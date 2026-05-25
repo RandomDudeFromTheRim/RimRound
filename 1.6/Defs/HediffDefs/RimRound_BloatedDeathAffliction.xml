@@ -17,7 +17,7 @@
       <li>
         <minSeverity>0.0</minSeverity>
         <label>strained</label>
-        <pain>0.10</pain>
+        <painOffset>0.10</painOffset>
         <capMods>
           <li>
             <capacity>Moving</capacity>
@@ -32,7 +32,7 @@
       <li>
         <minSeverity>0.5</minSeverity>
         <label>debilitated</label>
-        <pain>0.25</pain>
+        <painOffset>0.25</painOffset>
         <capMods>
           <li>
             <capacity>Moving</capacity>
@@ -48,7 +48,7 @@
         <minSeverity>1.0</minSeverity>
         <label>critical</label>
         <lifeThreatening>true</lifeThreatening>
-        <pain>0.40</pain>
+        <painOffset>0.40</painOffset>
         <capMods>
           <li>
             <capacity>Moving</capacity>
