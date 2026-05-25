@@ -38,18 +38,6 @@ The custom pipe network has been replaced with **VEF's PipeSystem** framework:
 - Buildings made from gluttonium or glut bricks leak weak radiation
 - Protection scales with gluttonium resistance stat on apparel
 
-## Gameplay Loop: Weight as a Trade-off
-Weight stages now provide meaningful bonuses alongside penalties:
-
-| Stage | Move | Melee Dmg | Blunt Armor | Cold Tol | Negotiation |
-|---|---|---|---|---|---|
-| Thick | -5% | +10% | +8% | -3°C | — |
-| Fat | -15% | +40% | +25% | -13°C | — |
-| Obese | -20% | +50% | +30% | -16°C | — |
-| Lardy | -30% | +75% | +40% | -22°C | +10% |
-| Gigantic | -40% | +110% | +50% | -28°C | +20% |
-| Gelatinous | -60% | +160% | +60% (+15% sharp) | -35°C | +30% |
-
 ## Horny Social Interactions
 Pawns can initiate social interactions based on weight opinion:
 
