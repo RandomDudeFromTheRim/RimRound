@@ -82,7 +82,7 @@ this system might be stuck at 15%, didnt test it much lol
 When the Twisted Obelisk mutates a pawn, they also gain weight + gluttonium exposure. Weight-likers get a mood boost.
 
 ### MELD DISEASE
-Getting attacked by fleshbeasts has a chance to make them begin merging into your pawn, dealing them damage and auto-sealing any bleeding on pawn while also making it's weight increase... pawns react differently to it based on their weight opinion.
+Getting attacked by fleshbeasts has a chance to make them begin merging into your pawn, dealing the fleshbeastss damage and auto-sealing any bleeding on pawn while also making it's weight increase... pawns react differently to it based on their weight opinion. The hits can stack, which can cause your pawn to balloon out if surrounded by fleshbeasts. Be on the lookout and prepare to use the liposuction surgery if fleshbeasts go loose...
 
 ## Mod Integrations
 
