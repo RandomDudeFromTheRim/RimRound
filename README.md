@@ -20,7 +20,7 @@ A weight gain mod for RimWorld. This is a community fork with extensive bugfixes
 - Filled 3 NotImplementedException stubs (ConvertWeightOpinion, HungerDroneUtility, ModCompatibilityUtility)
 - Fixed `return 0` bug that caused all unknown body type suffixes to instantly max weight stage
 
-## Feeding Tube System (Refactored)
+## Feeding Tube System (Refactored) (I DONT FUCKING KNOW IF IT ACTUALLY WORKS)
 The custom pipe network has been replaced with **VEF's PipeSystem** framework:
 - Pipes (`RR_FoodPipe`, `RR_UndergroundFoodPipe`) use `PipeSystem.Building_Pipe`
 - Valves (`RR_FoodValve`) use `PipeSystem.Building_PipeValve`
@@ -57,7 +57,7 @@ Pawns can initiate social interactions based on weight opinion:
 - **Smothering** — Larger pawn (Chubby+, heavier) presses against a smaller pawn. Weight-dependent intensity.
 - **Exploring** — Smaller pawn with Like+ opinion explores a larger pawn's curves.
 - **Wet Smothering** — Like+ lactating pawn force-feeds milk to a smaller pawn. Requires the `Lactating` hediff.
-
+(ratkin/races that add tails) - **Tail Groping** - because that chunk is kinda alluring...?
 All interactions can spark **social fights** if the recipient has Hate/Dislike weight opinion.
 
 ## SpeakUp Dialogue Integration
@@ -66,20 +66,20 @@ Custom dialogue for all horny interactions, conditional on each pawn's weight op
 ## Anomaly & Void Content
 
 ### Blob Walls & Void Gluttonium
-- `RR_BlobWall`: pulsating flesh walls with CornerFiller linking
-- `RR_BlobWallMineable`: mineable nodes that yield `RR_VoidGluttonium`
+- `RR_BlobWall`: skin walls with CornerFiller linking... currently only really acquirable from unnatural corpse going boom
+- `RR_BlobWallMineable`: mineable nodes that yield `RR_VoidGluttonium`... probably unavailable as of now. Tough luck!
 - `RR_VoidGluttonium`: high-value resource for ultra-tech cooking
-- **Feast of the Void**: a meal that bypasses soft limits entirely
+- **Feast of the Void**: a meal that bypasses soft limits entirely (i am unsure if this is actually useful lmao)
 
 ### Bloated Unnatural Corpses
 Harmony patch on `Pawn.TakeDamage`: intercepts unnatural corpse kill damage.
 - Corpse rapidly gains 810kg over 5 seconds
-- Then explodes into blob walls (mineable for 20 void gluttonium)
+- Then explodes into blob walls, leaving voidgluttonium around it
 - Witness reactions based on weight opinion
 - Attempts RV2 vore integration if RimVore-2 is installed (doesnt work lol)
 - Gives the victim sickness and some gain of weight upon corpse rupture
 
-### Meld Aerosol Bioweapon
+### Meld Aerosol Bioweapon (HORRIBLY BROKEN, USE AT YOUR OWN RISK)
 Craftable at a Drug Lab: combine gluttonium + twisted meat to create meld aerosol shells/grenades.
 - On impact, applies `RR_MeldAerosol` hediff to all pawns in radius and makes them thiccer
 - At max progression, pawn transforms into a fleshbeast
@@ -88,9 +88,13 @@ Craftable at a Drug Lab: combine gluttonium + twisted meat to create meld aeroso
   - 0.1–0.5 → Toughspike/Trispike
   - 0.5–2.0 → Bulbfreak
   - > 2.0 → **Dreadmeld** (only from extremely fat pawns)
+this system might be stuck at 15%, didnt test it much lol
 
 ### Obelisk Mutator Weight Gain
 When the Twisted Obelisk mutates a pawn, they also gain weight + gluttonium exposure. Weight-likers get a mood boost.
+
+### MELD DISEASE
+Getting attacked by fleshbeasts has a chance to make them begin merging into your pawn, dealing them damage and auto-sealing any bleeding on pawn while also making it's weight increase... pawns react differently to it based on their weight opinion.
 
 ## Mod Integrations
 
