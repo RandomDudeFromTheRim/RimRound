@@ -65,15 +65,6 @@ Custom dialogue for all horny interactions, conditional on each pawn's weight op
 
 ## Anomaly & Void Content
 
-### The Throbbing Domain
-A fleshy alternate dimension accessed via the **Throbbing Obelisk**:
-- Pawns enter and explore a warm, humid realm of pulsating flesh walls
-- `RR_VoidWarmth` prevents starvation; `RR_VoidFascination` increases hunger/mood
-- Meld fleshbeasts spawn periodically — they apply `RR_MeldGrowth` on contact
-- **Escape**: Find the return node before weight gain immobilizes you
-- **Auto-eject**: If downed or unable to move, the domain expels you
-- Rewards void gluttonium on successful exit
-
 ### Blob Walls & Void Gluttonium
 - `RR_BlobWall`: pulsating flesh walls with CornerFiller linking
 - `RR_BlobWallMineable`: mineable nodes that yield `RR_VoidGluttonium`
@@ -83,29 +74,20 @@ A fleshy alternate dimension accessed via the **Throbbing Obelisk**:
 ### Bloated Unnatural Corpses
 Harmony patch on `Pawn.TakeDamage`: intercepts unnatural corpse kill damage.
 - Corpse rapidly gains 810kg over 5 seconds
-- Then explodes into `RR_BloatedMass` (mineable for 20 void gluttonium)
+- Then explodes into blob walls (mineable for 20 void gluttonium)
 - Witness reactions based on weight opinion
-- Attempts RV2 vore integration if RimVore-2 is installed
-
-### Meld Overgrowth & Fleshbeast Transformation
-When `RR_MeldGrowth` severity exceeds natural weight severity, the pawn develops meld overgrowth:
-- Acts as a **damage buffer** — 30% of incoming damage burns off overgrowth instead of HP
-- At max overgrowth (2.5x natural mass), transforms into a Dreadmeld (Anomaly)
-- Damage is the only "treatment" — beat the meld off
-- Without Anomaly, causes severe illness instead
+- Attempts RV2 vore integration if RimVore-2 is installed (doesnt work lol)
+- Gives the victim sickness and some gain of weight upon corpse rupture
 
 ### Meld Aerosol Bioweapon
 Craftable at a Drug Lab: combine gluttonium + twisted meat to create meld aerosol shells/grenades.
-- On impact, applies `RR_MeldAerosol` hediff to all pawns in radius
+- On impact, applies `RR_MeldAerosol` hediff to all pawns in radius and makes them thiccer
 - At max progression, pawn transforms into a fleshbeast
 - **Transformation depends on pawn mass:**
   - Weight sev < 0.1 → Fingerspike
   - 0.1–0.5 → Toughspike/Trispike
   - 0.5–2.0 → Bulbfreak
   - > 2.0 → **Dreadmeld** (only from extremely fat pawns)
-
-### Bloater Wasp (Odyssey Integration)
-Adds `Comp_WaspStinger` to Drone_Wasp mechs. Each sting applies `Hediff_SuddenWeightGain` + 15kg temporary bloat. Weight fades after ~100 seconds but multiple stings stack rapidly. Non-lethal immobilization.
 
 ### Obelisk Mutator Weight Gain
 When the Twisted Obelisk mutates a pawn, they also gain weight + gluttonium exposure. Weight-likers get a mood boost.
