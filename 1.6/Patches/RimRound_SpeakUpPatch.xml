@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <!-- Inject filthy dialogue into RR_Fondle -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RR_Fondle"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <!-- Initiator lines -->
+      <li>r_logentry(p=0.3,priority=5,tag=RR_FondleReply_Selfconscious)->I-I know I'm big... but your hands feel nice...</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RR_FondleReply_Shy)->You... you really like touching me? Even like this?</li>
+      <li>r_logentry(p=0.4,priority=15,tag=RR_FondleReply_Encouraging)->Mmm, don't stop... I like being explored...</li>
+      <li>r_logentry(p=0.5,priority=20,tag=RR_FondleReply_Eager)->Yes! Feel every roll! I love your hands on me!</li>
+      <li>r_logentry(p=0.6,priority=30,tag=RR_FondleReply_Fanatical)->T-Touch me more! Worship my body! I need this!</li>
+    </value>
+  </Operation>
+
+  <!-- Inject filthy dialogue into RR_Smother -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RR_Smother"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.3,priority=10,tag=RR_SmotherReply_Selfconscious)->S-sorry, I-I'm heavy... I'll get off...</li>
+      <li>r_logentry(p=0.3,priority=15,tag=RR_SmotherReply_Shy)->You're so small compared to me... i-is this okay?</li>
+      <li>r_logentry(p=0.4,priority=20,tag=RR_SmotherReply_Encouraging)->Stay still and let me cover you... it's warm in here.</li>
+      <li>r_logentry(p=0.5,priority=25,tag=RR_SmotherReply_Eager)->I love how you disappear under me! You're all mine!</li>
+      <li>r_logentry(p=0.6,priority=35,tag=RR_SmotherReply_Fanatical)->Give in to my weight... let me consume you... become part of me!</li>
+    </value>
+  </Operation>
+
+  <!-- Inject filthy dialogue into RR_Explore -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RR_Explore"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.3,priority=10,tag=RR_ExploreReply_Shy)->You're so... big. C-can I really touch all of you?</li>
+      <li>r_logentry(p=0.4,priority=15,tag=RR_ExploreReply_Admiring)->Every curve is perfect... I want to memorize your body.</li>
+      <li>r_logentry(p=0.5,priority=22,tag=RR_ExploreReply_Eager)->I can't get enough of your softness! You're incredible!</li>
+      <li>r_logentry(p=0.6,priority=30,tag=RR_ExploreReply_Worshipping)->I want to bury myself in every fold... you're divine!</li>
+      <li>r_logentry(p=0.7,priority=40,tag=RR_ExploreReply_Fanatical)->I want to LIVE in your curves! Let me be lost in you forever!</li>
+    </value>
+  </Operation>
+
+  <!-- Inject filthy dialogue into RR_WetSmother -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RR_WetSmother"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.3,priority=12,tag=RR_WetSmotherReply_Shy)->I-I'm lactating... please, drink...</li>
+      <li>r_logentry(p=0.3,priority=18,tag=RR_WetSmotherReply_Encouraging)->Let me feed you... I'll take such good care of you...</li>
+      <li>r_logentry(p=0.5,priority=25,tag=RR_WetSmotherReply_Eager)->Drink up! I've got plenty of milk for my favorite little one!</li>
+      <li>r_logentry(p=0.6,priority=35,tag=RR_WetSmotherReply_Mommy)->That's it... drink from mommy... let me nourish you...</li>
+      <li>r_logentry(p=0.7,priority=45,tag=RR_WetSmotherReply_Fanatical)->DRINK! Take my essence! Let my milk make you as BIG as me!</li>
+    </value>
+  </Operation>
+</Patch>

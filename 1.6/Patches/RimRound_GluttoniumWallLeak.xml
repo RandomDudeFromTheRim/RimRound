@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <!-- Add weak radiation to all buildings that can be built from gluttonium stuff -->
+  <!-- The comp checks at runtime if the building's Stuff is actually RR_Gluttonium -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/ThingDef[(statBases/StuffPower_Armor_Sharp or statBases/StuffPower_Armor_Blunt) and not(thingClass = 'ShipPart') and not(defName = 'VoidmetalWall') and not(defName = 'RR_BlobWall')]/comps</xpath>
+    <value>
+      <li Class="RimRound.Comps.CompProperties_GluttoniumRadiation">
+        <radius>2.5</radius>
+        <exposurePerTick>0.001</exposurePerTick>
+        <tickInterval>600</tickInterval>
+      </li>
+    </value>
+  </Operation>
+</Patch>

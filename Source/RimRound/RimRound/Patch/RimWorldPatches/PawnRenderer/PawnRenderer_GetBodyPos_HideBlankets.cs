@@ -1,6 +1,7 @@
 using HarmonyLib;
 using RimRound.Comps;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace RimRound.Patch
     public class PawnRenderer_GetBodyPos_HideBlankets
     {
         static FieldInfo pawnFieldInfo = typeof(PawnRenderer).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
-        static Dictionary<string, HideCovers_ThingComp> pawnIdToComp = new Dictionary<string, HideCovers_ThingComp>();
+        static ConcurrentDictionary<string, HideCovers_ThingComp> pawnIdToComp = new ConcurrentDictionary<string, HideCovers_ThingComp>();
 
         public static void InvalidateCaches() 
         {
@@ -31,13 +32,7 @@ namespace RimRound.Patch
             if (pawn is null || !(pawn?.RaceProps?.Humanlike is bool b && b))
                 return;
 
-            HideCovers_ThingComp comp; 
-
-            if (!pawnIdToComp.TryGetValue(pawn.ThingID, out comp))
-            {
-                comp = pawn.TryGetComp<HideCovers_ThingComp>();
-                pawnIdToComp.Add(pawn.ThingID, comp);
-            }
+            HideCovers_ThingComp comp = pawnIdToComp.GetOrAdd(pawn.ThingID, (id) => pawn.TryGetComp<HideCovers_ThingComp>());
 
             if (comp is null)
                 return;

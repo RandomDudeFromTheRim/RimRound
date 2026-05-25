@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Meld aerosol shell — delivered by mortar -->
+  <ThingDef ParentName="ResourceBase">
+    <defName>RR_MeldAerosolShell</defName>
+    <label>meld aerosol shell</label>
+    <description>A pressurized canister containing a slurry of meld-infected biomass and processed anomalous meat. When the canister bursts, it releases a bioaerosol that forces rapid fleshmass growth in living tissue. Heavier targets transform into larger and more dangerous fleshbeasts. Victims with extreme mass may become Dreadmelds.</description>
+    <statBases>
+      <Mass>14</Mass>
+      <MarketValue>250</MarketValue>
+      <MaxHitPoints>150</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <graphicData>
+      <texPath>Things/Item/Resource/Shell/Shell_Incendiary</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <thingCategories>
+      <li>MortarShells</li>
+    </thingCategories>
+    <projectileWhenLoaded>RR_MeldAerosolShellProjectile</projectileWhenLoaded>
+    <recipeMaker>
+      <researchPrerequisite>RR_Research_MeldAerosol</researchPrerequisite>
+      <recipeUsers>
+        <li>DrugLab</li>
+      </recipeUsers>
+      <soundWorking>Recipe_Machining</soundWorking>
+    </recipeMaker>
+    <costList>
+      <RR_Gluttonium>20</RR_Gluttonium>
+      <Meat_Twisted>15</Meat_Twisted>
+    </costList>
+  </ThingDef>
+
+  <!-- Also a grenade variant for close-range delivery -->
+  <ThingDef ParentName="BaseWeapon">
+    <defName>RR_MeldAerosolGrenade</defName>
+    <label>meld aerosol grenade</label>
+    <techLevel>Industrial</techLevel>
+    <description>A throwable canister of meld aerosol. Creates a cloud of fleshmass-inducing bioaerosol on impact. Handle with care.</description>
+    <statBases>
+      <Mass>1.5</Mass>
+      <MarketValue>80</MarketValue>
+    </statBases>
+    <graphicData>
+      <texPath>Things/Item/Equipment/WeaponRanged/flab_grenade</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <thingCategories>
+      <li>Weapons</li>
+      <li>Grenades</li>
+    </thingCategories>
+    <verbs>
+      <li>
+        <label>throw meld aerosol</label>
+        <verbClass>Verb_LaunchProjectile</verbClass>
+        <hasStandardCommand>true</hasStandardCommand>
+        <defaultProjectile>RR_MeldAerosolProjectile</defaultProjectile>
+        <range>12</range>
+        <warmupTime>0.5</warmupTime>
+        <soundCast>ThrowGrenade</soundCast>
+        <forcedMissRadius>3</forcedMissRadius>
+        <ai_AvoidFriendlyFireRadius>1.5</ai_AvoidFriendlyFireRadius>
+      </li>
+    </verbs>
+    <soundInteract>Interact_Grenade</soundInteract>
+    <recipeMaker>
+      <researchPrerequisite>RR_Research_MeldAerosol</researchPrerequisite>
+      <recipeUsers>
+        <li>DrugLab</li>
+      </recipeUsers>
+      <soundWorking>Recipe_Machining</soundWorking>
+    </recipeMaker>
+    <costList>
+      <RR_Gluttonium>5</RR_Gluttonium>
+      <Meat_Twisted>5</Meat_Twisted>
+    </costList>
+  </ThingDef>
+
+  <!-- Recipe defs -->
+  <RecipeDef>
+    <defName>RR_Make_MeldAerosolShell</defName>
+    <label>make meld aerosol shell</label>
+    <description>Craft a mortar shell filled with biomass-slurry aerosol.</description>
+    <jobString>Crafting meld aerosol shell.</jobString>
+    <workAmount>5000</workAmount>
+    <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Machining</soundWorking>
+    <recipeUsers>
+      <li>DrugLab</li>
+    </recipeUsers>
+    <researchPrerequisite>RR_Research_MeldAerosol</researchPrerequisite>
+    <ingredients>
+      <li><filter><thingDefs><li>RR_Gluttonium</li></thingDefs></filter><count>20</count></li>
+      <li><filter><thingDefs><li>Meat_Twisted</li></thingDefs></filter><count>15</count></li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs><li>RR_Gluttonium</li><li>Meat_Twisted</li></thingDefs>
+    </fixedIngredientFilter>
+    <products><RR_MeldAerosolShell>1</RR_MeldAerosolShell></products>
+    <skillRequirements><Crafting>6</Crafting></skillRequirements>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>RR_Make_MeldAerosolGrenade</defName>
+    <label>make meld aerosol grenade</label>
+    <description>Craft a throwable canister of meld aerosol.</description>
+    <jobString>Crafting meld aerosol grenade.</jobString>
+    <workAmount>2000</workAmount>
+    <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Machining</soundWorking>
+    <recipeUsers>
+      <li>DrugLab</li>
+    </recipeUsers>
+    <researchPrerequisite>RR_Research_MeldAerosol</researchPrerequisite>
+    <ingredients>
+      <li><filter><thingDefs><li>RR_Gluttonium</li></thingDefs></filter><count>5</count></li>
+      <li><filter><thingDefs><li>Meat_Twisted</li></thingDefs></filter><count>5</count></li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs><li>RR_Gluttonium</li><li>Meat_Twisted</li></thingDefs>
+    </fixedIngredientFilter>
+    <products><RR_MeldAerosolGrenade>1</RR_MeldAerosolGrenade></products>
+    <skillRequirements><Crafting>4</Crafting></skillRequirements>
+  </RecipeDef>
+
+  <!-- Projectile for the grenade (thrown, no flyOverhead) -->
+  <ThingDef ParentName="BaseGrenadeProjectile">
+    <defName>RR_MeldAerosolProjectile</defName>
+    <label>meld aerosol cloud</label>
+    <thingClass>Projectile_Explosive</thingClass>
+    <graphicData>
+      <texPath>Things/Projectile/Grenade</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <projectile>
+      <damageDef>RR_MeldAerosolDamage</damageDef>
+      <damageAmountBase>1</damageAmountBase>
+      <explosionRadius>3.5</explosionRadius>
+    </projectile>
+  </ThingDef>
+
+  <!-- Projectile for the mortar shell (flyOverhead for mortar arc) -->
+  <ThingDef ParentName="BaseBullet">
+    <defName>RR_MeldAerosolShellProjectile</defName>
+    <label>meld aerosol shell</label>
+    <thingClass>Projectile_Explosive</thingClass>
+    <graphicData>
+      <texPath>Things/Projectile/ShellHighExplosive</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <projectile>
+      <damageDef>RR_MeldAerosolDamage</damageDef>
+      <damageAmountBase>1</damageAmountBase>
+      <speed>41</speed>
+      <explosionRadius>4.5</explosionRadius>
+      <flyOverhead>true</flyOverhead>
+      <!-- soundHitThickRoof intentionally omitted; no Mortar_Bombard in 1.6 -->
+    </projectile>
+  </ThingDef>
+
+  <!-- DamageDef for the aerosol — applies the hediff instead of dealing damage -->
+  <DamageDef>
+    <defName>RR_MeldAerosolDamage</defName>
+    <label>meld aerosol</label>
+    <workerClass>RimRound.Hediffs.DamageWorker_MeldAerosol</workerClass>
+    <externalViolence>false</externalViolence>
+    <makesAnimalsFlee>false</makesAnimalsFlee>
+    <isExplosive>true</isExplosive>
+  </DamageDef>
+</Defs>

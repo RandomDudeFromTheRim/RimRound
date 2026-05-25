@@ -11,6 +11,7 @@
     <AssemblyName>RimRound</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+      <LangVersion>9.0</LangVersion>
     <Deterministic>false</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -37,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>portable</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1_4|AnyCPU'">
@@ -46,7 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>portable</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
@@ -62,6 +63,7 @@
       <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -129,6 +131,11 @@
     <Compile Include="RimRound\AI\IngredientValueGetter_Gluttonium.cs" />
     <Compile Include="RimRound\AI\PlayWithBlob\JobDriver_PlayWithBlob.cs" />
     <Compile Include="RimRound\AI\PlayWithBlob\JoyGiver_PlayWithBlob.cs" />
+      <Compile Include="RimRound\Comps\Abilities\Comp_GluttoniumArousal.cs" />
+      <Compile Include="RimRound\Comps\Abilities\Comp_GluttoniumForceFeed.cs" />
+      <Compile Include="RimRound\Comps\Abilities\Comp_LactationIntegration.cs" />
+      <Compile Include="RimRound\Comps\Abilities\Comp_ObeliskIntegration.cs" />
+      <Compile Include="RimRound\Comps\Abilities\Comp_RV2Integration.cs" />
     <Compile Include="RimRound\AI\StatParts\StatPart_ArmorRating_Blunt.cs" />
     <Compile Include="RimRound\AI\StatParts\StatPart_ArmorRating_Sharp.cs" />
     <Compile Include="RimRound\AI\StatParts\StatPart_ButcheryFleshEfficiency.cs" />
@@ -204,6 +211,7 @@
     <Compile Include="RimRound\Patch\RimWorldPatches\Caravan\Caravan-NeedsTracker_TrySatisfyFoodNeed_DontEatIfFullnessSatisfies.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Corpse_CurRotDrawMode-Get_ChangeDessicatedCorpseBodyTypeToNonRR.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Corpse_SpawnSetup_UpdateBodyType.cs" />
+    <Compile Include="RimRound\Patch\RimWorldPatches\UnnaturalCorpse_BloatPatch.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\FurDef_GetFurBodyGraphicPath_ReturnTransparentForRR.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\GameDataSaveLoader_LoadGame_WipeCaches.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\HistoryAutoRecorderGroup_AddOrRemoveHistoryRecorders_AddAGraphForEachPawn.cs" />
@@ -363,6 +371,7 @@
     <Compile Include="RimRound\Patch\RimWorldPatches\Thing_Ingested\Thing_Ingested_HarmonyPatch.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Thing_Ingested\Thing_Ingested_StomachBurstCheck.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\GraphicalPatches\JobDriver-LayDown_LayDownToil_UpdatePawnPortrait.cs" />
+    <Compile Include="RimRound\Patch\RimWorldPatches\PipeSystem_VEF_Fix.cs" />
     <Compile Include="RimRound\UI\Gizmos\HideCoversGizmo.cs" />
     <Compile Include="RimRound\UI\MainTabWindow_RRGlobalSettings.cs" />
     <Compile Include="RimRound\UI\Gizmos\MakeBlobIntoBedGizmo.cs" />
@@ -384,6 +393,23 @@
     <Compile Include="RimRound\UI\Gizmos\WeightGizmo\WeightGizmo.cs" />
     <None Include=".editorconfig" />
     <Compile Include="RimRound\AI\PrisonerStuff\WorkGivers\WorkGiver_StuffPrisoner.cs" />
+    <Compile Include="RimRound\AI\InteractionWorker_Fondle.cs" />
+    <Compile Include="RimRound\AI\InteractionWorker_Smother.cs" />
+    <Compile Include="RimRound\AI\InteractionWorker_TailGrope.cs" />
+    <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_GluttoniumExposure.cs" />
+    <Compile Include="RimRound\Comps\Buildings\CompProperties_VoidPortal.cs" />
+    <Compile Include="RimRound\Comps\Buildings\Comp_VoidPortal.cs" />
+    <Compile Include="RimRound\Comps\Map\CompProperties_GluttoniumRadiation.cs" />
+    <Compile Include="RimRound\Comps\Map\Comp_CorpseBloat.cs" />
+    <Compile Include="RimRound\Comps\Map\Comp_GluttoniumRadiation.cs" />
+    <Compile Include="RimRound\Comps\Map\MapComp_GluttoniumRadiation.cs" />
+    <Compile Include="RimRound\Comps\Map\Comp_MeldFleshbeast.cs" />
+    <Compile Include="RimRound\Hediffs\DamageWorker_MeldAerosol.cs" />
+    <Compile Include="RimRound\Hediffs\Hediff_FeedingImplant.cs" />
+    <Compile Include="RimRound\Hediffs\Hediff_GluttoniumExposure.cs" />
+    <Compile Include="RimRound\Hediffs\Hediff_MeldAerosol.cs" />
+    <Compile Include="RimRound\Hediffs\Hediff_MeldGrowth.cs" />
+    <Compile Include="RimRound\Hediffs\Hediff_MeldOvergrowth.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

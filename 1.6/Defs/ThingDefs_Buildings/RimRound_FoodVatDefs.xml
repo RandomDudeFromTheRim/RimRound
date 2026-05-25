@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef ParentName="BuildingBase" Name="RR_FoodVatBase" Abstract="True">
+    <description>A tank for storing liquid food connected to the food pipe network.</description>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <statBases>
+      <WorkToBuild>800</WorkToBuild>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <comps>
+      <li Class="PipeSystem.CompProperties_ResourceStorage">
+        <pipeNet>RR_FoodNet</pipeNet>
+        <destroyOption>
+          <filth>Filth_Slime</filth>
+          <ratio>1</ratio>
+          <maxRadius>3</maxRadius>
+        </destroyOption>
+        <contentRequirePower>true</contentRequirePower>
+      </li>
+    </comps>
+    <rotatable>false</rotatable>
+    <tickerType>Normal</tickerType>
+    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+    <designationCategory>VCHE_PipeNetworks</designationCategory>
+    <constructEffect>ConstructMetal</constructEffect>
+    <canOverlapZones>false</canOverlapZones>
+  </ThingDef>
+
+  <ThingDef ParentName="RR_FoodVatBase">
+    <defName>RR_FoodStorageVatSmall</defName>
+    <label>small food vat</label>
+    <graphicData>
+      <texPath>Things/Building/Production/FoodStorageVatSmall</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <size>(1,1)</size>
+    <statBases>
+      <MaxHitPoints>150</MaxHitPoints>
+      <Mass>10</Mass>
+    </statBases>
+    <costList>
+      <Steel>50</Steel>
+    </costList>
+    <comps>
+      <li Class="PipeSystem.CompProperties_ResourceStorage">
+        <pipeNet>RR_FoodNet</pipeNet>
+        <storageCapacity>50</storageCapacity>
+        <barSize>(0.5, 0.15)</barSize>
+        <margin>0.05</margin>
+        <centerOffset>(0, 0, -0.15)</centerOffset>
+        <destroyOption>
+          <filth>Filth_Slime</filth>
+          <ratio>1</ratio>
+          <maxRadius>3</maxRadius>
+        </destroyOption>
+        <contentRequirePower>true</contentRequirePower>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="RR_FoodVatBase">
+    <defName>RR_FoodStorageVatLarge</defName>
+    <label>large food vat</label>
+    <graphicData>
+      <texPath>Things/Building/Production/FoodStorageVatLarge</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,2)</drawSize>
+    </graphicData>
+    <size>(2,2)</size>
+    <statBases>
+      <MaxHitPoints>300</MaxHitPoints>
+      <Mass>30</Mass>
+    </statBases>
+    <costList>
+      <Steel>150</Steel>
+    </costList>
+    <comps>
+      <li Class="PipeSystem.CompProperties_ResourceStorage">
+        <pipeNet>RR_FoodNet</pipeNet>
+        <storageCapacity>200</storageCapacity>
+        <barSize>(0.75, 0.2)</barSize>
+        <margin>0.05</margin>
+        <centerOffset>(0, 0, -0.3)</centerOffset>
+        <destroyOption>
+          <filth>Filth_Slime</filth>
+          <ratio>1</ratio>
+          <maxRadius>5</maxRadius>
+        </destroyOption>
+        <contentRequirePower>true</contentRequirePower>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="RR_FoodVatBase">
+    <defName>RR_FoodStorageVatMassive</defName>
+    <label>massive food vat</label>
+    <graphicData>
+      <texPath>Things/Building/Production/FoodStorageVatMassive</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3,3)</drawSize>
+    </graphicData>
+    <size>(3,3)</size>
+    <statBases>
+      <MaxHitPoints>600</MaxHitPoints>
+      <Mass>80</Mass>
+    </statBases>
+    <costList>
+      <Steel>400</Steel>
+    </costList>
+    <comps>
+      <li Class="PipeSystem.CompProperties_ResourceStorage">
+        <pipeNet>RR_FoodNet</pipeNet>
+        <storageCapacity>600</storageCapacity>
+        <barSize>(1.0, 0.25)</barSize>
+        <margin>0.05</margin>
+        <centerOffset>(0, 0, -0.4)</centerOffset>
+        <destroyOption>
+          <filth>Filth_Slime</filth>
+          <ratio>1</ratio>
+          <maxRadius>7</maxRadius>
+        </destroyOption>
+        <contentRequirePower>true</contentRequirePower>
+      </li>
+    </comps>
+  </ThingDef>
+</Defs>

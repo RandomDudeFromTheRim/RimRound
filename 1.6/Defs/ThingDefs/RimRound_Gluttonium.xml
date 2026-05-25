@@ -15,16 +15,19 @@
     <building>
       <isResourceRock>true</isResourceRock>
       <mineableThing>RR_Gluttonium</mineableThing>
-      <mineableYield>2</mineableYield>
-      <mineableScatterCommonality>1.00</mineableScatterCommonality> <!-- as often as steel, with smaller blotches -->
-      <mineableScatterLumpSizeRange>3~6</mineableScatterLumpSizeRange>
+      <mineableYield>6</mineableYield>
+      <mineableScatterCommonality>1.25</mineableScatterCommonality>
+      <mineableScatterLumpSizeRange>4~10</mineableScatterLumpSizeRange>
     </building>
 	<comps>
 	  <li Class="CompProperties_Glower">
         <glowRadius>4</glowRadius>
         <glowColor>(77,190,37,0)</glowColor>
-        <colorPickerEnabled>true</colorPickerEnabled>
-        <darklightToggle>true</darklightToggle>
+      </li>
+	  <li Class="RimRound.Comps.CompProperties_GluttoniumRadiation">
+        <radius>4</radius>
+        <exposurePerTick>0.005</exposurePerTick>
+        <tickInterval>250</tickInterval>
       </li>
 	</comps>
   </ThingDef>
@@ -32,7 +35,7 @@
   <ThingDef ParentName="ResourceBase">
     <defName>RR_Gluttonium</defName>
     <label>gluttonium</label>
-    <description>A compound alloy of unknown origin, packed with energy that replicates on contact with gastric juices. Research suggests it was intitially used as a tool to prevent prisoners from escaping, as, while not safe to ingest unless treated, can be cooked into extremely fattening foods and used as a tough, flexible material.</description>
+    <description>A volatile compound alloy of unknown origin, packed with energy that replicates on contact with gastric juices — and, to a lesser degree, on simple contact. Even handling raw gluttonium for extended periods can cause gradual weight gain. Research suggests it was initially used as a tool to prevent prisoners from escaping, as, while not safe to ingest unless treated, can be cooked into extremely fattening foods and used as a tough, flexible material. Prolonged exposure to gluttonium in any form carries risk.</description>
     <graphicData>
       <texPath>Things/Item/Resource/Gluttonium</texPath>
       <graphicClass>Graphic_StackCount</graphicClass>
@@ -77,8 +80,8 @@
         <MaxHitPoints>3.3</MaxHitPoints>
         <Beauty>1.5</Beauty>
         <Flammability>0</Flammability>
-        <WorkToMake>2.4</WorkToMake>
-        <WorkToBuild>2.4</WorkToBuild>
+        <WorkToMake>1.2</WorkToMake>
+        <WorkToBuild>1.2</WorkToBuild>
 		<ResearchSpeedFactor>1.7</ResearchSpeedFactor>
         <MeleeWeapon_CooldownMultiplier>0.95</MeleeWeapon_CooldownMultiplier>
       </statFactors>
@@ -86,4 +89,101 @@
     <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
     <allowedArchonexusCount>80</allowedArchonexusCount>
   </ThingDef>
+
+  <!-- Glut Bricks: processed gluttonium for safe construction -->
+  <ThingDef ParentName="ResourceBase">
+    <defName>RR_GlutBrick</defName>
+    <label>glut brick</label>
+    <description>A refined, blue-tinted brick made from processed gluttonium. The refinement process stabilizes the material, reducing its reactive properties while retaining its structural strength. Safer to handle than raw gluttonium, but long-term exposure still carries risk. Commonly used in construction where a durable, slightly radioactive building material is acceptable.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/GlutBricks</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <soundInteract>Metal_Drop</soundInteract>
+    <soundDrop>Metal_Drop</soundDrop>
+    <useHitPoints>false</useHitPoints>
+    <healthAffectsPrice>false</healthAffectsPrice>
+    <statBases>
+      <MarketValue>14</MarketValue>
+      <Mass>2.5</Mass>
+      <Beauty>2</Beauty>
+      <StuffPower_Armor_Sharp>1.10</StuffPower_Armor_Sharp>
+      <StuffPower_Armor_Blunt>0.80</StuffPower_Armor_Blunt>
+      <StuffPower_Armor_Heat>1.00</StuffPower_Armor_Heat>
+      <StuffPower_Insulation_Cold>6</StuffPower_Insulation_Cold>
+      <StuffPower_Insulation_Heat>2</StuffPower_Insulation_Heat>
+      <SharpDamageMultiplier>1.1</SharpDamageMultiplier>
+      <BluntDamageMultiplier>1.3</BluntDamageMultiplier>
+    </statBases>
+    <thingCategories>
+      <li>Manufactured</li>
+      <li>StoneBlocks</li>
+    </thingCategories>
+    <stuffProps>
+      <categories>
+        <li>Metallic</li>
+        <li>Stony</li>
+      </categories>
+      <appearance>Metal</appearance>
+      <commonality>0.05</commonality>
+      <constructEffect>ConstructMetal</constructEffect>
+      <color>(70,90,200)</color>
+      <soundImpactBullet>BulletImpact_Metal</soundImpactBullet>
+      <soundImpactMelee>BulletImpact_Metal</soundImpactMelee>
+      <soundMeleeHitSharp>MeleeHit_Metal_Sharp</soundMeleeHitSharp>
+      <soundMeleeHitBlunt>MeleeHit_Metal_Blunt</soundMeleeHitBlunt>
+      <statFactors>
+        <MaxHitPoints>2.5</MaxHitPoints>
+        <Beauty>1.8</Beauty>
+        <Flammability>0</Flammability>
+        <WorkToMake>1.0</WorkToMake>
+        <WorkToBuild>1.0</WorkToBuild>
+        <ResearchSpeedFactor>0.7</ResearchSpeedFactor>
+        <MeleeWeapon_CooldownMultiplier>1.0</MeleeWeapon_CooldownMultiplier>
+      </statFactors>
+    </stuffProps>
+    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+    <recipeMaker>
+      <researchPrerequisite>Machining</researchPrerequisite>
+      <recipeUsers>
+        <li>TableStonecutter</li>
+      </recipeUsers>
+      <soundWorking>Recipe_Machining</soundWorking>
+    </recipeMaker>
+    <costList>
+      <RR_Gluttonium>3</RR_Gluttonium>
+    </costList>
+  </ThingDef>
+
+  <RecipeDef>
+    <defName>RR_Make_GlutBrick</defName>
+    <label>make glut bricks</label>
+    <description>Process raw gluttonium into stable, blue-tinted construction bricks.</description>
+    <jobString>Processing gluttonium bricks.</jobString>
+    <workAmount>1800</workAmount>
+    <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Machining</soundWorking>
+    <recipeUsers>
+      <li>TableStonecutter</li>
+    </recipeUsers>
+    <researchPrerequisite>Machining</researchPrerequisite>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>RR_Gluttonium</li>
+          </thingDefs>
+        </filter>
+        <count>3</count>
+      </li>
+    </ingredients>
+    <products>
+      <RR_GlutBrick>10</RR_GlutBrick>
+    </products>
+    <skillRequirements>
+      <Crafting>5</Crafting>
+    </skillRequirements>
+    <workSkill>Crafting</workSkill>
+  </RecipeDef>
 </Defs>

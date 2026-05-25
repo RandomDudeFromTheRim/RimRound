@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Fingerspike"]</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[defName="Fingerspike"]/comps</xpath>
+      <value>
+        <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
+          <meldPerHit>0.15</meldPerHit>
+          <selfDamageMultiplier>1.0</selfDamageMultiplier>
+          <tickInterval>180</tickInterval>
+        </li>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Trispike"]</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[defName="Trispike"]/comps</xpath>
+      <value>
+        <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
+          <meldPerHit>0.30</meldPerHit>
+          <selfDamageMultiplier>1.0</selfDamageMultiplier>
+          <tickInterval>160</tickInterval>
+        </li>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Toughspike"]</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[defName="Toughspike"]/comps</xpath>
+      <value>
+        <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
+          <meldPerHit>0.25</meldPerHit>
+          <selfDamageMultiplier>1.0</selfDamageMultiplier>
+          <tickInterval>170</tickInterval>
+        </li>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Bulbfreak"]</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[defName="Bulbfreak"]/comps</xpath>
+      <value>
+        <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
+          <meldPerHit>0.60</meldPerHit>
+          <selfDamageMultiplier>0.5</selfDamageMultiplier>
+          <tickInterval>120</tickInterval>
+        </li>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Dreadmeld"]</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[defName="Dreadmeld"]/comps</xpath>
+      <value>
+        <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
+          <meldPerHit>1.50</meldPerHit>
+          <selfDamageMultiplier>0.3</selfDamageMultiplier>
+          <tickInterval>90</tickInterval>
+        </li>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Fingerspike"]</xpath>
+    <match Class="PatchOperationReplace">
+      <xpath>Defs/ThingDef[defName="Fingerspike"]/tools/li/power</xpath>
+      <value>
+        <power>1</power>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Trispike"]</xpath>
+    <match Class="PatchOperationReplace">
+      <xpath>Defs/ThingDef[defName="Trispike"]/tools/li/power</xpath>
+      <value>
+        <power>1</power>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Toughspike"]</xpath>
+    <match Class="PatchOperationReplace">
+      <xpath>Defs/ThingDef[defName="Toughspike"]/tools/li/power</xpath>
+      <value>
+        <power>1</power>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Bulbfreak"]</xpath>
+    <match Class="PatchOperationReplace">
+      <xpath>Defs/ThingDef[defName="Bulbfreak"]/tools/li/power</xpath>
+      <value>
+        <power>1</power>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Dreadmeld"]</xpath>
+    <match Class="PatchOperationReplace">
+      <xpath>Defs/ThingDef[defName="Dreadmeld"]/tools/li/power</xpath>
+      <value>
+        <power>1</power>
+      </value>
+    </match>
+  </Operation>
+</Patch>

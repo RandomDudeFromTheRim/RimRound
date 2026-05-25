@@ -538,7 +538,7 @@
 		</researchPrerequisites>
 	</ThingDef>
 	<!--XL Hopper-->
-	<ThingDef ParentName="BuildingBase">
+	<ThingDef>
 		<defName>RR_Hopper</defName>
 		<label>XL hopper</label>
 		<description>Holds resources for use by the food processor. This hopper is larger than normal and can take whole food items as a result.</description>
@@ -615,7 +615,7 @@
 		<uiIconScale>0.85</uiIconScale>
 	</ThingDef>
 	<!--Nutrient Distillery-->
-	<ThingDef ParentName="BuildingBase">
+	<ThingDef>
 		<defName>RR_TD_NutrientDistillery</defName>
 		<label>nutrient distillery</label>
 		<description>Increases the nutrient density of the system by removing unnecessary food components such as water and dietary fibers through a combination of centrifuges and distillation processes.</description>
@@ -650,7 +650,6 @@
 			<MaxHitPoints>160</MaxHitPoints>
 			<WorkToBuild>3600</WorkToBuild>
 			<Flammability>0.7</Flammability>
-			<Beauty>-2</Beauty>
 		</statBases>
 		<size>(2,3)</size>
 		<!-- placingDraggableDimensions tag removed in 1.6 -->

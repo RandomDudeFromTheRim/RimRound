@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef Name="RR_FoodPipeBase" Abstract="True">
+    <thingClass>PipeSystem.Building_Pipe</thingClass>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <pathCost>0</pathCost>
+    <selectable>true</selectable>
+    <size>(1,1)</size>
+    <comps>
+      <li Class="PipeSystem.CompProperties_Resource">
+        <pipeNet>RR_FoodNet</pipeNet>
+      </li>
+    </comps>
+    <designationCategory>VCHE_PipeNetworks</designationCategory>
+  	<building>
+	</building>
+</ThingDef>
+
+  <ThingDef ParentName="RR_FoodPipeBase">
+    <defName>RR_FoodPipe</defName>
+    <label>food pipe</label>
+    <description>A thick tube for moving liquid food around. Can be placed under walls and other buildings.</description>
+    <graphicData>
+      <texPath>Things/Building/Production/FoodPipe_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Custom6</li>
+      </linkFlags>
+    </graphicData>
+    <uiIconPath>Things/Building/Production/FoodPipe_MenuIcon</uiIconPath>
+    <uiIconScale>0.7</uiIconScale>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+      <isInert>true</isInert>
+      <isEdifice>false</isEdifice>
+      <blueprintGraphicData>
+        <texPath>Things/Building/Production/FoodPipe_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+      <canConstructInCorner>true</canConstructInCorner>
+    </building>
+    <drawerType>MapMeshOnly</drawerType>
+    <altitudeLayer>Conduits</altitudeLayer>
+    <passability>Standable</passability>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <statBases>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Flammability>0</Flammability>
+      <WorkToBuild>100</WorkToBuild>
+    </statBases>
+    <costList>
+      <Steel>5</Steel>
+    </costList>
+    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+    <constructEffect>ConstructMetal</constructEffect>
+    <placeWorkers>
+      <li>PipeSystem.PlaceWorker_Pipe</li>
+    </placeWorkers>
+    <rotatable>false</rotatable>
+    <neverMultiSelect>true</neverMultiSelect>
+    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+    <clearBuildingArea>false</clearBuildingArea>
+  </ThingDef>
+
+  <ThingDef ParentName="RR_FoodPipeBase">
+    <defName>RR_UndergroundFoodPipe</defName>
+    <label>underground food pipe</label>
+    <description>An underground food pipe. Can carry liquid food under walls, roofs, and other obstructions.</description>
+    <thingClass>PipeSystem.Building_Pipe</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Production/FoodPipe_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Custom6</li>
+      </linkFlags>
+    </graphicData>
+    <uiIconPath>Things/Building/Production/FoodPipe_MenuIcon</uiIconPath>
+    <uiIconScale>0.7</uiIconScale>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+      <isInert>true</isInert>
+      <isEdifice>false</isEdifice>
+      <blueprintGraphicData>
+        <texPath>Things/Building/Production/FoodPipe_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+      <ai_neverTrashThis>true</ai_neverTrashThis>
+      <isTargetable>false</isTargetable>
+      <expandHomeArea>false</expandHomeArea>
+      <canBeDamagedByAttacks>false</canBeDamagedByAttacks>
+      <canConstructInCorner>true</canConstructInCorner>
+    </building>
+    <drawerType>MapMeshOnly</drawerType>
+    <altitudeLayer>Conduits</altitudeLayer>
+    <passability>Standable</passability>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <statBases>
+      <MaxHitPoints>150</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <costList>
+      <Steel>10</Steel>
+    </costList>
+    <placeWorkers>
+      <li>PipeSystem.PlaceWorker_Pipe</li>
+    </placeWorkers>
+    <rotatable>false</rotatable>
+    <neverMultiSelect>true</neverMultiSelect>
+    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+    <clearBuildingArea>false</clearBuildingArea>
+  </ThingDef>
+
+  <ThingDef ParentName="RR_FoodPipeBase">
+    <defName>RR_FoodValve</defName>
+    <label>food valve</label>
+    <description>Controls the flow of liquid food through the pipe network. When toggled off, it separates the network into two disconnected sections.</description>
+    <thingClass>PipeSystem.Building_PipeValve</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Production/FoodPipe_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Custom6</li>
+      </linkFlags>
+    </graphicData>
+    <uiIconPath>Things/Building/Production/FoodPipe_MenuIcon</uiIconPath>
+    <uiIconScale>0.7</uiIconScale>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+      <allowWireConnection>false</allowWireConnection>
+      <blueprintGraphicData>
+        <texPath>Things/Building/Production/FoodPipe_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+    </building>
+    <drawerType>MapMeshOnly</drawerType>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Standable</passability>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <statBases>
+      <MaxHitPoints>150</MaxHitPoints>
+      <Flammability>0</Flammability>
+      <WorkToBuild>200</WorkToBuild>
+    </statBases>
+    <size>(1,1)</size>
+    <costList>
+      <Steel>15</Steel>
+      <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <comps>
+      <li Class="PipeSystem.CompProperties_Resource">
+        <pipeNet>RR_FoodNet</pipeNet>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+    </comps>
+    <designationCategory>VCHE_PipeNetworks</designationCategory>
+    <constructEffect>ConstructMetal</constructEffect>
+    <placeWorkers>
+      <li>PipeSystem.PlaceWorker_Pipe</li>
+    </placeWorkers>
+    <rotatable>false</rotatable>
+    <neverMultiSelect>false</neverMultiSelect>
+    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+    <clearBuildingArea>false</clearBuildingArea>
+  </ThingDef>
+</Defs>

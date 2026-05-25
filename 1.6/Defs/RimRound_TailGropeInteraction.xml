@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <InteractionDef>
+    <defName>RR_TailGrope</defName>
+    <workerClass>RimRound.AI.InteractionWorker_TailGrope</workerClass>
+    <symbol>Things/Mote/SpeechSymbols/KindWords</symbol>
+    <initiatorXpGainAmount>15</initiatorXpGainAmount>
+    <recipientXpGainAmount>5</recipientXpGainAmount>
+    <socialFightBaseChance>0.03</socialFightBaseChance>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry-> </li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <ThoughtDef>
+    <defName>RR_TailGropeInitiator</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Felt a tail</label><description>I ran my hands along their tail. It was surprisingly soft.</description><baseMoodEffect>3</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_TailGropeHate</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Tail violated</label><description>They grabbed my TAIL! How DARE they!</description><baseMoodEffect>-15</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_TailGropeDislike</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Tail touched</label><description>They touched my tail without asking. I don't like that.</description><baseMoodEffect>-6</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_TailGropeNeutral</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Tail felt</label><description>They felt my tail. Okay.</description><baseMoodEffect>0</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_TailGropeGood</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Tail stroked</label><description>Their fingers running through my tail fur sent shivers down my spine...</description><baseMoodEffect>5</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_TailGropeGreat</defName>
+    <durationDays>2</durationDays>
+    <stages>
+      <li><label>Tail worshipped</label><description>They treated my tail like the most precious thing in the world. Every stroke was pure bliss.</description><baseMoodEffect>12</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+</Defs>

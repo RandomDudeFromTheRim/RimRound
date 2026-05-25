@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <PipeSystem.PipeNetDef>
+    <defName>RR_FoodNet</defName>
+    <noStorageAlert>true</noStorageAlert>
+    <resource>
+      <name>Liquid food</name>
+      <unit>units</unit>
+      <color>(0.95, 0.90, 0.80)</color>
+      <onlyShowStored>true</onlyShowStored>
+      <offTexPath>Things/Item/Resource/Gluttonium/Gluttonium_a</offTexPath>
+    </resource>
+    <pipeDefs>
+      <li>RR_FoodPipe</li>
+      <li>RR_UndergroundFoodPipe</li>
+    </pipeDefs>
+    <designator>
+      <deconstructIconPath>Things/Building/Production/FoodPipe_MenuIcon</deconstructIconPath>
+    </designator>
+    <overlayOptions>
+      <overlayColor>(0.95, 0.90, 0.80)</overlayColor>
+    </overlayOptions>
+  </PipeSystem.PipeNetDef>
+</Defs>

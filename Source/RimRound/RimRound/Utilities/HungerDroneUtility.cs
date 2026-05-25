@@ -26,7 +26,7 @@ namespace RimRound.Utilities
                 case HungerDroneLevel.Severe:
                     return 3.0f;
                 default:
-                    throw new NotImplementedException();
+                    return 1;
             }
         }
 
@@ -45,7 +45,7 @@ namespace RimRound.Utilities
                 case HungerDroneLevel.Severe:
                     return 3.0f;
                 default:
-                    throw new NotImplementedException();
+                    return 1;
             }
         }
 

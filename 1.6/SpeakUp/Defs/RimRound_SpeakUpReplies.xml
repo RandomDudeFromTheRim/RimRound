@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Fondle replies — recipient responds based on THEIR weight opinion -->
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_FondleReply_Shy</defName>
+    <label>fondle shy reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->D-Don't touch me! Get away!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Um... I'd rather you didn't...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->You're really into this, huh...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Feels nice when you touch me there...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->Y-Yes! Don't stop!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_FondleReply_Eager</defName>
+    <label>fondle eager reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I said STOP touching me!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Yes! Right there!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->More! Touch all of me!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_FondleReply_Fanatical</defName>
+    <label>fondle fanatical reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->KEEP YOUR HANDS TO YOURSELF!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->WORSHIP MY BODY! I AM YOUR GODDESS!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <!-- Smother replies -->
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_SmotherReply_Shy</defName>
+    <label>smother shy reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->G-Get off! You're crushing me!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Too close... please move...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Am I too heavy? Is this okay?</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->You fit so perfectly under me...</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_SmotherReply_Eager</defName>
+    <label>smother eager reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I CAN'T BREATHE! GET OFF!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->I love covering you!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->Feel my weight... let it consume you...</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_SmotherReply_Fanatical</defName>
+    <label>smother fanatical reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Get off! Get off! GET OFF!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->BECOME PART OF ME!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <!-- Explore replies -->
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_ExploreReply_Shy</defName>
+    <label>explore shy reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->Stop poking me!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->You're so soft... it's amazing...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->I've never touched anyone this big...</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_ExploreReply_Eager</defName>
+    <label>explore eager reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->Don't touch me there! OR THERE!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Every inch of you drives me wild!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->I want to memorize every curve!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_ExploreReply_Fanatical</defName>
+    <label>explore fanatical reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->KEEP YOUR HANDS OFF!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->YOUR BODY IS PERFECT! LET ME STUDY EVERY PART!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+    <!-- Tail grope reply templates -->
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_TailGropeReply_Shy</defName>
+    <label>tail grope shy reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->Let GO of my tail!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->You're really into my tail, huh...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Be gentle... it's sensitive...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->Y-Yes! Pull my tail harder!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_TailGropeReply_Eager</defName>
+    <label>tail grope eager reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I SAID STOP! THAT'S MY TAIL!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Yes! Right where it meets the base!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->MORE! DON'T STOP! CLAIM MY TAIL!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_TailGropeReply_Fanatical</defName>
+    <label>tail grope fanatical reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I'LL BITE YOU! LET! GO!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->MY TAIL IS YOURS! WORSHIP IT!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <!-- Wet smother replies -->
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_WetSmotherReply_Shy</defName>
+    <label>wet smother shy reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->Stop! I don't want your milk!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->P-please drink... I want you to have it...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->Drink deeply... let me nourish you...</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_WetSmotherReply_Eager</defName>
+    <label>wet smother eager reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I'm going to be sick! Let me GO!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Drink up! There's plenty more!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->DRINK MY ESSENCE! LET IT FILL YOU!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_WetSmotherReply_Fanatical</defName>
+    <label>wet smother fanatical reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->I didn't ASK for this!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->CONSUME AND GROW! BECOME AS GLORIOUS AS ME!</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+</Defs>

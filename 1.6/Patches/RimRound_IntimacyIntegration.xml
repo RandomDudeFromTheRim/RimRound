@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>LovelyDovey.Sex.WithEuterpe</li>
+    </mods>
+    <match Class="PatchOperationSequence">
+      <operations>
+        <li Class="PatchOperationAddModExtension">
+          <xpath>Defs/InteractionDef[defName="RR_Fondle"]</xpath>
+          <value>
+            <li Class="LoveyDoveySexWithEuterpe.IntimacyModExtension">
+              <intimacyGainPerInteraction>0.03</intimacyGainPerInteraction>
+            </li>
+          </value>
+        </li>
+        <li Class="PatchOperationAddModExtension">
+          <xpath>Defs/InteractionDef[defName="RR_Smother"]</xpath>
+          <value>
+            <li Class="LoveyDoveySexWithEuterpe.IntimacyModExtension">
+              <intimacyGainPerInteraction>0.04</intimacyGainPerInteraction>
+            </li>
+          </value>
+        </li>
+        <li Class="PatchOperationAddModExtension">
+          <xpath>Defs/InteractionDef[defName="RR_Explore"]</xpath>
+          <value>
+            <li Class="LoveyDoveySexWithEuterpe.IntimacyModExtension">
+              <intimacyGainPerInteraction>0.03</intimacyGainPerInteraction>
+            </li>
+          </value>
+        </li>
+        <li Class="PatchOperationAddModExtension">
+          <xpath>Defs/InteractionDef[defName="RR_WetSmother"]</xpath>
+          <value>
+            <li Class="LoveyDoveySexWithEuterpe.IntimacyModExtension">
+              <intimacyGainPerInteraction>0.05</intimacyGainPerInteraction>
+            </li>
+          </value>
+        </li>
+        <li Class="PatchOperationAddModExtension">
+          <xpath>Defs/InteractionDef[defName="RR_TailGrope"]</xpath>
+          <value>
+            <li Class="LoveyDoveySexWithEuterpe.IntimacyModExtension">
+              <intimacyGainPerInteraction>0.02</intimacyGainPerInteraction>
+            </li>
+          </value>
+        </li>
+      </operations>
+    </match>
+  </Operation>
+</Patch>

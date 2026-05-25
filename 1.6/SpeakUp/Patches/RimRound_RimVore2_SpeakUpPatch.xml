@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <!-- RV2_Proposal - Predator proposing vore to prey -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RV2_Proposal"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=15,tag=RV2_Proposal_Kind,INITIATOR_trait==Kind)->I want you inside me. Not to hurt you. To keep you safe. Trust me.</li>
+      <li>r_logentry(p=0.5,priority=18,tag=RV2_Proposal_Bloodlust,INITIATOR_trait==Bloodlust)->I'm going to devour you. Every. Last. Bit. Don't keep me waiting.</li>
+      <li>r_logentry(p=0.5,priority=16,tag=RV2_Proposal_Greedy,INITIATOR_trait==Greedy)->You belong to me now. I'm taking you. All of you.</li>
+      <li>r_logentry(p=0.4,priority=14,tag=RV2_Proposal_Creepy,INITIATOR_trait==CreepyBreathing)->I can already imagine the warmth of you sliding down my throat...</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_Proposal_Psychopath,INITIATOR_trait==Psychopath)->You are a biological resource. I will process you efficiently.</li>
+      <li>r_logentry(p=0.4,priority=10,tag=RV2_Proposal_Nudist,INITIATOR_trait==Nudist)->It's the most natural thing in the world. One body nourishing another.</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RV2_Proposal_Nervous,INITIATOR_trait==Nervous)->I-I know this sounds crazy but... would you let me... consume you?</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_Proposal_Shy,INITIATOR_trait==Shy)->I've been wanting to ask for a while... would you come inside me?</li>
+      <li>r_logentry(p=0.4,priority=13,tag=RV2_Proposal_Smart,INITIATOR_trait==TooSmart)->The efficiency of direct biomass transfer is unparalleled. Join me.</li>
+      <li>r_logentry(p=0.3,priority=7,tag=RV2_Proposal_Wimp,INITIATOR_trait==Wimp)->This is really awkward but... I'm hungry. For you. Specifically.</li>
+      <li>r_logentry(p=0.5,priority=11,tag=RV2_Proposal_Neutral)->I want to vore you. Are you okay with that?</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RV2_Proposal_Undergrounder,INITIATOR_trait==Undergrounder)->The warm dark inside me... it's better than any cave. Come home.</li>
+    </value>
+  </Operation>
+
+  <!-- RV2_FatalVore - Predator fatally consuming prey -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RV2_FatalVore"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=20,tag=RV2_FatalVore_Bloodlust,INITIATOR_trait==Bloodlust)->DELICIOUS. Your struggles only made it better.</li>
+      <li>r_logentry(p=0.4,priority=15,tag=RV2_FatalVore_Kind,INITIATOR_trait==Kind)->I'm sorry it had to end this way. You were brave. Rest inside me now.</li>
+      <li>r_logentry(p=0.5,priority=18,tag=RV2_FatalVore_Greedy,INITIATOR_trait==Greedy)->MINE. Every nutrient, every memory, every fiber. ALL MINE.</li>
+      <li>r_logentry(p=0.4,priority=14,tag=RV2_FatalVore_Creepy,INITIATOR_trait==CreepyBreathing)->I can still feel you moving... wait, that's just my digestion. Or is it?</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_FatalVore_Psychopath,INITIATOR_trait==Psychopath)->Subject processed. Total mass: ingested. Caloric yield: satisfactory.</li>
+      <li>r_logentry(p=0.4,priority=13,tag=RV2_FatalVore_Smart,INITIATOR_trait==TooSmart)->Fascinating. The proteins are already breaking down. You are part of me now.</li>
+      <li>r_logentry(p=0.4,priority=11,tag=RV2_FatalVore_Nudist,INITIATOR_trait==Nudist)->The cycle completes. Your body returns to the world through mine.</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_FatalVore_Shy,INITIATOR_trait==Shy)->I... I actually did it. I'm sorry. I'm so sorry.</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RV2_FatalVore_Wimp,INITIATOR_trait==Wimp)->Oh god... I can feel you settling in my stomach... I think I'm going to be sick.</li>
+      <li>r_logentry(p=0.5,priority=16,tag=RV2_FatalVore_Neutral)->You're inside me now. Forever.</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RV2_FatalVore_Brawler,INITIATOR_trait==Brawler)->Not so tough now, are ya? Heh. Good scrap.</li>
+      <li>r_logentry(p=0.4,priority=17,tag=RV2_FatalVore_Fanatical,INITIATOR_trait==Transhumanist)->Your flesh fuels my ascension. This is evolution.</li>
+    </value>
+  </Operation>
+
+  <!-- RV2_EndoVore - Predator safely containing prey -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RV2_EndoVore"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=15,tag=RV2_EndoVore_Kind,INITIATOR_trait==Kind)->Shhh... you're safe in there. I'll keep you warm and protected.</li>
+      <li>r_logentry(p=0.5,priority=17,tag=RV2_EndoVore_Nudist,INITIATOR_trait==Nudist)->Two bodies, one space. This is intimacy in its purest form.</li>
+      <li>r_logentry(p=0.4,priority=14,tag=RV2_EndoVore_Bloodlust,INITIATOR_trait==Bloodlust)->I can feel every move you make in there. Don't try anything clever.</li>
+      <li>r_logentry(p=0.4,priority=13,tag=RV2_EndoVore_Greedy,INITIATOR_trait==Greedy)->You're my precious treasure. Hidden deep inside where no one can take you.</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_EndoVore_Nervous,INITIATOR_trait==Nervous)->Is it comfortable in there? Not too cramped? Just... tell me if you need out.</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RV2_EndoVore_Creepy,INITIATOR_trait==CreepyBreathing)->I love feeling your heartbeat against my insides. It's soothing.</li>
+      <li>r_logentry(p=0.3,priority=11,tag=RV2_EndoVore_Psychopath,INITIATOR_trait==Psychopath)->Storage capacity: adequate. Preservation conditions: optimal. You may remain.</li>
+      <li>r_logentry(p=0.5,priority=16,tag=RV2_EndoVore_Transhumanist,INITIATOR_trait==Transhumanist)->Our forms merge without destruction. A perfect symbiosis of flesh.</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_EndoVore_Shy,INITIATOR_trait==Shy)->Is this okay? I-I want you close. Really close.</li>
+      <li>r_logentry(p=0.5,priority=12,tag=RV2_EndoVore_Neutral)->I've got you. You're safe inside. Just relax.</li>
+      <li>r_logentry(p=0.4,priority=15,tag=RV2_EndoVore_Undergrounder,INITIATOR_trait==Undergrounder)->The warmth, the darkness, the pressure... this is true shelter.</li>
+    </value>
+  </Operation>
+
+  <!-- RV2_SuccessfulStruggle - Prey escaped predator -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RV2_SuccessfulStruggle"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=18,tag=RV2_Escape_Bloodlust,INITIATOR_trait==Bloodlust)->Next time, I'll be the one doing the eating!</li>
+      <li>r_logentry(p=0.5,priority=15,tag=RV2_Escape_Kind,INITIATOR_trait==Kind)->I'm sorry, I just... I wasn't ready for that. Please understand.</li>
+      <li>r_logentry(p=0.4,priority=14,tag=RV2_Escape_Nervous,INITIATOR_trait==Nervous)->I can't believe that worked! I'm out! I'M OUT!</li>
+      <li>r_logentry(p=0.4,priority=13,tag=RV2_Escape_Wimp,INITIATOR_trait==Wimp)->That was the most terrifying experience of my life. Never again.</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RV2_Escape_Psychopath,INITIATOR_trait==Psychopath)->Escape successful. Note: digestive fluids mildly irritating to epidermis.</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_Escape_Brawler,INITIATOR_trait==Brawler)->You gotta work on them stomach muscles! Too weak to hold me!</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_Escape_Shy,INITIATOR_trait==Shy)->I-I didn't mean to hurt you on the way out. Are you okay?</li>
+      <li>r_logentry(p=0.4,priority=11,tag=RV2_Escape_Smart,INITIATOR_trait==TooSmart)->Your esophageal sphincter has surprisingly low tensile strength. Noted.</li>
+      <li>r_logentry(p=0.5,priority=16,tag=RV2_Escape_Neutral)->I'm free. You couldn't keep me down.</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RV2_Escape_Nudist,INITIATOR_trait==Nudist)->Covered in your insides... I feel strangely connected to you now.</li>
+    </value>
+  </Operation>
+
+  <!-- RV2_FailedStruggle - Prey failed to escape -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RV2_FailedStruggle"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=16,tag=RV2_FailEscape_Bloodlust,INITIATOR_trait==Bloodlust)->I'll get out eventually! And when I do...!</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_FailEscape_Kind,INITIATOR_trait==Kind)->Please... let me go. I don't want to fight you.</li>
+      <li>r_logentry(p=0.5,priority=14,tag=RV2_FailEscape_Nervous,INITIATOR_trait==Nervous)->No no no no no! I can't be stuck in here!</li>
+      <li>r_logentry(p=0.4,priority=11,tag=RV2_FailEscape_Wimp,INITIATOR_trait==Wimp)->I'm too weak... I can't... I can't get out...</li>
+      <li>r_logentry(p=0.4,priority=10,tag=RV2_FailEscape_Psychopath,INITIATOR_trait==Psychopath)->Attempt failed. Reassessing containment breach protocols.</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_FailEscape_Brawler,INITIATOR_trait==Brawler)->Lemme at 'em! I'll punch my way outta here!</li>
+      <li>r_logentry(p=0.4,priority=13,tag=RV2_FailEscape_Shy,INITIATOR_trait==Shy)->I... I tried my best. I'm sorry.</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RV2_FailEscape_Smart,INITIATOR_trait==TooSmart)->The coefficient of friction is too high. I need more leverage.</li>
+      <li>r_logentry(p=0.5,priority=15,tag=RV2_FailEscape_Neutral)->Not like this. I'm not giving up.</li>
+      <li>r_logentry(p=0.4,priority=14,tag=RV2_FailEscape_Undergrounder,INITIATOR_trait==Undergrounder)->The belly is a strange dark... but I've survived worse tunnels.</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RV2_FailEscape_Nudist,INITIATOR_trait==Nudist)->Warm. Tight. I can feel your heartbeat all around me...</li>
+    </value>
+  </Operation>
+
+  <!-- RV2_ActiveStruggle - Prey struggling inside predator -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RV2_ActiveStruggle"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=14,tag=RV2_Struggle_Bloodlust,INITIATOR_trait==Bloodlust)->LEMME OUT! I'LL CHEW MY WAY THROUGH IF I HAVE TO!</li>
+      <li>r_logentry(p=0.4,priority=11,tag=RV2_Struggle_Nervous,INITIATOR_trait==Nervous)->It's so tight in here... I can barely breathe!</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_Struggle_Wimp,INITIATOR_trait==Wimp)->Please... I'm getting tired... just let me rest...</li>
+      <li>r_logentry(p=0.5,priority=13,tag=RV2_Struggle_Kind,INITIATOR_trait==Kind)->I know you can hear me in there! Let's talk about this!</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_Struggle_Brawler,INITIATOR_trait==Brawler)->Take THIS! And THAT! How d'ya like THEESE fists on yer guts?!</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RV2_Struggle_Shy,INITIATOR_trait==Shy)->Um... excuse me? Could you... let me out please?</li>
+      <li>r_logentry(p=0.4,priority=10,tag=RV2_Struggle_Smart,INITIATOR_trait==TooSmart)->If I apply pressure here and here simultaneously... the wall should give.</li>
+      <li>r_logentry(p=0.3,priority=7,tag=RV2_Struggle_Psychopath,INITIATOR_trait==Psychopath)->Struggling. Digesting. Either outcome is acceptable data.</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_Struggle_Neutral)->I'm getting out of here. One way or another.</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RV2_Struggle_Nudist,INITIATOR_trait==Nudist)->This is so intimate... I can feel the shape of your stomach around me...</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_Struggle_Undergrounder,INITIATOR_trait==Undergrounder)->The walls pulse. It's alive in here. Like a cave that breathes.</li>
+    </value>
+  </Operation>
+
+  <!-- RV2_SwitchedGoal - Predator changed vore plan -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RV2_SwitchedGoal"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=14,tag=RV2_Switch_Kind,INITIATOR_trait==Kind)->I changed my mind. I'll keep you safe inside instead. You deserve better.</li>
+      <li>r_logentry(p=0.5,priority=16,tag=RV2_Switch_Bloodlust,INITIATOR_trait==Bloodlust)->New plan. I'm going to savor you slowly instead.</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_Switch_Psychopath,INITIATOR_trait==Psychopath)->Goal recalibrated. Processing method: updated.</li>
+      <li>r_logentry(p=0.4,priority=11,tag=RV2_Switch_Creepy,INITIATOR_trait==CreepyBreathing)->I changed my mind about what I want to do with you... for now.</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_Switch_Nervous,INITIATOR_trait==Nervous)->Actually... I think I'd feel better if I just held you for a while.</li>
+      <li>r_logentry(p=0.4,priority=10,tag=RV2_Switch_Smart,INITIATOR_trait==TooSmart)->Upon further analysis, a non-terminal arrangement serves our mutual interests.</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RV2_Switch_Wimp,INITIATOR_trait==Wimp)->I can't go through with it. I'm sorry. You're safe.</li>
+      <li>r_logentry(p=0.5,priority=13,tag=RV2_Switch_Neutral)->New plan. You're staying whole. For now.</li>
+      <li>r_logentry(p=0.4,priority=15,tag=RV2_Switch_Greedy,INITIATOR_trait==Greedy)->I want to keep you intact. A living trophy. You should be grateful.</li>
+    </value>
+  </Operation>
+
+  <!-- RV2_Feeding_Predator - Someone fed prey to this pawn -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RV2_Feeding_Predator"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=14,tag=RV2_FeedPred_Kind,INITIATOR_trait==Kind)->Here. Eat. You need your strength. I'll take care of the scraps.</li>
+      <li>r_logentry(p=0.5,priority=16,tag=RV2_FeedPred_Bloodlust,INITIATOR_trait==Bloodlust)->Fresh meat, just for you. Enjoy every bite.</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_FeedPred_Psychopath,INITIATOR_trait==Psychopath)->Nutritional delivery for predator unit. Consume at your leisure.</li>
+      <li>r_logentry(p=0.4,priority=11,tag=RV2_FeedPred_Greedy,INITIATOR_trait==Greedy)->I brought you a gift. Don't waste it. Resources are precious.</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_FeedPred_Nervous,INITIATOR_trait==Nervous)->I-I brought you something to eat. I hope it's to your liking...</li>
+      <li>r_logentry(p=0.4,priority=13,tag=RV2_FeedPred_Smart,INITIATOR_trait==TooSmart)->Caloric transfer initiated. Ensure complete mastication for optimal digestion.</li>
+      <li>r_logentry(p=0.5,priority=15,tag=RV2_FeedPred_Neutral)->Here. Eat up. I found you a good one.</li>
+    </value>
+  </Operation>
+
+  <!-- RV2_Feeding_Prey - Someone fed this pawn as prey to another -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RV2_Feeding_Prey"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=15,tag=RV2_FeedPrey_Apologetic,INITIATOR_trait==Kind)->I'm sorry. Truly. But this is how it has to be. For the colony.</li>
+      <li>r_logentry(p=0.5,priority=17,tag=RV2_FeedPrey_Bloodlust,INITIATOR_trait==Bloodlust)->You're the offering. Be honored. You serve a greater purpose.</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RV2_FeedPrey_Psychopath,INITIATOR_trait==Psychopath)->You are being reassigned from colonist to nutrient source.</li>
+      <li>r_logentry(p=0.4,priority=11,tag=RV2_FeedPrey_Greedy,INITIATOR_trait==Greedy)->I got a good trade for you. Don't make me look bad.</li>
+      <li>r_logentry(p=0.4,priority=13,tag=RV2_FeedPrey_Smart,INITIATOR_trait==TooSmart)->Your biomass serves the colony more efficiently as predator fuel. Simple math.</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RV2_FeedPrey_Nervous,INITIATOR_trait==Nervous)->I know this is awful. I argued against it. I'm so sorry.</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RV2_FeedPrey_Wimp,INITIATOR_trait==Wimp)->I... I have to do this. Please don't hate me.</li>
+      <li>r_logentry(p=0.5,priority=14,tag=RV2_FeedPrey_Neutral)->You're being fed to the predator. It's nothing personal.</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RV2_FeedPrey_Nudist,INITIATOR_trait==Nudist)->The circle of life. You become part of them, they become part of the colony.</li>
+    </value>
+  </Operation>
+</Patch>

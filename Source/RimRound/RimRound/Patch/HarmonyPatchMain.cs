@@ -60,6 +60,26 @@ namespace RimRound.Patch
                 new ModPatchInfo("Vehicle Framework", "Vehicles.CaravanHelper", "MakeVehicleCaravan", MethodType.Normal),
                 VehicleFramework_CaravanHelper_MakeVehicleCaravan_ChangeDietMode.GetPatchCollection());
 
+            ModCompatibilityUtility.TryPatch(
+                harmony,
+                new ModPatchInfo("Intimacy - A Lovin' Expansion", "LoveyDoveySexWithEuterpe.Need_Intimacy", "NeedInterval", MethodType.Normal),
+                new PatchCollection
+                {
+                    postfix = typeof(Comps.Comp_GluttoniumArousal).GetMethod("Postfix_NeedInterval", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)
+                });
+
+            ModCompatibilityUtility.TryPatch(
+                harmony,
+                new ModPatchInfo("Intimacy - Socio Butterfly", "RecreationalSexWithEuterpe.InteractionWorker_StartConversation", "RandomSelectionWeight", MethodType.Normal),
+                new PatchCollection
+                {
+                    postfix = typeof(Comps.Comp_GluttoniumForceFeed).GetMethod("Postfix_SelectionWeight", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)
+                });
+
+            Comps.Comp_LactationIntegration.PatchAll(harmony);
+            Comps.Comp_ObeliskIntegration.PatchAll(harmony);
+            Comps.Comp_RV2Integration.PatchAll(harmony);
+
             //  This mod is stuck in 1.4
             //  ModCompatibilityUtility.TryPatch(
             //	harmony,

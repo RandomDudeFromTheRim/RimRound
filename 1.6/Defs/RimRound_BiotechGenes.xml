@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Slow Metabolism: less hunger, more weight gain. For weight-likers -->
+  <GeneDef >
+    <defName>RR_SlowMetabolism</defName>
+    <label>slow metabolism</label>
+    <labelShortAdj>slow-metabolism</labelShortAdj>
+    <description>Carriers of this gene have an exceptionally efficient metabolism. They need less food to maintain their energy, but any excess is stored as body mass much more effectively. Weight gain comes easily; weight loss is difficult.</description>
+    <iconPath>UI/Icons/Genes/Gene_NightOwl</iconPath>
+    <displayOrderInCategory>9999</displayOrderInCategory>
+    <displayCategory>Movement</displayCategory>
+    <exclusionTags>
+      <li>MetabolismRate</li>
+    </exclusionTags>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <customEffectDescriptions>
+      <li>Hunger rate -30%</li>
+      <li>Weight gain +50%</li>
+    </customEffectDescriptions>
+  </GeneDef>
+
+  <!-- Fast Metabolism: more hunger, less weight gain. For weight-haters -->
+  <GeneDef >
+    <defName>RR_FastMetabolism</defName>
+    <label>fast metabolism</label>
+    <labelShortAdj>fast-metabolism</labelShortAdj>
+    <description>Carriers of this gene have a hyperactive metabolism. They burn through food quickly and need to eat frequently, but have difficulty maintaining body mass. Weight loss comes easily; weight gain is an uphill battle.</description>
+    <iconPath>UI/Icons/Genes/Gene_SuperfastHealing</iconPath>
+    <displayOrderInCategory>9998</displayOrderInCategory>
+    <displayCategory>Movement</displayCategory>
+    <exclusionTags>
+      <li>MetabolismRate</li>
+    </exclusionTags>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <customEffectDescriptions>
+      <li>Hunger rate +40%</li>
+      <li>Weight gain -40%</li>
+    </customEffectDescriptions>
+  </GeneDef>
+
+  <!-- Dense Bones: extra blunt armor, minor move penalty. Synergizes with weight armor -->
+  <GeneDef >
+    <defName>RR_DenseBones</defName>
+    <label>dense bones</label>
+    <labelShortAdj>dense-boned</labelShortAdj>
+    <description>Carriers of this gene have unusually dense, heavy bones. This provides natural protection against blunt force, but makes the carrier heavier and slightly slower. The protection stacks with natural body mass, making larger carriers exceptionally durable.</description>
+    <iconPath>UI/Icons/Genes/Gene_StrongImmunity</iconPath>
+    <displayOrderInCategory>9997</displayOrderInCategory>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <statOffsets>
+      <ArmorRating_Blunt>0.10</ArmorRating_Blunt>
+      <MoveSpeed>-0.10</MoveSpeed>
+    </statOffsets>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <customEffectDescriptions>
+      <li>+10% blunt armor</li>
+      <li>-0.10 move speed</li>
+    </customEffectDescriptions>
+  </GeneDef>
+
+  <!-- Calorie Dumping: allows the pawn to rapidly lose weight by dumping excess calories as heat -->
+  <GeneDef >
+    <defName>RR_CalorieDumping</defName>
+    <label>calorie dumping</label>
+    <labelShortAdj>calorie-dumping</labelShortAdj>
+    <description>Carriers of this gene can consciously dump excess calories as body heat. This makes them resistant to cold environments but causes them to overheat faster in warm climates. Dumping calories also reduces weight gain from meals.</description>
+    <iconPath>UI/Icons/Genes/Gene_ColdRelaxed</iconPath>
+    <displayOrderInCategory>9996</displayOrderInCategory>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <statOffsets>
+      <ComfyTemperatureMin>-10</ComfyTemperatureMin>
+      <ComfyTemperatureMax>-8</ComfyTemperatureMax>
+    </statOffsets>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <customEffectDescriptions>
+      <li>Cold tolerance +10°C</li>
+      <li>Heat tolerance -8°C</li>
+      <li>Weight gain -30% from meals</li>
+    </customEffectDescriptions>
+  </GeneDef>
+
+  <!-- Nutrient Storage: acts as a biological feeding implant. The pawn stores excess nutrition in specialized tissue -->
+  <GeneDef >
+    <defName>RR_NutrientStorage</defName>
+    <label>nutrient storage</label>
+    <labelShortAdj>nutrient-storing</labelShortAdj>
+    <description>Carriers of this gene have specialized tissue that stores excess nutrients for later use. They need to eat less frequently and can go longer between meals. The stored nutrients contribute to body mass, making weight gain more noticeable.</description>
+    <iconPath>UI/Icons/Genes/Gene_Archite</iconPath>
+    <displayOrderInCategory>9995</displayOrderInCategory>
+    <displayCategory>Movement</displayCategory>
+    <exclusionTags>
+      <li>MetabolismRate</li>
+    </exclusionTags>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <customEffectDescriptions>
+      <li>Hunger rate -50%</li>
+      <li>Can go longer between meals</li>
+      <li>Weight gain +40%</li>
+    </customEffectDescriptions>
+  </GeneDef>
+</Defs>

@@ -61,14 +61,24 @@ namespace RimRound.Comps
 
         float GetWeightOpinionFloatChange(Pawn initiator, Pawn recipient)
         {
-            throw new NotImplementedException();
+            ThingComp_PawnAttitude attitude = recipient.TryGetComp<ThingComp_PawnAttitude>();
+            if (attitude is null)
+                return 0;
+
+            float baseChange = initiator.skills?.GetSkill(SkillDefOf.Social)?.Level ?? 5;
+            return baseChange * 10f;
         }
 
 
         /// <returns>true if pawn opinion is changed successfully, false otherwise.</returns>
         bool AttemptConversion(Pawn initiator, Pawn recipient, float amountToChangeBy) 
         {
-            throw new NotImplementedException();
+            ThingComp_PawnAttitude attitude = recipient.TryGetComp<ThingComp_PawnAttitude>();
+            if (attitude is null)
+                return false;
+
+            attitude.WeightOpinionFloat += amountToChangeBy;
+            return true;
         }
 
         public override void Apply(GlobalTargetInfo target)

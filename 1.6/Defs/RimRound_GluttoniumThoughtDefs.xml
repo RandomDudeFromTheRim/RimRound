@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThoughtDef>
+    <defName>RR_GluttoniumExposure_Hate</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_GluttoniumExposure</workerClass>
+    <stages>
+      <li><label>Unsettling glow</label><description>That gluttonium ore makes my skin crawl...</description><baseMoodEffect>-20</baseMoodEffect></li>
+      <li><label>Nauseating presence</label><description>I feel sick being near this horrible stuff.</description><baseMoodEffect>-25</baseMoodEffect></li>
+      <li><label>Get it away!</label><description>I can feel it seeping into me! Get it away!</description><baseMoodEffect>-30</baseMoodEffect></li>
+      <li><label>Torment</label><description>Every moment near this ore is pure torment!</description><baseMoodEffect>-40</baseMoodEffect></li>
+      <li><label>Agony</label><description>The gluttonium is FILLING me! I can't stop it!</description><baseMoodEffect>-50</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_GluttoniumExposure_Dislike</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_GluttoniumExposure</workerClass>
+    <stages>
+      <li><label>Weird feeling</label><description>Something about that ore feels wrong...</description><baseMoodEffect>-8</baseMoodEffect></li>
+      <li><label>Getting heavier</label><description>Is it just me or did I get heavier near that ore?</description><baseMoodEffect>-12</baseMoodEffect></li>
+      <li><label>Uncomfortable swell</label><description>I feel uncomfortably full... must be that ore.</description><baseMoodEffect>-16</baseMoodEffect></li>
+      <li><label>Bloated</label><description>I'm getting bloated from this exposure! I hate it!</description><baseMoodEffect>-20</baseMoodEffect></li>
+      <li><label>Burdened</label><description>This weight is unbearable...</description><baseMoodEffect>-25</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_GluttoniumExposure_NeutralMinus</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_GluttoniumExposure</workerClass>
+    <stages>
+      <li><label>Warmth</label><description>I feel a strange warmth near that ore...</description><baseMoodEffect>-3</baseMoodEffect></li>
+      <li><label>Heavy feeling</label><description>Something's making me feel heavier than usual...</description><baseMoodEffect>-5</baseMoodEffect></li>
+      <li><label>Growing</label><description>I think I'm getting bigger. Not sure how I feel.</description><baseMoodEffect>-8</baseMoodEffect></li>
+      <li><label>Blobish</label><description>I'm definitely larger than before. Huh.</description><baseMoodEffect>-10</baseMoodEffect></li>
+      <li><label>Spilling over</label><description>I can't stop growing near this stuff...</description><baseMoodEffect>-15</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_GluttoniumExposure_Neutral</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_GluttoniumExposure</workerClass>
+    <stages>
+      <li><label>Warmth</label><description>I feel a strange warmth near that ore...</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Heavy feeling</label><description>Something's making me feel heavier than usual.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Growing</label><description>I think I'm getting bigger. Not sure how I feel.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Full</label><description>I'm definitely larger than before.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Spilling over</label><description>I can't stop growing near this stuff...</description><baseMoodEffect>0</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_GluttoniumExposure_NeutralPlus</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_GluttoniumExposure</workerClass>
+    <stages>
+      <li><label>Cozy warmth</label><description>The warmth from the ore feels... nice.</description><baseMoodEffect>3</baseMoodEffect></li>
+      <li><label>Comfortably full</label><description>I feel comfortably stuffed just being near it.</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Pleasantly plump</label><description>I like how I'm filling out...</description><baseMoodEffect>8</baseMoodEffect></li>
+      <li><label>Growing nicely</label><description>More of me to love! This ore is wonderful!</description><baseMoodEffect>12</baseMoodEffect></li>
+      <li><label>Blissful bloating</label><description>I can't stop growing and it feels amazing!</description><baseMoodEffect>15</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_GluttoniumExposure_Like</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_GluttoniumExposure</workerClass>
+    <stages>
+      <li><label>Exciting warmth</label><description>This ore is making me tingle! In a good way!</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Getting bigger!</label><description>Yes! I can feel myself expanding!</description><baseMoodEffect>10</baseMoodEffect></li>
+      <li><label>So satisfying</label><description>The feeling of filling out is so satisfying!</description><baseMoodEffect>15</baseMoodEffect></li>
+      <li><label>Wonderful growth</label><description>I love how much bigger I'm getting!</description><baseMoodEffect>20</baseMoodEffect></li>
+      <li><label>Ecstasy!</label><description>Keep growing! Keep filling! More!</description><baseMoodEffect>30</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_GluttoniumExposure_Love</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_GluttoniumExposure</workerClass>
+    <stages>
+      <li><label>Intoxicating warmth</label><description>The ore's embrace is pure bliss...</description><baseMoodEffect>10</baseMoodEffect></li>
+      <li><label>Expanding with joy</label><description>Every moment near the ore makes me swell with happiness!</description><baseMoodEffect>15</baseMoodEffect></li>
+      <li><label>Blissful bulk</label><description>I can't get enough of this growth!</description><baseMoodEffect>22</baseMoodEffect></li>
+      <li><label>Heavenly heaviness</label><description>The weight gain is divine!</description><baseMoodEffect>30</baseMoodEffect></li>
+      <li><label>Transcendent</label><description>I want to become a monument to gluttony!</description><baseMoodEffect>40</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_GluttoniumExposure_Fanatical</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_GluttoniumExposure</workerClass>
+    <stages>
+      <li><label>Call of the void</label><description>The ore is speaking to me... I must consume more!</description><baseMoodEffect>15</baseMoodEffect></li>
+      <li><label>Becoming more</label><description>Every pound is a blessing from the gluttonium!</description><baseMoodEffect>22</baseMoodEffect></li>
+      <li><label>Glorious expansion</label><description>I am becoming something greater! Larger!</description><baseMoodEffect>30</baseMoodEffect></li>
+      <li><label>Limitless growth</label><description>There is no limit to what I can become!</description><baseMoodEffect>40</baseMoodEffect></li>
+      <li><label>Transcendence</label><description>I WILL BECOME THE BLOB! GLORY TO THE GLUTTONIUM!</description><baseMoodEffect>50</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_WasForceFed</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Overfed</label><description>I was force-fed by someone. I feel so stuffed...</description></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <!-- Vore integration thoughts -->
+  <ThoughtDef>
+    <defName>RR_VoredFatPredator</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Ate well</label><description>Such a substantial meal! Delicious.</description><baseMoodEffect>5</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoredThinPredator</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Disappointing meal</label><description>Barely a mouthful. What a waste.</description><baseMoodEffect>-5</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoredByAdmirer</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Wanted</label><description>They wanted ALL of me. I feel desired.</description><baseMoodEffect>4</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoredByHater</defName>
+    <durationDays>2</durationDays>
+    <stages>
+      <li><label>Devoured by disgust</label><description>They couldn't stand to look at me, so they ATE me. I'm nothing to them.</description><baseMoodEffect>-12</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_ForceFed</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Fed them</label><description>I made sure they got their fill.</description></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <!-- Lactation integration thoughts -->
+  <ThoughtDef>
+    <defName>RR_MilkedHate</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Forcibly milked</label><description>They took my milk against my will! I feel used!</description><baseMoodEffect>-12</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_MilkedLove</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Milked with care</label><description>Being milked feels so right...</description><baseMoodEffect>8</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_MilkedOthersFanatical</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Spreading the milk</label><description>Everyone deserves to be milked. I'm doing holy work.</description><baseMoodEffect>5</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+</Defs>

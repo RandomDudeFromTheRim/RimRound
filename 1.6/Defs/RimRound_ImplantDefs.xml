@@ -359,5 +359,82 @@
 			<li>Brain</li>
 		</appliedOnFixedBodyParts>
 		<addsHediff>RR_AIEncouragementChipHediff</addsHediff>
-	</RecipeDef>	
+	</RecipeDef>
+
+	<!-- Nutrient Recycling Implant — passively feeds the pawn so they don't stop for meals -->
+	<HediffDef ParentName="RR_AddedBodyPartBase">
+		<defName>RR_NutrientRecyclerHediff</defName>
+		<label>nutrient recycler</label>
+		<labelNoun>a nutrient recycler</labelNoun>
+		<hediffClass>RimRound.Hediffs.Hediff_FeedingImplant</hediffClass>
+		<description>An installed nutrient recycler.</description>
+		<descriptionHyperlinks><ThingDef>RR_NutrientRecycler</ThingDef></descriptionHyperlinks>
+		<spawnThingOnRemoved>RR_NutrientRecycler</spawnThingOnRemoved>
+		<addedPartProps>
+			<solid>true</solid>
+			<betterThanNatural>true</betterThanNatural>
+			<partEfficiency>1.0</partEfficiency>
+		</addedPartProps>
+		<stages>
+			<li>
+				<hungerRateFactor>0.5</hungerRateFactor>
+			</li>
+		</stages>
+	</HediffDef>
+
+	<ThingDef ParentName="RimRound_BodyPartBionicBase">
+		<defName>RR_NutrientRecycler</defName>
+		<label>nutrient recycler</label>
+		<description>A bionic stomach implant that constantly extracts and recycles nutrients from the digestive tract, smoothing out hunger dips and reducing the need to stop for meals. Also works with liquid food networks for continuous feeding. Pawns with this implant spend less time walking to the kitchen and more time working.</description>
+		<graphicData>
+			<texPath>Things/Item/Equipment/NovaTech/NUTRIENT_RECYCLER</texPath>
+		</graphicData>
+		<statBases>
+			<WorkToMake>18000</WorkToMake>
+			<MarketValue>1200</MarketValue>
+			<Mass>1.5</Mass>
+			<MaxHitPoints>100</MaxHitPoints>
+		</statBases>
+		<costList>
+			<Plasteel>30</Plasteel>
+			<ComponentSpacer>12</ComponentSpacer>
+			<RR_Gluttonium>10</RR_Gluttonium>
+		</costList>
+		<recipeMaker>
+			<skillRequirements>
+				<Crafting>9</Crafting>
+			</skillRequirements>
+			<researchPrerequisite>RR_Research_GlutoniumEnrichedFoods</researchPrerequisite>
+		</recipeMaker>
+	</ThingDef>
+
+	<RecipeDef ParentName="SurgeryInstallBodyPartArtificialBase">
+		<defName>RR_InstallNutrientRecycler</defName>
+		<label>install nutrient recycler</label>
+		<description>Install a nutrient recycler implant.</description>
+		<descriptionHyperlinks>
+			<ThingDef>RR_NutrientRecycler</ThingDef>
+			<HediffDef>RR_NutrientRecyclerHediff</HediffDef>
+		</descriptionHyperlinks>
+		<jobString>Installing nutrient recycler.</jobString>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>RR_NutrientRecycler</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>RR_NutrientRecycler</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<appliedOnFixedBodyParts>
+			<li>Stomach</li>
+		</appliedOnFixedBodyParts>
+		<addsHediff>RR_NutrientRecyclerHediff</addsHediff>
+	</RecipeDef>
 </Defs>

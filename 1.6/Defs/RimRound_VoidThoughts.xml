@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThoughtDef>
+    <defName>RR_VoidFascinationThought</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_WeightOpinion_Hate</workerClass>
+    <stages>
+      <li><label>Empty</label><description>The void showed me... nothing. Just emptiness. Maybe I should eat to fill the void inside.</description><baseMoodEffect>-3</baseMoodEffect></li>
+      <li><label>Whispers</label><description>The void whispers of endless feasts. Mountains of food. Oceans of milk. I want it all.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Hunger</label><description>I saw myself in the void. I was infinite. Expanding forever. Consuming stars. I need to EAT.</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Insatiable</label><description>GROW. CONSUME. EXPAND. The void showed me what I can become. Nothing will stop me!</description><baseMoodEffect>12</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_MeldGrowthThought</defName>
+    <thoughtClass>Thought_Memory</thoughtClass>
+    <durationDays>0.083</durationDays>
+    <stages>
+      <li><label>Tingling</label><description>Something is moving inside me... it tickles.</description><baseMoodEffect>-2</baseMoodEffect></li>
+      <li><label>Warm expansion</label><description>The warmth inside is spreading. I feel myself getting heavier. Fuller.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Pleasurable swelling</label><description>Every moment the meld grows, I feel more... complete. Is this what I was missing?</description><baseMoodEffect>4</baseMoodEffect></li>
+      <li><label>Blissful merger</label><description>I don't know where I end and the meld begins. We are becoming something beautiful together.</description><baseMoodEffect>10</baseMoodEffect></li>
+      <li><label>Ecstatic union</label><description>THE VOID FLOWS THROUGH ME. I AM BECOMING INFINITE. MELD WITH ME. GROW WITH ME. YES!</description><baseMoodEffect>20</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+</Defs>

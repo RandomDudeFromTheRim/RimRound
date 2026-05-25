@@ -25,5 +25,12 @@ namespace RimRound.Defs
         public static HediffDef RimRound_HediffGenevaSuggestion;
         public static HediffDef RimRound_HediffFoodIsFood;
         public static HediffDef RimRound_HediffHealthyFrame;
+        public static HediffDef RR_GluttoniumExposure;
+        public static HediffDef RR_MeldGrowth;
+        public static HediffDef RR_VoidWarmth;
+        public static HediffDef RR_VoidFascination;
+        public static HediffDef RR_MeldOvergrowth;
+        public static HediffDef RR_MeldAerosol;
+        public static HediffDef RR_BloatedDeathAffliction;
     }
 }

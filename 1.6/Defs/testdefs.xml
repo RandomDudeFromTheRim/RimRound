@@ -15,7 +15,6 @@
       <!--color>(68,83,68)</color>
       <colorTwo>(30,173,25)</colorTwo-->
     </graphicData>
-    <category>Building</category>
     <selectable>true</selectable>
     <drawerType>MapMeshOnly</drawerType>
 
@@ -26,7 +25,7 @@
     <passability>Impassable</passability>
     <blockWind>true</blockWind>
     <castEdgeShadows>true</castEdgeShadows>
-    <fillPercent>1</fillPercent>
+    <fillPercent>0.5</fillPercent>
     <coversFloor>true</coversFloor>
     <neverMultiSelect>true</neverMultiSelect>
     <rotatable>false</rotatable>
@@ -40,15 +39,6 @@
 		<MaxHitPoints>1500</MaxHitPoints>
 		<Flammability>0</Flammability>
     </statBases>
-    <building>
-      <isInert>true</isInert>
-      <isNaturalRock>false</isNaturalRock>
-      <canBuildNonEdificesUnder>false</canBuildNonEdificesUnder>
-      <deconstructible>true</deconstructible>
-      <destroyShakeAmount>0</destroyShakeAmount>
-	  <isResourceRock>false</isResourceRock>
-
-    </building>
     <damageMultipliers>
       <li>
         <damageDef>Thump</damageDef>

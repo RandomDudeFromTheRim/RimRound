@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <HediffDef>
+    <defName>RR_MeldOvergrowth</defName>
+    <label>meld overgrowth</label>
+    <description>The melded flesh has overtaken the body's natural mass. It squirms and writhes independently. If left unchecked, it will consume the host entirely.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_MeldOvergrowth</hediffClass>
+    <isBad>true</isBad>
+    <maxSeverity>2.0</maxSeverity>
+    <stages>
+      <li>
+        <minSeverity>0</minSeverity>
+        <label>tingling</label>
+        <partEfficiencyOffset>-0.02</partEfficiencyOffset>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.05</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>squirming</label>
+        <partEfficiencyOffset>-0.05</partEfficiencyOffset>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.10</offset></li>
+          <li><capacity>Manipulation</capacity><offset>-0.05</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>0.8</minSeverity>
+        <label>leaking</label>
+        <partEfficiencyOffset>-0.10</partEfficiencyOffset>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.15</offset></li>
+          <li><capacity>Manipulation</capacity><offset>-0.10</offset></li>
+          <li><capacity>Eating</capacity><offset>-0.10</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>1.2</minSeverity>
+        <label>consuming</label>
+        <partEfficiencyOffset>-0.20</partEfficiencyOffset>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.25</offset></li>
+          <li><capacity>Manipulation</capacity><offset>-0.15</offset></li>
+          <li><capacity>Eating</capacity><offset>-0.15</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>1.6</minSeverity>
+        <label>DREADMELD</label>
+        <partEfficiencyOffset>-0.40</partEfficiencyOffset>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.50</offset></li>
+          <li><capacity>Manipulation</capacity><offset>-0.30</offset></li>
+          <li><capacity>Eating</capacity><offset>-0.30</offset></li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+</Defs>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_BlobWall</defName>
+    <thingClass>Building</thingClass>
+    <category>Building</category>
+    <label>blob wall</label>
+    <description>A pulsating wall of organic matter. Warm and slightly moist to the touch. It throbs gently, as if breathing.</description>
+    <selectable>true</selectable>
+    <neverMultiSelect>true</neverMultiSelect>
+    <stuffCategories />
+    <graphicData>
+      <texPath>WIP/Skin_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>CutoutComplex</shaderType>
+      <linkType>CornerFiller</linkType>
+      <linkFlags>
+        <li>Custom2</li>
+      </linkFlags>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>false</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <coversFloor>false</coversFloor>
+    <rotatable>false</rotatable>
+    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+    <holdsRoof>true</holdsRoof>
+    <blockLight>true</blockLight>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <fertility>0</fertility>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <filthLeaving>Filth_Fleshmass</filthLeaving>
+    <soundImpactDefault>Fleshmass_Damaged</soundImpactDefault>
+    <autoTargetNearbyIdenticalThings>true</autoTargetNearbyIdenticalThings>
+    <statBases>
+      <MaxHitPoints>80</MaxHitPoints>
+      <Flammability>0.7</Flammability>
+      <Beauty>-6</Beauty>
+    </statBases>
+    <building>
+      <isNaturalRock>false</isNaturalRock>
+      <isInert>true</isInert>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+      <destroyEffecter>FleshmassDestroyed</destroyEffecter>
+      <destroyShakeAmount>0</destroyShakeAmount>
+      <quickTargetable>true</quickTargetable>
+    </building>
+    <comps>
+      <li Class="RimRound.Comps.CompProperties_GluttoniumRadiation">
+        <radius>1.5</radius>
+        <exposurePerTick>0.002</exposurePerTick>
+        <tickInterval>500</tickInterval>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- Mineable blob wall that drops void gluttonium -->
+  <ThingDef>
+    <defName>RR_BlobWallMineable</defName>
+    <label>void blob wall</label>
+    <description>A thicker, vein-ridden section of blob wall. Pulses with a purple glow. Can be mined for void gluttonium.</description>
+    <thingClass>Mineable</thingClass>
+    <graphicData>
+      <texPath>WIP/Skin_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>CutoutComplex</shaderType>
+      <color>(150,50,180)</color>
+      <drawSize>(1,1)</drawSize>
+    </graphicData>
+    <stuffCategories />
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>0.5</fillPercent>
+    <coversFloor>true</coversFloor>
+    <rotatable>false</rotatable>
+    <holdsRoof>true</holdsRoof>
+    <blockLight>true</blockLight>
+    <fertility>0</fertility>
+    <statBases>
+      <MaxHitPoints>2000</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <mineable>true</mineable>
+    <building>
+      <isNaturalRock>false</isNaturalRock>
+      <isResourceRock>true</isResourceRock>
+      <isInert>true</isInert>
+      <mineableThing>RR_VoidGluttonium</mineableThing>
+      <mineableYield>2</mineableYield>
+    </building>
+    <comps>
+      <li Class="CompProperties_Glower">
+        <glowRadius>3</glowRadius>
+        <glowColor>(180,40,180,0)</glowColor>
+      </li>
+      <li Class="RimRound.Comps.CompProperties_GluttoniumRadiation">
+        <radius>3</radius>
+        <exposurePerTick>0.008</exposurePerTick>
+        <tickInterval>250</tickInterval>
+      </li>
+    </comps>
+  </ThingDef>
+</Defs>

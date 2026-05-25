@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <HediffDef>
+    <defName>RR_MeldGrowth</defName>
+    <label>meld growth</label>
+    <description>A fleshmass entity has merged with your body. It's filling you from within, adding mass and weight at an unnatural rate.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_MeldGrowth</hediffClass>
+    <isBad>true</isBad>
+    <maxSeverity>10.0</maxSeverity>
+    <stages>
+      <li><minSeverity>0</minSeverity><label>tingling</label><partEfficiencyOffset>-0.02</partEfficiencyOffset></li>
+      <li><minSeverity>0.25</minSeverity><label>swelling</label><partEfficiencyOffset>-0.05</partEfficiencyOffset></li>
+      <li><minSeverity>0.5</minSeverity><label>expanding</label><partEfficiencyOffset>-0.10</partEfficiencyOffset></li>
+      <li><minSeverity>1.0</minSeverity><label>melding</label><partEfficiencyOffset>-0.15</partEfficiencyOffset></li>
+      <li><minSeverity>2.5</minSeverity><label>merging</label><partEfficiencyOffset>-0.20</partEfficiencyOffset></li>
+      <li><minSeverity>5.0</minSeverity><label>engulfed</label><partEfficiencyOffset>-0.30</partEfficiencyOffset></li>
+      <li><minSeverity>8.0</minSeverity><label>consumed</label><partEfficiencyOffset>-0.50</partEfficiencyOffset></li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>RR_VoidWarmth</defName>
+    <label>void warmth</label>
+    <description>The warm, humid air of the void realm fills your lungs. You feel oddly full despite not eating.</description>
+    <isBad>false</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <stages>
+      <li><minSeverity>0</minSeverity><label>warmed</label><hungerRateFactor>0.5</hungerRateFactor></li>
+      <li><minSeverity>1.0</minSeverity><label>saturated</label><hungerRateFactor>0</hungerRateFactor></li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>RR_VoidFascination</defName>
+    <label>void fascination</label>
+    <description>The void calls to you. You feel an endless hunger, a desire to consume and grow beyond all limits.</description>
+    <isBad>false</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <stages>
+      <li><minSeverity>0</minSeverity><label>curious</label></li>
+      <li><minSeverity>0.33</minSeverity><label>hungry</label><hungerRateFactor>1.3</hungerRateFactor></li>
+      <li><minSeverity>0.66</minSeverity><label>ravenous</label><hungerRateFactor>1.7</hungerRateFactor></li>
+      <li><minSeverity>1.0</minSeverity><label>insatiable</label><hungerRateFactor>2.0</hungerRateFactor></li>
+    </stages>
+  </HediffDef>
+</Defs>

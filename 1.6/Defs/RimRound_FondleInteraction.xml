@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <InteractionDef>
+    <defName>RR_Fondle</defName>
+    <workerClass>RimRound.AI.InteractionWorker_Fondle</workerClass>
+    <symbol>Things/Mote/SpeechSymbols/KindWords</symbol>
+    <initiatorXpGainAmount>15</initiatorXpGainAmount>
+    <recipientXpGainAmount>5</recipientXpGainAmount>
+    <socialFightBaseChance>0.02</socialFightBaseChance>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry-> </li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <!-- Recipient thoughts -->
+  <ThoughtDef>
+    <defName>RR_FondledHate</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Fondled against will</label><description>How dare they touch me! I hate this!</description><baseMoodEffect>-20</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_FondledDislike</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Fondled uncomfortably</label><description>They touched my fat... I feel violated.</description><baseMoodEffect>-10</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_FondledNeutral</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Fondled</label><description>I was touched. It happened.</description><baseMoodEffect>0</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_FondledGood</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Grazed</label><description>Their hands wandered over me... nice.</description><baseMoodEffect>3</baseMoodEffect></li>
+      <li><label>Caressed</label><description>They know just how to touch me.</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Squeezed</label><description>Being handled so tenderly feels wonderful!</description><baseMoodEffect>8</baseMoodEffect></li>
+      <li><label>Kneaded</label><description>Every inch of me is being appreciated!</description><baseMoodEffect>12</baseMoodEffect></li>
+      <li><label>Worshipped</label><description>They can't get enough of my size!</description><baseMoodEffect>16</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_FondledGreat</defName>
+    <durationDays>2</durationDays>
+    <stages>
+      <li><label>Melting</label><description>Their touch makes me melt...</description><baseMoodEffect>6</baseMoodEffect></li>
+      <li><label>Bliss</label><description>I lose myself in their touch!</description><baseMoodEffect>10</baseMoodEffect></li>
+      <li><label>Ecstasy</label><description>Every squeeze is pure ecstasy!</description><baseMoodEffect>15</baseMoodEffect></li>
+      <li><label>Heavenly</label><description>Their hands on my body is a religious experience!</description><baseMoodEffect>22</baseMoodEffect></li>
+      <li><label>Transcendent</label><description>I exist to be touched. I am their canvas!</description><baseMoodEffect>30</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <!-- Initiator thought -->
+  <ThoughtDef>
+    <defName>RR_FondledInitiator</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Fondled someone</label><description>I enjoyed exploring their body.</description><baseMoodEffect>3</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+</Defs>

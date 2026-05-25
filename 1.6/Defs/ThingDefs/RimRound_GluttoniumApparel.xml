@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef Name="RR_GluttoniumFabricBase" Abstract="True">
+    <defName>RR_GluttoniumFabric</defName>
+    <label>gluttonium fiber</label>
+    <description>A woven fiber made from processed gluttonium. It shimmers with a faint green energy that seems to repel the ore's effects.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/Gluttonium</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <statBases>
+      <MarketValue>8</MarketValue>
+      <Mass>0.04</Mass>
+      <StuffPower_Armor_Sharp>0.30</StuffPower_Armor_Sharp>
+      <StuffPower_Armor_Blunt>0.20</StuffPower_Armor_Blunt>
+      <RR_GluttoniumResistance>0.7</RR_GluttoniumResistance>
+    </statBases>
+    <stuffProps>
+      <categories>
+        <li>Fabric</li>
+      </categories>
+      <commonality>0.02</commonality>
+      <color>(140,180,140)</color>
+    </stuffProps>
+    <thingCategories>
+      <li>Manufactured</li>
+    </thingCategories>
+  </ThingDef>
+
+  <ThingDef ParentName="RR_GluttoniumFabricBase">
+    <defName>RR_GluttoniumFiber</defName>
+    <label>gluttonium fiber</label>
+    <thingClass>ThingWithComps</thingClass>
+    <recipeMaker>
+      <researchPrerequisite>RR_Research_GlutoniumEnrichedFoods</researchPrerequisite>
+      <recipeUsers>
+        <li>RR_UltraTechCookingStation</li>
+      </recipeUsers>
+      <soundWorking>Recipe_Machining</soundWorking>
+    </recipeMaker>
+    <costList>
+      <RR_Gluttonium>15</RR_Gluttonium>
+    </costList>
+  </ThingDef>
+
+  <RecipeDef>
+    <defName>RR_Make_GluttoniumFiber</defName>
+    <label>make gluttonium fiber</label>
+    <description>Process gluttonium into protective woven fiber.</description>
+    <jobString>Spinning gluttonium fiber.</jobString>
+    <workAmount>2500</workAmount>
+    <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Machining</soundWorking>
+    <recipeUsers>
+      <li>RR_UltraTechCookingStation</li>
+    </recipeUsers>
+    <researchPrerequisite>RR_Research_GlutoniumEnrichedFoods</researchPrerequisite>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>RR_Gluttonium</li>
+          </thingDefs>
+        </filter>
+        <count>15</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>RR_Gluttonium</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <RR_GluttoniumFiber>5</RR_GluttoniumFiber>
+    </products>
+    <skillRequirements>
+      <Crafting>4</Crafting>
+    </skillRequirements>
+    <workSkill>Crafting</workSkill>
+  </RecipeDef>
+
+  <ThingDef ParentName="ApparelBase">
+    <defName>RR_Apparel_HazSuit</defName>
+    <label>gluttonium hazmat suit</label>
+    <description>A suit woven from gluttonium fibers that protects against the ore's weight-inducing radiation. Doesn't stop it completely, but greatly reduces the effect.</description>
+    <graphicData>
+      <texPath>Things/Item/Equipment/NovaTech/NOVATECH_PROTOSUIT</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>150</MaxHitPoints>
+      <Mass>3</Mass>
+      <StuffPower_Armor_Sharp>0.60</StuffPower_Armor_Sharp>
+      <StuffPower_Armor_Blunt>0.40</StuffPower_Armor_Blunt>
+      <RR_GluttoniumResistance>0.85</RR_GluttoniumResistance>
+    </statBases>
+    <thingCategories>
+      <li>Apparel</li>
+    </thingCategories>
+    <costList>
+      <RR_GluttoniumFiber>40</RR_GluttoniumFiber>
+    </costList>
+    <apparel>
+      <layers>
+        <li>Middle</li>
+      </layers>
+      <bodyPartGroups>
+        <li>Torso</li>
+        <li>Legs</li>
+        <li>Arms</li>
+        <li>Head</li>
+      </bodyPartGroups>
+    </apparel>
+    <recipeMaker>
+      <researchPrerequisite>RR_Research_GlutoniumEnrichedFoods</researchPrerequisite>
+      <recipeUsers>
+        <li>RR_UltraTechCookingStation</li>
+      </recipeUsers>
+      <soundWorking>Recipe_Machining</soundWorking>
+    </recipeMaker>
+  </ThingDef>
+</Defs>

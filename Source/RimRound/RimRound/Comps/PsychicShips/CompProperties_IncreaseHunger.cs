@@ -14,7 +14,7 @@ namespace RimRound.Comps
 			this.compClass = typeof(CompIncreaseHunger);
 		}
 
-		public SimpleCurve severityPerDayCurve;
+		public SimpleCurve severityPerDayCurve = null;
 	}
 }
 

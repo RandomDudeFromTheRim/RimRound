@@ -82,6 +82,12 @@ StyleCopReport.xml
 
 Dev/**
 
+# Project-specific junk
+Player.log
+FUCK.txt
+.idea/
+**/.idea/
+
 # Files built by Visual Studio
 *_i.c
 *_p.c

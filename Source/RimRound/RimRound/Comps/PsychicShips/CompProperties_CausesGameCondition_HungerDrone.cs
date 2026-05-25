@@ -15,7 +15,7 @@ namespace RimRound.Comps
         {
             this.compClass = typeof(CompCauseGameCondition_HungerDrone);
         }
-        public HungerDroneLevel droneLevel;
+        public HungerDroneLevel droneLevel = default;
         internal int droneLevelIncreaseInterval = int.MinValue;
     }
 }

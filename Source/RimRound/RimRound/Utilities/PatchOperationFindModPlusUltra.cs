@@ -47,11 +47,11 @@ namespace RimRound.Utilities
             return string.Format("{0}({1})", base.ToString(), this.mods.ToCommaList(false, false));
         }
 
-        private List<string> mods;
+        private List<string> mods = null;
 
-        private PatchOperation match;
+        private PatchOperation match = null;
 
-        private PatchOperation nomatch;
+        private PatchOperation nomatch = null;
 
         private static Dictionary<string, bool> modSuccess = new Dictionary<string, bool>();
     }

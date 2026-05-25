@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- 1. Smothering -->
+  <InteractionDef>
+    <defName>RR_Smother</defName>
+    <workerClass>RimRound.AI.InteractionWorker_Smother</workerClass>
+    <symbol>Things/Mote/SpeechSymbols/KindWords</symbol>
+    <initiatorXpGainAmount>20</initiatorXpGainAmount>
+    <recipientXpGainAmount>10</recipientXpGainAmount>
+    <socialFightBaseChance>0.05</socialFightBaseChance>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry-> </li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <!-- 2. Exploring -->
+  <InteractionDef>
+    <defName>RR_Explore</defName>
+    <workerClass>RimRound.AI.InteractionWorker_Explore</workerClass>
+    <symbol>Things/Mote/SpeechSymbols/BuildRapport</symbol>
+    <initiatorXpGainAmount>15</initiatorXpGainAmount>
+    <recipientXpGainAmount>8</recipientXpGainAmount>
+    <socialFightBaseChance>0.03</socialFightBaseChance>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry-> </li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <!-- 3. Wet Smothering (lactation-based) -->
+  <InteractionDef>
+    <defName>RR_WetSmother</defName>
+    <workerClass>RimRound.AI.InteractionWorker_WetSmother</workerClass>
+    <symbol>Things/Mote/SpeechSymbols/KindWords</symbol>
+    <initiatorXpGainAmount>25</initiatorXpGainAmount>
+    <recipientXpGainAmount>15</recipientXpGainAmount>
+    <socialFightBaseChance>0.08</socialFightBaseChance>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry-> </li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <!-- ========== SMOTHER THOUGHTS ========== -->
+  <ThoughtDef>
+    <defName>RR_SmotheredInitiator</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Pinned someone</label><description>I pinned them against the wall and let them feel every inch of me. Their struggle only made it better.</description><baseMoodEffect>4</baseMoodEffect></li>
+      <li><label>Squished someone</label><description>They couldn't escape my weight. I love being this big and in control.</description><baseMoodEffect>6</baseMoodEffect></li>
+      <li><label>Smothered someone</label><description>I pressed my full bulk into them until they could barely breathe. The power is intoxicating.</description><baseMoodEffect>8</baseMoodEffect></li>
+      <li><label>Overwhelmed someone</label><description>They disappeared beneath my rolls and folds. I could stay like this forever.</description><baseMoodEffect>12</baseMoodEffect></li>
+      <li><label>Consumed someone</label><description>I enveloped them completely. They are mine, lost somewhere in my fat.</description><baseMoodEffect>16</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_SmotheredHate</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Pinned by fat</label><description>They pressed their disgusting fat against me! I couldn't breathe!</description><baseMoodEffect>-12</baseMoodEffect></li>
+      <li><label>Crushed by flab</label><description>Their weight was suffocating! I hate this!</description><baseMoodEffect>-16</baseMoodEffect></li>
+      <li><label>Suffocated</label><description>I was buried in their rolls! It was horrible!</description><baseMoodEffect>-20</baseMoodEffect></li>
+      <li><label>Trapped under blubber</label><description>I couldn't move under all that fat! The humiliation!</description><baseMoodEffect>-25</baseMoodEffect></li>
+      <li><label>Drowning in lard</label><description>I thought I was going to be absorbed into them! Get away!</description><baseMoodEffect>-30</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_SmotheredDislike</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Uncomfortably close</label><description>They got way too close. I felt their belly on me...</description><baseMoodEffect>-6</baseMoodEffect></li>
+      <li><label>Squished</label><description>I was squished between them and the wall. Not fun.</description><baseMoodEffect>-8</baseMoodEffect></li>
+      <li><label>Too much contact</label><description>Their fat pressed me from all sides. Way too intimate.</description><baseMoodEffect>-10</baseMoodEffect></li>
+      <li><label>Overwhelmed</label><description>I couldn't push them off. I felt so small...</description><baseMoodEffect>-14</baseMoodEffect></li>
+      <li><label>Trapped</label><description>I was literally enveloped. I hate feeling helpless.</description><baseMoodEffect>-18</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_SmotheredNeutral</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Pressed against</label><description>They pressed against me. I felt their softness.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Squished</label><description>I was squished. It was warm, I guess.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Enveloped</label><description>They're so big. I couldn't move. Not bad, not good.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Buried</label><description>I disappeared into them for a moment. Huh.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Lost in folds</label><description>I don't know where I ended and they began. Weird but warm.</description><baseMoodEffect>0</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_SmotheredGood</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Softly pressed</label><description>They pressed their soft belly against me. It felt nice.</description><baseMoodEffect>3</baseMoodEffect></li>
+      <li><label>Warmly squished</label><description>Being squished by their warm body is comforting.</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Enjoying the weight</label><description>I love feeling their weight on me. So safe and warm.</description><baseMoodEffect>8</baseMoodEffect></li>
+      <li><label>Blissfully trapped</label><description>I never want to leave their soft embrace. This is heaven.</description><baseMoodEffect>12</baseMoodEffect></li>
+      <li><label>Lost in bliss</label><description>I want to live in their folds forever. Nothing else matters.</description><baseMoodEffect>16</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_SmotheredGreat</defName>
+    <durationDays>2</durationDays>
+    <stages>
+      <li><label>Cherished</label><description>They used their whole body to hold me. I felt so cherished.</description><baseMoodEffect>6</baseMoodEffect></li>
+      <li><label>Worshipped by weight</label><description>Being enveloped by their mass is pure worship!</description><baseMoodEffect>10</baseMoodEffect></li>
+      <li><label>Devoured by love</label><description>I want to be consumed by them completely!</description><baseMoodEffect>15</baseMoodEffect></li>
+      <li><label>United as one</label><description>Our bodies merged into one. I felt whole for the first time.</description><baseMoodEffect>22</baseMoodEffect></li>
+      <li><label>Transcended</label><description>I ceased to exist as an individual. I am part of them now. Perfect.</description><baseMoodEffect>30</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <!-- ========== EXPLORE THOUGHTS ========== -->
+  <ThoughtDef>
+    <defName>RR_ExploredInitiator</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Felt their curves</label><description>I explored their soft body with my hands. Every roll is beautiful.</description><baseMoodEffect>3</baseMoodEffect></li>
+      <li><label>Traced their rolls</label><description>I followed every fold and crevice. So much to discover!</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Buried in softness</label><description>I pressed my face into their belly. I never want to leave.</description><baseMoodEffect>8</baseMoodEffect></li>
+      <li><label>Worshipped their size</label><description>I explored every inch of their magnificent body. Perfection!</description><baseMoodEffect>12</baseMoodEffect></li>
+      <li><label>Became one with curves</label><description>I nestled into their folds and felt at home for the first time.</description><baseMoodEffect>16</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_ExploredHate</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Prodded</label><description>They poked and prodded my fat! How dare they!</description><baseMoodEffect>-10</baseMoodEffect></li>
+      <li><label>Groped</label><description>They were feeling my rolls! This is humiliating!</description><baseMoodEffect>-14</baseMoodEffect></li>
+      <li><label>Fondled against will</label><description>They touched every part of my disgusting body. I hate this!</description><baseMoodEffect>-18</baseMoodEffect></li>
+      <li><label>Examined like cattle</label><description>They treated my body like a curiosity! I'm not an object!</description><baseMoodEffect>-22</baseMoodEffect></li>
+      <li><label>Violated</label><description>They explored every inch of me. I feel so violated!</description><baseMoodEffect>-28</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_ExploredDislike</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Poked</label><description>They were touching my belly. I wish they wouldn't.</description><baseMoodEffect>-4</baseMoodEffect></li>
+      <li><label>Felt up</label><description>They're exploring my body like there's something to find. Stop.</description><baseMoodEffect>-6</baseMoodEffect></li>
+      <li><label>Groped awkwardly</label><description>They're way too into my fat. It's weird.</description><baseMoodEffect>-8</baseMoodEffect></li>
+      <li><label>Too much attention</label><description>They can't keep their hands off my rolls. I'm uncomfortable.</description><baseMoodEffect>-12</baseMoodEffect></li>
+      <li><label>Intrusive exploration</label><description>They were determined to touch every single part of me. Why?</description><baseMoodEffect>-16</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_ExploredNeutral</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Touched</label><description>They touched my belly. Okay.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Felt</label><description>They're feeling my body. I don't mind, I guess.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Explored</label><description>They're exploring my curves. Whatever.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Studied</label><description>They seem fascinated by my size. Huh.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Admired</label><description>They spent a long time touching me. Is this normal?</description><baseMoodEffect>0</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_ExploredGood</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Appreciated</label><description>They're appreciating my curves. It feels... nice.</description><baseMoodEffect>3</baseMoodEffect></li>
+      <li><label>Admired</label><description>They admire my body. I feel beautiful.</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Worshipped softly</label><description>Their gentle touch makes me feel worshipped.</description><baseMoodEffect>8</baseMoodEffect></li>
+      <li><label>Celebrated</label><description>They celebrate my size with every touch. I feel so loved!</description><baseMoodEffect>12</baseMoodEffect></li>
+      <li><label>Cherished fully</label><description>They love every inch of me. I've never felt so accepted.</description><baseMoodEffect>16</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_ExploredGreat</defName>
+    <durationDays>2</durationDays>
+    <stages>
+      <li><label>Devoured by eyes</label><description>They can't stop exploring me. I feel so desired!</description><baseMoodEffect>6</baseMoodEffect></li>
+      <li><label>Worshipped completely</label><description>Every touch is pure adoration. I am their goddess!</description><baseMoodEffect>10</baseMoodEffect></li>
+      <li><label>Sanctified</label><description>This body is a temple, and they are my most devoted follower!</description><baseMoodEffect>15</baseMoodEffect></li>
+      <li><label>Revered</label><description>My size is holy to them. I feel divine under their touch!</description><baseMoodEffect>22</baseMoodEffect></li>
+      <li><label>Apotheosis</label><description>I am a god of size and they know it. Let them worship!</description><baseMoodEffect>30</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <!-- ========== WET SMOTHER THOUGHTS ========== -->
+  <ThoughtDef>
+    <defName>RR_WetSmotherInitiator</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Nursed someone</label><description>I pressed them against my chest and fed them my milk. They're mine now.</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Milked into them</label><description>I forced my milk down their throat while holding them close. Perfect.</description><baseMoodEffect>8</baseMoodEffect></li>
+      <li><label>Fed my essence</label><description>They drank from me as I enveloped them. This is intimacy.</description><baseMoodEffect>12</baseMoodEffect></li>
+      <li><label>Nourished my prey</label><description>I fed them my milk while they squirmed in my embrace. They will grow.</description><baseMoodEffect>16</baseMoodEffect></li>
+      <li><label>Bonded eternally</label><description>They drank from me as I held them. We are connected forever now.</description><baseMoodEffect>22</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_WetSmotherHate</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Forcibly nursed</label><description>They forced me to drink! I couldn't breathe with their weight on me!</description><baseMoodEffect>-15</baseMoodEffect></li>
+      <li><label>Drowned in milk</label><description>They pinned me and made me swallow! I'm choking on their milk!</description><baseMoodEffect>-20</baseMoodEffect></li>
+      <li><label>Force-fed filth</label><description>They're pumping me full of their milk! I can't stop it!</description><baseMoodEffect>-25</baseMoodEffect></li>
+      <li><label>Violated and filled</label><description>I was held down and filled against my will! This is assault!</description><baseMoodEffect>-32</baseMoodEffect></li>
+      <li><label>Traumatized</label><description>Their milk. Everywhere. Inside me. I can still feel their weight. Help.</description><baseMoodEffect>-40</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_WetSmotherDislike</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Force-fed</label><description>They made me drink their milk. I didn't want it.</description><baseMoodEffect>-8</baseMoodEffect></li>
+      <li><label>Overfed</label><description>I'm so full of their milk. I feel bloated and uncomfortable.</description><baseMoodEffect>-10</baseMoodEffect></li>
+      <li><label>Stuffed against will</label><description>They kept feeding me even when I tried to pull away.</description><baseMoodEffect>-14</baseMoodEffect></li>
+      <li><label>Stretched</label><description>I feel so full from their milk. They wouldn't stop pouring.</description><baseMoodEffect>-18</baseMoodEffect></li>
+      <li><label>Burdened</label><description>I can feel their milk settling in my stomach. Why do they do this?</description><baseMoodEffect>-22</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_WetSmotherNeutral</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Fed</label><description>They fed me their milk. I feel full.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Nursed</label><description>I was nursed. It was warm.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Filled</label><description>I drank their milk. My stomach is warm now.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Nourished</label><description>They made sure I was well-fed. Okay.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Satiated</label><description>I'm very full of their milk. That sure happened.</description><baseMoodEffect>0</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_WetSmotherGood</defName>
+    <durationDays>1</durationDays>
+    <stages>
+      <li><label>Warmly fed</label><description>They held me close and fed me. I feel so warm and cared for.</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Nurtured</label><description>Being held and fed by someone so big is incredibly comforting.</description><baseMoodEffect>8</baseMoodEffect></li>
+      <li><label>Cherished and filled</label><description>They nourished me while enveloping me. I've never felt so safe.</description><baseMoodEffect>12</baseMoodEffect></li>
+      <li><label>Worshipped with milk</label><description>They shared their essence with me. I feel so connected to them.</description><baseMoodEffect>16</baseMoodEffect></li>
+      <li><label>United through nurture</label><description>I drank from them as they held me. We are bonded forever.</description><baseMoodEffect>22</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_WetSmotherGreat</defName>
+    <durationDays>2</durationDays>
+    <stages>
+      <li><label>Devotedly nursed</label><description>They gave me their milk with such tenderness. I feel so loved!</description><baseMoodEffect>8</baseMoodEffect></li>
+      <li><label>Sanctified feeding</label><description>Their milk fills me with more than just nutrition. I feel blessed!</description><baseMoodEffect>14</baseMoodEffect></li>
+      <li><label>Divine nurturing</label><description>I was held in their soft embrace and fed their essence. Sacred.</description><baseMoodEffect>20</baseMoodEffect></li>
+      <li><label>Transcendent bonding</label><description>Our souls connected through their milk. I am part of them now.</description><baseMoodEffect>28</baseMoodEffect></li>
+      <li><label>Apotheosis through milk</label><description>I drank from a god. Their milk courses through me. I am ascended!</description><baseMoodEffect>38</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+</Defs>

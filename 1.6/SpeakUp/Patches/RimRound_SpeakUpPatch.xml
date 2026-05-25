@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <!-- RR_Fondle dialogue injection -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RR_Fondle"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <!-- Neutral+ warm appreciation -->
+      <li>r_logentry(p=0.5,priority=12,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+)->You know what? This is nice. I like this.</li>
+      <li>r_logentry(p=0.5,priority=14,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+,INITIATOR_trait==Nudist)->Being comfortable with your body means letting others appreciate it too!</li>
+      <li>r_logentry(p=0.5,priority=12,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+,INITIATOR_trait==Bloodlust)->Careful... I might get used to this.</li>
+      <!-- Like: trusting and affectionate -->
+      <li>r_logentry(p=0.6,priority=18,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Like)->I love how you appreciate my size! It makes me feel beautiful.</li>
+      <li>r_logentry(p=0.5,priority=16,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Kind)->Your hands feel so caring... I trust you completely.</li>
+      <li>r_logentry(p=0.5,priority=17,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Nudist)->There's nothing between us but honesty. I love how that feels.</li>
+      <li>r_logentry(p=0.5,priority=16,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Greedy)->Finally, someone who appreciates what I have to offer!</li>
+      <!-- Love: deep affectionate admiration -->
+      <li>r_logentry(p=0.6,priority=22,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Love)->I feel so safe when you touch me. Don't ever stop.</li>
+      <li>r_logentry(p=0.5,priority=21,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Shy)->I used to be so ashamed of my body... but with you, I feel proud.</li>
+      <li>r_logentry(p=0.5,priority=23,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Kind)->Every squeeze, every stroke... it's like you're telling me I matter.</li>
+      <li>r_logentry(p=0.5,priority=22,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Transhumanist)->This vessel is becoming something more, and your touch guides it.</li>
+      <li>r_logentry(p=0.5,priority=24,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Nervous)->I-I never thought anyone would want to touch me like this... thank you.</li>
+      <!-- Fanatical - keep but tone down weight slightly -->
+      <li>r_logentry(p=0.5,priority=30,tag=RR_FondleReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical)->WORSHIP MY BODY! I AM TRANSCENDENT!</li>
+      <li>r_logentry(p=0.4,priority=28,tag=RR_FondleReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical,INITIATOR_trait==CreepyBreathing)->Your touch makes me GROW...</li>
+      <!-- Timid/shy lines (any opinion) -->
+      <li>r_logentry(p=0.4,priority=8,tag=RR_FondleReply_Shy)->Um... you really like touching me like this?</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RR_FondleReply_Shy,INITIATOR_trait==Wimp)->Easy... I'm sensitive there...</li>
+      <li>r_logentry(p=0.4,priority=10,tag=RR_FondleReply_Shy,INITIATOR_trait==Kind)->Your hands are so gentle... I feel safe.</li>
+      <li>r_logentry(p=0.4,priority=10,tag=RR_FondleReply_Shy,INITIATOR_trait==Nervous)->I-I'm not used to being touched...</li>
+      <!-- Eager trait-based lines -->
+      <li>r_logentry(p=0.5,priority=15,tag=RR_FondleReply_Eager)->Yes! Keep going! I want your hands everywhere!</li>
+      <li>r_logentry(p=0.4,priority=18,tag=RR_FondleReply_Eager,INITIATOR_trait==Greedy)->More! I want all your attention on ME!</li>
+      <li>r_logentry(p=0.4,priority=18,tag=RR_FondleReply_Eager,INITIATOR_trait==Bloodlust)->Harder! Don't hold back!</li>
+      <li>r_logentry(p=0.3,priority=12,tag=RR_FondleReply_Eager,INITIATOR_trait==Nudist)->I love being touched! It's so freeing!</li>
+      <li>r_logentry(p=0.3,priority=12,tag=RR_FondleReply_Eager,INITIATOR_trait==Brawler)->You've got some strong hands there... I like it.</li>
+      <!-- Neutral/negative -->
+      <li>r_logentry(p=0.3,priority=5,tag=RR_FondleReply_Shy,INITIATOR_trait==Weight Opinion: Neutral)->This is happening. Okay.</li>
+      <li>r_logentry(p=0.3,priority=4,tag=RR_FondleReply_Shy,INITIATOR_trait==Weight Opinion: Neutral,INITIATOR_trait==Ascetic)->The flesh is temporary. But your hands... I feel present.</li>
+      <li>r_logentry(p=0.4,priority=2,tag=RR_FondleReply_Shy,INITIATOR_trait==BodyPurist)->Stop touching me. I don't want this body.</li>
+      <li>r_logentry(p=0.3,priority=3,tag=RR_FondleReply_Shy,INITIATOR_trait==BodyPurist,INITIATOR_trait==Weight Opinion: Hate)->I said DON'T. This flesh is a curse, not a toy.</li>
+      <li>r_logentry(p=0.3,priority=6,tag=RR_FondleReply_Shy,INITIATOR_trait==Psychopath)->How would your insides feel compared to your outsides, I wonder...</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RR_FondleReply_Shy,INITIATOR_trait==TooSmart)->I find your tactile curiosity... intellectually stimulating.</li>
+      <!-- Weight watching (self-awareness) -->
+      <li>r_logentry(p=0.3,priority=6,tag=RR_FondleReply_Shy,INITIATOR_trait==Weight Opinion: Hate)->I've gotten so big... I can feel it in every fold you touch...</li>
+      <li>r_logentry(p=0.3,priority=6,tag=RR_FondleReply_Shy,INITIATOR_trait==Weight Opinion: Dislike)->I used to be smaller than this. I don't know when it happened.</li>
+      <li>r_logentry(p=0.3,priority=6,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Fanatical)->I'm getting bigger every day! Can you feel it?!</li>
+      <li>r_logentry(p=0.3,priority=6,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Love)->I've been eating so well lately... you can tell, can't you?</li>
+      <li>r_logentry(p=0.3,priority=6,tag=RR_FondleReply_Eager,INITIATOR_trait==Weight Opinion: Like)->Every meal, every pound... it's all worth it for moments like this.</li>
+    </value>
+  </Operation>
+
+  <!-- RR_Smother dialogue injection -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RR_Smother"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <!-- Neutral+ lines -->
+      <li>r_logentry(p=0.5,priority=14,tag=RR_SmotherReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+)->I never realized how good this could feel. Don't move.</li>
+      <li>r_logentry(p=0.5,priority=14,tag=RR_SmotherReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+,INITIATOR_trait==Bloodlust)->The way you squirm under me... I could stay here forever.</li>
+      <!-- Like lines -->
+      <li>r_logentry(p=0.6,priority=18,tag=RR_SmotherReply_Eager,INITIATOR_trait==Weight Opinion: Like)->You're so safe under here. Nothing can hurt you while I've got you.</li>
+      <li>r_logentry(p=0.5,priority=17,tag=RR_SmotherReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Kind)->I'll protect you from the whole world. Just stay here with me.</li>
+      <li>r_logentry(p=0.5,priority=17,tag=RR_SmotherReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Nervous)->Is this okay? I want to make you feel as good as you make me feel.</li>
+      <!-- Love lines -->
+      <li>r_logentry(p=0.6,priority=24,tag=RR_SmotherReply_Eager,INITIATOR_trait==Weight Opinion: Love)->I want to wrap myself around you and never let go. You're mine.</li>
+      <li>r_logentry(p=0.5,priority=23,tag=RR_SmotherReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Kind)->The warmth of your body against mine... this is what love feels like.</li>
+      <li>r_logentry(p=0.5,priority=25,tag=RR_SmotherReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Transhumanist)->We are becoming something together. Our forms intertwined. Beautiful.</li>
+      <li>r_logentry(p=0.5,priority=22,tag=RR_SmotherReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Nervous)->I used to be so self-conscious about my size. But with you... it feels like a gift.</li>
+      <!-- Fanatical - reduced weight -->
+      <li>r_logentry(p=0.5,priority=35,tag=RR_SmotherReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical)->BECOME ONE WITH MY INFINITE MASS!</li>
+      <li>r_logentry(p=0.4,priority=30,tag=RR_SmotherReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical,INITIATOR_trait==Psychopath)->I will absorb you into my flesh...</li>
+      <li>r_logentry(p=0.4,priority=25,tag=RR_SmotherReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical,INITIATOR_trait==Bloodlust)->I can feel your heartbeat through my belly... it's MINE.</li>
+      <!-- Base eager -->
+      <li>r_logentry(p=0.5,priority=20,tag=RR_SmotherReply_Eager)->I love covering you! You disappear under me!</li>
+      <li>r_logentry(p=0.4,priority=18,tag=RR_SmotherReply_Eager,INITIATOR_trait==Greedy)->MINE. All mine.</li>
+      <li>r_logentry(p=0.3,priority=16,tag=RR_SmotherReply_Eager,INITIATOR_trait==Nudist)->Skin to skin to skin... this is how we were meant to be!</li>
+      <!-- Shy -->
+      <li>r_logentry(p=0.4,priority=10,tag=RR_SmotherReply_Shy)->S-sorry, am I crushing you?</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RR_SmotherReply_Shy,INITIATOR_trait==Wimp)->I-I'm heavy... let me get off...</li>
+      <li>r_logentry(p=0.4,priority=12,tag=RR_SmotherReply_Shy,INITIATOR_trait==Kind)->Is this okay? I don't want to hurt you...</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RR_SmotherReply_Shy,INITIATOR_trait==Nervous)->I'm not going to squish you, am I?</li>
+      <!-- Neutral/negative -->
+      <li>r_logentry(p=0.3,priority=4,tag=RR_SmotherReply_Shy,INITIATOR_trait==Weight Opinion: Neutral)->Well, this is happening.</li>
+      <li>r_logentry(p=0.3,priority=5,tag=RR_SmotherReply_Shy,INITIATOR_trait==Weight Opinion: Neutral,INITIATOR_trait==Ascetic)->Attachment to the flesh is suffering. But this is... warm.</li>
+      <li>r_logentry(p=0.2,priority=3,tag=RR_SmotherReply_Shy,INITIATOR_trait==BodyPurist)->This is disgusting. I'm sorry you have to see me like this.</li>
+      <li>r_logentry(p=0.3,priority=6,tag=RR_SmotherReply_Shy,INITIATOR_trait==Undergrounder)->It's warm and dark in here... I feel at home.</li>
+    </value>
+  </Operation>
+
+  <!-- RR_Explore dialogue injection -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RR_Explore"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <!-- Neutral+ lines -->
+      <li>r_logentry(p=0.5,priority=14,tag=RR_ExploreReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+)->There's so much of you to discover. I love it.</li>
+      <li>r_logentry(p=0.5,priority=14,tag=RR_ExploreReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+,INITIATOR_trait==Brawler)->You've got substance! I respect that!</li>
+      <!-- Like lines -->
+      <li>r_logentry(p=0.6,priority=20,tag=RR_ExploreReply_Eager,INITIATOR_trait==Weight Opinion: Like)->Every curve, every roll... you're art. Let me admire you.</li>
+      <li>r_logentry(p=0.5,priority=19,tag=RR_ExploreReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Kind)->You're beautiful in every way. I hope you know that.</li>
+      <li>r_logentry(p=0.5,priority=19,tag=RR_ExploreReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Nudist)->The human body is incredible! And yours is especially magnificent!</li>
+      <!-- Love lines -->
+      <li>r_logentry(p=0.6,priority=25,tag=RR_ExploreReply_Eager,INITIATOR_trait==Weight Opinion: Love)->I want to memorize every dip and curve. You're perfect as you are.</li>
+      <li>r_logentry(p=0.5,priority=24,tag=RR_ExploreReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Shy)->I never knew I could feel this way about someone's body. It's overwhelming.</li>
+      <li>r_logentry(p=0.5,priority=26,tag=RR_ExploreReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Transhumanist)->Your form is evolving into something magnificent. I'm privileged to witness it.</li>
+      <li>r_logentry(p=0.5,priority=24,tag=RR_ExploreReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Kind)->Every part of you tells a story. I want to read every chapter.</li>
+      <!-- Fanatical - reduced -->
+      <li>r_logentry(p=0.5,priority=40,tag=RR_ExploreReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical)->YOUR SIZE IS DIVINE! LET ME WORSHIP IT!</li>
+      <li>r_logentry(p=0.4,priority=35,tag=RR_ExploreReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical,INITIATOR_trait==CreepyBreathing)->I want to live inside your folds forever...</li>
+      <li>r_logentry(p=0.4,priority=32,tag=RR_ExploreReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical,INITIATOR_trait==Psychopath)->I wonder how far your skin can stretch before it tears... let's find out.</li>
+      <!-- Base eager -->
+      <li>r_logentry(p=0.5,priority=22,tag=RR_ExploreReply_Eager)->Every curve drives me wild!</li>
+      <li>r_logentry(p=0.4,priority=20,tag=RR_ExploreReply_Eager,INITIATOR_trait==Bloodlust)->I want to memorize every inch of you...</li>
+      <li>r_logentry(p=0.4,priority=18,tag=RR_ExploreReply_Eager,INITIATOR_trait==Greedy)->I want ALL of you. Every roll. Every fold.</li>
+      <li>r_logentry(p=0.3,priority=14,tag=RR_ExploreReply_Eager,INITIATOR_trait==Brawler)>You've got so much more to grab onto than a skinny thing!</li>
+      <li>r_logentry(p=0.3,priority=12,tag=RR_ExploreReply_Eager,INITIATOR_trait==Nudist)->The human body is art, and yours is a MASTERPIECE!</li>
+      <!-- Shy -->
+      <li>r_logentry(p=0.4,priority=10,tag=RR_ExploreReply_Shy)->C-can I really touch all of you?</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RR_ExploreReply_Shy,INITIATOR_trait==Wimp)->You're so big... I'm a little nervous...</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RR_ExploreReply_Shy,INITIATOR_trait==Kind)->You're beautiful... every inch of you.</li>
+      <li>r_logentry(p=0.3,priority=9,tag=RR_ExploreReply_Shy,INITIATOR_trait==Nervous)->I-I've never touched anyone this... substantial.</li>
+      <!-- Neutral/negative -->
+      <li>r_logentry(p=0.3,priority=4,tag=RR_ExploreReply_Shy,INITIATOR_trait==Weight Opinion: Neutral)->You're big. I'm touching you. Alright.</li>
+      <li>r_logentry(p=0.3,priority=5,tag=RR_ExploreReply_Shy,INITIATOR_trait==Weight Opinion: Neutral,INITIATOR_trait==TooSmart)->Your body has fascinating topology. May I continue my survey?</li>
+      <li>r_logentry(p=0.3,priority=2,tag=RR_ExploreReply_Shy,INITIATOR_trait==BodyPurist)->This body isn't natural. I don't like it.</li>
+      <li>r_logentry(p=0.2,priority=3,tag=RR_ExploreReply_Shy,INITIATOR_trait==BodyPurist,INITIATOR_trait==Weight Opinion: Hate)->Every roll is a reminder of what I've let myself become... stop.</li>
+    </value>
+  </Operation>
+
+  <!-- RR_TailGrope dialogue injection -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RR_TailGrope"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(p=0.5,priority=14,tag=RR_TailGropeReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+)->You have a really nice tail. I just had to say it.</li>
+      <li>r_logentry(p=0.6,priority=18,tag=RR_TailGropeReply_Eager,INITIATOR_trait==Weight Opinion: Like)->The way your tail curls around my hand... it's like it trusts me.</li>
+      <li>r_logentry(p=0.6,priority=14,tag=RR_TailGropeReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Kind)->I'll be so gentle with it. Your tail deserves kindness.</li>
+      <li>r_logentry(p=0.6,priority=22,tag=RR_TailGropeReply_Eager,INITIATOR_trait==Weight Opinion: Love)->Your tail is the most expressive part of you. I love watching it react to my touch.</li>
+      <li>r_logentry(p=0.5,priority=21,tag=RR_TailGropeReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Nervous)->I can tell how you feel just by how your tail moves... it's beautiful.</li>
+      <li>r_logentry(p=0.5,priority=30,tag=RR_TailGropeReply_Fanatical)->I WANT TO WORSHIP EVERY INCH OF YOUR TAIL!</li>
+      <li>r_logentry(p=0.4,priority=28,tag=RR_TailGropeReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical)->YOUR TAIL IS A LIVING EXTENSION OF YOUR GLORIOUS BULK!</li>
+      <li>r_logentry(p=0.4,priority=18,tag=RR_TailGropeReply_Eager,INITIATOR_trait==Bloodlust)->I bet you use this tail to knock people out, huh?</li>
+      <li>r_logentry(p=0.3,priority=16,tag=RR_TailGropeReply_Eager,INITIATOR_trait==Greedy)->I need this tail. It's MINE now.</li>
+      <li>r_logentry(p=0.3,priority=12,tag=RR_TailGropeReply_Eager,INITIATOR_trait==CreepyBreathing)->I want to wrap it around my neck...</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RR_TailGropeReply_Shy)->I-is it okay if I touch your tail?</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RR_TailGropeReply_Shy,INITIATOR_trait==Wimp)->Your tail is so fluffy... can I really?</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RR_TailGropeReply_Shy,INITIATOR_trait==Kind)->I'll be gentle, I promise. Your tail is beautiful.</li>
+      <li>r_logentry(p=0.3,priority=5,tag=RR_TailGropeReply_Shy,INITIATOR_trait==Weight Opinion: Neutral)->So you have a tail. I touched it. Good talk.</li>
+      <li>r_logentry(p=0.3,priority=6,tag=RR_TailGropeReply_Shy,INITIATOR_trait==TooSmart)->A prehensile caudal appendage. The biomechanics are fascinating.</li>
+    </value>
+  </Operation>
+
+  <!-- RR_WetSmother dialogue injection -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/InteractionDef[defName="RR_WetSmother"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <!-- Neutral+ lines -->
+      <li>r_logentry(p=0.5,priority=15,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+)->Here... let me take care of you. You need this.</li>
+      <li>r_logentry(p=0.5,priority=15,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Neutral+,INITIATOR_trait==Nudist)->This is the cycle of life! Nourishment passing between us!</li>
+      <!-- Like lines -->
+      <li>r_logentry(p=0.6,priority=20,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Like)->I want to see you grow strong and happy. Let me feed you.</li>
+      <li>r_logentry(p=0.5,priority=19,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Kind)->You look so peaceful when you're being cared for. It warms my heart.</li>
+      <li>r_logentry(p=0.5,priority=19,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Like,INITIATOR_trait==Bloodlust)->Good. Swallow it all. I want you full and satisfied.</li>
+      <!-- Love lines -->
+      <li>r_logentry(p=0.6,priority=26,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Love)->Let me nourish you... I want to see you thrive and grow.</li>
+      <li>r_logentry(p=0.5,priority=25,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Shy)->I feel so close to you when I do this. Like we're truly connected.</li>
+      <li>r_logentry(p=0.5,priority=27,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Transhumanist)->Your body is a temple, and I'm filling it with offerings.</li>
+      <li>r_logentry(p=0.5,priority=25,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Kind)->Every drop is filled with my care for you. Drink deeply, my love.</li>
+      <li>r_logentry(p=0.5,priority=28,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Weight Opinion: Love,INITIATOR_trait==Nervous)->Am I doing this right? I just want to make you feel good...</li>
+      <!-- Fanatical - reduced -->
+      <li>r_logentry(p=0.5,priority=45,tag=RR_WetSmotherReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical)->DRINK MY ESSENCE! GROW AS I HAVE GROWN!</li>
+      <li>r_logentry(p=0.4,priority=40,tag=RR_WetSmotherReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical,INITIATOR_trait==Psychopath)->My milk flows through you now. You belong to me.</li>
+      <li>r_logentry(p=0.4,priority=35,tag=RR_WetSmotherReply_Fanatical,INITIATOR_trait==Weight Opinion: Fanatical,INITIATOR_trait==CreepyBreathing)->I can feel you drinking... the warmth spreading through you... it's beautiful.</li>
+      <!-- Base -->
+      <li>r_logentry(p=0.5,priority=25,tag=RR_WetSmotherReply_Eager)->Drink up! I've got plenty to share!</li>
+      <li>r_logentry(p=0.4,priority=22,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Greedy)->Every drop is yours... but you OWE me.</li>
+      <li>r_logentry(p=0.4,priority=20,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Bloodlust)->Swallow. Every. Drop. Good pawn.</li>
+      <li>r_logentry(p=0.3,priority=18,tag=RR_WetSmotherReply_Eager,INITIATOR_trait==Nudist)->This is the most natural thing in the world!</li>
+      <!-- Shy -->
+      <li>r_logentry(p=0.4,priority=12,tag=RR_WetSmotherReply_Shy)->P-please drink... I've been saving it for you...</li>
+      <li>r_logentry(p=0.3,priority=8,tag=RR_WetSmotherReply_Shy,INITIATOR_trait==Wimp)->I-I hope you like it... is it okay?</li>
+      <li>r_logentry(p=0.3,priority=10,tag=RR_WetSmotherReply_Shy,INITIATOR_trait==Kind)->Drink slowly... I want to take care of you...</li>
+      <li>r_logentry(p=0.3,priority=11,tag=RR_WetSmotherReply_Shy,INITIATOR_trait==Nervous)->Does it taste okay? I've been so worried...</li>
+      <!-- Neutral/negative -->
+      <li>r_logentry(p=0.3,priority=4,tag=RR_WetSmotherReply_Shy,INITIATOR_trait==Weight Opinion: Neutral)->Milk. You. Drinking. Okay.</li>
+      <li>r_logentry(p=0.3,priority=5,tag=RR_WetSmotherReply_Shy,INITIATOR_trait==Weight Opinion: Neutral,INITIATOR_trait==Ascetic)->Sustenance is sustenance. The method is irrelevant.</li>
+      <li>r_logentry(p=0.2,priority=3,tag=RR_WetSmotherReply_Shy,INITIATOR_trait==BodyPurist)->I can't believe I'm reduced to this. Please don't tell anyone.</li>
+    </value>
+  </Operation>
+</Patch>

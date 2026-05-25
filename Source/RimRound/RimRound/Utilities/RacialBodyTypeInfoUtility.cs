@@ -148,6 +148,9 @@ namespace RimRound.Utilities
             if (!GlobalSettings.varyMinWeightForBodyTypeByBodySize)
                 return 1;
 
+            if (p.story is null || p.story.bodyType is null)
+                return 1;
+
             return GetBodyTypeWeightRequirementMultiplierByDefName(p.story.bodyType.defName);
         }
 
@@ -178,11 +181,11 @@ namespace RimRound.Utilities
                 case "Anty":
                     return 0.6f;
                 default:
-                    Log.Warning("Ran defualt case in GetBodyTypeWeightRequirementMultiplier!");
+                    Log.Warning($"Unknown body type suffix '{cleanedDefName}' in GetBodyTypeWeightRequirementMultiplier, defaulting to 1");
                     break;
             }
 
-            return 0;
+            return 1;
         }
 
 

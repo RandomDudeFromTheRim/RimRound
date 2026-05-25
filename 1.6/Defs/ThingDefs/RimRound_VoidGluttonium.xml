@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef ParentName="RockBase">
+    <defName>RR_VoidGluttoniumOre</defName>
+    <label>void gluttonium ore</label>
+    <description>Gluttonium ore suffused with void energy. It pulses with a warm, wet heat. Mining it fills the air with a thick, humid pressure that seeps into your skin. Exposure causes explosive weight gain.</description>
+    <graphicData>
+      <texPath>Things/Building/Linked/Gluttonium_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>CutoutComplex</shaderType>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>4000</MaxHitPoints>
+    </statBases>
+    <building>
+      <isResourceRock>true</isResourceRock>
+      <mineableThing>RR_VoidGluttonium</mineableThing>
+      <mineableYield>4</mineableYield>
+    </building>
+    <comps>
+      <li Class="CompProperties_Glower">
+        <glowRadius>6</glowRadius>
+        <glowColor>(180,40,180,0)</glowColor>
+      </li>
+      <li Class="RimRound.Comps.CompProperties_GluttoniumRadiation">
+        <radius>5</radius>
+        <exposurePerTick>0.015</exposurePerTick>
+        <tickInterval>200</tickInterval>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="ResourceBase">
+    <defName>RR_VoidGluttonium</defName>
+    <label>void gluttonium</label>
+    <description>Gluttonium imbued with void essence. Warm to the touch. Makes you feel hungry just holding it.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/VoidGluttonium</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <statBases>
+      <MarketValue>45</MarketValue>
+      <Mass>4</Mass>
+      <Beauty>-2</Beauty>
+      <StuffPower_Armor_Sharp>1.5</StuffPower_Armor_Sharp>
+      <StuffPower_Armor_Blunt>1.2</StuffPower_Armor_Blunt>
+    </statBases>
+    <thingCategories>
+      <li>Manufactured</li>
+    </thingCategories>
+    <stuffProps>
+      <categories>
+        <li>Metallic</li>
+      </categories>
+      <color>(120,20,120)</color>
+      <statFactors>
+        <WorkToMake>0.5</WorkToMake>
+        <WorkToBuild>0.5</WorkToBuild>
+      </statFactors>
+    </stuffProps>
+  </ThingDef>
+
+  <!-- Feast of the Void meal -->
+  <ThingDef ParentName="MealBase">
+    <defName>RR_FeastOfTheVoid</defName>
+    <label>feast of the void</label>
+    <description>A dark, steaming meal made from void gluttonium and rich ingredients. Each bite fills you with unnatural warmth and expansion. Those who fear weight will recoil; those who crave it will feel ecstasy.</description>
+    <graphicData>
+      <texPath>Things/Item/GluttoniumFood/VoidMeal</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <statBases>
+      <MarketValue>30</MarketValue>
+      <Mass>0.5</Mass>
+      <Nutrition>2.5</Nutrition>
+    </statBases>
+    <comps>
+      <li Class="RimRound.Comps.CompProperties_FoodItems_NutritionDensity">
+        <compClass>RimRound.Comps.ThingComp_FoodItems_NutritionDensity</compClass>
+        <fullnessToNutritionRatio>0.5</fullnessToNutritionRatio>
+      </li>
+    </comps>
+    <ingestible>
+      <preferability>MealLavish</preferability>
+    </ingestible>
+    <recipeMaker>
+      <researchPrerequisite>RR_Research_GlutoniumEnrichedFoods</researchPrerequisite>
+      <recipeUsers>
+        <li>RR_UltraTechCookingStation</li>
+      </recipeUsers>
+      <soundWorking>Recipe_CookMeal</soundWorking>
+    </recipeMaker>
+    <costList>
+      <RR_VoidGluttonium>5</RR_VoidGluttonium>
+      <RR_Gluttonium>20</RR_Gluttonium>
+      <MealNutrientPaste>10</MealNutrientPaste>
+    </costList>
+  </ThingDef>
+
+  <RecipeDef>
+    <defName>RR_Cook_FeastOfTheVoid</defName>
+    <label>cook feast of the void</label>
+    <description>Cook a feast infused with void gluttonium.</description>
+    <jobString>Cooking feast of the void.</jobString>
+    <workAmount>5000</workAmount>
+    <workSpeedStat>CookSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_CookMeal</soundWorking>
+    <recipeUsers>
+      <li>RR_UltraTechCookingStation</li>
+    </recipeUsers>
+    <researchPrerequisite>RR_Research_GlutoniumEnrichedFoods</researchPrerequisite>
+    <ingredients>
+      <li>
+        <filter><thingDefs><li>RR_VoidGluttonium</li></thingDefs></filter>
+        <count>5</count>
+      </li>
+      <li>
+        <filter><thingDefs><li>RR_Gluttonium</li></thingDefs></filter>
+        <count>20</count>
+      </li>
+      <li>
+        <filter><categories><li>Foods</li></categories></filter>
+        <count>10</count>
+      </li>
+    </ingredients>
+    <products>
+      <RR_FeastOfTheVoid>1</RR_FeastOfTheVoid>
+    </products>
+    <skillRequirements>
+      <Cooking>8</Cooking>
+    </skillRequirements>
+  </RecipeDef>
+</Defs>

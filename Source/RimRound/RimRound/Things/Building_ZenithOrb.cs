@@ -88,34 +88,30 @@ namespace RimRound.Things
             }
         }
 
+        private void CleanupSustainers()
+        {
+            onSustainer?.End();
+            offSustainer?.End();
+            onSustainer = null;
+            offSustainer = null;
+        }
+
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
             base.Destroy(mode);
-            onSustainer.End();
-            offSustainer.End();
-
-            onSustainer = null;
-            offSustainer = null;
+            CleanupSustainers();
         }
 
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
         {
             base.DeSpawn(mode);
-            onSustainer.End();
-            offSustainer.End();
-
-            onSustainer = null;
-            offSustainer = null;
+            CleanupSustainers();
         }
 
         public override void Discard(bool silentlyRemoveReferences = false)
         {
             base.Discard(silentlyRemoveReferences);
-            onSustainer.End();
-            offSustainer.End();
-
-            onSustainer = null;
-            offSustainer = null;
+            CleanupSustainers();
         }
 
         protected override void Tick()

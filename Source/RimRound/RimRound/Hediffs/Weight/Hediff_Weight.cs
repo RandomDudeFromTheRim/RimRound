@@ -71,7 +71,7 @@ namespace RimRound.Hediffs
         {
             get 
             {
-                if (this.def.stages == null)
+                if (this.def.stages == null || this.pawn is null)
                 {
                     return 0;
                 }

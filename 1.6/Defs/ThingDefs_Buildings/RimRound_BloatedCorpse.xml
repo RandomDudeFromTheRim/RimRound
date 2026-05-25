@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- The bloated remains after an unnatural corpse bursts -->
+  <ThingDef>
+    <defName>RR_BloatedMass</defName>
+    <label>bloated mass</label>
+    <description>A pulsating mountain of fleshy matter, studded with void gluttonium veins. It twitches and throbs, as if something inside still wants out. Mining it yields valuable void gluttonium.</description>
+    <thingClass>Mineable</thingClass>
+    <stuffCategories />
+    <graphicData>
+      <texPath>Things/Building/Linked/Gluttonium_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>CutoutComplex</shaderType>
+      <drawSize>(4,4)</drawSize>
+      <color>(180,60,100)</color>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>0.5</fillPercent>
+    <coversFloor>true</coversFloor>
+    <rotatable>false</rotatable>
+    <holdsRoof>true</holdsRoof>
+    <blockLight>true</blockLight>
+    <fertility>0</fertility>
+    <selectable>true</selectable>
+    <statBases>
+      <MaxHitPoints>4000</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <building>
+      <isResourceRock>true</isResourceRock>
+      <mineableThing>RR_VoidGluttonium</mineableThing>
+      <mineableYield>20</mineableYield>
+      <mineableScatterLumpSizeRange>1~1</mineableScatterLumpSizeRange>
+    </building>
+    <mineable>true</mineable>
+  </ThingDef>
+
+  <!-- Witness thoughts for the bloated corpse explosion -->
+  <ThoughtDef>
+    <defName>RR_WitnessedBloatedDeath_Horror</defName>
+    <durationDays>3</durationDays>
+    <stages>
+      <li><label>Horrifying consumption</label><description>The corpse SWALLOWED them whole! I watched them disappear into that bloated thing... I can still hear the screaming.</description><baseMoodEffect>-20</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_WitnessedBloatedDeath_Aroused</defName>
+    <durationDays>3</durationDays>
+    <stages>
+      <li><label>Mesmerized</label><description>I watched them get consumed... that mass... the way it swelled and burst... I can't stop thinking about it.</description><baseMoodEffect>12</baseMoodEffect></li>
+    </stages>
+    <thoughtClass>Thought_Memory</thoughtClass>
+  </ThoughtDef>
+</Defs>

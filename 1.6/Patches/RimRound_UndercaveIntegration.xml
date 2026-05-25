@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <!-- Void gluttonium integration with undercaves — removed thingSetMaker patches
+       as GenStepDef doesn't have that field in this game version.
+       Integration handled via ore def generation instead. -->
+</Patch>

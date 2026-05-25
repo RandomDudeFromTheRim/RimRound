@@ -46,6 +46,7 @@ namespace RimRound.Patch
             return !shouldEat;
         }
 
+        [HarmonyPriority(Priority.VeryHigh)]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> codeInstructions = new List<CodeInstruction>(instructions);

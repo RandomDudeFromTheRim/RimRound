@@ -1,11 +1,12 @@
 <Defs>
-    <ThingDef ParentName="BuildingBase">
-        <defName>RR_ZenithOrb</defName>
-        <label>zenith orb</label>
-        <description>The pinnacle of mass replication studies, the Zenith Orb is the culmination of the answer to the question "Why not?" It radiates pure gluttonium in an area around itself, and can be manually and specifically attuned to specific targets, rapidly and rampantly fattening them, even far beyond immobility, until stopped. It consumes an enormous amount of power, but in return, provides limitless gain beyond comprehension.\n\nIt is heavy but portable, and can be placed in the field for combat purposes, incapacitating both enemies and allies should the operator desire.\n\nDue to its all-encompassing efficacy, all known civilised societies are fearful of the immense power of the Zenith Orb. Now you are in control.</description>
-        <thingClass>RimRound.Things.Building_ZenithOrb</thingClass>
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_ZenithOrb</defName>
+    <label>zenith orb</label>
+    <description>A mysterious pulsing orb that hums with warm energy. Its presence comforts those around it, boosting mood and reducing the need for food. The effect is subtle but cumulative over time.</description>
+    <thingClass>RimRound.Things.Building_ZenithOrb</thingClass>
 		<tickerType>Normal</tickerType>
-        <graphicData>
+    <stuffCategories />
+    <graphicData>
             <graphicClass>Graphic_Single</graphicClass>
             <texPath>Things/Building/Security/ZenithOrb</texPath>
             <drawSize>(2,2)</drawSize>
@@ -54,5 +55,7 @@
         <researchPrerequisites>
             <li>RR_Research_ZenithOrb</li>
         </researchPrerequisites>		
-    </ThingDef>
+    	<building>
+	</building>
+</ThingDef>
 </Defs>

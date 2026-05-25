@@ -23,7 +23,7 @@ namespace RimRound.Comps
         {
             base.ExposeData();
             SaveAllSettings();
-            //SaveCaravanPatchUtility();
+            SaveCaravanPatchUtility();
 
         }
 

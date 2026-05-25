@@ -696,6 +696,9 @@ namespace RimRound.Comps
         {
             get
             {
+                if (this.parent.AsPawn()?.needs?.food == null)
+                    return 0f;
+
                 float digestionBeyondQuestionMult = (perkLevels.PerkToLevels?["RR_Digestion_Beyond_Question_Title"] ?? 0) * 0.2f;
                 float gigaGurglingMult = (perkLevels.PerkToLevels?["RR_GigaGurgling_Title"] ?? 0) * 0.5f;
                 float titaniumStomachMultBonus = (perkLevels.PerkToLevels?["RR_TitaniumStomach_Title"] ?? 0) * 1f;
