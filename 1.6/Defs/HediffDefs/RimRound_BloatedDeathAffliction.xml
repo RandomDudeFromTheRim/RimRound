@@ -8,8 +8,7 @@
     <isBad>true</isBad>
     <maxSeverity>1.0</maxSeverity>
     <comps>
-      <li>
-        <compClass>HediffComp_Disappears</compClass>
+      <li Class="HediffCompProperties_Disappears">
         <disappearsAfterTicks>120000</disappearsAfterTicks>
       </li>
     </comps>
