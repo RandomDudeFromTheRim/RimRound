@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef ParentName="OrganicProductBase">
+    <defName>RR_WeirdMilk</defName>
+    <label>weird milk</label>
+    <description>This milk has an unnatural shimmer — cross-contaminated by gluttonium radiation or fleshmeld residue. Drinking it causes rapid, unnatural weight gain.</description>
+    <graphicData>
+      <texPath>Things/Item/GluttoniumFood/WeirdMilk</texPath>
+      <drawSize>0.8</drawSize>
+    </graphicData>
+    <socialPropernessMatters>true</socialPropernessMatters>
+    <statBases>
+      <MarketValue>5</MarketValue>
+      <Mass>0.05</Mass>
+      <MaxHitPoints>60</MaxHitPoints>
+      <Flammability>0.2</Flammability>
+      <Nutrition>0.05</Nutrition>
+      <FoodPoisonChanceFixedHuman>0</FoodPoisonChanceFixedHuman>
+    </statBases>
+    <comps>
+      <li Class="CompProperties_Rottable">
+        <daysToRotStart>14</daysToRotStart>
+        <rotDestroys>true</rotDestroys>
+      </li>
+    </comps>
+    <ingestible>
+      <preferability>RawTasty</preferability>
+      <foodType>AnimalProduct, Fluid</foodType>
+      <hediffGivers>
+        <li>
+          <hediffDef>RimRound_SuddenWeightGain</hediffDef>
+          <severity>0.02</severity>
+        </li>
+      </hediffGivers>
+    </ingestible>
+    <thingCategories>
+      <li>AnimalProductRaw</li>
+    </thingCategories>
+    <allowedArchonexusCount>80</allowedArchonexusCount>
+  </ThingDef>
+</Defs>

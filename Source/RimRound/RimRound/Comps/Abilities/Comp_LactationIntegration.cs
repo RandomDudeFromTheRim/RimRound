@@ -6,6 +6,7 @@ using System;
 using Verse.AI;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 using Verse;
 
 namespace RimRound.Comps
@@ -108,54 +109,107 @@ namespace RimRound.Comps
             return 15f;
         }
 
-        // #2: Weight opinion affects milking mood (prisoner being milked)
-        static void Postfix_MilkPrisonerToils(Pawn ___pawn)
+        // #2: Weight opinion affects milking mood + WeirdMilk (warden milking prisoner)
+        static IEnumerable<Toil> Postfix_MilkPrisonerToils(IEnumerable<Toil> __result, Pawn ___pawn, JobDriver __instance)
         {
             var att = ___pawn.TryGetComp<ThingComp_PawnAttitude>();
-            if (att is null)
-                return;
-
-            var thoughts = ___pawn.needs?.mood?.thoughts;
-            if (thoughts is null)
-                return;
-
-            if (att.weightOpinion <= WeightOpinion.Dislike)
+            if (att != null)
             {
-                thoughts.memories.TryGainMemory(RimRound.Defs.ThoughtDefOf.RR_MilkedHate);
+                var thoughts = ___pawn.needs?.mood?.thoughts;
+                if (thoughts != null)
+                {
+                    if (att.weightOpinion <= WeightOpinion.Dislike)
+                        thoughts.memories.TryGainMemory(RimRound.Defs.ThoughtDefOf.RR_MilkedHate);
+                    else if (att.weightOpinion >= WeightOpinion.Love)
+                        thoughts.memories.TryGainMemory(RimRound.Defs.ThoughtDefOf.RR_MilkedLove);
+                }
             }
-            else if (att.weightOpinion >= WeightOpinion.Love)
+
+            foreach (var toil in __result)
+                yield return toil;
+
+            yield return new Toil
             {
-                thoughts.memories.TryGainMemory(RimRound.Defs.ThoughtDefOf.RR_MilkedLove);
-            }
+                initAction = () =>
+                {
+                    Pawn prisoner = __instance?.job?.GetTarget(TargetIndex.A).Thing as Pawn;
+                    if (prisoner != null)
+                        TryReplaceMilk(___pawn, prisoner);
+                },
+                defaultCompleteMode = ToilCompleteMode.Instant
+            };
         }
 
-        // #2: Weight opinion affects milking mood (prisoner doing the milking)
-        static void Postfix_GetMilkedToils(Pawn ___pawn)
+        // #2b: Weight opinion affects milking mood + WeirdMilk (prisoner getting milked)
+        static IEnumerable<Toil> Postfix_GetMilkedToils(IEnumerable<Toil> __result, Pawn ___pawn, JobDriver __instance)
         {
             var att = ___pawn.TryGetComp<ThingComp_PawnAttitude>();
-            if (att is null)
-                return;
-
-            var thoughts = ___pawn.needs?.mood?.thoughts;
-            if (thoughts is null)
-                return;
-
-            if (att.weightOpinion >= WeightOpinion.Fanatical)
+            if (att != null)
             {
-                thoughts.memories.TryGainMemory(RimRound.Defs.ThoughtDefOf.RR_MilkedOthersFanatical);
+                var thoughts = ___pawn.needs?.mood?.thoughts;
+                if (thoughts != null)
+                {
+                    if (att.weightOpinion >= WeightOpinion.Fanatical)
+                        thoughts.memories.TryGainMemory(RimRound.Defs.ThoughtDefOf.RR_MilkedOthersFanatical);
+                }
             }
+
+            foreach (var toil in __result)
+                yield return toil;
+
+            yield return new Toil
+            {
+                initAction = () =>
+                {
+                    Pawn prisoner = __instance?.job?.GetTarget(TargetIndex.A).Thing as Pawn;
+                    if (prisoner != null)
+                        TryReplaceMilk(___pawn, prisoner);
+                },
+                defaultCompleteMode = ToilCompleteMode.Instant
+            };
         }
 
-        // #3: Milk from gluttonium-exposed pawns carries exposure
-        static void Postfix_MilkSelfToils(Pawn ___pawn)
+        // #3: WeirdMilk spawn for gluttonium/meld-exposed pawns (self-milking)
+        static IEnumerable<Toil> Postfix_MilkSelfToils(IEnumerable<Toil> __result, Pawn ___pawn)
         {
-            var exposure = ___pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_GluttoniumExposure);
-            if (exposure is null || exposure.Severity < 0.01f)
+            foreach (var toil in __result)
+                yield return toil;
+
+            yield return new Toil
+            {
+                initAction = () => TryReplaceMilk(___pawn, ___pawn),
+                defaultCompleteMode = ToilCompleteMode.Instant
+            };
+        }
+
+        static bool HasContaminationCondition(Pawn pawn)
+        {
+            if (pawn?.health?.hediffSet is null)
+                return false;
+
+            bool hasGlut = pawn.health.hediffSet.GetFirstHediffOfDef(Defs.HediffDefOf.RR_GluttoniumExposure)?.Severity > 0.01f;
+            bool hasMeld = pawn.health.hediffSet.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldOvergrowth) != null;
+            return hasGlut || hasMeld;
+        }
+
+        static void TryReplaceMilk(Pawn recipient, Pawn source)
+        {
+            if (recipient?.inventory?.innerContainer is null || source?.health?.hediffSet is null)
                 return;
 
-            Hediff milkSpiked = HediffMaker.MakeHediff(Defs.HediffDefOf.RR_GluttoniumExposure, ___pawn);
-            milkSpiked.Severity = exposure.Severity * 0.1f;
-            ___pawn.health.AddHediff(milkSpiked);
+            if (!HasContaminationCondition(source))
+                return;
+
+            Thing milk = recipient.inventory.innerContainer.FirstOrDefault(t => t.def.defName == "SEX_BreastMilk");
+            if (milk is null)
+                return;
+
+            int count = milk.stackCount;
+            milk.Destroy();
+
+            Thing weirdMilk = ThingMaker.MakeThing(Defs.ThingDefOf.RR_WeirdMilk);
+            weirdMilk.stackCount = count;
+            recipient.inventory.innerContainer.TryAdd(weirdMilk);
         }
 
         // #5: Fullness multiplier on lactation rate
