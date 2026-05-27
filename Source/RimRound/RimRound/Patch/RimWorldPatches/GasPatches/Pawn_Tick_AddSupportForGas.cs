@@ -31,7 +31,7 @@ namespace RimRound.Patch
                 byte gasDensity = __instance.Position.GasDentity(__instance.Map, gasHediffCombo.Key);
 
                 if (gasDensity <= 0)
-                    return;
+                    continue;
 
                 float gasDensityPercent = gasDensity / 255f;
 

@@ -18,6 +18,12 @@ namespace RimRound.Hediffs
             if (!pawn.IsHashIntervalTick(60))
                 return;
 
+            if (Severity >= 1f)
+            {
+                TriggerMeldDetonation();
+                return;
+            }
+
             DecaySeverity();
 
             if (Severity > 0f)
@@ -25,9 +31,6 @@ namespace RimRound.Hediffs
                 AddMeldGrowth();
                 AddDirectWeightGain();
             }
-
-            if (Severity >= 1f)
-                TriggerMeldDetonation();
         }
 
         void DecaySeverity()
@@ -74,7 +77,7 @@ namespace RimRound.Hediffs
 
             float weightSev = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight)?.Severity ?? 0.035f;
             float meldSev = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth)?.Severity ?? 0f;
-            float extraKilos = (weightSev + meldSev) / 0.001f;
+            float extraKilos = (weightSev / 0.001f) + (meldSev * 10f);
 
             int blobWallCount = 1 + (int)(extraKilos / 20f);
             blobWallCount = Mathf.Clamp(blobWallCount, 3, 80);
@@ -104,7 +107,7 @@ namespace RimRound.Hediffs
                 spawned++;
             }
 
-            int gluttoniumCount = Rand.RangeInclusive(3, 8) + (int)(extraKilos * 0.005f);
+            int gluttoniumCount = Rand.RangeInclusive(3, 8) + Mathf.Min((int)(extraKilos * 0.005f), 12);
             IntVec3[] offsets = {
                 new IntVec3(1, 0, 0), new IntVec3(-1, 0, 0),
                 new IntVec3(0, 0, 1), new IntVec3(0, 0, -1)
@@ -145,7 +148,7 @@ namespace RimRound.Hediffs
             {
                 float weightSev = pawn?.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight)?.Severity ?? 0.035f;
                 float meldSev = pawn?.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth)?.Severity ?? 0f;
-                float ek = (weightSev + meldSev) / 0.001f;
+                float ek = (weightSev / 0.001f) + (meldSev * 10f);
                 int blobEstimate = 1 + (int)(ek / 20f);
                 blobEstimate = Mathf.Clamp(blobEstimate, 3, 80);
 

@@ -10,22 +10,7 @@ namespace RimRound.Hediffs
     {
         public override DamageResult Apply(DamageInfo dinfo, Thing victim)
         {
-            DamageResult result = new DamageResult();
-            if (victim is Pawn pawn && pawn.RaceProps.Humanlike && !pawn.Dead)
-            {
-                var existing = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldAerosol);
-                if (existing != null)
-                {
-                    existing.Severity += 0.15f;
-                }
-                else
-                {
-                    var hediff = HediffMaker.MakeHediff(Defs.HediffDefOf.RR_MeldAerosol, pawn);
-                    hediff.Severity = 0.15f;
-                    pawn.health.AddHediff(hediff);
-                }
-            }
-            return result;
+            return new DamageResult();
         }
 
         public override void ExplosionAffectCell(Explosion explosion, IntVec3 cell, List<Thing> damagedThings, List<Thing> ignoredThings, bool canAffectCeller)
