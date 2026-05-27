@@ -1,4 +1,5 @@
 ﻿using RimRound.Comps;
+using RimRound.Utilities;
 using RimRoundExtraEvents.Hediffs;
 using RimWorld;
 using System;
@@ -13,7 +14,7 @@ namespace RimRoundExtraEvents.MentalStates
 {
     public class MentalState_AppetiteStimulatedBinging : MentalState_Binging
     {
-		public override void MentalStateTick()
+	    public void MentalStateTick()
 		{
 			if (this.pawn.IsHashIntervalTick(30))
 			{

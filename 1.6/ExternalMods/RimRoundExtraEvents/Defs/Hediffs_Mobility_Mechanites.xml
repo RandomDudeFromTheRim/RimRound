@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<HediffDef ParentName="MechanitesBase">
+		<defName>MobilityMechanites</defName>
+		<label>mobility mechanites</label>
+		<description>Semi-coherent mechanites which strenghten one's leg muscle tissue. They enhance the victim's mobility, but also cause intense hunger. These are probably a mutated strain of mobility-enhancing mechanites.</description>
+		<stages>
+			<li>
+				<label>mild hunger</label>
+				<hungerRateFactorOffset>0.5</hungerRateFactorOffset>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>0.5</offset>
+					</li>
+					<li>
+						<capacity>Eating</capacity>
+						<offset>0.5</offset>
+					</li>
+				</capMods>
+			</li>
+			<li>
+				<minSeverity>0.5</minSeverity>
+				<label>strong hunger</label>
+				<hungerRateFactorOffset>1.0</hungerRateFactorOffset>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>1.0</offset>
+					</li>
+					<li>
+						<capacity>Eating</capacity>
+						<offset>1.0</offset>
+					</li>
+				</capMods>
+			</li>
+			<li>
+				<minSeverity>0.7</minSeverity>
+				<label>intense hunger</label>
+				<hungerRateFactorOffset>2.0</hungerRateFactorOffset>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>2.0</offset>
+					</li>
+					<li>
+						<capacity>Eating</capacity>
+						<offset>2.0</offset>
+					</li>
+				</capMods>
+			</li>
+		</stages>
+	</HediffDef>
+</Defs>

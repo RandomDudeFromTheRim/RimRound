@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<IncidentDef>
+		<defName>FatToxicFallout</defName>
+		<label>mutagenic enbiggener fallout</label>
+		<category>Misc</category>
+		<targetTags>
+			<li>Map_PlayerHome</li>
+		</targetTags>
+		<workerClass>IncidentWorker_MakeGameCondition</workerClass>
+		<gameCondition>FatToxicFallout</gameCondition>
+		<letterLabel>Mutagenic enbiggener fallout</letterLabel>
+		<letterDef>ThreatSmall</letterDef>
+		<baseChance>0.12</baseChance>
+		<earliestDay>60</earliestDay>
+		<minRefireDays>90</minRefireDays>
+		<disabledWhen>
+			<extremeWeatherIncidentsDisabled>true</extremeWeatherIncidentsDisabled>
+		</disabledWhen>
+		<durationDays>2.5~10.5</durationDays>
+		<tale>FatToxicFallout</tale>
+	</IncidentDef>
+
+	<TaleDef>
+		<defName>FatToxicFallout</defName>
+		<label>mutagenic enbiggener fallout</label>
+		<taleClass>Tale_SinglePawn</taleClass>
+		<type>Volatile</type>
+		<baseInterest>50</baseInterest>
+		<rulePack>
+			<rulesStrings>
+				<li>tale_noun->fallout settling over [PAWN_nameDef]'s [Community]</li>
+				<li>tale_noun->the atmosphere near [PAWN_nameDef]'s [Community] becoming filled with growth dust</li>
+				<li>image->an ominous sky, [circumstance_group]</li>
+				<li>image->the air becoming thick and [circumstance_group]</li>
+				<li>image->fields of growing plants [circumstance_group]</li>
+				<li>image->[Quantity_adjphrase] fatties [circumstance_group]</li>
+				<li>circumstance_phrase->with much life in sight</li>
+				<li>circumstance_phrase->covered by a faint sheen of fattening dust</li>
+				<li>circumstance_phrase->waiting for the mutagenic substance to clear</li>
+				<li>desc_sentence->[PAWN_nameDef] hides near a [TerrainFeature], gazing out with a [AdjectiveAngsty] look.</li>
+				<li>desc_sentence->[PAWN_nameDef] looks on in shock.</li>
+				<li>desc_sentence->[PAWN_nameDef] rests quietly with a layer of sweat upon [PAWN_possessive] face.</li>
+			</rulesStrings>
+		</rulePack>
+	</TaleDef>
+
+	<GameConditionDef>
+		<defName>FatToxicFallout</defName>
+		<conditionClass>RimRoundExtraEvents.GameConditions.GameCondition_FatToxicFallout</conditionClass>
+		<label>mutagenic enbiggener fallout</label>
+		<description>A plume of mutagenic smoke from some distant source is slowly settling over this entire region. Any Person not under a roof will absorb it into their bloodstream, causing their fat cells to slowly multiply over time.
+		\n It, however, seems to have the side-effect of causing rapid plant growth.</description>
+		<descriptionFuture>a cloud of mutagenic smoke will blanket the area around [map_definite] for [gameConditionDuration_duration], stimulating outdoor plant life</descriptionFuture>
+		<endMessage>The worst of the growth dust has settled.</endMessage>
+		<letterText>A distant chemical explosion has released a plume of mutagenic smoke over this entire region.\n\nAny Person not under a roof will absorb the substance settling out of the atmosphere and slowly grow fatter.\n\nIt will last for anywhere between a few days to over a quadrum.</letterText>
+		<letterDef>NegativeEvent</letterDef>
+		<canBePermanent>true</canBePermanent>
+	</GameConditionDef>
+
+	<HediffDef>
+		<defName>FatToxicBuildup</defName>
+		<label>mutagenic enbiggener buildup</label>
+		<description>Enbiggening mutagens in the bloodstream. This can come from various sources, including environmental toxins, venomous bites, or poisoned weapons.
+		\nAt no dose is this lethal, but it sure shows on the waistline.
+		\nEven at low doses, it can generate fattening growths.</description>
+		<hediffClass>HediffWithComps</hediffClass>
+		<defaultLabelColor>(0.7, 1.0, 0.7)</defaultLabelColor>
+		<makesSickThought>true</makesSickThought>
+		<scenarioCanAdd>true</scenarioCanAdd>
+		<taleOnVisible>ToxicityRevealed</taleOnVisible>
+		<comps>
+			<li Class="HediffCompProperties_SeverityPerDay">
+				<severityPerDay>-0.08</severityPerDay>
+				<showDaysToRecover>true</showDaysToRecover>
+				<showHoursToRecover>true</showHoursToRecover>
+			</li>
+		</comps>
+		<stages>
+			<li>
+				<label>initial</label>
+				<becomeVisible>false</becomeVisible>
+			</li>
+			<li>
+				<label>initial</label>
+				<minSeverity>0.04</minSeverity>
+				<capMods />
+			</li>
+			<li>
+				<label>minor</label>
+				<minSeverity>0.2</minSeverity>
+				<capMods />
+			</li>
+			<li>
+				<label>moderate</label>
+				<minSeverity>0.40</minSeverity>
+				<capMods />
+				<hediffGivers>
+					<li Class="HediffGiver_Random">
+						<hediff>FatCarcinoma</hediff>
+						<mtbDays>438</mtbDays>
+						<canAffectAnyLivePart>true</canAffectAnyLivePart>
+					</li>
+				</hediffGivers>
+			</li>
+			<li>
+				<label>serious</label>
+				<minSeverity>0.60</minSeverity>
+				<capMods />
+				<hediffGivers>
+					<li Class="HediffGiver_Random">
+						<hediff>FatCarcinoma</hediff>
+						<mtbDays>111</mtbDays>
+						<canAffectAnyLivePart>true</canAffectAnyLivePart>
+					</li>
+				</hediffGivers>
+			</li>
+			<li>
+				<label>extreme</label>
+				<minSeverity>0.80</minSeverity>
+				<capMods />
+				<hediffGivers>
+					<li Class="HediffGiver_Random">
+						<hediff>FatCarcinoma</hediff>
+						<mtbDays>39</mtbDays>
+						<canAffectAnyLivePart>true</canAffectAnyLivePart>
+					</li>
+				</hediffGivers>
+			</li>
+		</stages>
+	</HediffDef>
+	
+	<HediffDef ParentName="ChronicDiseaseBase">
+    <defName>FatCarcinoma</defName>
+    <label>fattening growth</label>
+    <labelNoun>a carcinoma</labelNoun>
+    <description>A lump of cancerous tissue. Without treatment, the carcinoma will grow over time, causing worsening symptoms and eventually blobbing the patient.
+\nA skilled doctor can excise the carcinoma. An unskilled doctor may be able to simply amputate the body part which contains the carcinoma.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <initialSeverity>0.3</initialSeverity>
+    <chanceToCauseNoPain>0.3</chanceToCauseNoPain>
+    <tendable>true</tendable>
+    <removeOnQuestLodgers>true</removeOnQuestLodgers>
+    <stages>
+      <li>
+        <label>minor</label>
+      </li>
+      <li>
+        <minSeverity>0.15</minSeverity>
+        <label>minor</label>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>major</label>
+      </li>
+      <li>
+        <minSeverity>0.6</minSeverity>
+        <label>major</label>
+      </li>
+      <li>
+        <minSeverity>0.8</minSeverity>
+        <label>extreme</label>
+      </li>
+      <li>
+        <minSeverity>1</minSeverity>
+        <label>extreme</label>
+      </li>
+    </stages>
+    <comps>
+		<li Class="HediffCompProperties_SeverityPerDay">
+			<severityPerDay>0.16</severityPerDay>
+		</li>
+      <li Class="HediffCompProperties_TendDuration">
+        <baseTendDurationHours>96</baseTendDurationHours>
+        <severityPerDayTended>-0.0027</severityPerDayTended>
+      </li>
+      <li Class="HediffCompProperties_GrowthMode">
+        <severityPerDayGrowing>0.003</severityPerDayGrowing>
+        <severityPerDayRemission>-0.002</severityPerDayRemission>
+        <severityPerDayGrowingRandomFactor>0.45~1.65</severityPerDayGrowingRandomFactor>
+        <severityPerDayRemissionRandomFactor>0.7~1.5</severityPerDayRemissionRandomFactor>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <RecipeDef ParentName="SurgeryFlesh">
+    <defName>ExciseFatCarcinoma</defName>
+    <label>excise fattening growth</label>
+    <description>Excise a fattening growth.</description>
+    <workerClass>Recipe_RemoveHediff</workerClass>
+    <jobString>Excising fattening growth.</jobString>
+    <workAmount>4500</workAmount>
+    <removesHediff>FatCarcinoma</removesHediff>
+    <successfullyRemovedHediffMessage>{0} has successfully excised {1}'s fattening growth.</successfullyRemovedHediffMessage>
+    <deathOnFailedSurgeryChance>0.25</deathOnFailedSurgeryChance>
+    <skillRequirements>
+      <Medicine>10</Medicine>
+    </skillRequirements>
+    <ingredients>
+      <li>
+        <filter>
+          <categories>
+            <li>Medicine</li>
+          </categories>
+        </filter>
+        <count>4</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <categories>
+        <li>Medicine</li>
+      </categories>
+      <disallowedThingDefs>
+        <li>MedicineHerbal</li>
+      </disallowedThingDefs>
+    </fixedIngredientFilter>
+  </RecipeDef>
+</Defs>

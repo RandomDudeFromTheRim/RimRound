@@ -33,10 +33,10 @@ namespace RimRound.Patch
                     map.GetComponent<MapComp_RRGasGrid>().AddGas(cell, RRGasType.fatteningGas, amount, true);
                     return false;
                 case rimRoundGasType1:
-                    map.GetComponent<MapComp_RRGasGrid>().AddGas(cell, RRGasType.unused0, amount, true);
+                    map.GetComponent<MapComp_RRGasGrid>().AddGas(cell, RRGasType.enbiggenerGas, amount, true);
                     return false;
                 case rimRoundGasType2:
-                    map.GetComponent<MapComp_RRGasGrid>().AddGas(cell, RRGasType.unused1, amount, true);
+                    map.GetComponent<MapComp_RRGasGrid>().AddGas(cell, RRGasType.meldGas, amount, true);
                     return false;
                 case rimRoundGasType3:
                     map.GetComponent<MapComp_RRGasGrid>().AddGas(cell, RRGasType.unused2, amount, true);

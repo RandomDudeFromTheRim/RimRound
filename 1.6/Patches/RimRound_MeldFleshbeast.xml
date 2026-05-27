@@ -6,8 +6,8 @@
       <xpath>Defs/ThingDef[defName="Fingerspike"]/comps</xpath>
       <value>
         <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
-          <meldPerHit>0.15</meldPerHit>
-          <selfDamageMultiplier>1.0</selfDamageMultiplier>
+          <meldPerHit>0.04</meldPerHit>
+          <selfDamageMultiplier>15.0</selfDamageMultiplier>
           <tickInterval>180</tickInterval>
         </li>
       </value>
@@ -20,8 +20,8 @@
       <xpath>Defs/ThingDef[defName="Trispike"]/comps</xpath>
       <value>
         <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
-          <meldPerHit>0.30</meldPerHit>
-          <selfDamageMultiplier>1.0</selfDamageMultiplier>
+          <meldPerHit>0.08</meldPerHit>
+          <selfDamageMultiplier>10.0</selfDamageMultiplier>
           <tickInterval>160</tickInterval>
         </li>
       </value>
@@ -34,8 +34,8 @@
       <xpath>Defs/ThingDef[defName="Toughspike"]/comps</xpath>
       <value>
         <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
-          <meldPerHit>0.25</meldPerHit>
-          <selfDamageMultiplier>1.0</selfDamageMultiplier>
+          <meldPerHit>0.06</meldPerHit>
+          <selfDamageMultiplier>10.0</selfDamageMultiplier>
           <tickInterval>170</tickInterval>
         </li>
       </value>
@@ -48,8 +48,8 @@
       <xpath>Defs/ThingDef[defName="Bulbfreak"]/comps</xpath>
       <value>
         <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
-          <meldPerHit>0.60</meldPerHit>
-          <selfDamageMultiplier>0.5</selfDamageMultiplier>
+          <meldPerHit>0.50</meldPerHit>
+          <selfDamageMultiplier>1.5</selfDamageMultiplier>
           <tickInterval>120</tickInterval>
         </li>
       </value>
@@ -62,8 +62,8 @@
       <xpath>Defs/ThingDef[defName="Dreadmeld"]/comps</xpath>
       <value>
         <li Class="RimRound.Comps.CompProperties_MeldFleshbeast">
-          <meldPerHit>1.50</meldPerHit>
-          <selfDamageMultiplier>0.3</selfDamageMultiplier>
+          <meldPerHit>1.20</meldPerHit>
+          <selfDamageMultiplier>0.8</selfDamageMultiplier>
           <tickInterval>90</tickInterval>
         </li>
       </value>

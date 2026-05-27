@@ -9,8 +9,8 @@ namespace RimRound.Utilities
     public enum RRGasType : ushort
     {
         fatteningGas = 0,
-        unused0 = 8,
-        unused1 = 16,
+        enbiggenerGas = 8,
+        meldGas = 16,
         unused2 = 24,
     }
 }

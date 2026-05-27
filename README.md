@@ -4,7 +4,7 @@
 > This codebase was developed with heavy LLM assistance. Edits are applied rapidly across many interconnected systems (Harmony patches, XML defs, comps, hediffs, VEF pipes). Some patches may conflict, edge cases are not fully tested, and save compatibility is not guaranteed between builds.... some stuff might not just exist lmao. You have been warned.
 >
 > **Will run poorly or break without:** Harmony, Humanoid Alien Races, Vanilla Expanded Framework.
-> **Heavily recommended:** SpeakUp, RimVore-2, Intimacy series (Lovin' + Socio Butterfly), Lactation Expansion, Ushanka's Biological Warfare.
+> **Heavily recommended:** SpeakUp, RimVore-2, Intimacy series (Lovin' + Socio Butterfly), Lactation Expansion.
 > **Requires Anomaly DLC** for all void/meld/fleshbeast content.
 
 A weight gain mod for RimWorld. This is a community fork with extensive bugfixes, new content, and deep integration with other mods.
@@ -19,6 +19,8 @@ A weight gain mod for RimWorld. This is a community fork with extensive bugfixes
 - Fixed caravan diet mode saving (`SaveCaravanPatchUtility` uncommented)
 - Filled 3 NotImplementedException stubs (ConvertWeightOpinion, HungerDroneUtility, ModCompatibilityUtility)
 - Fixed `return 0` bug that caused all unknown body type suffixes to instantly max weight stage
+- Fixed breathing sound sustainer looping indefinitely — converted to throttled one-shots with 4s interval
+- Fixed NRE in `SoundUtility.GetAverageGrainDuration` when subSounds or grainnull
 
 ## Feeding Tube System (Refactored) (I DONT FUCKING KNOW IF IT ACTUALLY WORKS)
 The custom pipe network has been replaced with **VEF's PipeSystem** framework:
@@ -67,22 +69,27 @@ Harmony patch on `Pawn.TakeDamage`: intercepts unnatural corpse kill damage.
 - Attempts RV2 vore integration if RimVore-2 is installed (doesnt work lol)
 - Gives the victim sickness and some gain of weight upon corpse rupture
 
-### Meld Aerosol Bioweapon (HORRIBLY BROKEN, USE AT YOUR OWN RISK)
+### Meld Aerosol Bioweapon
 Craftable at a Drug Lab: combine gluttonium + twisted meat to create meld aerosol shells/grenades.
-- On impact, applies `RR_MeldAerosol` hediff to all pawns in radius and makes them thiccer
-- At max progression, pawn transforms into a fleshbeast
-- **Transformation depends on pawn mass:**
-  - Weight sev < 0.1 → Fingerspike
-  - 0.1–0.5 → Toughspike/Trispike
-  - 0.5–2.0 → Bulbfreak
-  - > 2.0 → **Dreadmeld** (only from extremely fat pawns)
-this system might be stuck at 15%, didnt test it much lol
+- On impact, applies `RR_MeldAerosol` hediff and RR gas (pink) to all pawns in radius
+- Severity grows only via external exposure (gas, direct hits) — no auto-progression
+- Naturally decays over ~2 days if no re-exposure
+- At max progression, pawn **detonates** into `RR_BlobWall` clusters (4–30 walls, scaling with pawn weight) and drops `RR_VoidGluttonium`
 
 ### Obelisk Mutator Weight Gain
 When the Twisted Obelisk mutates a pawn, they also gain weight + gluttonium exposure. Weight-likers get a mood boost.
 
 ### MELD DISEASE
-Getting attacked by fleshbeasts has a chance to make them begin merging into your pawn, dealing the fleshbeastss damage and auto-sealing any bleeding on pawn while also making it's weight increase... pawns react differently to it based on their weight opinion. The hits can stack, which can cause your pawn to balloon out if surrounded by fleshbeasts. Be on the lookout and prepare to use the liposuction surgery if fleshbeasts go loose...
+Fleshbeasts merge into pawns on contact, dealing self-damage and applying `RR_MeldGrowth` hediff. The hediff converts meld mass to gradual weight gain and auto-seals bleeding. Pawns react differently based on weight opinion (haters get negative moods, lovers get positive). Early creatures (Fingerspike) deal more self-damage and give less weight per hit — a few won't matter, but a swarm still adds up.
+
+## RimRound Extra Events (RREE)
+Extra events, hazards, and equipment bundled as a separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`):
+- **Mutagenic Enbiggener Fallout** — game condition that applies `FatToxicBuildup` to unroofed pawns (slow fattening) and boosts plant growth
+- **FatToxicBuildup** — hediff from environmental exposure, naturally clears over time, can spawn `FatCarcinoma` at high severity
+- **FatCarcinoma** — fast-growing cancerous growth, can be excised via surgery
+- **Enbiggener smoke mortar shells & IED traps** — deploy green-tinted RR gas (enbiggener) on detonation
+- **Enbiggener smoke launcher** — handheld weapon applying enbiggener gas on impact
+- **Mobility Mechanites** — hediff that boosts movement/eating at cost of increased hunger
 
 ## Mod Integrations
 
@@ -114,7 +121,7 @@ Getting attacked by fleshbeasts has a chance to make them begin merging into you
 ## Dependencies
 - **Required:** Harmony, Humanoid Alien Races, Vanilla Expanded Framework
 - **Required for void/meld content:** Anomaly DLC
-- **Recommended:** SpeakUp, RimVore-2, Intimacy series (Lovin' + Socio Butterfly), Lactation Expansion, Ushanka's Biological Warfare
+- **Recommended:** SpeakUp, RimVore-2, Intimacy series (Lovin' + Socio Butterfly), Lactation Expansion
 - **Optional:** Odyssey DLC, Biotech DLC
 
 ## License

@@ -72,7 +72,7 @@ namespace RimRound.Hediffs
             }
             totalMeldMass -= converted;
 
-            float kilos = converted * avgBodySize * 55f;
+            float kilos = converted * avgBodySize * 10f;
 
             var fnd = pawn.TryGetComp<FullnessAndDietStats_ThingComp>();
             if (fnd != null && !fnd.Disabled)
@@ -84,17 +84,8 @@ namespace RimRound.Hediffs
             if (_displaySeverity > totalMeldMass)
                 _displaySeverity = Mathf.Max(_displaySeverity - 0.002f, totalMeldMass);
 
-            if (converted > 0)
-                SpawnMote();
-
             AutoClot();
             ApplyMeldThought();
-        }
-
-        void SpawnMote()
-        {
-            if (pawn?.Map != null && pawn.IsHashIntervalTick(120))
-                FleckMaker.ThrowSmoke(pawn.DrawPos, pawn.Map, Mathf.Min(totalMeldMass * 2f, 3f));
         }
 
         void AutoClot()
@@ -143,7 +134,7 @@ namespace RimRound.Hediffs
             {
                 var att = pawn?.TryGetComp<ThingComp_PawnAttitude>();
                 float kgPerCycle = totalMeldMass > 0
-                    ? (0.01f + totalMeldMass * 0.03f) * (weightedBodySizeSum / totalMeldMass) * 55f
+                    ? (0.01f + totalMeldMass * 0.03f) * (weightedBodySizeSum / totalMeldMass) * 10f
                     : 0;
                 return att?.weightOpinion switch
                 {

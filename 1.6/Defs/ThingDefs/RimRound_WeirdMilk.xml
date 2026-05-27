@@ -26,12 +26,12 @@
     <ingestible>
       <preferability>RawTasty</preferability>
       <foodType>AnimalProduct, Fluid</foodType>
-      <hediffGivers>
-        <li>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
           <hediffDef>RimRound_SuddenWeightGain</hediffDef>
           <severity>0.02</severity>
         </li>
-      </hediffGivers>
+      </outcomeDoers>
     </ingestible>
     <thingCategories>
       <li>AnimalProductRaw</li>

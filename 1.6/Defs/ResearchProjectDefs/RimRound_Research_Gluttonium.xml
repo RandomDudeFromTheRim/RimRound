@@ -216,7 +216,7 @@ Societies privy to these have mostly outlawed this technology as it usually resu
 		<defName>RR_Research_MeldAerosol</defName>
 		<label>meld aerosol weapons</label>
 		<tab>RimRoundTech</tab>
-		<description>Process anomalous meat and gluttonium into weaponized meld aerosol. Creates mortar shells and grenades that infect targets with fleshmass growth, rapidly adding weight before the victim transforms into a fleshbeast.</description>
+        <description>Process anomalous meat and gluttonium into weaponized meld aerosol. Creates mortar shells and grenades that infect targets with fleshmass growth. If the infection reaches full saturation, the victim detonates violently — their body erupting into a cluster of blob walls scaled to their mass.</description>
 		<baseCost>2000</baseCost>
 		<requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
 		<requiredResearchFacilities>

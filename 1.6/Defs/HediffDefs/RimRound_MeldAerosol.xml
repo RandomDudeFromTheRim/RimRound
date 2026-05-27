@@ -3,7 +3,7 @@
   <HediffDef>
     <defName>RR_MeldAerosol</defName>
     <label>meld aerosol infection</label>
-    <description>A bioweapon aerosol that forces rapid meld growth in living tissue. The body is being consumed from within and replaced with fleshmass. The final form depends on the host's mass.</description>
+    <description>A bioweapon aerosol that forces rapid meld growth in living tissue. The body is being consumed from within. At full saturation the host detonates into a cluster of blob walls.</description>
     <hediffClass>RimRound.Hediffs.Hediff_MeldAerosol</hediffClass>
     <isBad>true</isBad>
     <maxSeverity>1.0</maxSeverity>

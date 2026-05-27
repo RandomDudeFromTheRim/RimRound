@@ -12,6 +12,8 @@ namespace RimRound.Utilities
         public static Dictionary<RRGasType, HediffDef> gasToHediff = new Dictionary<RRGasType, HediffDef>
         {
             { RRGasType.fatteningGas, Defs.HediffDefOf.RimRound_SuddenWeightGain },
+            { RRGasType.enbiggenerGas, HediffDef.Named("FatToxicBuildup") },
+            { RRGasType.meldGas, HediffDef.Named("RR_MeldAerosol") },
         };
     }
 }

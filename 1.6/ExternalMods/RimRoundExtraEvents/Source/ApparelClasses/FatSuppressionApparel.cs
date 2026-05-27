@@ -13,7 +13,7 @@ namespace RimRoundExtraEvents.Apparelclasses
 {
     public class FatSuppressionApparel : Apparel
     {
-		public override void Tick()
+	    protected override void Tick()
 		{
 			base.Tick();
 

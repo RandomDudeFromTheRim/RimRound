@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<ThingDef ParentName="MakeableShellBase">
+		<defName>Shell_Fat</defName>
+		<label>Enbiggener shell</label>
+		<description>A shell that generates a cloud of mutagenic smoke when detonated, which when entering the blood stream interacts with fat cells causing them to multiply rapidly. Can be fired from mortars or installed as a trap. Explodes when damaged.</description>
+		<graphicData>
+			<texPath>Things/Item/Resource/Shell/Shell_Smoke</texPath>
+			<graphicClass>Graphic_StackCount</graphicClass>
+		</graphicData>
+		<comps>
+			<li Class="RimRoundExtraEvents.ThingComps.CompProperties_ExplosiveAddRRGas">
+				<explosiveDamageType>Smoke</explosiveDamageType>
+				<explosiveRadius>11</explosiveRadius>
+				<wickTicks>30~60</wickTicks>
+			</li>
+		</comps>
+		<projectileWhenLoaded>Bullet_Shell_Fat</projectileWhenLoaded>
+		<costList>
+			<Steel>25</Steel>
+		</costList>
+		<costListForDifficulty>
+			<difficultyVar>classicMortars</difficultyVar>
+			<costList>
+				<Steel>35</Steel>
+			</costList>
+		</costListForDifficulty>
+		<recipeMaker>
+			<researchPrerequisite>Mortars</researchPrerequisite>
+		</recipeMaker>
+	</ThingDef>
+
+	<ThingDef ParentName="BaseBullet">
+		<defName>Bullet_Shell_Fat</defName>
+		<label>Enbiggener shell</label>
+		<graphicData>
+			<texPath>Things/Projectile/ShellSmoke</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<shaderType>TransparentPostLight</shaderType>
+		</graphicData>
+		<thingClass>RimRoundExtraEvents.Projectiles.Projectile_Explosive_AddRRGas</thingClass>
+		<projectile>
+			<damageDef>Smoke</damageDef>
+			<speed>41</speed>
+			<explosionRadius>7.2</explosionRadius>
+			<flyOverhead>true</flyOverhead>
+			<soundHitThickRoof>Artillery_HitThickRoof</soundHitThickRoof>
+			<soundExplode>Explosion_Smoke</soundExplode>
+			<soundImpactAnticipate>MortarRound_PreImpact</soundImpactAnticipate>
+			<soundAmbient>MortarRound_Ambient</soundAmbient>
+		</projectile>
+	</ThingDef>
+
+	<ThingDef ParentName="TrapIEDBase">
+		<defName>TrapIED_FatSmoke</defName>
+		<label>IED Enbiggener Smoke trap</label>
+		<description>A pair of enbiggener smoke shells connected to a trigger which detonates on touch or bullet impact. Since it is hidden in the surrounding terrain, it cannot be placed adjacent to other traps. Animals can sense these when calm.</description>
+		<graphicData>
+			<texPath>Things/Building/Security/IEDSmoke</texPath>
+		</graphicData>
+		<costList>
+			<Shell_Smoke>2</Shell_Smoke>
+		</costList>
+		<designationHotKey>Misc10</designationHotKey>
+		<comps>
+			<li Class="RimRoundExtraEvents.ThingComps.CompProperties_ExplosiveAddRRGas">
+				<explosiveRadius>8.6</explosiveRadius>
+				<explosiveDamageType>Smoke</explosiveDamageType>
+				<startWickHitPointsPercent>0.2</startWickHitPointsPercent>
+				<wickTicks>15</wickTicks>
+				<startWickOnDamageTaken>
+					<li>Bullet</li>
+					<li>Arrow</li>
+					<li>ArrowHighVelocity</li>
+				</startWickOnDamageTaken>
+			</li>
+		</comps>
+		<specialDisplayRadius>8.6</specialDisplayRadius>
+	</ThingDef>
+
+	<ThingDef ParentName="BaseHumanMakeableGun">
+		<defName>Gun_FatSmokeLauncher</defName>
+		<label>enbiggener smoke launcher</label>
+		<description>A wide-barreled enbiggener smoke shell launcher. The shell will upon impact release a cloud of mutagenic smoke, which when entering the blood stream interacts with fat cells causing them to multiply rapidly.</description>
+		<graphicData>
+			<texPath>Things/Item/Equipment/WeaponRanged/SmokeLauncher</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<soundInteract>Interact_Rifle</soundInteract>
+		<generateCommonality>0.3</generateCommonality>
+		<weaponClasses>
+			<li>RangedHeavy</li>
+		</weaponClasses>
+		<statBases>
+			<WorkToMake>30000</WorkToMake>
+			<Mass>3.4</Mass>
+			<RangedWeapon_Cooldown>4.5</RangedWeapon_Cooldown>
+		</statBases>
+		<costList>
+			<Steel>75</Steel>
+			<ComponentIndustrial>4</ComponentIndustrial>
+		</costList>
+		<weaponTags Inherit="False">
+			<li>GrenadeSmoke</li>
+		</weaponTags>
+		<recipeMaker>
+			<skillRequirements>
+				<Crafting>4</Crafting>
+			</skillRequirements>
+		</recipeMaker>
+		<verbs>
+			<li>
+				<verbClass>Verb_Shoot</verbClass>
+				<hasStandardCommand>true</hasStandardCommand>
+				<defaultProjectile>Bullet_FatSmokeLauncher</defaultProjectile>
+				<warmupTime>3.5</warmupTime>
+				<range>23.9</range>
+				<forcedMissRadius>1.9</forcedMissRadius>
+				<burstShotCount>1</burstShotCount>
+				<soundCast>Shot_IncendiaryLauncher</soundCast>
+				<soundCastTail>GunTail_Medium</soundCastTail>
+				<muzzleFlashScale>14</muzzleFlashScale>
+				<targetParams>
+					<canTargetLocations>true</canTargetLocations>
+				</targetParams>
+			</li>
+		</verbs>
+		<tools>
+			<li>
+				<label>stock</label>
+				<capacities>
+					<li>Blunt</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+			<li>
+				<label>barrel</label>
+				<capacities>
+					<li>Blunt</li>
+					<li>Poke</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+		</tools>
+	</ThingDef>
+	<ThingDef ParentName="BaseBullet">
+		<defName>Bullet_FatSmokeLauncher</defName>
+		<label>enbiggener smoke launcher shell</label>
+		<graphicData>
+			<texPath>Things/Projectile/LauncherShot</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<shaderType>TransparentPostLight</shaderType>
+			<color>(140,135,156)</color>
+		</graphicData>
+		<thingClass>RimRoundExtraEvents.Projectiles.Projectile_Explosive_AddRRGas</thingClass>
+		<projectile>
+			<speed>40</speed>
+			<damageDef>Smoke</damageDef>
+			<explosionRadius>2.4</explosionRadius>
+			<ai_IsIncendiary>true</ai_IsIncendiary>
+			<arcHeightFactor>0.2</arcHeightFactor>
+			<shadowSize>0.6</shadowSize>
+		</projectile>
+	</ThingDef>
+</Defs>

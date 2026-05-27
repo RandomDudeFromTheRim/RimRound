@@ -4,7 +4,7 @@
   <ThingDef ParentName="ResourceBase">
     <defName>RR_MeldAerosolShell</defName>
     <label>meld aerosol shell</label>
-    <description>A pressurized canister containing a slurry of meld-infected biomass and processed anomalous meat. When the canister bursts, it releases a bioaerosol that forces rapid fleshmass growth in living tissue. Heavier targets transform into larger and more dangerous fleshbeasts. Victims with extreme mass may become Dreadmelds.</description>
+    <description>A pressurized canister containing a slurry of meld-infected biomass and processed anomalous meat. When the canister bursts, it releases a bioaerosol that forces rapid fleshmass growth in living tissue. At full saturation the victim detonates, their mass bursting outward into a cluster of blob walls.</description>
     <statBases>
       <Mass>14</Mass>
       <MarketValue>250</MarketValue>
@@ -37,7 +37,7 @@
     <defName>RR_MeldAerosolGrenade</defName>
     <label>meld aerosol grenade</label>
     <techLevel>Industrial</techLevel>
-    <description>A throwable canister of meld aerosol. Creates a cloud of fleshmass-inducing bioaerosol on impact. Handle with care.</description>
+    <description>A throwable canister of meld aerosol. Infects living tissue with fleshmass growth on impact. At full saturation the victim erupts into blob walls — handle with care.</description>
     <statBases>
       <Mass>1.5</Mass>
       <MarketValue>80</MarketValue>
@@ -56,8 +56,8 @@
         <verbClass>Verb_LaunchProjectile</verbClass>
         <hasStandardCommand>true</hasStandardCommand>
         <defaultProjectile>RR_MeldAerosolProjectile</defaultProjectile>
-        <range>12</range>
-        <warmupTime>0.5</warmupTime>
+        <range>9</range>
+        <warmupTime>1.5</warmupTime>
         <soundCast>ThrowGrenade</soundCast>
         <forcedMissRadius>3</forcedMissRadius>
         <ai_AvoidFriendlyFireRadius>1.5</ai_AvoidFriendlyFireRadius>
@@ -169,5 +169,6 @@
     <externalViolence>false</externalViolence>
     <makesAnimalsFlee>false</makesAnimalsFlee>
     <isExplosive>true</isExplosive>
+    <soundExplosion>Explosion_Smoke</soundExplosion>
   </DamageDef>
 </Defs>

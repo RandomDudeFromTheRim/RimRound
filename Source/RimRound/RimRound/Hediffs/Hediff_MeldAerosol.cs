@@ -2,15 +2,13 @@ using RimRound.Comps;
 using RimRound.Utilities;
 using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace RimRound.Hediffs
 {
     public class Hediff_MeldAerosol : Hediff
     {
-        int tickCounter = 0;
-
         public override void Tick()
         {
             base.Tick();
@@ -20,28 +18,28 @@ namespace RimRound.Hediffs
             if (!pawn.IsHashIntervalTick(60))
                 return;
 
-            tickCounter++;
+            DecaySeverity();
 
-            AddSeverityProgression();
-
-            AddMeldGrowth();
-
-            AddDirectWeightGain();
+            if (Severity > 0f)
+            {
+                AddMeldGrowth();
+                AddDirectWeightGain();
+            }
 
             if (Severity >= 1f)
-                TransformToFleshbeast();
+                TriggerMeldDetonation();
         }
 
-        void AddSeverityProgression()
+        void DecaySeverity()
         {
-            Severity += 0.0005f;
-            if (Severity > 1f)
-                Severity = 1f;
+            Severity -= 0.0005f;
+            if (Severity < 0f)
+                Severity = 0f;
         }
 
         void AddMeldGrowth()
         {
-            float meldAmount = 0.05f + Severity * 0.15f;
+            float meldAmount = 0.02f + Severity * 0.05f;
             Hediff existing = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth);
             if (existing is Hediff_MeldGrowth meldGrowth)
             {
@@ -61,78 +59,97 @@ namespace RimRound.Hediffs
             if (fnd == null || fnd.Disabled)
                 return;
 
-            float kilos = (0.05f + Severity * 0.3f);
+            float kilos = 0.02f + Severity * 0.1f;
             fnd.activeWeightGainRequests.Enqueue(
                 new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, 0, false));
         }
 
-        void TransformToFleshbeast()
+        void TriggerMeldDetonation()
         {
             if (pawn == null || pawn.Dead || pawn.Map == null)
                 return;
 
-            if (!ModsConfig.AnomalyActive)
-                return;
+            Map map = pawn.Map;
+            IntVec3 pos = pawn.Position;
 
-            var naturalWeight = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight);
-            var meld = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth);
+            float weightSev = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight)?.Severity ?? 0.035f;
+            float meldSev = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth)?.Severity ?? 0f;
+            float extraKilos = (weightSev + meldSev) / 0.001f;
 
-            float weightSev = naturalWeight?.Severity ?? 0.035f;
-            float meldSev = meld?.Severity ?? 0f;
-            float totalMass = weightSev + meldSev;
+            int blobWallCount = 1 + (int)(extraKilos / 20f);
+            blobWallCount = Mathf.Clamp(blobWallCount, 3, 80);
+            float blobRadius = 1.5f + extraKilos * 0.004f;
 
-            PawnKindDef kind = ChooseFleshbeast(totalMass);
-            if (kind == null)
-            {
-                Severity = 0.5f;
-                return;
-            }
-
-            string label = kind.label;
             Messages.Message(
-                $"{pawn.LabelShort}'s body contorts and rips apart as a {label} emerges from the writhing mass!",
+                $"{pawn.LabelShort}'s body swells and bursts, releasing a torrent of fleshmass that solidifies into blob walls!",
                 new LookTargets(pawn),
                 MessageTypeDefOf.ThreatBig);
 
-            Pawn beast = PawnGenerator.GeneratePawn(kind, Faction.OfEntities);
-            GenSpawn.Spawn(beast, pawn.Position, pawn.Map);
+            pawn.Kill(null);
 
-            if (!pawn.Dead)
-                pawn.Kill(null);
-        }
+            int spawned = 0;
+            foreach (IntVec3 cell in GenRadial.RadialCellsAround(pos, blobRadius, useCenter: true))
+            {
+                if (spawned >= blobWallCount)
+                    break;
 
-        static PawnKindDef ChooseFleshbeast(float totalMass)
-        {
-            if (totalMass < 0.1f)
-                return PawnKindDef.Named("Fingerspike");
-            else if (totalMass < 0.5f)
-                return Rand.Bool ? PawnKindDef.Named("Toughspike") : PawnKindDef.Named("Trispike");
-            else if (totalMass < 2.0f)
-                return PawnKindDef.Named("Bulbfreak");
-            else
-                return PawnKindDef.Named("Dreadmeld");
+                if (!cell.InBounds(map) || !cell.Walkable(map))
+                    continue;
+
+                if (!Rand.Chance(0.65f))
+                    continue;
+
+                Thing wall = ThingMaker.MakeThing(ThingDef.Named("RR_BlobWall"));
+                GenSpawn.Spawn(wall, cell, map, Rot4.North, WipeMode.Vanish);
+                spawned++;
+            }
+
+            int gluttoniumCount = Rand.RangeInclusive(3, 8) + (int)(extraKilos * 0.005f);
+            IntVec3[] offsets = {
+                new IntVec3(1, 0, 0), new IntVec3(-1, 0, 0),
+                new IntVec3(0, 0, 1), new IntVec3(0, 0, -1)
+            };
+            foreach (IntVec3 offset in offsets)
+            {
+                IntVec3 cell = pos + offset;
+                if (cell.InBounds(map) && cell.Walkable(map))
+                {
+                    int dropCount = gluttoniumCount;
+                    if (dropCount > 8) dropCount = 8;
+                    if (dropCount > 0)
+                    {
+                        Thing ore = ThingMaker.MakeThing(ThingDef.Named("RR_VoidGluttonium"));
+                        ore.stackCount = dropCount;
+                        gluttoniumCount -= dropCount;
+                        GenPlace.TryPlaceThing(ore, cell, map, ThingPlaceMode.Near);
+                    }
+                }
+            }
+
+            foreach (Pawn p in map.mapPawns.FreeColonistsSpawned)
+            {
+                float dist = (p.Position - pos).LengthHorizontal;
+                if (dist > 30f) continue;
+                ThingComp_PawnAttitude witnessAtt = p.TryGetComp<ThingComp_PawnAttitude>();
+                if (witnessAtt == null) continue;
+                if (witnessAtt.weightOpinion >= WeightOpinion.NeutralPlus)
+                    p.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtDef.Named("RR_WitnessedBloatedDeath_Aroused"));
+                else
+                    p.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtDef.Named("RR_WitnessedBloatedDeath_Horror"));
+            }
         }
 
         public override string TipStringExtra
         {
             get
             {
-                var naturalWeight = pawn?.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight);
-                var meld = pawn?.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth);
-                float weightSev = naturalWeight?.Severity ?? 0.035f;
-                float meldSev = meld?.Severity ?? 0f;
-                float totalMass = weightSev + meldSev;
+                float weightSev = pawn?.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight)?.Severity ?? 0.035f;
+                float meldSev = pawn?.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth)?.Severity ?? 0f;
+                float ek = (weightSev + meldSev) / 0.001f;
+                int blobEstimate = 1 + (int)(ek / 20f);
+                blobEstimate = Mathf.Clamp(blobEstimate, 3, 80);
 
-                string outcome = totalMass switch
-                {
-                    < 0.1f => "Will become: Fingerspike",
-                    < 0.5f => "Will become: Toughspike or Trispike",
-                    < 2.0f => "Will become: Bulbfreak",
-                    _ => "WILL BECOME: DREADMELD!"
-                };
-
-                float kgPerCycle = 0.05f + Severity * 0.3f;
-                return $"Meld aerosol progress: {Severity:P0}\nWeight gain: +{kgPerCycle:F1} kg/cycle\nPredicted outcome: {outcome}";
+                return $"Meld aerosol infection: {Severity:P1}\nDetonation: ~{blobEstimate} blob walls\nHeavier victims produce more walls";
             }
         }
     }
