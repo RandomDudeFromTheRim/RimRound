@@ -9,12 +9,13 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-
 namespace RimRound.Hediffs
 {
 
     public class Hediff_Weight : Hediff
     {
+        static HashSet<int> loggedPbtNullPawns = new HashSet<int>();
+
         public override void PostAdd(DamageInfo? dinfo)
         {
             base.PostAdd(dinfo);
@@ -54,7 +55,8 @@ namespace RimRound.Hediffs
 
                 if (pbtComp is null)
                 {
-                    Log.Error("PBT comp was null in weight hediff");
+                    if (loggedPbtNullPawns.Add(pawn.thingIDNumber))
+                        Log.Warning("PBT comp was null on pawn " + pawn + " in weight hediff");
                     return baselabel;
                 }
 
