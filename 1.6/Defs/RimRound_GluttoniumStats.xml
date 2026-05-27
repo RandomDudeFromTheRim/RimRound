@@ -1,15 +1,3 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <StatDef>
-    <defName>RR_GluttoniumResistance</defName>
-    <label>gluttonium resistance</label>
-    <description>How well this apparel protects against gluttonium exposure.</description>
-    <category>PawnResistances</category>
-    <defaultBaseValue>0</defaultBaseValue>
-    <minValue>0</minValue>
-    <maxValue>1</maxValue>
-    <showIfUndefined>false</showIfUndefined>
-    <hideAtValue>0</hideAtValue>
-    <toStringStyle>PercentZero</toStringStyle>
-  </StatDef>
 </Defs>

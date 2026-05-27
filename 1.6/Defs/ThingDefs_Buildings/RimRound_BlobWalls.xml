@@ -54,6 +54,10 @@
         <exposurePerTick>0.002</exposurePerTick>
         <tickInterval>500</tickInterval>
       </li>
+      <li Class="RimRound.Comps.CompProperties_DestroyDrop">
+        <dropDefName>Meat_Twisted</dropDefName>
+        <dropCount>5</dropCount>
+      </li>
     </comps>
   </ThingDef>
 

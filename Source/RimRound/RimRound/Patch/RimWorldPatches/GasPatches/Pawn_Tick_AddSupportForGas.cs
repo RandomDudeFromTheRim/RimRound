@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using Verse;
 
 namespace RimRound.Patch
@@ -45,7 +46,8 @@ namespace RimRound.Patch
                     hediff = Utilities.HediffUtility.AddHediffOfDefTo(gasHediffCombo.Value, __instance);
 
 
-                Utilities.HediffUtility.AddHediffSeverity(hediff, __instance, gasDensityPercent * 0.1f);
+                float toxicResistance = Mathf.Min(__instance.GetStatValue(StatDefOf.ToxicResistance), 1f);
+                Utilities.HediffUtility.AddHediffSeverity(hediff, __instance, gasDensityPercent * 0.2f * (1f - toxicResistance));
 
 
             }

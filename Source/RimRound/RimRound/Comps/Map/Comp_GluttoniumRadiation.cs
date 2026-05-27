@@ -3,6 +3,7 @@ using RimRound.Utilities;
 using RimWorld;
 using System.Collections.Generic;
 using Verse;
+using UnityEngine;
 
 namespace RimRound.Comps
 {
@@ -71,7 +72,7 @@ namespace RimRound.Comps
                 if (attenuation <= 0)
                     continue;
 
-                float protection = GetGluttoniumProtection(pawn);
+                float protection = Mathf.Min(pawn.GetStatValue(StatDefOf.ToxicResistance), 1f);
                 if (protection >= 1f)
                     continue;
 
@@ -91,18 +92,5 @@ namespace RimRound.Comps
             }
         }
 
-        static float GetGluttoniumProtection(Pawn pawn)
-        {
-            if (pawn.apparel == null)
-                return 0;
-
-            float best = 0;
-            foreach (Apparel a in pawn.apparel.WornApparel)
-            {
-                float p = a.GetStatValue(StatDef.Named("RR_GluttoniumResistance"));
-                if (p > best) best = p;
-            }
-            return best;
-        }
     }
 }

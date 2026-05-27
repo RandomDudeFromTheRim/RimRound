@@ -4,6 +4,7 @@ using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using static UnityEngine.Mathf;
 
 namespace RimRound.Hediffs
 {
@@ -88,7 +89,11 @@ namespace RimRound.Hediffs
                 new LookTargets(pawn),
                 MessageTypeDefOf.ThreatBig);
 
+            GenExplosion.DoExplosion(pos, map, 2.9f, DamageDefOf.Smoke, null);
+            Find.CameraDriver.shaker.DoShake(1f);
+
             pawn.Kill(null);
+            pawn.Corpse?.Destroy();
 
             int spawned = 0;
             foreach (IntVec3 cell in GenRadial.RadialCellsAround(pos, blobRadius, useCenter: true))

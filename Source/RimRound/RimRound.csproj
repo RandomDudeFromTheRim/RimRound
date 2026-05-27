@@ -171,6 +171,7 @@
     <Compile Include="RimRound\Comps\Buildings\CompProperties_RestingWeightGainMod.cs" />
     <Compile Include="RimRound\Comps\Buildings\Comp_AssignableToPawnModified.cs" />
     <Compile Include="RimRound\Comps\Buildings\Comp_RestingWeightGainMod.cs" />
+    <Compile Include="RimRound\Comps\Building\CompDestroyDrop.cs" />
     <Compile Include="RimRound\Comps\Map\MapComp_RRGasGrid.cs" />
     <Compile Include="RimRound\Comps\PsychicShips\CompCauseGameCondition_HungerDrone.cs" />
     <Compile Include="RimRound\Comps\PsychicShips\CompIncreaseHunger.cs" />

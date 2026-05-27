@@ -13,7 +13,6 @@
       <Mass>0.04</Mass>
       <StuffPower_Armor_Sharp>0.30</StuffPower_Armor_Sharp>
       <StuffPower_Armor_Blunt>0.20</StuffPower_Armor_Blunt>
-      <RR_GluttoniumResistance>0.7</RR_GluttoniumResistance>
     </statBases>
     <stuffProps>
       <categories>
@@ -93,7 +92,7 @@
       <Mass>3</Mass>
       <StuffPower_Armor_Sharp>0.60</StuffPower_Armor_Sharp>
       <StuffPower_Armor_Blunt>0.40</StuffPower_Armor_Blunt>
-      <RR_GluttoniumResistance>0.85</RR_GluttoniumResistance>
+      <ToxicResistance>0.75</ToxicResistance>
     </statBases>
     <thingCategories>
       <li>Apparel</li>
