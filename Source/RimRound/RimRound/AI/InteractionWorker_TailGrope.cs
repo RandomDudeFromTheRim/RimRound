@@ -61,7 +61,6 @@ namespace RimRound.AI
             {
                 case WeightOpinion.Hate:
                     recThought?.memories.TryGainMemory(ThoughtDef.Named("RR_TailGropeHate"), initiator);
-                    recipient.interactions?.StartSocialFight(initiator);
                     break;
                 case WeightOpinion.Dislike:
                     recThought?.memories.TryGainMemory(ThoughtDef.Named("RR_TailGropeDislike"), initiator);

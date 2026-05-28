@@ -8,8 +8,11 @@
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->D-Don't touch me! Get away!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Um... I'd rather you didn't...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->I-I guess it's okay if you touch me...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->You're really into this, huh...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Your hands feel nice on me...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Feels nice when you touch me there...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I love when you hold me...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->Y-Yes! Don't stop!</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -20,7 +23,12 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I said STOP touching me!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Not now. I'm not in the mood.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->Well... if you insist.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->Mmm, that's nice I guess...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Okay yeah, that's working for me...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Yes! Right there!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I need your touch so badly!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->More! Touch all of me!</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -31,6 +39,12 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->KEEP YOUR HANDS TO YOURSELF!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->You DARE touch me like that?</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->You may touch me. Consider it a privilege.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->You have my permission to admire me.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Yes, appreciate my body.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Marvel at my perfection!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I AM YOUR GODDESS! WORSHIP ME!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->WORSHIP MY BODY! I AM YOUR GODDESS!</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -44,7 +58,11 @@
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->G-Get off! You're crushing me!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Too close... please move...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->Is this... happening right now...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->I guess this is happening...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Your warmth is... nice...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Am I too heavy? Is this okay?</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I love feeling your weight on me...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->You fit so perfectly under me...</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -55,7 +73,12 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I CAN'T BREATHE! GET OFF!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Too much! Back off a little!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->Heh, you're really into this...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->Yeah, squash me with all that...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Mmm yeah, put your weight on me...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->I love covering you!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->Yes! Smother me! I need ALL of you!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->Feel my weight... let it consume you...</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -65,7 +88,13 @@
     <label>smother fanatical reply</label>
     <logRulesInitiator>
       <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I'LL CRUSH YOU! GET OFF!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Get off! Get off! GET OFF!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->You are beneath me, but I'll allow it.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->Submit to my mass.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Feel the power of my body.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->YOUR SIZE PALES BEFORE ME! ACCEPT IT!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I AM THE MOUNTAIN! BOW BEFORE MY MASS!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->BECOME PART OF ME!</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -78,7 +107,12 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->Stop poking me!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Please don't...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->You're... really curious, huh...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->You're so soft... it's amazing...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Your touch is... gentle...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->It feels good when you explore me...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I love your hands on me...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->I've never touched anyone this big...</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -89,7 +123,12 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->Don't touch me there! OR THERE!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Not there! Anywhere but there!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->Go on then... explore all you want...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->Mmm, yeah feel how soft I am...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Your hands feel amazing on me...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Every inch of you drives me wild!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I crave your touch! Explore every inch!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->I want to memorize every curve!</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -100,20 +139,30 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->KEEP YOUR HANDS OFF!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->You may observe, but do NOT touch.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->You may look. Touching is a privilege.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->I allow you this honor.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Yes, appreciate my divine form.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->STUDY MY PERFECTION IN DETAIL!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->YOUR HANDS EXIST TO WORSHIP ME!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->YOUR BODY IS PERFECT! LET ME STUDY EVERY PART!</li>
       </rulesStrings>
     </logRulesInitiator>
   </InteractionDef>
 
-    <!-- Tail grope reply templates -->
+  <!-- Tail grope reply templates -->
   <InteractionDef ParentName="SpeakUpReply">
     <defName>RR_TailGropeReply_Shy</defName>
     <label>tail grope shy reply</label>
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->Let GO of my tail!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Hey! Ask first...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->Um, my tail is sensitive...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->You're really into my tail, huh...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Your touch on my tail feels... different...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Be gentle... it's sensitive...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I love when you touch my tail...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->Y-Yes! Pull my tail harder!</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -124,7 +173,12 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I SAID STOP! THAT'S MY TAIL!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Careful with the tail, okay?</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->You really like my tail, huh...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->Yeah, right there... that's good...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Mmm, don't stop touching my tail...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Yes! Right where it meets the base!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I need your hands on my tail! More!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->MORE! DON'T STOP! CLAIM MY TAIL!</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -135,6 +189,12 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I'LL BITE YOU! LET! GO!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->My tail is SACRED! Respect it!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->You have my permission to touch.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->Yes, appreciate my tail.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Feel the power in my tail.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->MY TAIL IS A GIFT! CHERISH IT!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->YOUR SOUL BELONGS TO MY TAIL!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->MY TAIL IS YOURS! WORSHIP IT!</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -147,7 +207,12 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->Stop! I don't want your milk!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->P-please, not the milk...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->Is this... really necessary...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->I'll drink... if you want...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Your milk is warm...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->P-please drink... I want you to have it...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->I love when you feed me...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->Drink deeply... let me nourish you...</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -158,7 +223,12 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->I'm going to be sick! Let me GO!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->Not thirsty right now...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->Well if you insist...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->Mmm, your milk tastes good...</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->Don't stop, I want more...</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->Drink up! There's plenty more!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->Fill me with your essence! I need it!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->DRINK MY ESSENCE! LET IT FILL YOU!</li>
       </rulesStrings>
     </logRulesInitiator>
@@ -168,7 +238,13 @@
     <label>wet smother fanatical reply</label>
     <logRulesInitiator>
       <rulesStrings>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Hate)->YOU DARE FORCE-FEED A GOD?!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Dislike)->I didn't ASK for this!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral-)->You wish to nourish me? Fine.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral)->Drink of my essence and be grateful.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Neutral+)->You may consume my divine milk.</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Like)->CONSUME MY MILK AND GROW STRONGER!</li>
+        <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Love)->DRINK DEEPLY! LET MY POWER FLOW INTO YOU!</li>
         <li>r_logentry(tag=continue,RECIPIENT_trait==Weight Opinion: Fanatical)->CONSUME AND GROW! BECOME AS GLORIOUS AS ME!</li>
       </rulesStrings>
     </logRulesInitiator>

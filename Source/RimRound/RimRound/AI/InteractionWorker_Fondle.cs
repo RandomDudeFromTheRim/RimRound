@@ -92,10 +92,6 @@ namespace RimRound.AI
             if (initAtt?.weightOpinion >= WeightOpinion.Fanatical)
 
             AdjustIntimacyNeed(initiator, recipient, stage);
-
-            // Haters fight back
-            if (recAtt?.weightOpinion <= WeightOpinion.Dislike)
-                recipient.interactions?.StartSocialFight(initiator);
         }
 
         static int GetFondleStage(Pawn recipient)

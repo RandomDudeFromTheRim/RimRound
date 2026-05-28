@@ -48,7 +48,6 @@ Pawns can initiate social interactions based on weight opinion:
 - **Exploring** — Smaller pawn with Like+ opinion explores a larger pawn's curves.
 - **Wet Smothering** — Like+ lactating pawn force-feeds milk to a smaller pawn. Requires the `Lactating` hediff.
 (ratkin/races that add tails) - **Tail Groping** - because that chunk is kinda alluring...?
-All interactions can spark **social fights** if the recipient has Hate/Dislike weight opinion.
 
 ## SpeakUp Dialogue Integration
 Custom dialogue for all horny interactions, conditional on each pawn's weight opinion trait. Requires **SpeakUp** mod.

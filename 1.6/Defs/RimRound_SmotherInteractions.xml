@@ -7,7 +7,7 @@
     <symbol>Things/Mote/SpeechSymbols/KindWords</symbol>
     <initiatorXpGainAmount>20</initiatorXpGainAmount>
     <recipientXpGainAmount>10</recipientXpGainAmount>
-    <socialFightBaseChance>0.05</socialFightBaseChance>
+    <socialFightBaseChance>0</socialFightBaseChance>
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry-> </li>
@@ -22,7 +22,7 @@
     <symbol>Things/Mote/SpeechSymbols/BuildRapport</symbol>
     <initiatorXpGainAmount>15</initiatorXpGainAmount>
     <recipientXpGainAmount>8</recipientXpGainAmount>
-    <socialFightBaseChance>0.03</socialFightBaseChance>
+    <socialFightBaseChance>0</socialFightBaseChance>
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry-> </li>
@@ -37,7 +37,7 @@
     <symbol>Things/Mote/SpeechSymbols/KindWords</symbol>
     <initiatorXpGainAmount>25</initiatorXpGainAmount>
     <recipientXpGainAmount>15</recipientXpGainAmount>
-    <socialFightBaseChance>0.08</socialFightBaseChance>
+    <socialFightBaseChance>0</socialFightBaseChance>
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry-> </li>

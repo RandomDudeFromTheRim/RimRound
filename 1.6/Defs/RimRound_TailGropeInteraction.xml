@@ -6,7 +6,7 @@
     <symbol>Things/Mote/SpeechSymbols/KindWords</symbol>
     <initiatorXpGainAmount>15</initiatorXpGainAmount>
     <recipientXpGainAmount>5</recipientXpGainAmount>
-    <socialFightBaseChance>0.03</socialFightBaseChance>
+    <socialFightBaseChance>0</socialFightBaseChance>
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry-> </li>

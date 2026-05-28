@@ -105,10 +105,6 @@ namespace RimRound.AI
             }
 
             AdjustIntimacy(initiator, recipient, stage);
-
-            var recAtt2 = recipient.TryGetComp<ThingComp_PawnAttitude>();
-            if (recAtt2?.weightOpinion <= WeightOpinion.Dislike)
-                recipient.interactions?.StartSocialFight(initiator);
         }
 
         static void AdjustIntimacy(Pawn initiator, Pawn recipient, int stage)
@@ -244,10 +240,6 @@ namespace RimRound.AI
                 };
                 recIntimacy.CurLevelPercentage += relief * 0.6f * mult;
             }
-
-            var exploreAtt = recipient.TryGetComp<ThingComp_PawnAttitude>();
-            if (exploreAtt?.weightOpinion <= WeightOpinion.Dislike)
-                recipient.interactions?.StartSocialFight(initiator);
         }
     }
 
@@ -379,9 +371,6 @@ namespace RimRound.AI
                     WeightOpinion.Love or WeightOpinion.Fanatical => MessageTypeDefOf.PositiveEvent,
                     _ => MessageTypeDefOf.NeutralEvent,
                 });
-
-            if (recAtt?.weightOpinion <= WeightOpinion.Dislike)
-                recipient.interactions?.StartSocialFight(initiator);
         }
 
         static void AdjustIntimacy(Pawn initiator, Pawn recipient, int stage, float nutrition)
