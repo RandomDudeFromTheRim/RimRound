@@ -40,19 +40,6 @@ The custom pipe network has been replaced with **VEF's PipeSystem** framework:
 - Buildings made from gluttonium or glut bricks leak weak radiation
 - Protection scales with gluttonium resistance stat on apparel
 
-## Horny Social Interactions
-Pawns can initiate social interactions based on weight opinion:
-
-- **Fondling** — Neutral+ initiator touches a Thick+ recipient. Mood based on recipient's weight opinion.
-- **Smothering** — Larger pawn (Chubby+, heavier) presses against a smaller pawn. Weight-dependent intensity.
-- **Exploring** — Smaller pawn with Like+ opinion explores a larger pawn's curves.
-- **Wet Smothering** — Like+ lactating pawn force-feeds milk to a smaller pawn. Requires the `Lactating` hediff.
-(ratkin/races that add tails) - **Tail Groping** - because that chunk is kinda alluring...?
-All interactions can spark **social fights** if the recipient has Hate/Dislike weight opinion.
-
-## SpeakUp Dialogue Integration
-Custom dialogue for all horny interactions, conditional on each pawn's weight opinion trait. Requires **SpeakUp** mod.
-
 ## Anomaly & Void Content
 
 ### Blob Walls & Void Gluttonium
