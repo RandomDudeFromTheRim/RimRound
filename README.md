@@ -1,14 +1,4 @@
-# RimRound - Community Patch + Expansion
-
-> **⚠️ LLM-Assisted Project — Expect Bugs AND stuff pulled out the AI's ass**
-> This codebase was developed with heavy LLM assistance. Edits are applied rapidly across many interconnected systems (Harmony patches, XML defs, comps, hediffs, VEF pipes). Some patches may conflict, edge cases are not fully tested, and save compatibility is not guaranteed between builds.... some stuff might not just exist lmao. You have been warned.
->
-> **Will run poorly or break without:** Harmony, Humanoid Alien Races, Vanilla Expanded Framework.
-> **Heavily recommended:** SpeakUp, RimVore-2, Intimacy series (Lovin' + Socio Butterfly), Lactation Expansion.
-> **Requires Anomaly DLC** for all void/meld/fleshbeast content.
-
-A weight gain mod for RimWorld. This is a community fork with extensive bugfixes, new content, and deep integration with other mods.
-
+# RimRound - Community Patch + Expansion (EXPECT JANKINESS)
 ---
 
 ## Bugfixes & Core Improvements
