@@ -25,26 +25,28 @@ namespace RimRound.Hediffs
 
             if (inMaze)
             {
-                // full saturation after roughly half a day of lingering
-                Severity += 0.0016f;
+                // full saturation after roughly one day of lingering
+                Severity += 0.001f;
 
                 if (pawn.IsHashIntervalTick(600))
                 {
-                    // ambient weight gain: kilograms per day, scaling with saturation
+                    var att = pawn.TryGetComp<ThingComp_PawnAttitude>();
+                    var intimacy = pawn.needs?.AllNeeds?.FirstOrDefault(n => n.def.defName == "SEX_Intimacy");
+
+                    // pawns who enjoy the growth burn with want inside the void
+                    if (att != null && att.weightOpinion >= WeightOpinion.Like && intimacy != null)
+                        intimacy.CurLevelPercentage += 0.012f + Severity * 0.02f;
+
+                    // ambient weight gain: kilograms per day, scaling with saturation,
+                    // and arousal sweetens the flesh — the hornier, the more it takes
                     float kilos = 0.03f + Severity * 0.10f;
+                    if (att != null && att.weightOpinion >= WeightOpinion.Like && intimacy != null)
+                        kilos *= 1f + Mathf.Clamp01(intimacy.CurLevelPercentage) * 0.5f;
+
                     var fnd = pawn.TryGetComp<FullnessAndDietStats_ThingComp>();
                     if (fnd != null && !fnd.Disabled)
                         fnd.activeWeightGainRequests.Enqueue(
                             new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, 6000, false));
-
-                    // pawns who enjoy the growth burn with want inside the void
-                    var att = pawn.TryGetComp<ThingComp_PawnAttitude>();
-                    if (att != null && att.weightOpinion >= WeightOpinion.Like)
-                    {
-                        var intimacy = pawn.needs?.AllNeeds?.FirstOrDefault(n => n.def.defName == "SEX_Intimacy");
-                        if (intimacy != null)
-                            intimacy.CurLevelPercentage += 0.012f + Severity * 0.02f;
-                    }
                 }
 
                 if (Severity >= 1f)

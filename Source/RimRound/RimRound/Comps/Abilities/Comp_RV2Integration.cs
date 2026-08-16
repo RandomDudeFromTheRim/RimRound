@@ -74,11 +74,13 @@ namespace RimRound.Comps
         static Pawn GetPred(object record) => recordPredFI?.GetValue(record) as Pawn;
 
         // 1
-        static void Postfix_VoreRoll(ref float __result, object __instance)
+        // RollModifier.ModifyValue passes the VoreTrackerRecord as a parameter —
+        // the modifier itself has no Predator/Prey fields.
+        static void Postfix_VoreRoll(ref float __result, object __instance, object record)
         {
-            if (__instance == null) return;
-            var pred = GetPred(__instance);
-            var prey = GetPrey(__instance);
+            if (record == null || recordPredFI == null || recordPreyFI == null) return;
+            var pred = GetPred(record);
+            var prey = GetPrey(record);
             if (pred == null || prey == null) return;
 
             float pSev = GetWeightSev(prey);

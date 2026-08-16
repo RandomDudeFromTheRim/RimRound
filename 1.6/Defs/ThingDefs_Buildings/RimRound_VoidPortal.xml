@@ -36,6 +36,11 @@
         <glowRadius>8</glowRadius>
         <glowColor>(180,40,180,0)</glowColor>
       </li>
+      <li Class="CompProperties_Studiable" MayRequire="Ludeon.RimWorld.Anomaly">
+        <frequencyTicks>120000</frequencyTicks>
+        <knowledgeCategory>Advanced</knowledgeCategory>
+        <anomalyKnowledge>1</anomalyKnowledge>
+      </li>
     </comps>
     <building>
       <isInert>false</isInert>

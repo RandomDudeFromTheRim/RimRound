@@ -68,22 +68,18 @@
     <description>A thicker, vein-ridden section of blob wall. Pulses with a purple glow. Can be mined for void gluttonium.</description>
     <thingClass>Mineable</thingClass>
     <graphicData>
-      <texPath>WIP/Skin_Atlas</texPath>
+      <texPath>Things/Building/RR_FleshWall</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>CutoutComplex</shaderType>
-      <color>(150,50,180)</color>
-      <linkType>CornerFiller</linkType>
-      <linkFlags>
-        <li>Custom2</li>
-      </linkFlags>
+      <color>(170,110,210)</color>
       <drawSize>(1,1)</drawSize>
     </graphicData>
     <stuffCategories />
     <passability>Impassable</passability>
     <blockWind>true</blockWind>
     <castEdgeShadows>true</castEdgeShadows>
-    <fillPercent>1</fillPercent>
-    <coversFloor>true</coversFloor>
+    <fillPercent>0.5</fillPercent>
+    <coversFloor>false</coversFloor>
     <rotatable>false</rotatable>
     <holdsRoof>true</holdsRoof>
     <blockLight>true</blockLight>
