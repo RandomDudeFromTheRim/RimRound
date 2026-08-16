@@ -237,6 +237,10 @@ namespace RimRound.Comps
             fascination.Severity = 0.25f;
             pawn.health.AddHediff(fascination);
 
+            var saturation = HediffMaker.MakeHediff(Defs.HediffDefOf.RR_VoidSaturation, pawn);
+            saturation.Severity = 0.05f;
+            pawn.health.AddHediff(saturation);
+
             nextSpawnTick = Find.TickManager.TicksGame + (int)(Props.respawnIntervalTicks * 0.5f);
 
             Messages.Message(

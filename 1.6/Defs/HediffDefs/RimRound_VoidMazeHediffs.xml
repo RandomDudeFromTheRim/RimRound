@@ -43,4 +43,26 @@
       <li><minSeverity>1.0</minSeverity><label>insatiable</label><hungerRateFactor>2.0</hungerRateFactor></li>
     </stages>
   </HediffDef>
+
+  <HediffDef>
+    <defName>RR_VoidSaturation</defName>
+    <label>void saturation</label>
+    <description>The void realm's warmth seeps into every fold of flesh, quietly adding weight the longer you linger. At full saturation, the accumulated excess may tear free and take on a life of its own.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_VoidSaturation</hediffClass>
+    <isBad>false</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <stages>
+      <li><minSeverity>0</minSeverity><label>warmed</label></li>
+      <li><minSeverity>0.4</minSeverity><label>swelling</label>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.05</offset></li>
+        </capMods>
+      </li>
+      <li><minSeverity>0.75</minSeverity><label>brimming</label>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.1</offset></li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
 </Defs>

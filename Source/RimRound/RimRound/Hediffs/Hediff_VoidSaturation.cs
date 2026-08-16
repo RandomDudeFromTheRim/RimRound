@@ -1,0 +1,104 @@
+using RimRound.Comps;
+using RimRound.Utilities;
+using RimWorld;
+using UnityEngine;
+using Verse;
+
+namespace RimRound.Hediffs
+{
+    /// <summary>
+    /// Gained by entering the void maze. While inside, the pawn slowly but steadily
+    /// gains weight; saturation builds the longer they linger. At full saturation,
+    /// the accumulated excess mass tears free as a bloated "void echo" of the pawn
+    /// and hunts them. Outside the maze the saturation slowly drains away.
+    /// </summary>
+    public class Hediff_VoidSaturation : Hediff
+    {
+        public override void Tick()
+        {
+            base.Tick();
+            if (pawn == null || pawn.Dead || !pawn.IsHashIntervalTick(60))
+                return;
+
+            bool inMaze = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_VoidWarmth) != null;
+
+            if (inMaze)
+            {
+                // full saturation after roughly a day and a half of lingering
+                Severity += 0.0007f;
+
+                // ambient weight gain: a few kilograms per day, scaling with saturation
+                if (pawn.IsHashIntervalTick(600))
+                {
+                    float kilos = 0.02f + Severity * 0.08f;
+                    var fnd = pawn.TryGetComp<FullnessAndDietStats_ThingComp>();
+                    if (fnd != null && !fnd.Disabled)
+                        fnd.activeWeightGainRequests.Enqueue(
+                            new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, 6000, false));
+                }
+
+                if (Severity >= 1f)
+                {
+                    SpawnVoidEcho();
+                    Severity = 0.35f; // camping longer tears another echo free
+                }
+            }
+            else
+            {
+                Severity -= 0.001f;
+                if (Severity <= 0f)
+                    pawn.health.RemoveHediff(this);
+            }
+        }
+
+        void SpawnVoidEcho()
+        {
+            if (!pawn.Spawned || pawn.Map == null)
+                return;
+            Map map = pawn.Map;
+
+            Pawn echo = PawnGenerator.GeneratePawn(pawn.kindDef, Faction.OfEntities);
+            if (echo == null)
+                return;
+
+            echo.Name = new NameSingle("Echo of " + pawn.LabelShort);
+
+            // the echo wears the pawn's greed made flesh: their weight, and then some
+            float original = Utilities.HediffUtility.WeightHediff(pawn)?.Severity ?? 0f;
+            float target = Mathf.Max(original + 0.45f, 0.55f);
+            var echoWeight = echo.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight);
+            if (echoWeight != null)
+            {
+                echoWeight.Severity = target;
+            }
+            else if (echo.health != null)
+            {
+                var h = HediffMaker.MakeHediff(Defs.HediffDefOf.RimRound_Weight, echo);
+                h.Severity = target;
+                echo.health.AddHediff(h);
+            }
+
+            var att = echo.TryGetComp<ThingComp_PawnAttitude>();
+            if (att != null)
+                att.SetWeightOpinion(WeightOpinion.Fanatical);
+
+            IntVec3 cell = CellFinder.RandomClosewalkCellNear(pawn.Position, map, 6);
+            GenSpawn.Spawn(echo, cell, map);
+            FleckMaker.ThrowSmoke(echo.Position.ToVector3Shifted(), map, 2f);
+
+            Messages.Message(
+                $"{pawn.LabelShort}'s excess mass tears free and takes shape — a void echo stalks the flesh halls!",
+                new LookTargets(echo),
+                MessageTypeDefOf.ThreatBig);
+        }
+
+        public override string TipStringExtra
+        {
+            get
+            {
+                float kgPerDay = (0.02f + Severity * 0.08f) * 100f;
+                return $"Void saturation: {Severity * 100f:F0}%\nGaining ~{kgPerDay:F1} kg/day inside the maze.\nAt full saturation, something will tear loose...";
+            }
+        }
+    }
+}
