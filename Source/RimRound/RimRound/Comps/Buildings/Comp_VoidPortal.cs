@@ -64,38 +64,150 @@ namespace RimRound.Comps
             Map map = parent.Map;
             IntVec3 center = parent.Position;
 
-            // Ring of blob walls at radius 8
-            for (int i = 0; i < 30; i++)
+            const int cells = 13;  // logical cells per side; portal starts in the middle cell
+            const int pitch = 3;   // 1-thick walls with 2-wide corridors
+            int extent = cells * pitch;
+            int startCell = cells / 2;
+
+            // origin chosen so the portal lands inside the middle cell's floor pocket
+            int ox = center.x - 1 - pitch * startCell;
+            int oz = center.z - 1 - pitch * startCell;
+
+            // passages between adjacent cells; every cell starts sealed
+            bool[,] passH = new bool[cells - 1, cells]; // between (i,j) and (i+1,j)
+            bool[,] passV = new bool[cells, cells - 1]; // between (i,j) and (i,j+1)
+
+            // recursive backtracker — guarantees every cell is reachable
+            var visited = new bool[cells, cells];
+            var stack = new Stack<int[]>();
+            var options = new List<int[]>(4);
+            stack.Push(new[] { startCell, startCell });
+            visited[startCell, startCell] = true;
+            while (stack.Count > 0)
             {
-                float angle = (float)i / 30f * 360f;
-                int radius = (i % 3 == 0) ? 7 : 9;
-                IntVec3 cell = center + new IntVec3(
-                    (int)(Mathf.Sin(angle * Mathf.Deg2Rad) * radius),
-                    0,
-                    (int)(Mathf.Cos(angle * Mathf.Deg2Rad) * radius));
+                int cx = stack.Peek()[0], cz = stack.Peek()[1];
+                options.Clear();
+                if (cx > 0 && !visited[cx - 1, cz]) options.Add(new[] { 0, cx - 1, cz });
+                if (cx < cells - 1 && !visited[cx + 1, cz]) options.Add(new[] { 1, cx + 1, cz });
+                if (cz > 0 && !visited[cx, cz - 1]) options.Add(new[] { 2, cx, cz - 1 });
+                if (cz < cells - 1 && !visited[cx, cz + 1]) options.Add(new[] { 3, cx, cz + 1 });
 
-                if (!cell.InBounds(map) || !cell.Standable(map))
+                if (options.Count == 0)
+                {
+                    stack.Pop();
                     continue;
+                }
 
-                Thing wall = ThingMaker.MakeThing(ThingDef.Named("RR_BlobWall"));
-                GenSpawn.Spawn(wall, cell, map, Rot4.North);
-                spawnedWalls.Add(wall);
+                int[] pick = options[Rand.Range(0, options.Count)];
+                switch (pick[0])
+                {
+                    case 0: passH[cx - 1, cz] = true; break;
+                    case 1: passH[cx, cz] = true; break;
+                    case 2: passV[cx, cz - 1] = true; break;
+                    case 3: passV[cx, cz] = true; break;
+                }
+                visited[pick[1], pick[2]] = true;
+                stack.Push(new[] { pick[1], pick[2] });
             }
 
-            // Mineable nodes scattered inside
-            for (int i = 0; i < 5; i++)
+            // carve open chambers out of random 2x2 cell clusters
+            for (int r = 0; r < 6; r++)
             {
-                IntVec3 cell = center + new IntVec3(
-                    Rand.RangeInclusive(-5, 5),
-                    0,
-                    Rand.RangeInclusive(-5, 5));
+                int rx = Rand.RangeInclusive(0, cells - 2);
+                int rz = Rand.RangeInclusive(0, cells - 2);
+                if (Mathf.Abs(rx - startCell) <= 1 && Mathf.Abs(rz - startCell) <= 1)
+                    continue; // keep the portal chamber as corridors
+                passH[rx, rz] = true;
+                passH[rx, rz + 1] = true;
+                passV[rx, rz] = true;
+                passV[rx + 1, rz] = true;
+            }
 
-                if (!cell.InBounds(map) || !cell.Standable(map) || cell == center)
-                    continue;
+            // four entrances through the outer ring at the compass midpoints
+            var entrances = new HashSet<IntVec3>();
+            int midLo = startCell * pitch + 1;
+            entrances.Add(new IntVec3(ox, 0, oz + midLo));
+            entrances.Add(new IntVec3(ox, 0, oz + midLo + 1));
+            entrances.Add(new IntVec3(ox + extent, 0, oz + midLo));
+            entrances.Add(new IntVec3(ox + extent, 0, oz + midLo + 1));
+            entrances.Add(new IntVec3(ox + midLo, 0, oz));
+            entrances.Add(new IntVec3(ox + midLo + 1, 0, oz));
+            entrances.Add(new IntVec3(ox + midLo, 0, oz + extent));
+            entrances.Add(new IntVec3(ox + midLo + 1, 0, oz + extent));
 
-                Thing node = ThingMaker.MakeThing(ThingDef.Named("RR_BlobWallMineable"));
-                GenSpawn.Spawn(node, cell, map, Rot4.North);
-                spawnedWalls.Add(node);
+            ThingDef blobWall = ThingDef.Named("RR_BlobWall");
+            ThingDef mineable = ThingDef.Named("RR_BlobWallMineable");
+
+            for (int tx = ox; tx <= ox + extent; tx++)
+            {
+                for (int tz = oz; tz <= oz + extent; tz++)
+                {
+                    int dx = tx - ox, dz = tz - oz;
+
+                    bool wall;
+                    if (dx == extent || dz == extent)
+                        wall = true;                                          // north & east outer ring
+                    else if (dx % pitch == 0 && dz % pitch == 0)
+                        wall = true;                                          // pillar
+                    else if (dx % pitch == 0)
+                        wall = dx == 0 || !passH[dx / pitch - 1, dz / pitch]; // vertical strips incl. west ring
+                    else if (dz % pitch == 0)
+                        wall = dz == 0 || !passV[dx / pitch, dz / pitch - 1]; // horizontal strips incl. south ring
+                    else
+                        wall = false;                                         // floor pocket
+
+                    if (!wall)
+                        continue;
+
+                    IntVec3 cell = new IntVec3(tx, 0, tz);
+                    if (entrances.Contains(cell))
+                        continue;
+                    if (!cell.InBounds(map) || !cell.Standable(map))
+                        continue;
+                    if (cell.DistanceTo(center) <= 2f)
+                        continue; // never wall in the portal itself
+                    if (cell.GetThingList(map).Any(t => t is Pawn))
+                        continue;
+
+                    Thing wallThing = ThingMaker.MakeThing(blobWall);
+                    GenSpawn.Spawn(wallThing, cell, map, Rot4.North);
+                    spawnedWalls.Add(wallThing);
+                }
+            }
+
+            // reward the dead ends: mineable blob nodes and scattered void gluttonium
+            for (int ci = 0; ci < cells; ci++)
+            {
+                for (int cj = 0; cj < cells; cj++)
+                {
+                    int openings =
+                        (ci > 0 && passH[ci - 1, cj] ? 1 : 0) +
+                        (ci < cells - 1 && passH[ci, cj] ? 1 : 0) +
+                        (cj > 0 && passV[ci, cj - 1] ? 1 : 0) +
+                        (cj < cells - 1 && passV[ci, cj] ? 1 : 0);
+                    if (openings != 1 || (ci == startCell && cj == startCell))
+                        continue;
+
+                    IntVec3 spot = new IntVec3(ox + ci * pitch + 1, 0, oz + cj * pitch + 1);
+                    if (!spot.InBounds(map) || !spot.Standable(map) || spot.DistanceTo(center) <= 2f)
+                        continue;
+                    if (spot.GetThingList(map).Any(t => t is Pawn))
+                        continue;
+
+                    if (Rand.Value < 0.4f)
+                    {
+                        Thing node = ThingMaker.MakeThing(mineable);
+                        GenSpawn.Spawn(node, spot, map, Rot4.North);
+                        spawnedWalls.Add(node);
+                    }
+                    else if (Rand.Value < 0.3f)
+                    {
+                        Thing loot = ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidGluttonium);
+                        loot.stackCount = Rand.RangeInclusive(3, 8);
+                        GenSpawn.Spawn(loot, spot, map, Rot4.North);
+                        spawnedWalls.Add(loot);
+                    }
+                }
             }
         }
 

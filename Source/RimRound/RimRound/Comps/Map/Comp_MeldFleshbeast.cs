@@ -25,6 +25,12 @@ namespace RimRound.Comps
     {
         public CompProperties_MeldFleshbeast Props => (CompProperties_MeldFleshbeast)props;
 
+        static bool MergeTargetStillReachable(Pawn pawn, Pawn target)
+        {
+            return target != null && target.Spawned && !target.Dead && target.Map == pawn.Map
+                && (pawn.Position - target.Position).LengthHorizontal <= 6f;
+        }
+
         int tickCounter = 0;
         Pawn lastTarget = null;
 
@@ -34,11 +40,16 @@ namespace RimRound.Comps
             if (parent is not Pawn pawn || !pawn.Spawned || pawn.Dead)
                 return;
 
-            // When downed, continue merging with last target instead of stopping
+            // Once a merge has begun, stay committed to that target even if the AI
+            // re-targets or panic-flees, so the beast cannot wander off mid-meld.
             Pawn target;
-            if (pawn.Downed)
+            if (MergeTargetStillReachable(pawn, lastTarget))
             {
                 target = lastTarget;
+            }
+            else if (pawn.Downed)
+            {
+                target = null;
             }
             else
             {
@@ -48,13 +59,15 @@ namespace RimRound.Comps
             if (target is null || !target.Spawned || target.Dead)
             {
                 lastTarget = null;
+                tickCounter = 0;
                 return;
             }
 
             float dist = (pawn.Position - target.Position).LengthHorizontal;
-            if (dist > Props.mergeRange && !pawn.Downed)
+            if (dist > Props.mergeRange)
             {
                 lastTarget = null;
+                tickCounter = 0;
                 return;
             }
 
@@ -100,6 +113,11 @@ namespace RimRound.Comps
 
             // Visual
             FleckMaker.ThrowSmoke((pawn.Position + target.Position).ToVector3Shifted() / 2f, pawn.Map, 1.5f);
+
+            // The beast braces itself against its victim for the next pulse —
+            // a true grapple that only ends when one of them drops
+            if (!pawn.Downed && !pawn.stances.stunner.Stunned)
+                pawn.stances.stunner.StunFor(Props.tickInterval + 60, pawn, addBattleLog: false, showMote: false);
 
             if (lastTarget != target)
             {

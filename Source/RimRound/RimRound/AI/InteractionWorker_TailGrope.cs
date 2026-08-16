@@ -13,6 +13,9 @@ namespace RimRound.AI
             if (initiator.Inhumanized() || recipient.Inhumanized())
                 return 0;
 
+            if (!CloseContactUtility.InTouchRange(initiator, recipient))
+                return 0;
+
             // Check if recipient is from a modded race that might have a tail
             // (HAR races with custom bodies)
             if (recipient.def is AlienRace.ThingDef_AlienRace)

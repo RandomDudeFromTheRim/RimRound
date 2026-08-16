@@ -16,6 +16,9 @@ namespace RimRound.AI
             if (initiator.Inhumanized() || recipient.Inhumanized())
                 return 0;
 
+            if (!CloseContactUtility.InTouchRange(initiator, recipient))
+                return 0;
+
             if (!initiator.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
                 return 0;
 

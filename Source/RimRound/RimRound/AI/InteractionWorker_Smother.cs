@@ -38,6 +38,8 @@ namespace RimRound.AI
                 return false;
             if (initiator.Inhumanized() || recipient.Inhumanized())
                 return false;
+            if (!CloseContactUtility.InTouchRange(initiator, recipient))
+                return false;
             if (initiator.relations.OpinionOf(recipient) < 30)
                 return false;
 
@@ -160,6 +162,8 @@ namespace RimRound.AI
                 return false;
             if (initiator.Inhumanized() || recipient.Inhumanized())
                 return false;
+            if (!CloseContactUtility.InTouchRange(initiator, recipient))
+                return false;
             if (initiator.relations.OpinionOf(recipient) < 25)
                 return false;
 
@@ -271,6 +275,8 @@ namespace RimRound.AI
             if (initiator == recipient || !initiator.RaceProps.Humanlike || !recipient.RaceProps.Humanlike)
                 return false;
             if (initiator.Inhumanized() || recipient.Inhumanized())
+                return false;
+            if (!CloseContactUtility.InTouchRange(initiator, recipient))
                 return false;
             if (initiator.relations.OpinionOf(recipient) < 40)
                 return false;
