@@ -50,9 +50,9 @@
     </building>
     <comps>
       <li Class="RimRound.Comps.CompProperties_GluttoniumRadiation">
-        <radius>1.5</radius>
-        <exposurePerTick>0.002</exposurePerTick>
-        <tickInterval>500</tickInterval>
+        <radius>2.5</radius>
+        <exposurePerTick>0.006</exposurePerTick>
+        <tickInterval>350</tickInterval>
       </li>
       <li Class="RimRound.Comps.CompProperties_DestroyDrop">
         <dropDefName>Meat_Twisted</dropDefName>
@@ -106,9 +106,9 @@
         <glowColor>(180,40,180,0)</glowColor>
       </li>
       <li Class="RimRound.Comps.CompProperties_GluttoniumRadiation">
-        <radius>3</radius>
-        <exposurePerTick>0.008</exposurePerTick>
-        <tickInterval>250</tickInterval>
+        <radius>4</radius>
+        <exposurePerTick>0.015</exposurePerTick>
+        <tickInterval>200</tickInterval>
       </li>
     </comps>
   </ThingDef>

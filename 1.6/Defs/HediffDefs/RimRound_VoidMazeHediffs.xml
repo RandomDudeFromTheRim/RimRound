@@ -69,7 +69,8 @@
   <HediffDef>
     <defName>RR_VoidEchoVigor</defName>
     <label>void vigor</label>
-    <description>Whatever moves this mass, it is not ordinary muscle. The flesh flows more than it walks.</description>
+    <description>Whatever moves this mass, it is not ordinary muscle. The flesh flows more than it walks, and nothing short of annihilation will stop it.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_VoidEchoVigor</hediffClass>
     <isBad>false</isBad>
     <maxSeverity>1.0</maxSeverity>
     <stages>
@@ -80,6 +81,10 @@
           <li><capacity>Moving</capacity><offset>0.5</offset></li>
           <li><capacity>Manipulation</capacity><offset>0.25</offset></li>
         </capMods>
+        <statOffsets>
+          <ArmorRating_Sharp>0.75</ArmorRating_Sharp>
+          <ArmorRating_Blunt>0.75</ArmorRating_Blunt>
+        </statOffsets>
       </li>
     </stages>
   </HediffDef>

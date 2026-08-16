@@ -400,6 +400,7 @@
     <Compile Include="RimRound\AI\CloseContactUtility.cs" />
     <Compile Include="RimRound\AI\JobDriver_RRCloseEncounter.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_VoidSaturation.cs" />
+    <Compile Include="RimRound\Hediffs\Hediff_VoidEchoVigor.cs" />
     <Compile Include="RimRound\GenSteps\GenStep_RRVoidMaze.cs" />
     <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_GluttoniumExposure.cs" />
     <Compile Include="RimRound\Comps\Buildings\CompProperties_VoidPortal.cs" />

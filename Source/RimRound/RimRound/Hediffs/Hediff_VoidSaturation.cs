@@ -25,17 +25,26 @@ namespace RimRound.Hediffs
 
             if (inMaze)
             {
-                // full saturation after roughly a day and a half of lingering
-                Severity += 0.0007f;
+                // full saturation after roughly half a day of lingering
+                Severity += 0.0016f;
 
-                // ambient weight gain: a few kilograms per day, scaling with saturation
                 if (pawn.IsHashIntervalTick(600))
                 {
-                    float kilos = 0.02f + Severity * 0.08f;
+                    // ambient weight gain: kilograms per day, scaling with saturation
+                    float kilos = 0.03f + Severity * 0.10f;
                     var fnd = pawn.TryGetComp<FullnessAndDietStats_ThingComp>();
                     if (fnd != null && !fnd.Disabled)
                         fnd.activeWeightGainRequests.Enqueue(
                             new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, 6000, false));
+
+                    // pawns who enjoy the growth burn with want inside the void
+                    var att = pawn.TryGetComp<ThingComp_PawnAttitude>();
+                    if (att != null && att.weightOpinion >= WeightOpinion.Like)
+                    {
+                        var intimacy = pawn.needs?.AllNeeds?.FirstOrDefault(n => n.def.defName == "SEX_Intimacy");
+                        if (intimacy != null)
+                            intimacy.CurLevelPercentage += 0.012f + Severity * 0.02f;
+                    }
                 }
 
                 if (Severity >= 1f)
@@ -92,6 +101,8 @@ namespace RimRound.Hediffs
             // void vigor: the mass is carried by something other than muscle
             var vigor = HediffMaker.MakeHediff(HediffDef.Named("RR_VoidEchoVigor"), echo);
             vigor.Severity = 1f;
+            if (vigor is Hediff_VoidEchoVigor vigorTyped)
+                vigorTyped.markedPrey = pawn; // it wants its original back inside it
             echo.health.AddHediff(vigor);
 
             var att = echo.TryGetComp<ThingComp_PawnAttitude>();

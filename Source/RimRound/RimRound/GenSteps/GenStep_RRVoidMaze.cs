@@ -5,16 +5,15 @@ using Verse;
 namespace RimRound.GenSteps
 {
     /// <summary>
-    /// Fills an entire pocket map with warm flesh and a full-coverage maze: the map
-    /// edge and border are immovable hardened flesh, the interior is 2-thick flesh
-    /// walls with 2-wide carved corridors, open chambers, and a central portal
-    /// chamber. Dead ends hide mineable nodes and void gluttonium.
+    /// Fills an entire pocket map with flesh, then carves cramped, winding
+    /// caverns through it — undercave style, not a grid maze. Border and map
+    /// edge are immovable hardened flesh; tunnels are mostly 1-2 cells wide
+    /// with occasional small chambers. Dead pockets hide mineable nodes and
+    /// void gluttonium.
     /// </summary>
     public class GenStep_RRVoidMaze : GenStep
     {
         public override int SeedPart => 20415307;
-
-        const int Pitch = 4; // 2-thick walls, 2-wide corridors
 
         public override void Generate(Map map, GenStepParams parms)
         {
@@ -22,145 +21,144 @@ namespace RimRound.GenSteps
             foreach (IntVec3 cell in map.AllCells)
                 map.terrainGrid.SetTerrain(cell, floor);
 
-            int side = map.Size.x;
-            int cells = (side - 2) / Pitch;          // logical cells per side
-            int extent = cells * Pitch;              // maze footprint in tiles
-            int ox = (side - extent) / 2;
-            int oz = (side - extent) / 2;
-            int startCell = cells / 2;
+            int sideX = map.Size.x, sideZ = map.Size.z;
+            IntVec3 center = map.Center;
+            var carved = new HashSet<IntVec3>();
 
-            bool[,] passH = new bool[cells - 1, cells];
-            bool[,] passV = new bool[cells, cells - 1];
-
-            // recursive backtracker over all cells — guarantees full connectivity
-            var visited = new bool[cells, cells];
-            var stack = new Stack<int[]>();
-            var options = new List<int[]>(4);
-            stack.Push(new[] { startCell, startCell });
-            visited[startCell, startCell] = true;
-            while (stack.Count > 0)
+            void CarveRadius(IntVec3 c, int r)
             {
-                int cx = stack.Peek()[0], cz = stack.Peek()[1];
-                options.Clear();
-                if (cx > 0 && !visited[cx - 1, cz]) options.Add(new[] { 0, cx - 1, cz });
-                if (cx < cells - 1 && !visited[cx + 1, cz]) options.Add(new[] { 1, cx + 1, cz });
-                if (cz > 0 && !visited[cx, cz - 1]) options.Add(new[] { 2, cx, cz - 1 });
-                if (cz < cells - 1 && !visited[cx, cz + 1]) options.Add(new[] { 3, cx, cz + 1 });
-
-                if (options.Count == 0)
+                for (int dx = -r; dx <= r; dx++)
+                for (int dz = -r; dz <= r; dz++)
                 {
-                    stack.Pop();
-                    continue;
+                    if (dx * dx + dz * dz > r * r + 1)
+                        continue;
+                    var cell = new IntVec3(c.x + dx, 0, c.z + dz);
+                    if (cell.InBounds(map))
+                        carved.Add(cell);
                 }
-
-                int[] pick = options[Rand.Range(0, options.Count)];
-                switch (pick[0])
-                {
-                    case 0: passH[cx - 1, cz] = true; break;
-                    case 1: passH[cx, cz] = true; break;
-                    case 2: passV[cx, cz - 1] = true; break;
-                    case 3: passV[cx, cz] = true; break;
-                }
-                visited[pick[1], pick[2]] = true;
-                stack.Push(new[] { pick[1], pick[2] });
             }
 
-            // carve open chambers out of random 2x2 cell clusters
-            for (int r = 0; r < 10; r++)
+            // the portal chamber
+            CarveRadius(center, 4);
+
+            // winding walkers: start from carved ground and tunnel outward
+            var carvedList = new List<IntVec3> { center };
+            var dirs = new[] { new IntVec3(1, 0, 0), new IntVec3(-1, 0, 0), new IntVec3(0, 0, 1), new IntVec3(0, 0, -1) };
+            for (int tunnel = 0; tunnel < 16; tunnel++)
             {
-                int rx = Rand.RangeInclusive(0, cells - 2);
-                int rz = Rand.RangeInclusive(0, cells - 2);
-                if (System.Math.Abs(rx - startCell) <= 1 && System.Math.Abs(rz - startCell) <= 1)
-                    continue;
-                passH[rx, rz] = true;
-                passH[rx, rz + 1] = true;
-                passV[rx, rz] = true;
-                passV[rx + 1, rz] = true;
+                IntVec3 pos = carvedList[Rand.Range(0, carvedList.Count)];
+                IntVec3 dir = dirs[Rand.Range(0, 4)];
+                int length = Rand.RangeInclusive(180, 420);
+                int squeezeLeft = 0, chamberCooldown = 0;
+
+                for (int step = 0; step < length; step++)
+                {
+                    // momentum: mostly keep direction, sometimes swerve hard
+                    if (Rand.Value < 0.25f)
+                        dir = dirs[Rand.Range(0, 4)];
+
+                    pos += dir;
+                    if (!pos.InHorDistOf(center, sideX * 0.48f))
+                        break; // stay off the hardened shell
+
+                    // width rhythm: squeeze to 1-wide, breathe back to 2
+                    if (squeezeLeft > 0)
+                    {
+                        squeezeLeft--;
+                    }
+                    else if (Rand.Value < 0.18f)
+                    {
+                        squeezeLeft = Rand.RangeInclusive(12, 30);
+                    }
+
+                    if (chamberCooldown > 0)
+                        chamberCooldown--;
+
+                    if (chamberCooldown == 0 && Rand.Value < 0.03f)
+                    {
+                        CarveRadius(pos, Rand.RangeInclusive(2, 3)); // small gullet chamber
+                        chamberCooldown = 60;
+                    }
+                    else
+                    {
+                        CarveRadius(pos, squeezeLeft > 0 ? 0 : 1);
+                    }
+
+                    if (step % 5 == 0)
+                        carvedList.Add(pos);
+                }
             }
 
-            // open a plaza around the portal chamber
-            for (int d = -1; d <= 1; d++)
+            // second pass: short feeder crawls off existing tunnels for dead ends
+            for (int i = 0; i < 60; i++)
             {
-                if (startCell + d >= 0 && startCell + d < cells - 1)
+                IntVec3 pos = carvedList[Rand.Range(0, carvedList.Count)];
+                IntVec3 dir = dirs[Rand.Range(0, 4)];
+                for (int step = 0; step < Rand.RangeInclusive(10, 40); step++)
                 {
-                    passH[startCell + d, startCell] = true;
-                    passV[startCell, startCell + d] = true;
+                    if (Rand.Value < 0.35f)
+                        dir = dirs[Rand.Range(0, 4)];
+                    pos += dir;
+                    if (!pos.InHorDistOf(center, sideX * 0.48f))
+                        break;
+                    CarveRadius(pos, Rand.Value < 0.75f ? 0 : 1); // mostly 1-wide
+                    carvedList.Add(pos);
                 }
             }
 
             ThingDef hardWall = ThingDef.Named("RR_HardenedFleshWall");
             ThingDef blobWall = ThingDef.Named("RR_BlobWall");
-            // Anomaly's own fleshmass wall when available, local variant otherwise
             ThingDef fleshWall = ModsConfig.AnomalyActive
                 ? ThingDef.Named("Fleshmass_Active")
                 : ThingDef.Named("RR_FleshWall");
 
-            // paint every tile of the map — nothing is left bare
+            // paint: hardened shell near the edge, flesh mass elsewhere, carve stays open
             foreach (IntVec3 cell in map.AllCells)
             {
-                int dx = cell.x - ox, dz = cell.z - oz;
-                bool insideFootprint = dx >= 0 && dz >= 0 && dx < extent && dz < extent;
+                if (carved.Contains(cell))
+                    continue;
 
-                ThingDef def;
-                if (!insideFootprint || dx < 2 || dz < 2 || dx >= extent - 2 || dz >= extent - 2)
-                {
-                    def = hardWall; // map edge + border ring: the immovable carcass
-                }
-                else
-                {
-                    int lx = dx % Pitch, lz = dz % Pitch;
-                    bool wall;
-                    if (lx < 2 && lz < 2)
-                        wall = true; // pillar
-                    else if (lx < 2)
-                        wall = !passH[dx / Pitch - 1, dz / Pitch];
-                    else if (lz < 2)
-                        wall = !passV[dx / Pitch, dz / Pitch - 1];
-                    else
-                        wall = false; // floor pocket
+                int edgeDist = System.Math.Min(
+                    System.Math.Min(cell.x, sideX - 1 - cell.x),
+                    System.Math.Min(cell.z, sideZ - 1 - cell.z));
 
-                    if (!wall)
-                        continue;
-
-                    def = Rand.Value < 0.62f ? blobWall : fleshWall;
-                }
-
-                if (cell.DistanceTo(map.Center) <= 3f && def != hardWall)
-                    continue; // keep the portal chamber open
+                ThingDef def = edgeDist <= 3
+                    ? hardWall
+                    : (Rand.Value < 0.62f ? blobWall : fleshWall);
 
                 GenSpawn.Spawn(ThingMaker.MakeThing(def), cell, map);
             }
 
-            // dead ends: mineable nodes and gluttonium
-            for (int ci = 0; ci < cells; ci++)
+            // rewards in the dead pockets: mineables and gluttonium
+            int placed = 0;
+            for (int i = 0; i < 400 && placed < 45; i++)
             {
-                for (int cj = 0; cj < cells; cj++)
+                IntVec3 spot = carvedList[Rand.Range(0, carvedList.Count)];
+                if (spot.DistanceTo(center) < 12)
+                    continue;
+                if (!spot.Standable(map) || spot.GetFirstThing<Building>(map) != null)
+                    continue;
+                // dead pocket feel: mostly surrounded by wall
+                int openNeighbors = 0;
+                foreach (IntVec3 n in GenAdj.AdjacentCells)
+                    if (carved.Contains(spot + n))
+                        openNeighbors++;
+                if (openNeighbors > 3)
+                    continue;
+
+                if (Rand.Value < 0.55f)
+                    GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("RR_BlobWallMineable")), spot, map);
+                else
                 {
-                    int openings =
-                        (ci > 0 && passH[ci - 1, cj] ? 1 : 0) +
-                        (ci < cells - 1 && passH[ci, cj] ? 1 : 0) +
-                        (cj > 0 && passV[ci, cj - 1] ? 1 : 0) +
-                        (cj < cells - 1 && passV[ci, cj] ? 1 : 0);
-                    if (openings != 1 || (ci == startCell && cj == startCell))
-                        continue;
-
-                    IntVec3 spot = new IntVec3(ox + ci * Pitch + 2, 0, oz + cj * Pitch + 2);
-                    if (spot.DistanceTo(map.Center) <= 3f)
-                        continue;
-
-                    if (Rand.Value < 0.35f)
-                        GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("RR_BlobWallMineable")), spot, map);
-                    else if (Rand.Value < 0.4f)
-                    {
-                        Thing loot = ThingMaker.MakeThing(ThingDef.Named("RR_VoidGluttonium"));
-                        loot.stackCount = Rand.RangeInclusive(3, 8);
-                        GenSpawn.Spawn(loot, spot, map);
-                    }
+                    Thing loot = ThingMaker.MakeThing(ThingDef.Named("RR_VoidGluttonium"));
+                    loot.stackCount = Rand.RangeInclusive(3, 8);
+                    GenSpawn.Spawn(loot, spot, map);
                 }
+                placed++;
             }
 
             // the way home
-            GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("RR_VoidPortalReturn")), map.Center, map);
+            GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("RR_VoidPortalReturn")), center, map);
 
             MapGenerator.PlayerStartSpot = IntVec3.Zero;
         }

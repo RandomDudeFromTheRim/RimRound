@@ -19,6 +19,8 @@
   <MapGeneratorDef>
     <defName>RR_VoidMazeMapGen</defName>
     <label>void maze</label>
+    <isUnderground>true</isUnderground>
+    <roofDef>RoofRock</roofDef>
     <ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
     <disableShadows>true</disableShadows>
     <disableCallAid>true</disableCallAid>
