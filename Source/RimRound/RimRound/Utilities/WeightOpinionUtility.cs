@@ -94,7 +94,10 @@ namespace RimRound.Utilities
 
         public static TraitDef GetTraitByWeightOpinion(WeightOpinion w)
         {
-            return weightOpinionToTraitDef[w];
+            if (weightOpinionToTraitDef.TryGetValue(w, out TraitDef trait))
+                return trait;
+            // None and Extreme deliberately have no trait def
+            return null;
         }
 
         public static void RemoveWeightOpinionTraits(Pawn p)

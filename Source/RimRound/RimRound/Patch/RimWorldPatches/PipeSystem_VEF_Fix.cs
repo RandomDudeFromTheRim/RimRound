@@ -9,12 +9,18 @@ namespace RimRound.Patch
     [HarmonyPatch("ResolvedAllowedDesignators", MethodType.Getter)]
     public class DesignationCategoryDef_ResolvedAllowedDesignators_Fix
     {
+        static bool loggedOnce = false;
+
         [HarmonyFinalizer]
         static Exception Finalizer(Exception __exception)
         {
             if (__exception is NullReferenceException)
             {
-                Log.Warning("[RimRound] Suppressed NRE in ResolvedAllowedDesignators (PipeSystem/VEF postfix conflict)");
+                if (!loggedOnce)
+                {
+                    loggedOnce = true;
+                    Log.Warning($"[RimRound] Suppressed NRE in ResolvedAllowedDesignators (PipeSystem/VEF postfix conflict). Further occurrences will be silent. Full exception:\n{__exception}");
+                }
                 return null;
             }
             return __exception;

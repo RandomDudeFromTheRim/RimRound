@@ -86,17 +86,18 @@ namespace RimRound.Comps
             if (Prefs.DevMode)
                 Log.Message($"Current opinion is now: {weightOpinion}");
 
-            if (!((Pawn)parent).story.traits.HasTrait(WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion)))
+            TraitDef increasedTrait = WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion);
+            if (increasedTrait != null && !((Pawn)parent).story.traits.HasTrait(increasedTrait))
             {
                 WeightOpinionUtility.RemoveWeightOpinionTraits((Pawn)parent);
-                ((Pawn)parent).story.traits.GainTrait(new Trait(WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion)));
+                ((Pawn)parent).story.traits.GainTrait(new Trait(increasedTrait));
             }
 
 
             return weightOpinion;
         }
 
-        public WeightOpinion Debug_LowerOpinion() 
+        public WeightOpinion Debug_LowerOpinion()
         {
             List<WeightOpinion> weightOpinions = new List<WeightOpinion>();
 
@@ -134,21 +135,25 @@ namespace RimRound.Comps
             if (Prefs.DevMode)
                 Log.Message($"Current opinion is now: {weightOpinion}");
 
-            if (!((Pawn)parent).story.traits.HasTrait(WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion)))
+            TraitDef loweredTrait = WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion);
+            if (loweredTrait != null && !((Pawn)parent).story.traits.HasTrait(loweredTrait))
             {
                 WeightOpinionUtility.RemoveWeightOpinionTraits((Pawn)parent);
-                ((Pawn)parent).story.traits.GainTrait(new Trait(WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion)));
+                ((Pawn)parent).story.traits.GainTrait(new Trait(loweredTrait));
             }
 
             return weightOpinion;
         }
 
-        public void SetWeightOpinion(WeightOpinion weightOpinion) 
+        public void SetWeightOpinion(WeightOpinion weightOpinion)
         {
             this.weightOpinion = weightOpinion;
 
             WeightOpinionUtility.RemoveWeightOpinionTraits((Pawn)parent);
-            ((Pawn)parent).story.traits.GainTrait(new Trait(WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion)));
+
+            TraitDef newOpinionTrait = WeightOpinionUtility.GetTraitByWeightOpinion(weightOpinion);
+            if (newOpinionTrait != null)
+                ((Pawn)parent).story.traits.GainTrait(new Trait(newOpinionTrait));
 
             return;
         }

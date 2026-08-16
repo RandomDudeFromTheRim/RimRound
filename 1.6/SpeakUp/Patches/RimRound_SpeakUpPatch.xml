@@ -110,7 +110,7 @@
       <li>r_logentry(p=0.5,priority=22,tag=RR_ExploreReply_Eager)->Every curve drives me wild!</li>
       <li>r_logentry(p=0.4,priority=20,tag=RR_ExploreReply_Eager,INITIATOR_trait==Bloodlust)->I want to memorize every inch of you...</li>
       <li>r_logentry(p=0.4,priority=18,tag=RR_ExploreReply_Eager,INITIATOR_trait==Greedy)->I want ALL of you. Every roll. Every fold.</li>
-      <li>r_logentry(p=0.3,priority=14,tag=RR_ExploreReply_Eager,INITIATOR_trait==Brawler)>You've got so much more to grab onto than a skinny thing!</li>
+      <li>r_logentry(p=0.3,priority=14,tag=RR_ExploreReply_Eager,INITIATOR_trait==Brawler)->You've got so much more to grab onto than a skinny thing!</li>
       <li>r_logentry(p=0.3,priority=12,tag=RR_ExploreReply_Eager,INITIATOR_trait==Nudist)->The human body is art, and yours is a MASTERPIECE!</li>
       <!-- Shy -->
       <li>r_logentry(p=0.4,priority=10,tag=RR_ExploreReply_Shy)->C-can I really touch all of you?</li>

@@ -102,6 +102,12 @@ namespace RimRound.Utilities
                         throw new NotImplementedException();
                 }
 
+                if (methodToPatchMI is null)
+                {
+                    Log.Warning($"[RimRound] {modPatchInfo.ModName}'s {modPatchInfo.MethodName} not found in this version — skipping patch (harmless, external mod changed its code).");
+                    return;
+                }
+
                 harmonyinstance.Patch(methodToPatchMI,
                     patchCollection.prefix is null ? null : new HarmonyMethod(patchCollection.prefix),
                     patchCollection.postfix is null ? null : new HarmonyMethod(patchCollection.postfix),
@@ -112,8 +118,10 @@ namespace RimRound.Utilities
             }
             catch (Exception e)
             {
-                Log.Error($"[RimRound] Failed to patch {modPatchInfo.ModName}'s {modPatchInfo.MethodName}. Please report this!");
-                Log.Warning($"Details: {e.Message}, {e.StackTrace}");
+                if (e.ToString().Contains("Invalid IL code"))
+                    Log.Warning($"[RimRound] Skipped patching {modPatchInfo.ModName}'s {modPatchInfo.MethodName}: another mod already rewrote the method (harmless). Details: {e.Message}");
+                else
+                    Log.Error($"[RimRound] Failed to patch {modPatchInfo.ModName}'s {modPatchInfo.MethodName}. Details: {e.Message}\n{e.StackTrace}");
             }
             
         }
@@ -163,7 +171,7 @@ namespace RimRound.Utilities
 
                         if (methodInfo is null)
                         {
-                            Log.Error($"Could not get method {methodName} from {t.Name}");
+                            Log.Warning($"Could not get method {methodName} from {t.Name}");
                         }
 
                         return methodInfo;
