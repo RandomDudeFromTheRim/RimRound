@@ -16,6 +16,7 @@
     </pipeDefs>
     <designator>
       <deconstructIconPath>Things/Building/Production/FoodPipe_MenuIcon</deconstructIconPath>
+      <designationCategoryDef>VCHE_PipeNetworks</designationCategoryDef>
     </designator>
     <overlayOptions>
       <overlayColor>(0.95, 0.90, 0.80)</overlayColor>

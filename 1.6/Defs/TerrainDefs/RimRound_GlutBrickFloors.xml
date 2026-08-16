@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Carefully-cut glut brick tiles, built alongside the vanilla stone tile set -->
+  <TerrainDef ParentName="FloorBase">
+    <defName>RR_GlutBrickTile</defName>
+    <label>glut brick tile</label>
+    <description>Carefully-cut and fit tiles made from refined glut bricks. The dense, faintly glowing material is easy to clean and pleasingly smooth underfoot, though pawns occasionally complain it looks back at them.</description>
+    <texturePath>Terrain/Surfaces/TileStone</texturePath>
+    <pollutionShaderType MayRequire="Ludeon.RimWorld.Biotech">TerrainFadeRoughLinearBurn</pollutionShaderType>
+    <pollutionOverlayTexturePath>Terrain/Surfaces/PollutionFloorSmooth</pollutionOverlayTexturePath>
+    <pollutionColor>(1, 1, 1, 1)</pollutionColor>
+    <isPaintable>true</isPaintable>
+    <renderPrecedence>220</renderPrecedence>
+    <color>(70, 90, 200)</color>
+    <statBases>
+      <WorkToBuild>1100</WorkToBuild>
+      <Beauty>3</Beauty>
+      <CleaningTimeFactor>0.7</CleaningTimeFactor>
+    </statBases>
+    <designatorDropdown>Floor_Tile</designatorDropdown>
+    <designationCategory>Floors</designationCategory>
+    <researchPrerequisites>
+      <li>Machining</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>3</constructionSkillPrerequisite>
+    <uiOrder>2061</uiOrder>
+    <costList>
+      <RR_GlutBrick>4</RR_GlutBrick>
+    </costList>
+  </TerrainDef>
+
+</Defs>

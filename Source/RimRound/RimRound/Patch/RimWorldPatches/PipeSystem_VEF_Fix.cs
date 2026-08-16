@@ -14,12 +14,15 @@ namespace RimRound.Patch
         [HarmonyFinalizer]
         static Exception Finalizer(Exception __exception)
         {
-            if (__exception is NullReferenceException)
+            // Only swallow the known PipeSystem postfix bug (a PipeNetDef whose
+            // designator lacks designationCategoryDef); let any other NRE through.
+            if (__exception is NullReferenceException &&
+                __exception.StackTrace.Contains("PipeSystem.ResolvedAllowedDesignators_Patch"))
             {
                 if (!loggedOnce)
                 {
                     loggedOnce = true;
-                    Log.Warning($"[RimRound] Suppressed NRE in ResolvedAllowedDesignators (PipeSystem/VEF postfix conflict). Further occurrences will be silent. Full exception:\n{__exception}");
+                    Log.Warning($"[RimRound] Suppressed NRE in ResolvedAllowedDesignators caused by a PipeSystem pipe net whose <designator> is missing <designationCategoryDef>. Further occurrences will be silent. Full exception:\n{__exception}");
                 }
                 return null;
             }

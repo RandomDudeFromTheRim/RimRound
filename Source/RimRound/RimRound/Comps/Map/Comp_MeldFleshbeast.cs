@@ -85,8 +85,14 @@ namespace RimRound.Comps
                 target.health.AddHediff(meld);
             }
 
-            // Self-damage as exchange
-            int selfDamage = Mathf.Max(1, (int)(Props.meldPerHit * Props.selfDamageMultiplier * 5f));
+            // Self-damage as exchange: a fixed fraction of total body HP per merge,
+            // so any fleshbeast dies after roughly ten merges regardless of species
+            float maxBodyHP = 0f;
+            foreach (BodyPartRecord part in pawn.RaceProps.body.AllParts)
+                maxBodyHP += part.def.hitPoints;
+            maxBodyHP *= pawn.HealthScale;
+
+            float selfDamage = Mathf.Max(1f, maxBodyHP * 0.10f * Props.selfDamageMultiplier);
             pawn.TakeDamage(new DamageInfo(
                 DamageDefOf.Cut,
                 selfDamage,
