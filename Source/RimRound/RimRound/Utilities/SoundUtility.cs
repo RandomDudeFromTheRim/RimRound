@@ -179,7 +179,10 @@ namespace RimRound.Utilities
             if (fndComp == null ||
                 fndComp.parent.AsPawn() == null ||
                 !PawnShouldPlaySound(fndComp.parent.AsPawn()) ||
-                fndComp.CurrentFullness <= 0.05f) // Arbitrarily low number above zero
+                fndComp.CurrentFullness <= 0.05f || // Arbitrarily low number above zero
+                // Only genuinely overweight pawns make stomach noises at all —
+                // otherwise an entire colony gurgles nonstop
+                !BodyTypeUtility.PawnIsOverWeightThreshold(fndComp.parent.AsPawn(), Defs.BodyTypeDefOf.F_006_Chonky))
             {
                 return null;
             }
@@ -206,7 +209,8 @@ namespace RimRound.Utilities
             if (fndComp == null ||
                 fndComp.parent.AsPawn() == null ||
                 !PawnShouldPlaySound(fndComp.parent.AsPawn()) ||
-                fndComp.CurrentFullness <= 0.05f) // Arbitrarily low number above zero
+                fndComp.CurrentFullness <= 0.05f || // Arbitrarily low number above zero
+                !BodyTypeUtility.PawnIsOverWeightThreshold(fndComp.parent.AsPawn(), Defs.BodyTypeDefOf.F_006_Chonky))
             {
                 return null;
             }
@@ -338,7 +342,8 @@ namespace RimRound.Utilities
             if (fndComp == null ||
                 fndComp.parent.AsPawn() == null ||
                 !PawnShouldPlaySound(fndComp.parent.AsPawn()) ||
-                fndComp.CurrentFullness > 0.05f)  // Arbitrarily low number above zero
+                fndComp.CurrentFullness > 0.05f ||  // Arbitrarily low number above zero
+                !BodyTypeUtility.PawnIsOverWeightThreshold(fndComp.parent.AsPawn(), Defs.BodyTypeDefOf.F_006_Chonky))
             {
                 return null;
             }

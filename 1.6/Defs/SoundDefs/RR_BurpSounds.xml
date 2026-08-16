@@ -20,7 +20,7 @@
 					</li>
 				</grains>
 				<volumeRange>7~7</volumeRange>
-				<distRange>10~30</distRange>
+				<distRange>5~15</distRange>
 				<sustainLoop>False</sustainLoop>
 				<paramMappings>
 					<li>
@@ -43,7 +43,7 @@
 					</li>
 				</grains>
 				<volumeRange>7~7</volumeRange>
-				<distRange>10~30</distRange>
+				<distRange>5~15</distRange>
 				<sustainLoop>False</sustainLoop>
 				<paramMappings>
 					<li>
@@ -66,7 +66,7 @@
 					</li>
 				</grains>
 				<volumeRange>7~7</volumeRange>
-				<distRange>10~30</distRange>
+				<distRange>5~15</distRange>
 				<sustainLoop>False</sustainLoop>
 				<paramMappings>
 					<li>
@@ -89,7 +89,7 @@
 					</li>
 				</grains>
 				<volumeRange>14~14</volumeRange>
-				<distRange>10~30</distRange>
+				<distRange>5~15</distRange>
 				<sustainLoop>False</sustainLoop>
 				<paramMappings>
 					<li>
