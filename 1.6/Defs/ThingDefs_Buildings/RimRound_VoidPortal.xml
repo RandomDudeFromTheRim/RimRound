@@ -11,7 +11,7 @@
       <texPath>Things/Building/Misc/VoidPortal</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>Cutout</shaderType>
-      <drawSize>(1,1)</drawSize>
+      <drawSize>(2,2)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
@@ -33,13 +33,14 @@
         <jobString>entering the void maze</jobString>
       </li>
       <li Class="CompProperties_Glower">
-        <glowRadius>5</glowRadius>
+        <glowRadius>8</glowRadius>
         <glowColor>(180,40,180,0)</glowColor>
-        <darklightToggle>true</darklightToggle>
       </li>
     </comps>
     <building>
       <isInert>false</isInert>
+      <deconstructible>false</deconstructible>
+      <claimable>false</claimable>
     </building>
   </ThingDef>
 </Defs>

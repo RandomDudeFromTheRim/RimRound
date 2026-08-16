@@ -10,14 +10,12 @@
     <neverMultiSelect>true</neverMultiSelect>
     <stuffCategories />
     <graphicData>
-      <texPath>Things/Building/Linked/Wall</texPath>
+      <texPath>WIP/Skin_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>CutoutComplex</shaderType>
-      <color>(235,150,165)</color>
       <linkType>CornerFiller</linkType>
       <linkFlags>
-        <li>Wall</li>
-        <li>Rock</li>
+        <li>Custom2</li>
       </linkFlags>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
@@ -70,21 +68,21 @@
     <description>A thicker, vein-ridden section of blob wall. Pulses with a purple glow. Can be mined for void gluttonium.</description>
     <thingClass>Mineable</thingClass>
     <graphicData>
-      <texPath>Things/Building/Linked/Wall</texPath>
+      <texPath>WIP/Skin_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>CutoutComplex</shaderType>
-      <color>(160,60,95)</color>
+      <color>(150,50,180)</color>
       <linkType>CornerFiller</linkType>
       <linkFlags>
-        <li>Wall</li>
-        <li>Rock</li>
+        <li>Custom2</li>
       </linkFlags>
+      <drawSize>(1,1)</drawSize>
     </graphicData>
     <stuffCategories />
     <passability>Impassable</passability>
     <blockWind>true</blockWind>
     <castEdgeShadows>true</castEdgeShadows>
-    <fillPercent>0.5</fillPercent>
+    <fillPercent>1</fillPercent>
     <coversFloor>true</coversFloor>
     <rotatable>false</rotatable>
     <holdsRoof>true</holdsRoof>
@@ -126,15 +124,11 @@
     <neverMultiSelect>true</neverMultiSelect>
     <stuffCategories />
     <graphicData>
-      <texPath>Things/Building/Linked/Wall</texPath>
+      <texPath>Things/Building/RR_FleshWall</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>CutoutComplex</shaderType>
-      <color>(170,55,80)</color>
-      <linkType>CornerFiller</linkType>
-      <linkFlags>
-        <li>Wall</li>
-        <li>Rock</li>
-      </linkFlags>
+      <color>(190,120,130)</color>
+      <drawSize>(1,1)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Impassable</passability>
@@ -172,5 +166,51 @@
         <dropCount>3</dropCount>
       </li>
     </comps>
+  </ThingDef>
+
+  <!-- Hardened flesh shell: the maze's immovable outer carcass -->
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_HardenedFleshWall</defName>
+    <thingClass>Building</thingClass>
+    <category>Building</category>
+    <label>hardened flesh</label>
+    <description>Calloused, calcified flesh dense as bedrock. The skeleton of whatever vast organism this place grew inside of.</description>
+    <selectable>true</selectable>
+    <neverMultiSelect>true</neverMultiSelect>
+    <stuffCategories />
+    <graphicData>
+      <texPath>Things/Building/RR_HardenedFlesh</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>CutoutComplex</shaderType>
+      <drawSize>(1,1)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <coversFloor>false</coversFloor>
+    <rotatable>false</rotatable>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <holdsRoof>true</holdsRoof>
+    <blockLight>true</blockLight>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <fertility>0</fertility>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <filthLeaving>Filth_GrayFlesh</filthLeaving>
+    <soundImpactDefault>Fleshmass_Damaged</soundImpactDefault>
+    <statBases>
+      <MaxHitPoints>50000</MaxHitPoints>
+      <Flammability>0</Flammability>
+      <Beauty>-10</Beauty>
+    </statBases>
+    <building>
+      <isNaturalRock>false</isNaturalRock>
+      <isInert>true</isInert>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+      <destroyShakeAmount>0</destroyShakeAmount>
+      <quickTargetable>false</quickTargetable>
+    </building>
   </ThingDef>
 </Defs>

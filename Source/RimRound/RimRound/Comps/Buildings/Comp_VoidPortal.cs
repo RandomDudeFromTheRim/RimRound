@@ -100,9 +100,9 @@ namespace RimRound.Comps
 
             if (!Props.exitPortal)
             {
-                var weight = activateBy.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight);
-                float sev = weight?.Severity ?? 0;
-                if (sev < Props.minWeightToEnter)
+                // Race-aware threshold: raw hediff severity means different
+                // kilogram amounts for small races like Ratkin
+                if (!BodyTypeUtility.PawnIsOverWeightThreshold(activateBy, Defs.BodyTypeDefOf.F_006_Chonky))
                     return $"{activateBy.LabelShort} needs to be at least Chubby to enter the void portal.";
 
                 if (pawnsInMaze.Contains(activateBy))

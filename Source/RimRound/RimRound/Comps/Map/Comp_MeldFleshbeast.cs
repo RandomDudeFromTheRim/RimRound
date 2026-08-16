@@ -110,15 +110,15 @@ namespace RimRound.Comps
             if (tickCounter < Props.tickInterval)
             {
                 // Keep target immobilized between merge ticks
-                if (!target.stances.stunner.Stunned)
-                    target.stances.stunner.StunFor(Props.tickInterval + 60, pawn, addBattleLog: false, showMote: false);
+                if (!(target.stances?.stunner?.Stunned ?? true))
+                    target.stances?.stunner?.StunFor(Props.tickInterval + 60, pawn, addBattleLog: false, showMote: false);
                 return;
             }
             tickCounter = 0;
 
             // Immobilize target for merge duration
-            target.stances.stunner.StunFor(Props.stunDurationTicks, pawn, addBattleLog: false, showMote: false);
-            target.jobs.EndCurrentJob(JobCondition.InterruptForced);
+            target.stances?.stunner?.StunFor(Props.stunDurationTicks, pawn, addBattleLog: false, showMote: false);
+            target.jobs?.EndCurrentJob(JobCondition.InterruptForced);
 
             // Apply meld growth to target — scaled by uncovered skin; a fully
             // covered pawn has nothing for the meld to sink into
@@ -164,8 +164,8 @@ namespace RimRound.Comps
 
             // The beast braces itself against its victim for the next pulse —
             // a true grapple that only ends when one of them drops
-            if (!pawn.Downed && !pawn.stances.stunner.Stunned)
-                pawn.stances.stunner.StunFor(Props.tickInterval + 60, pawn, addBattleLog: false, showMote: false);
+            if (!pawn.Downed && !(pawn.stances?.stunner?.Stunned ?? true))
+                pawn.stances?.stunner?.StunFor(Props.tickInterval + 60, pawn, addBattleLog: false, showMote: false);
 
             if (lastTarget != target)
             {

@@ -48,6 +48,7 @@
     <edgeType>Fade</edgeType>
     <renderPrecedence>90</renderPrecedence>
     <layerable>true</layerable>
+    <fertility>0</fertility>
     <affordances>
       <li>Light</li>
       <li>Medium</li>

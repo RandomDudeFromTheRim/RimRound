@@ -1,6 +1,7 @@
 using RimRound.Comps;
 using RimRound.Utilities;
 using RimWorld;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -57,15 +58,25 @@ namespace RimRound.Hediffs
                 return;
             Map map = pawn.Map;
 
-            Pawn echo = PawnGenerator.GeneratePawn(pawn.kindDef, Faction.OfEntities);
+            // a real hostile faction when one exists; entities as fallback
+            Faction echoFaction = Find.FactionManager.AllFactionsVisible
+                .Where(f => f.def.permanentEnemy && !f.def.hidden && f != Faction.OfEntities && f.def.humanlikeFaction)
+                .FirstOrDefault()
+                ?? Faction.OfEntities;
+
+            Pawn echo = PawnGenerator.GeneratePawn(pawn.kindDef, echoFaction);
             if (echo == null)
                 return;
 
             echo.Name = new NameSingle("Echo of " + pawn.LabelShort);
 
-            // the echo wears the pawn's greed made flesh: their weight, and then some
+            // the echo wears the pawn's own age — no fountain of youth in the void
+            echo.ageTracker.AgeBiologicalTicks = pawn.ageTracker.AgeBiologicalTicks;
+            echo.ageTracker.AgeChronologicalTicks = pawn.ageTracker.AgeChronologicalTicks;
+
+            // their weight, and then some — but capped so it can still move
             float original = Utilities.HediffUtility.WeightHediff(pawn)?.Severity ?? 0f;
-            float target = Mathf.Max(original + 0.45f, 0.55f);
+            float target = Mathf.Clamp(original + 0.35f, 0.35f, 1.0f);
             var echoWeight = echo.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight);
             if (echoWeight != null)
             {
@@ -77,6 +88,11 @@ namespace RimRound.Hediffs
                 h.Severity = target;
                 echo.health.AddHediff(h);
             }
+
+            // void vigor: the mass is carried by something other than muscle
+            var vigor = HediffMaker.MakeHediff(HediffDef.Named("RR_VoidEchoVigor"), echo);
+            vigor.Severity = 1f;
+            echo.health.AddHediff(vigor);
 
             var att = echo.TryGetComp<ThingComp_PawnAttitude>();
             if (att != null)
