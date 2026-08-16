@@ -9,6 +9,7 @@ namespace RimRound.Comps
         public int mazeDurationTicks = 120000;
         public int respawnIntervalTicks = 60000;
         public int maxMeldBeasts = 4;
+        public bool exitPortal = false;
 
         public CompProperties_VoidPortal()
         {

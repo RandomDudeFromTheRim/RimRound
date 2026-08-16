@@ -10,12 +10,14 @@
     <neverMultiSelect>true</neverMultiSelect>
     <stuffCategories />
     <graphicData>
-      <texPath>WIP/Skin_Atlas</texPath>
+      <texPath>Things/Building/Linked/Wall</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>CutoutComplex</shaderType>
+      <color>(235,150,165)</color>
       <linkType>CornerFiller</linkType>
       <linkFlags>
-        <li>Custom2</li>
+        <li>Wall</li>
+        <li>Rock</li>
       </linkFlags>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
@@ -68,11 +70,15 @@
     <description>A thicker, vein-ridden section of blob wall. Pulses with a purple glow. Can be mined for void gluttonium.</description>
     <thingClass>Mineable</thingClass>
     <graphicData>
-      <texPath>WIP/Skin_Atlas</texPath>
+      <texPath>Things/Building/Linked/Wall</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>CutoutComplex</shaderType>
-      <color>(150,50,180)</color>
-      <drawSize>(1,1)</drawSize>
+      <color>(160,60,95)</color>
+      <linkType>CornerFiller</linkType>
+      <linkFlags>
+        <li>Wall</li>
+        <li>Rock</li>
+      </linkFlags>
     </graphicData>
     <stuffCategories />
     <passability>Impassable</passability>
@@ -105,6 +111,65 @@
         <radius>3</radius>
         <exposurePerTick>0.008</exposurePerTick>
         <tickInterval>250</tickInterval>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- Crimson flesh wall variant sprinkled through the maze -->
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_FleshWall</defName>
+    <thingClass>Building</thingClass>
+    <category>Building</category>
+    <label>flesh wall</label>
+    <description>A dense wall of twisted crimson flesh. Veins branch across its surface and something moves underneath.</description>
+    <selectable>true</selectable>
+    <neverMultiSelect>true</neverMultiSelect>
+    <stuffCategories />
+    <graphicData>
+      <texPath>Things/Building/Linked/Wall</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>CutoutComplex</shaderType>
+      <color>(170,55,80)</color>
+      <linkType>CornerFiller</linkType>
+      <linkFlags>
+        <li>Wall</li>
+        <li>Rock</li>
+      </linkFlags>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>false</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <coversFloor>false</coversFloor>
+    <rotatable>false</rotatable>
+    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+    <holdsRoof>true</holdsRoof>
+    <blockLight>true</blockLight>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <fertility>0</fertility>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <filthLeaving>Filth_GrayFlesh</filthLeaving>
+    <soundImpactDefault>Fleshmass_Damaged</soundImpactDefault>
+    <autoTargetNearbyIdenticalThings>true</autoTargetNearbyIdenticalThings>
+    <statBases>
+      <MaxHitPoints>120</MaxHitPoints>
+      <Flammability>0.9</Flammability>
+      <Beauty>-8</Beauty>
+    </statBases>
+    <building>
+      <isNaturalRock>false</isNaturalRock>
+      <isInert>true</isInert>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+      <destroyEffecter>FleshmassDestroyed</destroyEffecter>
+      <destroyShakeAmount>0</destroyShakeAmount>
+      <quickTargetable>true</quickTargetable>
+    </building>
+    <comps>
+      <li Class="RimRound.Comps.CompProperties_DestroyDrop">
+        <dropDefName>Meat_Twisted</dropDefName>
+        <dropCount>3</dropCount>
       </li>
     </comps>
   </ThingDef>

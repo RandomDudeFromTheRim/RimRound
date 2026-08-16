@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Flesh dimension biome, modeled on Anomaly's Labyrinth pocket biome -->
+  <BiomeDef>
+    <defName>RR_VoidMazeBiome</defName>
+    <label>void maze</label>
+    <description>A pocket of warm, breathing flesh. The air is thick and sweet, and the walls pulse faintly, as if the whole place is digesting.</description>
+    <generatesNaturally>false</generatesNaturally>
+    <animalDensity>0</animalDensity>
+    <plantDensity>0</plantDensity>
+    <wildAnimalsCanWanderInto>false</wildAnimalsCanWanderInto>
+    <baseWeatherCommonalities>
+      <Clear>1</Clear>
+    </baseWeatherCommonalities>
+    <diseaseMtbDays>0</diseaseMtbDays>
+  </BiomeDef>
+
+  <MapGeneratorDef>
+    <defName>RR_VoidMazeMapGen</defName>
+    <label>void maze</label>
+    <ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
+    <disableShadows>true</disableShadows>
+    <disableCallAid>true</disableCallAid>
+    <pocketMapProperties>
+      <biome>RR_VoidMazeBiome</biome>
+      <temperature>30</temperature>
+    </pocketMapProperties>
+    <genSteps>
+      <li>RR_VoidMazeGen</li>
+      <li>Fog</li>
+    </genSteps>
+  </MapGeneratorDef>
+
+  <GenStepDef>
+    <defName>RR_VoidMazeGen</defName>
+    <order>10</order>
+    <genStep Class="RimRound.GenSteps.GenStep_RRVoidMaze" />
+  </GenStepDef>
+
+  <!-- The living floor of the flesh dimension -->
+  <TerrainDef>
+    <defName>RR_FleshFloor</defName>
+    <label>warm flesh</label>
+    <description>Soft, warm flesh covers every surface. It dimples underfoot and slowly springs back.</description>
+    <texturePath>Terrain/Surfaces/Soil</texturePath>
+    <color>(205,110,125)</color>
+    <edgeType>Fade</edgeType>
+    <renderPrecedence>90</renderPrecedence>
+    <layerable>true</layerable>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+    </affordances>
+    <statBases>
+      <Beauty>-2</Beauty>
+      <Cleanliness>-2</Cleanliness>
+    </statBases>
+  </TerrainDef>
+
+  <!-- The way home, spawned at the heart of the maze -->
+  <ThingDef>
+    <defName>RR_VoidPortalReturn</defName>
+    <thingClass>Building</thingClass>
+    <category>Building</category>
+    <label>void portal (return)</label>
+    <description>A pulsating vertical wound in reality leading home. Warm air rushes back through it, carrying the smells of the outside world.</description>
+    <stuffCategories />
+    <graphicData>
+      <texPath>Things/Building/Misc/VoidPortal</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>Cutout</shaderType>
+      <drawSize>(1,1)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <selectable>true</selectable>
+    <statBases>
+      <MaxHitPoints>500</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <size>(1,1)</size>
+    <comps>
+      <li Class="RimRound.Comps.CompProperties_VoidPortal">
+        <activateTexPath>UI/Activate/Activate</activateTexPath>
+        <exitPortal>true</exitPortal>
+        <activateLabelString>Return through the void portal</activateLabelString>
+        <jobString>returning through the void portal</jobString>
+      </li>
+      <li Class="CompProperties_Glower">
+        <glowRadius>5</glowRadius>
+        <glowColor>(80,180,80,0)</glowColor>
+        <darklightToggle>true</darklightToggle>
+      </li>
+    </comps>
+    <building>
+      <isInert>false</isInert>
+    </building>
+  </ThingDef>
+
+</Defs>

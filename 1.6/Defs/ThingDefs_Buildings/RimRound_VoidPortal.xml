@@ -10,7 +10,7 @@
     <graphicData>
       <texPath>Things/Building/Misc/VoidPortal</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <shaderType>CutoutComplex</shaderType>
+      <shaderType>Cutout</shaderType>
       <drawSize>(1,1)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
@@ -29,6 +29,8 @@
         <mazeDurationTicks>120000</mazeDurationTicks>
         <respawnIntervalTicks>60000</respawnIntervalTicks>
         <maxMeldBeasts>4</maxMeldBeasts>
+        <activateLabelString>Enter the void maze</activateLabelString>
+        <jobString>entering the void maze</jobString>
       </li>
       <li Class="CompProperties_Glower">
         <glowRadius>5</glowRadius>

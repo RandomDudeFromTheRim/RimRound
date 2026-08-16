@@ -31,6 +31,41 @@ namespace RimRound.Comps
                 && (pawn.Position - target.Position).LengthHorizontal <= 6f;
         }
 
+        /// <summary>Fraction of the pawn's body parts not covered by any worn apparel.</summary>
+        static float UncoveredBodyFraction(Pawn p)
+        {
+            if (p?.apparel == null || p.RaceProps?.body == null)
+                return 1f;
+
+            var parts = p.RaceProps.body.AllParts;
+            if (parts.Count == 0)
+                return 1f;
+
+            var worn = p.apparel.WornApparel;
+            int uncovered = 0;
+            foreach (BodyPartRecord part in parts)
+            {
+                bool covered = false;
+                for (int i = 0; i < worn.Count && !covered; i++)
+                {
+                    var groups = worn[i].def.apparel?.bodyPartGroups;
+                    if (groups == null)
+                        continue;
+                    for (int j = 0; j < groups.Count; j++)
+                    {
+                        if (part.groups.Contains(groups[j]))
+                        {
+                            covered = true;
+                            break;
+                        }
+                    }
+                }
+                if (!covered)
+                    uncovered++;
+            }
+            return uncovered / (float)parts.Count;
+        }
+
         int tickCounter = 0;
         Pawn lastTarget = null;
 
@@ -85,17 +120,30 @@ namespace RimRound.Comps
             target.stances.stunner.StunFor(Props.stunDurationTicks, pawn, addBattleLog: false, showMote: false);
             target.jobs.EndCurrentJob(JobCondition.InterruptForced);
 
-            // Apply meld growth to target — pooled by contribution body size
-            Hediff existing = target.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth);
-            if (existing is Hediff_MeldGrowth meldGrowth)
+            // Apply meld growth to target — scaled by uncovered skin; a fully
+            // covered pawn has nothing for the meld to sink into
+            float exposure = UncoveredBodyFraction(target);
+            if (exposure > 0.05f)
             {
-                meldGrowth.AddContribution(Props.meldPerHit, pawn.BodySize);
+                float dose = Props.meldPerHit * exposure;
+                Hediff existing = target.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth);
+                if (existing is Hediff_MeldGrowth meldGrowth)
+                {
+                    meldGrowth.AddContribution(dose, pawn.BodySize);
+                }
+                else
+                {
+                    Hediff_MeldGrowth meld = (Hediff_MeldGrowth)HediffMaker.MakeHediff(Defs.HediffDefOf.RR_MeldGrowth, target);
+                    meld.AddContribution(dose, pawn.BodySize);
+                    target.health.AddHediff(meld);
+                }
             }
-            else
+            else if (lastTarget != target)
             {
-                Hediff_MeldGrowth meld = (Hediff_MeldGrowth)HediffMaker.MakeHediff(Defs.HediffDefOf.RR_MeldGrowth, target);
-                meld.AddContribution(Props.meldPerHit, pawn.BodySize);
-                target.health.AddHediff(meld);
+                Messages.Message(
+                    $"{pawn.LabelShort}'s melding grasp slides off {target.LabelShort}'s coverings!",
+                    new LookTargets(new Pawn[] { pawn, target }),
+                    MessageTypeDefOf.SilentInput);
             }
 
             // Self-damage as exchange: a fixed fraction of total body HP per merge,
