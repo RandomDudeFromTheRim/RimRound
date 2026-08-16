@@ -108,7 +108,7 @@
         <li>Torso</li>
         <li>Legs</li>
         <li>Arms</li>
-        <li>Head</li>
+        <li>FullHead</li>
       </bodyPartGroups>
     </apparel>
     <recipeMaker>

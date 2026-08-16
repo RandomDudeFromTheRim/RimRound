@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Physical layer for RimRound's close-contact interactions -->
+  <JobDef>
+    <defName>RR_CloseEncounter</defName>
+    <driverClass>RimRound.AI.JobDriver_RRCloseEncounter</driverClass>
+    <reportString>pressing close to TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+</Defs>

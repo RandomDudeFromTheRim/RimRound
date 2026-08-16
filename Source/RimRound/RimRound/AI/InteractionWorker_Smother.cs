@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 namespace RimRound.AI
 {
@@ -66,6 +67,8 @@ namespace RimRound.AI
             letterLabel = null;
             letterDef = null;
             lookTargets = new LookTargets(initiator, recipient);
+
+            CloseContactUtility.TryStartEncounter(initiator, recipient);
 
             var recAtt = recipient.TryGetComp<ThingComp_PawnAttitude>();
             var initAtt = initiator.TryGetComp<ThingComp_PawnAttitude>();
@@ -187,6 +190,8 @@ namespace RimRound.AI
             letterLabel = null;
             letterDef = null;
             lookTargets = new LookTargets(initiator, recipient);
+
+            CloseContactUtility.TryStartEncounter(initiator, recipient);
 
             var recAtt = recipient.TryGetComp<ThingComp_PawnAttitude>();
             var initThought = initiator.needs?.mood?.thoughts;
@@ -312,6 +317,21 @@ namespace RimRound.AI
             letterLabel = null;
             letterDef = null;
             lookTargets = new LookTargets(initiator, recipient);
+
+            // A lactating pawn feeding a baby goes straight to Biotech's real
+            // breastfeeding job; anyone else gets pinned for the duration.
+            if (recipient.DevelopmentalStage == DevelopmentalStage.Baby &&
+                RimWorld.JobDefOf.Breastfeed != null &&
+                initiator.jobs != null && !initiator.Drafted)
+            {
+                initiator.jobs.StartJob(
+                    JobMaker.MakeJob(RimWorld.JobDefOf.Breastfeed, recipient),
+                    JobCondition.InterruptForced);
+            }
+            else
+            {
+                CloseContactUtility.TryStartEncounter(initiator, recipient);
+            }
 
             float milkNutrition = 0.15f;
             var weight = initiator.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight);

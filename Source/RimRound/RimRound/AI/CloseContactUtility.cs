@@ -1,4 +1,5 @@
 using Verse;
+using Verse.AI;
 
 namespace RimRound.AI
 {
@@ -15,6 +16,24 @@ namespace RimRound.AI
                 return false;
 
             return a.Position == b.Position || a.Position.AdjacentTo8Way(b.Position);
+        }
+
+        /// <summary>
+        /// Gives a touch interaction a physical presence: the initiator walks up and
+        /// pins the recipient for a few seconds instead of the interaction being pure
+        /// flavor text. Skips drafted/busy/mentally-broken pawns.
+        /// </summary>
+        public static void TryStartEncounter(Pawn initiator, Pawn recipient)
+        {
+            if (initiator == null || recipient == null || initiator.jobs == null)
+                return;
+            if (initiator.Drafted || initiator.InMentalState)
+                return;
+            if (initiator.CurJobDef == Defs.JobDefOf.RR_CloseEncounter)
+                return;
+
+            Job job = JobMaker.MakeJob(Defs.JobDefOf.RR_CloseEncounter, recipient);
+            initiator.jobs.StartJob(job, JobCondition.InterruptForced);
         }
     }
 }

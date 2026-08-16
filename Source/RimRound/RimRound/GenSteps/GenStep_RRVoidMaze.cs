@@ -88,7 +88,10 @@ namespace RimRound.GenSteps
             }
 
             ThingDef blobWall = ThingDef.Named("RR_BlobWall");
-            ThingDef fleshWall = ThingDef.Named("RR_FleshWall");
+            // Anomaly's own fleshmass wall when available, local variant otherwise
+            ThingDef fleshWall = ModsConfig.AnomalyActive
+                ? ThingDef.Named("Fleshmass_Active")
+                : ThingDef.Named("RR_FleshWall");
 
             for (int tx = ox; tx < ox + extent; tx++)
             {
@@ -117,7 +120,7 @@ namespace RimRound.GenSteps
 
                     ThingDef def = (dx < 2 || dz < 2 || dx >= extent - 2 || dz >= extent - 2)
                         ? blobWall
-                        : (Rand.Value < 0.72f ? blobWall : fleshWall);
+                        : (Rand.Value < 0.62f ? blobWall : fleshWall);
 
                     GenSpawn.Spawn(ThingMaker.MakeThing(def), cell, map);
                 }
