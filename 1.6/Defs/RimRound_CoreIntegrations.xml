@@ -91,12 +91,6 @@
     <stages>
       <li>
         <label>glowing</label>
-        <capMods>
-          <li>
-            <capacity>Hunger</capacity>
-            <offset>0.8</offset>
-          </li>
-        </capMods>
       </li>
     </stages>
   </HediffDef>
