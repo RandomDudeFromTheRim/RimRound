@@ -31,7 +31,7 @@ Source/Garbage/
 Source/Garbage/
 Source/RRBAS/
 Source/RRInstaller/
-
+.serena/
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

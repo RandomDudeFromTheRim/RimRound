@@ -69,13 +69,8 @@ namespace RimRound.Hediffs
                 return;
             Map map = pawn.Map;
 
-            // a real hostile faction when one exists; entities as fallback
-            Faction echoFaction = Find.FactionManager.AllFactionsVisible
-                .Where(f => f.def.permanentEnemy && !f.def.hidden && f != Faction.OfEntities && f.def.humanlikeFaction)
-                .FirstOrDefault()
-                ?? Faction.OfEntities;
-
-            Pawn echo = PawnGenerator.GeneratePawn(pawn.kindDef, echoFaction);
+            // entities faction: makes the echo capturable on Anomaly holding platforms
+            Pawn echo = PawnGenerator.GeneratePawn(pawn.kindDef, Faction.OfEntities);
             if (echo == null)
                 return;
 

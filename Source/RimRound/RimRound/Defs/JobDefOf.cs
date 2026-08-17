@@ -14,5 +14,7 @@ namespace RimRound.Defs
         public static JobDef RR_JD_StuffPrisoner;
         public static JobDef RR_PrisonerAttemptReduceReluctance;
         public static JobDef RR_CloseEncounter;
+        public static JobDef RR_SharedFeeding;
+        public static JobDef RR_FeedToEcho;
     }
 }

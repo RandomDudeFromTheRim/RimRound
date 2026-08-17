@@ -7,4 +7,20 @@
     <reportString>pressing close to TargetA.</reportString>
     <casualInterruptible>false</casualInterruptible>
   </JobDef>
+
+  <!-- Intimacy series: two pawns share a long feeding session at a machine -->
+  <JobDef>
+    <defName>RR_SharedFeeding</defName>
+    <driverClass>RimRound.AI.JobDriver_RRSharedFeeding</driverClass>
+    <reportString>sharing a feeding session with TargetB.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
+  <!-- Offering a colonist to a held void echo -->
+  <JobDef>
+    <defName>RR_FeedToEcho</defName>
+    <driverClass>RimRound.AI.JobDriver_RRFeedToEcho</driverClass>
+    <reportString>offering themselves to TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
 </Defs>

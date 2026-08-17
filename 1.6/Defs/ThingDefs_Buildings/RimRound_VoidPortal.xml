@@ -40,6 +40,7 @@
         <frequencyTicks>120000</frequencyTicks>
         <knowledgeCategory>Advanced</knowledgeCategory>
         <anomalyKnowledge>1</anomalyKnowledge>
+        <minMonolithLevelForStudy>1</minMonolithLevelForStudy>
       </li>
     </comps>
     <building>

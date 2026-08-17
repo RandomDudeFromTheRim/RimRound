@@ -399,6 +399,12 @@
     <Compile Include="RimRound\AI\InteractionWorker_TailGrope.cs" />
     <Compile Include="RimRound\AI\CloseContactUtility.cs" />
     <Compile Include="RimRound\AI\JobDriver_RRCloseEncounter.cs" />
+    <Compile Include="RimRound\AI\JobDriver_RRSharedFeeding.cs" />
+    <Compile Include="RimRound\AI\JobDriver_RRFeedToEcho.cs" />
+    <Compile Include="RimRound\Thoughts\ThoughtWorker_AdmiringNearbyBulk.cs" />
+    <Compile Include="RimRound\Hediffs\Hediff_VoidMilkBuzz.cs" />
+    <Compile Include="RimRound\Comps\Buildings\Comp_SharedFeedingMenu.cs" />
+    <Compile Include="RimRound\Patch\BuildingHoldingPlatform_VoidEchoGizmos.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_VoidSaturation.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_VoidEchoVigor.cs" />
     <Compile Include="RimRound\GenSteps\GenStep_RRVoidMaze.cs" />

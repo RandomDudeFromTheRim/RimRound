@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Core: ambient admiration of generous company (Like+ observers only) -->
+  <ThoughtDef>
+    <defName>RR_AdmiringNearbyBulk</defName>
+    <workerClass>RimRound.Thoughts.ThoughtWorker_AdmiringNearbyBulk</workerClass>
+    <validWhileDespawned>false</validWhileDespawned>
+    <stackLimit>1</stackLimit>
+    <stages>
+      <li>
+        <label>appreciative of bulk</label>
+        <description>There's so much of them to appreciate...</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+      <li>
+        <label>admiring the swell</label>
+        <description>Watching them waddle by makes my day a little warmer.</description>
+        <baseMoodEffect>6</baseMoodEffect>
+      </li>
+      <li>
+        <label>reverent before the mass</label>
+        <description>That glorious bulk... I could stare for hours. Sometimes I do.</description>
+        <baseMoodEffect>10</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- Intimacy series: shared feeding sessions -->
+  <ThoughtDef>
+    <defName>RR_SharedFeedingThought</defName>
+    <stages>
+      <li>
+        <label>shared a feeding session</label>
+        <description>We just... ate, together, for hours. I can still feel their warmth against my side.</description>
+        <baseMoodEffect>8</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- Voidmilk: drawn from a held echo, warm and impossibly filling -->
+  <ThingDef ParentName="OrganicProductBase">
+    <defName>RR_VoidMilk</defName>
+    <label>voidmilk</label>
+    <description>Thick, faintly glowing milk drawn from a void echo. It is warm on the tongue, impossibly filling, and leaves a contented heaviness that lingers for days.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/RR_VoidMilk</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <socialPropernessMatters>true</socialPropernessMatters>
+    <statBases>
+      <MarketValue>18</MarketValue>
+      <Mass>0.3</Mass>
+      <MaxHitPoints>60</MaxHitPoints>
+      <Flammability>0.2</Flammability>
+      <Nutrition>0.25</Nutrition>
+      <FoodPoisonChanceFixedHuman>0</FoodPoisonChanceFixedHuman>
+    </statBases>
+    <comps>
+      <li Class="CompProperties_Rottable">
+        <daysToRotStart>8</daysToRotStart>
+        <rotDestroys>true</rotDestroys>
+      </li>
+    </comps>
+    <ingestible>
+      <preferability>MealFine</preferability>
+      <foodType>AnimalProduct, Fluid</foodType>
+      <joy>0.12</joy>
+      <joyKind>Gluttonous</joyKind>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>RR_VoidMilkBuzz</hediffDef>
+          <severity>1.0</severity>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <thingCategories>
+      <li>AnimalProductRaw</li>
+    </thingCategories>
+  </ThingDef>
+
+  <HediffDef>
+    <defName>RR_VoidMilkBuzz</defName>
+    <label>voidmilk afterglow</label>
+    <description>Warm, heavy contentment spreading slowly outward from your middle.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_VoidMilkBuzz</hediffClass>
+    <isBad>false</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <initialSeverity>1.0</initialSeverity>
+    <tendable>false</tendable>
+    <stages>
+      <li>
+        <label>glowing</label>
+        <capMods>
+          <li>
+            <capacity>Hunger</capacity>
+            <offset>0.8</offset>
+          </li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+</Defs>
