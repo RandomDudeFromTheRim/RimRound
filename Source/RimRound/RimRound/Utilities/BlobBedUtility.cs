@@ -11,6 +11,9 @@ namespace RimRound.Utilities
     {
         public static bool IsBlobBed(this Building_Bed bed) 
         {
+            if (bed == null)
+                return false;
+
             return bed.def.defName == Defs.ThingDefOf.BlobBed_FoldsOfHeaven_z.defName ||
             bed.def.defName == Defs.ThingDefOf.BlobBed_FoldsOfHeaven_I.defName ||
             bed.def.defName == Defs.ThingDefOf.BlobBed_FoldsOfHeaven_II.defName ||

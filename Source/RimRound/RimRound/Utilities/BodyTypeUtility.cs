@@ -18,13 +18,20 @@ namespace RimRound.Utilities
     {
         public static bool PawnIsOverWeightThreshold(Pawn pawn, BodyTypeDef bodyType)
         {
+            if (pawn == null || bodyType == null)
+                return false;
+
             float maxValueForBodyType = 0;
             if (RacialBodyTypeInfoUtility.defaultFemaleSet.ContainsKey(bodyType))
                 maxValueForBodyType = RacialBodyTypeInfoUtility.defaultFemaleSet[bodyType].maxSeverity;
             else
-                Log.Error("Only use default female bodytypedefs in PawnIsOverWeightThreshold!");
+                return false;
 
-            if (Utilities.HediffUtility.WeightHediff(pawn).Severity > maxValueForBodyType * RacialBodyTypeInfoUtility.GetBodyTypeWeightRequirementMultiplier(pawn))
+            Hediff weightHediff = Utilities.HediffUtility.WeightHediff(pawn);
+            if (weightHediff == null)
+                return false;
+
+            if (weightHediff.Severity > maxValueForBodyType * RacialBodyTypeInfoUtility.GetBodyTypeWeightRequirementMultiplier(pawn))
             {
                 return true;
             }

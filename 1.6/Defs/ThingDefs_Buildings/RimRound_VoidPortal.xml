@@ -8,9 +8,9 @@
     <description>A pulsating vertical wound in reality. Warm, humid air wafts through it, carrying a sweet, heavy scent. Pawns with Chubby+ body types feel drawn to it... entering sends them into the void maze where weight grows freely, but fleshbeasts lurk in the warm dark.</description>
     <stuffCategories />
     <graphicData>
-      <texPath>Things/Building/Misc/VoidPortal</texPath>
+      <texPath>Things/Building/Obelisk_Warped/WarpedObelisk</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <shaderType>Cutout</shaderType>
+      <shaderType>CutoutComplex</shaderType>
       <drawSize>(2,2)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
@@ -49,4 +49,16 @@
       <claimable>false</claimable>
     </building>
   </ThingDef>
+
+  <EntityCodexEntryDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_VoidPortal</defName>
+    <label>void portal</label>
+    <useDescriptionFrom>RR_VoidPortal</useDescriptionFrom>
+    <uiIconPath>Things/Building/Obelisk_Warped/WarpedObelisk</uiIconPath>
+    <category>Advanced</category>
+    <linkedThings>
+      <li>RR_VoidPortal</li>
+    </linkedThings>
+    <orderInCategory>1500</orderInCategory>
+  </EntityCodexEntryDef>
 </Defs>

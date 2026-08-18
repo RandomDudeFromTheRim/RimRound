@@ -14,8 +14,9 @@
     </comps>
     <designationCategory>VCHE_PipeNetworks</designationCategory>
   	<building>
+	  <claimable>true</claimable>
 	</building>
-</ThingDef>
+  </ThingDef>
 
   <ThingDef ParentName="RR_FoodPipeBase">
     <defName>RR_FoodPipe</defName>
@@ -35,6 +36,7 @@
       <ai_chillDestination>false</ai_chillDestination>
       <isInert>true</isInert>
       <isEdifice>false</isEdifice>
+      <claimable>true</claimable>
       <blueprintGraphicData>
         <texPath>Things/Building/Production/FoodPipe_Blueprint_Atlas</texPath>
       </blueprintGraphicData>
@@ -49,6 +51,7 @@
       <Flammability>0</Flammability>
       <WorkToBuild>100</WorkToBuild>
     </statBases>
+    <drawStyleCategory>Conduits</drawStyleCategory>
     <costList>
       <Steel>5</Steel>
     </costList>
@@ -69,7 +72,7 @@
     <description>An underground food pipe. Can carry liquid food under walls, roofs, and other obstructions.</description>
     <thingClass>PipeSystem.Building_Pipe</thingClass>
     <graphicData>
-      <texPath>Things/Building/Production/FoodPipe_Atlas</texPath>
+      <texPath>UI/CSG/IConduit</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <linkType>Basic</linkType>
       <linkFlags>
@@ -82,6 +85,7 @@
       <ai_chillDestination>false</ai_chillDestination>
       <isInert>true</isInert>
       <isEdifice>false</isEdifice>
+      <claimable>true</claimable>
       <blueprintGraphicData>
         <texPath>Things/Building/Production/FoodPipe_Blueprint_Atlas</texPath>
       </blueprintGraphicData>
@@ -99,6 +103,7 @@
       <MaxHitPoints>150</MaxHitPoints>
       <Flammability>0</Flammability>
     </statBases>
+    <drawStyleCategory>Conduits</drawStyleCategory>
     <costList>
       <Steel>10</Steel>
     </costList>
@@ -148,8 +153,9 @@
       <ComponentIndustrial>1</ComponentIndustrial>
     </costList>
     <comps>
-      <li Class="PipeSystem.CompProperties_Resource">
+      <li Class="PipeSystem.CompProperties_PipeValve">
         <pipeNet>RR_FoodNet</pipeNet>
+        <alwaysLinkToPipes>true</alwaysLinkToPipes>
       </li>
       <li Class="CompProperties_Flickable"/>
     </comps>
