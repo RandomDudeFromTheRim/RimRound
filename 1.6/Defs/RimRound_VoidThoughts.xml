@@ -1,13 +1,88 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
+  <!-- Void fascination: an escalating, weight-opinion-scaled mood for being
+       inside the flesh dimension / void maze. Severity of the RR_VoidFascination
+       hediff (ramps while lingering inside) drives the thought stage via
+       ThoughtWorker_VoidFascination. Haters feel dread, lovers feel bliss. -->
+
   <ThoughtDef>
-    <defName>RR_VoidFascinationThought</defName>
-    <workerClass>RimRound.AI.ThoughtWorker_WeightOpinion_Hate</workerClass>
+    <defName>RR_VoidFascination_Hate</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_VoidFascination</workerClass>
     <stages>
-      <li><label>Empty</label><description>The void showed me... nothing. Just emptiness. Maybe I should eat to fill the void inside.</description><baseMoodEffect>-3</baseMoodEffect></li>
-      <li><label>Whispers</label><description>The void whispers of endless feasts. Mountains of food. Oceans of milk. I want it all.</description><baseMoodEffect>0</baseMoodEffect></li>
-      <li><label>Hunger</label><description>I saw myself in the void. I was infinite. Expanding forever. Consuming stars. I need to EAT.</description><baseMoodEffect>5</baseMoodEffect></li>
-      <li><label>Insatiable</label><description>GROW. CONSUME. EXPAND. The void showed me what I can become. Nothing will stop me!</description><baseMoodEffect>12</baseMoodEffect></li>
+      <li><label>Crawling</label><description>The walls of flesh are closing in. I need to leave. Now.</description><baseMoodEffect>-12</baseMoodEffect></li>
+      <li><label>Wrong</label><description>Everything here is wrong. This place is feeding on me.</description><baseMoodEffect>-18</baseMoodEffect></li>
+      <li><label>Swallowing</label><description>It's pulling me deeper. I'm becoming part of it!</description><baseMoodEffect>-24</baseMoodEffect></li>
+      <li><label>Consuming</label><description>THE FLESH IS INSIDE ME. I can't stop it!</description><baseMoodEffect>-30</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoidFascination_Dislike</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_VoidFascination</workerClass>
+    <stages>
+      <li><label>Unsettling warmth</label><description>The air is too warm and sweet here. Something feels off.</description><baseMoodEffect>-6</baseMoodEffect></li>
+      <li><label>Too much</label><description>I'm getting fuller and I don't want to be.</description><baseMoodEffect>-10</baseMoodEffect></li>
+      <li><label>Excess</label><description>This place is making me fat. I hate it.</description><baseMoodEffect>-14</baseMoodEffect></li>
+      <li><label>Burdened</label><description>I can't stop swelling. Get me out!</description><baseMoodEffect>-18</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoidFascination_NeutralMinus</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_VoidFascination</workerClass>
+    <stages>
+      <li><label>Curious</label><description>The void hums. I don't know what to make of it.</description><baseMoodEffect>-2</baseMoodEffect></li>
+      <li><label>Hungry</label><description>I feel hungrier than I should.</description><baseMoodEffect>-4</baseMoodEffect></li>
+      <li><label>Swelling</label><description>I keep growing. I'm not sure I like it.</description><baseMoodEffect>-6</baseMoodEffect></li>
+      <li><label>Too much</label><description>This place fills me faster than I can accept.</description><baseMoodEffect>-8</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoidFascination_Neutral</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_VoidFascination</workerClass>
+    <stages>
+      <li><label>Curious</label><description>The void whispers. Nothing more.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Hungry</label><description>I feel a strange appetite here.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Filling</label><description>I'm filling out more than usual.</description><baseMoodEffect>0</baseMoodEffect></li>
+      <li><label>Insatiable</label><description>I can't stop eating while I'm here.</description><baseMoodEffect>0</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoidFascination_NeutralPlus</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_VoidFascination</workerClass>
+    <stages>
+      <li><label>Cozy</label><description>The warmth here feels comforting.</description><baseMoodEffect>2</baseMoodEffect></li>
+      <li><label>Comfortably full</label><description>Everything here makes me comfortably full.</description><baseMoodEffect>4</baseMoodEffect></li>
+      <li><label>Pleasing plump</label><description>I like the way I'm filling out.</description><baseMoodEffect>6</baseMoodEffect></li>
+      <li><label>Blissful binge</label><description>The void feeds me and I love it.</description><baseMoodEffect>9</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoidFascination_Like</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_VoidFascination</workerClass>
+    <stages>
+      <li><label>Pleasant hum</label><description>The void hums in a way I enjoy.</description><baseMoodEffect>4</baseMoodEffect></li>
+      <li><label>Growing nicely</label><description>I'm getting bigger and it feels great.</description><baseMoodEffect>7</baseMoodEffect></li>
+      <li><label>More of me</label><description>More of me to love. The void knows what I want.</description><baseMoodEffect>10</baseMoodEffect></li>
+      <li><label>Ecstatic growth</label><description>I can hardly contain how good this feels!</description><baseMoodEffect>14</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoidFascination_Love</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_VoidFascination</workerClass>
+    <stages>
+      <li><label>Belonging</label><description>The void understands me.</description><baseMoodEffect>5</baseMoodEffect></li>
+      <li><label>Feeding</label><description>It feeds me so well. I keep growing.</description><baseMoodEffect>9</baseMoodEffect></li>
+      <li><label>Union</label><description>I'm becoming something beautiful.</description><baseMoodEffect>13</baseMoodEffect></li>
+      <li><label>Blissful infinitude</label><description>THE VOID FLOWS THROUGH ME. GROW. MORE!</description><baseMoodEffect>18</baseMoodEffect></li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RR_VoidFascination_Fanatical</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_VoidFascination</workerClass>
+    <stages>
+      <li><label>Communion</label><description>The void calls me home.</description><baseMoodEffect>6</baseMoodEffect></li>
+      <li><label>Feasting</label><description>I feast endlessly. I grow endlessly.</description><baseMoodEffect>10</baseMoodEffect></li>
+      <li><label>Transcendence</label><description>No limit can hold me. The void affirms me!</description><baseMoodEffect>15</baseMoodEffect></li>
+      <li><label>Infinite</label><description>I AM BECOMING INFINITE. GROW. CONSUME. GROW!</description><baseMoodEffect>22</baseMoodEffect></li>
     </stages>
   </ThoughtDef>
 

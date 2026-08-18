@@ -1,0 +1,92 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <AssemblyName>RimRoundFeedOther</AssemblyName>
+    <RootNamespace>RimRound.FeedOther</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>../../1.6/Assemblies/</OutputPath>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Condition="'$(SkipReferenceAssemblyPackage)' != 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\Dev\harmony16\Current\Assemblies\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RimRound">
+      <HintPath>..\..\1.6\Assemblies\RimRound.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\netstandard.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AutoMilkExpression.cs" />
+    <Compile Include="CurrentFullness_FeedOtherClampPatch.cs" />
+    <Compile Include="EnergeticJoyPriorityPatch.cs" />
+    <Compile Include="FeedOtherBootstrap.cs" />
+    <Compile Include="FeedOtherConversations.cs" />
+    <Compile Include="FeedOtherCooldownComponent.cs" />
+    <Compile Include="FeedOtherDefOf.cs" />
+    <Compile Include="FeedOtherJoyTolerancePatch.cs" />
+    <Compile Include="FeedOtherSettings.cs" />
+    <Compile Include="FeedOtherUtility.cs" />
+    <Compile Include="FeedPartnerFloatMenuPatch.cs" />
+    <Compile Include="FoodNetworkV2AutoFeeders.cs" />
+    <Compile Include="FoodNetworkV2Core.cs" />
+    <Compile Include="FoodNetworkV2Machines.cs" />
+    <Compile Include="FoodNetworkV2PatientSearchPatch.cs" />
+    <Compile Include="FoodNetworkV2Serving.cs" />
+    <Compile Include="GluttoniumGenerationSettingsPatch.cs" />
+    <Compile Include="HoverchairReliabilityFix.cs" />
+    <Compile Include="IdleUnderweightEatingPatch.cs" />
+    <Compile Include="JobDriver_FattenPrisonerBedLock.cs" />
+    <Compile Include="JobDriver_FattenPrisonerDirectFeed.cs" />
+    <Compile Include="JobDriver_FeedOther.cs" />
+    <Compile Include="JobDriver_FeedOtherBedside.cs" />
+    <Compile Include="JobDriver_FeedOtherOneWay.cs" />
+    <Compile Include="JobDriver_FoodFeedPatientEatingSpeed.cs" />
+    <Compile Include="JobDriver_PrisonerMealDelivery.cs" />
+    <Compile Include="JoyGiver_FeedOther.cs" />
+    <Compile Include="MainTabWindow_FeedOtherSettings.cs" />
+    <Compile Include="NeedFood_NutritionWanted_FeedOtherPatch.cs" />
+    <Compile Include="NotRegalBedReliabilityFix.cs" />
+    <Compile Include="OrbitalMovementPenaltyPatch.cs" />
+    <Compile Include="PostMealSocialUtility.cs" />
+    <Compile Include="PrisonerFatteningFoodPatch.cs" />
+    <Compile Include="RimRoundTraitGenerationBeta.cs" />
+    <Compile Include="WeightOpinionShiftAbilities.cs" />
+  </ItemGroup>
+</Project>

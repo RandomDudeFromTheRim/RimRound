@@ -31,6 +31,7 @@
 		<altitudeLayer>SmallWire</altitudeLayer>
 		<passability>Standable</passability>
 		<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+		<drawStyleCategory>Conduits</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>80</MaxHitPoints>
 			<WorkToBuild>300</WorkToBuild>
@@ -55,7 +56,7 @@
 		<neverMultiSelect>false</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
-		<designationCategory>Production</designationCategory>
+		<designationCategory>VCHE_PipeNetworks</designationCategory>
 		<constructEffect>ConstructMetal</constructEffect>
 		<clearBuildingArea>false</clearBuildingArea>
 		<designationHotKey>Misc1</designationHotKey>
@@ -112,7 +113,7 @@
 		<neverMultiSelect>false</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
-		<designationCategory>Production</designationCategory>
+		<designationCategory>VCHE_PipeNetworks</designationCategory>
 		<constructEffect>ConstructMetal</constructEffect>
 		<clearBuildingArea>false</clearBuildingArea>
 		<designationHotKey>Misc1</designationHotKey>
@@ -148,7 +149,7 @@
 		<neverMultiSelect>false</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
 		<terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
-		<designationCategory>Production</designationCategory>
+		<designationCategory>VCHE_PipeNetworks</designationCategory>
 		<constructEffect>ConstructMetal</constructEffect>
 		<clearBuildingArea>false</clearBuildingArea>
 		<designationHotKey>Misc1</designationHotKey>
@@ -333,7 +334,7 @@
 		<neverMultiSelect>false</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
-		<designationCategory>Production</designationCategory>
+		<designationCategory>VCHE_PipeNetworks</designationCategory>
 		<constructEffect>ConstructMetal</constructEffect>
 		<clearBuildingArea>false</clearBuildingArea>
 		<designationHotKey>Misc1</designationHotKey>
@@ -412,7 +413,7 @@
 		<neverMultiSelect>false</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
-		<designationCategory>Production</designationCategory>
+		<designationCategory>VCHE_PipeNetworks</designationCategory>
 		<constructEffect>ConstructMetal</constructEffect>
 		<designationHotKey>Misc1</designationHotKey>
 		<researchPrerequisites>
@@ -465,7 +466,7 @@
 		<neverMultiSelect>false</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
-		<designationCategory>Production</designationCategory>
+		<designationCategory>VCHE_PipeNetworks</designationCategory>
 		<constructEffect>ConstructMetal</constructEffect>
 		<designationHotKey>Misc1</designationHotKey>
 	</ThingDef>
@@ -608,7 +609,7 @@
 		<tickerType>Never</tickerType>
 		<rotatable>true</rotatable>
 		<neverMultiSelect>true</neverMultiSelect>
-		<designationCategory>Production</designationCategory>
+		<designationCategory>VCHE_PipeNetworks</designationCategory>
 		<surfaceType>Item</surfaceType>
 		<placeWorkers>
 			<li>PlaceWorker_NextToHopperAccepter</li>
@@ -687,7 +688,7 @@
 		<neverMultiSelect>true</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
-		<designationCategory>Production</designationCategory>
+		<designationCategory>VCHE_PipeNetworks</designationCategory>
 		<constructEffect>ConstructMetal</constructEffect>
 		<clearBuildingArea>false</clearBuildingArea>
 		<designationHotKey>Misc1</designationHotKey>

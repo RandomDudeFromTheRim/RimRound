@@ -12,7 +12,6 @@
         <pipeNet>RR_FoodNet</pipeNet>
       </li>
     </comps>
-    <designationCategory>VCHE_PipeNetworks</designationCategory>
   	<building>
 	  <claimable>true</claimable>
 	</building>
@@ -159,7 +158,6 @@
       </li>
       <li Class="CompProperties_Flickable"/>
     </comps>
-    <designationCategory>VCHE_PipeNetworks</designationCategory>
     <constructEffect>ConstructMetal</constructEffect>
     <placeWorkers>
       <li>PipeSystem.PlaceWorker_Pipe</li>

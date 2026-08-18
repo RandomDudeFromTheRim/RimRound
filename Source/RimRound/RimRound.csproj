@@ -63,6 +63,14 @@
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PipeSystem">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2023507013\1.6\Assemblies\PipeSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VEF">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\2023507013\1.6\Assemblies\VEF.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
 
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -98,6 +106,7 @@
     <Compile Include="FeedingTube\Building_FoodVatLarge.cs" />
     <Compile Include="FeedingTube\Building_FoodVatSmall.cs" />
     <Compile Include="FeedingTube\Building_NutrientDistillery.cs" />
+    <Compile Include="FeedingTube\Building_FoodConverter.cs" />
     <Compile Include="FeedingTube\Comps\FoodNetStorage_CompProperties.cs" />
     <Compile Include="FeedingTube\Comps\FoodNetStorage_ThingComp.cs" />
     <Compile Include="FeedingTube\Comps\FoodNetTrader_CompProperties.cs" />
@@ -196,6 +205,7 @@
     <Compile Include="RimRound\IWeightStageChangedListener.cs" />
     <Compile Include="RimRound\Patch\HumanoidAlienRacesPatches\AlienRenderTreePatches_BodyGraphicForPrefix_ChangeSpritePath.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\BedFixPatches\Building-Bed_GetFootSlotPos_AdjustForRRBed.cs" />
+    <Compile Include="RimRound\Patch\RimWorldPatches\SaveCompat_ConvertRetiredFoodPipes.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\BedFixPatches\Building-Bed_GetSleepingSlotPos_AdjustForRRBed.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\BedFixPatches\Building-Bed_SleepingSlotsCount_AdjustForRRBed.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\GraphicalPatches\PawnRenderNodeWorker-Body_CanDrawNow_AdjustForShowBlanketSetting.cs" />
@@ -406,9 +416,11 @@
     <Compile Include="RimRound\Comps\Buildings\Comp_SharedFeedingMenu.cs" />
     <Compile Include="RimRound\Patch\BuildingHoldingPlatform_VoidEchoGizmos.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_VoidSaturation.cs" />
+    <Compile Include="RimRound\Hediffs\Hediff_VoidFascination.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_VoidEchoVigor.cs" />
     <Compile Include="RimRound\GenSteps\GenStep_RRVoidMaze.cs" />
     <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_GluttoniumExposure.cs" />
+    <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_VoidFascination.cs" />
     <Compile Include="RimRound\Comps\Buildings\CompProperties_VoidPortal.cs" />
     <Compile Include="RimRound\Comps\Buildings\Comp_VoidPortal.cs" />
     <Compile Include="RimRound\Comps\Map\CompProperties_GluttoniumRadiation.cs" />

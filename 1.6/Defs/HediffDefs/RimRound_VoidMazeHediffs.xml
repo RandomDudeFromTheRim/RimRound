@@ -34,6 +34,7 @@
     <defName>RR_VoidFascination</defName>
     <label>void fascination</label>
     <description>The void calls to you. You feel an endless hunger, a desire to consume and grow beyond all limits.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_VoidFascination</hediffClass>
     <isBad>false</isBad>
     <maxSeverity>1.0</maxSeverity>
     <stages>

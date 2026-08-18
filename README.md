@@ -1,117 +1,158 @@
-# RimRound - Community Patch + Expansion (EXPECT JANKINESS)
+# RimRound — Community Patch + Expansion (EXPECT JANKINESS)
+---
+> **Note:** this build ports the complete **RimRoundFeedOther** companion from the
+> community fork **`6retroforlife9-gif/RimRound`** (branch `Feed-other-and-fixes-to-1.6`)
+> and documents the flesh-dimension / void-maze and other content that was already
+> land-locked in the codebase. See [Credits](#credits) and [What's New](#whats-new).
+
+## What is RimRound?
+A weight-gain mod for RimWorld. This community fork adds a **density-aware liquid-food
+network**, an **Anomaly-backed flesh dimension**, a **gluttonium exposure** system,
+**meld/void bioweapons**, and a suite of **horny social interactions** — plus the
+`RimRoundFeedOther` companion (feed-other socials, idle eating, Food Network v2,
+prisoner fattening, reliability fixes) ported from the community fork.
+
 ---
 
-## Bugfixes & Core Improvements
-- Fixed NRE in `RacialBodyTypeInfoUtility.GetBodyTypeWeightRequirementMultiplier` when pawns have no `story` or `bodyType`
-- Fixed NRE in `Hediff_Weight.CurStageIndex` when `this.pawn` is null during world-tick stat eval
-- Fixed `GetBodyTypeWeightRequirementMultiplierByDefName` returning 0 for unknown body type suffixes (caused instant max stage)
-- Re-enabled 3 disabled Harmony patches (DrawBodyGenes, shell clothing, head cover adjustments)
-- Fixed caravan diet mode saving (`SaveCaravanPatchUtility` uncommented)
-- Filled 3 NotImplementedException stubs (ConvertWeightOpinion, HungerDroneUtility, ModCompatibilityUtility)
-- Fixed `return 0` bug that caused all unknown body type suffixes to instantly max weight stage
-- Fixed breathing sound sustainer looping indefinitely — converted to throttled one-shots with 4s interval
-- Fixed NRE in `SoundUtility.GetAverageGrainDuration` when subSounds or grainnull
+## Flesh Dimension & Void Realm (Anomaly)
+The **void maze** is a true pocket-map flesh dimension (Anomaly's pocket-map system,
+underground, 30 °C, breathable warm-flesh floor):
 
-## Feeding Tube System (Refactored) (I DONT FUCKING KNOW IF IT ACTUALLY WORKS)
-The custom pipe network has been replaced with **VEF's PipeSystem** framework:
-- Pipes (`RR_FoodPipe`, `RR_UndergroundFoodPipe`) use `PipeSystem.Building_Pipe`
-- Valves (`RR_FoodValve`) use `PipeSystem.Building_PipeValve`
-- Storage vats use `PipeSystem.CompProperties_ResourceStorage` with built-in bar rendering
-- Auto-feeders, processors, and distillery use `PipeSystem.CompResource` for network access
-- Network overlay visualization via VEF's pipe network tool
-- Auto grid-based flood fill for connectivity (no manual merge/split)
-- **Requires Vanilla Expanded Framework**
+- **Void Portal** (`RR_VoidPortal`) — an entry token/building. Interact to step into
+  the maze; a warm "void warmth" hediff is applied while you linger inside.
+- **The maze itself** — `RR_VoidMazeMap` biome (`RR_VoidMazeBiome`), mapgen
+  `RR_VoidMazeGen`, `RR_FleshFloor` warm-flesh terrain, a return portal at the heart.
+- **Void Warmth** — inside the maze your hunger is suppressed (and eventually killed),
+  and you slowly gain weight.
+- **Void Saturation** — the longer you stay, the more you balloon. At full saturation,
+  your accumulated excess **tears free as a bloated "void echo"** that hunts you.
+- **Void Echoes** — spawned echoes carry your weight and a `RR_VoidEchoVigor` hediff
+  (extra move/manip, armor), are capturable on Anomaly holding platforms, and want you
+  back inside them.
+- **Void Gluttonium** — high-value harvesting from the maze, usable for ultra-tech cooking.
+- **Void Fascination** — "the void calls to you": the longer you linger, the more
+  the void makes you hungry and fills you — and it shifts mood (see below).
 
-## Gluttonium Radiation System
-- **Gluttonium ore** radiates weight gain in a radius, applying `RR_GluttoniumExposure` hediff
-- Exposure builds up, adding weight gain requests over time
-- **Glut Bricks** (`RR_GlutBrick`): processed blue-tinted bricks for construction (3 raw → 10 bricks, lower rads)
-- **Hazmat suit** (`RR_Apparel_HazSuit`): 85% radiation protection, crafted from gluttonium fiber
-- Buildings made from gluttonium or glut bricks leak weak radiation
-- Protection scales with gluttonium resistance stat on apparel
+> **Mood note:** being inside the flesh dimension now applies a **ramping, weight-
+> opinion-scaled mood** (dread for weight-haters, bliss for weight-likers), plus hunger
+> suppression, a movement penalty, weight gain and intimacy. Gluttonium exposure and
+> the social interactions also apply moods (see [Mood & Thoughts](#mood--thoughts)).
+
+## Gluttonium
+- **Gluttonium ore** radiates weight gain in a radius, applying `RR_GluttoniumExposure`.
+- **Glut Bricks** (`RR_GlutBrick`) — processed blue-tinted bricks (3 raw → 10 bricks,
+  lower radiation).
+- **Hazmat suit** (`RR_Apparel_HazSuit`) — 85% radiation protection from gluttonium fiber.
+- Buildings from gluttonium/glut bricks leak weak radiation; protection scales with a
+  gluttonium-resistance stat.
+- Resistance to gluttonium is influenced by the victim's **ToxicResistance** (wasters are
+  tough).
+- Additional gluttonium generation pass (`RR_ScatterGluttoniumLumps`) so it doesn't
+  displace vanilla ore.
+
+## Meld, Bloat & Void Bioweapons (Anomaly)
+- **Meld disease** — fleshbeasts merge into pawns, self-damaging and applying
+  `RR_MeldGrowth` (converts meld mass → weight, auto-seals bleeding; weight-opinion moods).
+- **Melding creature contacts** — early creatures (Fingerspike) deal more self-damage /
+  give less weight; a swarm accumulates.
+- **Meld Aerosol** — craftable shells/grenades apply `RR_MeldAerosol` (pink RR gas);
+  at max progression a pawn **detonates** into `RR_BlobWall` clusters that drop
+  `RR_VoidGluttonium`.
+- **Bloated unnatural corpses** — killed unnatural corpses balloon ~810 kg then explode
+  into blob walls, leaving void gluttonium; witnesses react by weight opinion.
+- **Blob walls** (`RR_BlobWall` / mineable `RR_BlobWallMineable`) + **Feast of the Void**.
+- **Obelisk mutation** — Twisted Obelisk mutations add weight + gluttonium exposure;
+  weight-likers get a mood boost.
 
 ## Horny Social Interactions
-Pawns can initiate social interactions based on weight opinion:
+Pawns initiate weight-opinion-scaled interactions (each grants staged thoughts + adjusts
+`SEX_Intimacy`):
 
-- **Fondling** — Neutral+ initiator touches a Thick+ recipient. Mood based on recipient's weight opinion.
-- **Smothering** — Larger pawn (Chubby+, heavier) presses against a smaller pawn. Weight-dependent intensity.
-- **Exploring** — Smaller pawn with Like+ opinion explores a larger pawn's curves.
-- **Wet Smothering** — Like+ lactating pawn force-feeds milk to a smaller pawn. Requires the `Lactating` hediff.
-(ratkin/races that add tails) - **Tail Groping** - because that chunk is kinda alluring...?
+- **Fondling** — Neutral+ initiator & Thick+ recipient.
+- **Smothering** — heavier pawn presses a smaller one; weight-dependent intensity.
+- **Exploring** — smaller pawn with Like+ explores a larger pawn's curves.
+- **Wet Smothering** — lactating pawn force-f feeds milk (requires `Lactating`).
+- **Tail Groping** — for ratkin/tail races.
+- **Shared Feeding** — two pawns share a lazy feeding session at a machine.
+- **Close Encounters** — via `CloseContactUtility` (requires real touch range; grapple-lock).
 
 ## SpeakUp Dialogue Integration
-Custom dialogue for all horny interactions, conditional on each pawn's weight opinion trait. Requires **SpeakUp** mod.
+Custom dialogue for all horny interactions, conditional on weight-opinion trait
+(requires **SpeakUp**).
 
-## Anomaly & Void Content
+## Feeding Tube System (density-aware liquid food)
+- Pipes/vats/processors/distillery/faucets/auto-feeders carry **liquid food with per-batch
+  nutrition density** (nutrition + fullness + ingredients preserved per FIFO batch).
+- **Food Processor** converts hoppered solid food → liters, preserving each food's density.
+- **Nutrient Distillery** condenses density (rotation-aware input/output ports).
+- **Food Converter** (`RR_FoodConverter`) — bridges the VNPE paste network into the liter
+  network (requires VNPE).
+- **Food Network v2** (`RimRoundFeedOther.dll`) — conserved FIFO batch storage with secure
+  store/draw transactions, per-tank saved state, and legacy import/export.
+- Feed buildings live under the **Network** build tab; pipes are drag-constructable.
+- **Requires** Vanilla Expanded Framework + Vanilla Nutrient Paste Expanded.
 
-### Blob Walls & Void Gluttonium
-- `RR_BlobWall`: skin walls with CornerFiller linking... currently only really acquirable from unnatural corpse going boom
-- `RR_BlobWallMineable`: mineable nodes that yield `RR_VoidGluttonium`... probably unavailable as of now. Tough luck!
-- `RR_VoidGluttonium`: high-value resource for ultra-tech cooking
-- **Feast of the Void**: a meal that bypasses soft limits entirely (i am unsure if this is actually useful lmao)
-
-### Bloated Unnatural Corpses
-Harmony patch on `Pawn.TakeDamage`: intercepts unnatural corpse kill damage.
-- Corpse rapidly gains 810kg over 5 seconds
-- Then explodes into blob walls, leaving voidgluttonium around it
-- Witness reactions based on weight opinion
-- Attempts RV2 vore integration if RimVore-2 is installed (doesnt work lol)
-- Gives the victim sickness and some gain of weight upon corpse rupture
-
-### Meld Aerosol Bioweapon
-Craftable at a Drug Lab: combine gluttonium + twisted meat to create meld aerosol shells/grenades.
-- On impact, applies `RR_MeldAerosol` hediff and RR gas (pink) to all pawns in radius
-- Severity grows only via external exposure (gas, direct hits) — no auto-progression
-- Naturally decays over ~2 days if no re-exposure
-- At max progression, pawn **detonates** into `RR_BlobWall` clusters (4–30 walls, scaling with pawn weight) and drops `RR_VoidGluttonium`
-
-### Obelisk Mutator Weight Gain
-When the Twisted Obelisk mutates a pawn, they also gain weight + gluttonium exposure. Weight-likers get a mood boost.
-
-### MELD DISEASE
-Fleshbeasts merge into pawns on contact, dealing self-damage and applying `RR_MeldGrowth` hediff. The hediff converts meld mass to gradual weight gain and auto-seals bleeding. Pawns react differently based on weight opinion (haters get negative moods, lovers get positive). Early creatures (Fingerspike) deal more self-damage and give less weight per hit — a few won't matter, but a swarm still adds up.
+## RimRoundFeedOther companion (ported — see Credits)
+- **Feed Other / Share Meal** — pawns feed each other as social recreation; right-click
+  feeding, bedside feeding, post-meal social.
+- **Idle underweight eating** — thin, idle colony pawns auto-eat to fullness.
+- **Prisoner fattening** — bed-lock + controlled direct feeding under `RR_Fatten`.
+- **Automatic feeders & beds** — bed-linked auto-feeders, correct double/3x3-bed handling.
+- **Reliability fixes** — hoverchair, NotRegalBed, orbital relief, auto-milk expression,
+  weight-opinion abilities, beta trait generation.
+- **7-page settings window** (`RimRound Patch` main button).
 
 ## RimRound Extra Events (RREE)
-Extra events, hazards, and equipment bundled as a separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`):
-- **Mutagenic Enbiggener Fallout** — game condition that applies `FatToxicBuildup` to unroofed pawns (slow fattening) and boosts plant growth
-- **FatToxicBuildup** — hediff from environmental exposure, naturally clears over time, can spawn `FatCarcinoma` at high severity
-- **FatCarcinoma** — fast-growing cancerous growth, can be excised via surgery
-- **Enbiggener smoke mortar shells & IED traps** — deploy green-tinted RR gas (enbiggener) on detonation
-- **Enbiggener smoke launcher** — handheld weapon applying enbiggener gas on impact
-- **Mobility Mechanites** — hediff that boosts movement/eating at cost of increased hunger
+Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`): Mutagenic Enbiggener Fallout,
+FatToxicBuildup, FatCarcinoma, enbiggener smoke mortars/launcher/IEDs, Mobility Mechanites.
+
+## Mood & Thoughts
+- **Works correctly:** Gluttonium exposure (staged, weight-opinion-scaled −50 to +15);
+  Void fascination inside the flesh dimension (ramping, weight-opinion-scaled −30 to +22);
+  Fondle/Smother/Explore/WetSmother/TailGrope thoughts; Force-Fed / Was-Force-Fed;
+  lactation milked thoughts; meld-growth; bloated-corpse witness; shared feeding;
+  weight-opinion moods.
+- **Known gaps (checked 2026):** (none outstanding — the flesh-dimension mood and
+  void-fascination wiring are now fixed.)
 
 ## Mod Integrations
-
-### RimVore-2 (6 integration patches)
-- Weight affects vore success chance (fat prey harder to process)
-- Predator capacity scales with body weight
-- Digested prey converts to lasting weight gain
-- Weight opinion affects vore proposal AI (haters refuse fat prey)
-- Heavier prey need more struggles to escape
-- Bloat visual + moodlets on vore initiation
-
-### Intimacy — A Lovin' Expansion
-- Gluttonium exposure affects `SEX_Intimacy` need (rises for fans, drops for haters)
-
-### Intimacy — Socio Butterfly
-- Weight-liking pawns are 3x more likely to start conversations for force-feeding
-
-### Lactation Expansion (5 integration patches)
-- Milk yield scales with weight stage (up to 15x at Gelatinous)
-- Weight opinion affects milking mood (haters get -12, lovers get +8)
-- Gluttonium-exposed pawns produce spiked milk
-- Fullness increases lactation rate
-- Nursing station building auto-feeds hungry pawns
-
-### SpeakUp
-- 12 reply templates with dialogue for all horny interactions
-- Dialogue changes based on speaking pawn's traits and weight opinion
+- **RimVore-2** (6 patches): weight ↔ vore chance/capacity, digested-prey weight gain,
+  weight-opinion vore AI, etc.
+- **Intimacy — Lovin' / Socio Butterfly**: gluttonium ↔ `SEX_Intimacy`; weight-likers
+  3× more likely to start force-feed conversations.
+- **Lactation Expansion** (5 patches): milk scales with weight, opinion moods, spiked
+  milk, fullness-lactation, nursing station.
+- **SpeakUp** (12 reply templates).
 
 ## Dependencies
-- **Required:** Harmony, Humanoid Alien Races, Vanilla Expanded Framework
+- **Required:** Harmony, Humanoid Alien Races, Vanilla Expanded Framework,
+  **Vanilla Nutrient Paste Expanded**
 - **Required for void/meld content:** Anomaly DLC
-- **Recommended:** SpeakUp, RimVore-2, Intimacy series (Lovin' + Socio Butterfly), Lactation Expansion
-- **Optional:** Odyssey DLC, Biotech DLC
+- **Recommended:** SpeakUp, RimVore-2, Intimacy series, Lactation Expansion
+- **Optional:** Odyssey, Biotech DLC
+
+---
+
+## What's New (changelog highlights since the last README in May)
+- Flesh dimension / void maze pocket map, void portal + return, void warmth/saturation,
+  void echoes (git: `4415bea`…`fcb661`).
+- Melding fleshmass, meld aerosol, blob walls/void gluttonium, bloated unnatural corpses.
+- Gluttonium exposure system + radiation, glut brick, hazmat suit, extra gen pass,
+  ToxicResistance interaction.
+- Horny social interactions (fondle/smother/explore/wet-smother/tail-grope/close-contact).
+- Density-aware liquid-food network, food converter (VNPE bridge), processor fix,
+  Network build tab, drag-build pipes, retired-pipe→steel save repair.
+- Ported `RimRoundFeedOther` companion (feed-other, idle eating, Food Network v2,
+  prisoner fattening, reliability fixes, settings UI).
+
+## Credits
+- **Ported companion (`RimRoundFeedOther`)** from the community fork
+  **`6retroforlife9-gif/RimRound`** (branch `Feed-other-and-fixes-to-1.6`, build v1.0.69.22):
+  https://github.com/6retroforlife9-gif/RimRound — builds on the original by **Niwatori401**.
+- **Sound/asset credits:** see **ATTRIBUTION** (CC-BY voice/SFX).
+- Community-contributed content: SwellGlow (Galactase/Bun), meatslop clothing (Gosuke),
+  various fixes (digifox_, Toggle, prototype99).
 
 ## License
-This project is, unless otherwise specified, licensed under the Unlicense. Specific assets may be licensed under CC-BY.
+Unlicense unless otherwise specified; some assets CC-BY (see ATTRIBUTION). The ported
+`RimRoundFeedOther` content follows the upstream repository's terms.

@@ -26,7 +26,6 @@
     <rotatable>false</rotatable>
     <tickerType>Normal</tickerType>
     <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
-    <designationCategory>VCHE_PipeNetworks</designationCategory>
     <constructEffect>ConstructMetal</constructEffect>
     <canOverlapZones>false</canOverlapZones>
   </ThingDef>

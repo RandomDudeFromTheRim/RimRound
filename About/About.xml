@@ -31,6 +31,12 @@
 			<downloadUrl>steam://url/CommunityFilePage/2023507013</downloadUrl>
 			<steamWorkshopUrl>steam://url/CommunityFilePage/818773962</steamWorkshopUrl>
 		</li>
+		<li>
+			<packageId>VanillaExpanded.VNutrientE</packageId>
+			<displayName>Vanilla Nutrient Paste Expanded</displayName>
+			<downloadUrl>steam://url/CommunityFilePage/2920385763</downloadUrl>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/818773962</steamWorkshopUrl>
+		</li>
 	</modDependencies>
 	<loadAfter>
 		<li>Ludeon.RimWorld</li>
@@ -39,6 +45,7 @@
 		<li>brrainz.harmony</li>
 		<li>erdelf.HumanoidAlienRaces</li>
 		<li>OskarPotocki.VanillaFactionsExpanded.Core</li>
+		<li>VanillaExpanded.VNutrientE</li>
 		<li>VanillaExpanded.VCookE</li>
 		<li>neronix17.outerrim.galaxies</li>		
 		<li>neronix17.fr.compilation</li>		

@@ -9,9 +9,20 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 namespace RimRound.FeedingTube
 {
+    /// <summary>
+    /// Converts solid feed stock from an adjacent hopper into liquid food,
+    /// preserving the food's nutrition density. Fixed up from the original:
+    ///  - the "Build Hopper" gizmo now places the hopper on an adjacent (not a
+    ///    floating 2-cell-away) cell so the processor can actually reach it;
+    ///  - hopper feedstock is scanned the same way vanilla hoppers are used;
+    ///  - throughput (nutrition per processing pass / frequency) is higher so a
+    ///    single processor can keep up with colony feeding;
+    ///  - the pointless always-true feedstock gate now requires a real minimum.
+    /// </summary>
     public class Building_FoodProcessor : Building
     {
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
@@ -22,16 +33,41 @@ namespace RimRound.FeedingTube
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
+            foreach (Gizmo g in base.GetGizmos())
+                yield return g;
+
             yield return new Command_Action
             {
-                Disabled = GenConstruct.CanPlaceBlueprintAt(Defs.ThingDefOf.RR_Hopper, Position + new IntVec3(2, 0, 0), Rot4.West, this.Map) ? false : true,
+                Disabled = TryFindHopperSpot(out _) ? false : true,
                 defaultLabel = "Build Hopper",
+                defaultDesc = "Places a XL hopper on an adjacent empty cell so the processor can accept feed stock.",
                 icon = Widgets.GetIconFor(Defs.ThingDefOf.RR_Hopper),
                 action = delegate ()
                 {
-                    GenConstruct.PlaceBlueprintForBuild(Defs.ThingDefOf.RR_Hopper, Position + new IntVec3(2, 0, 0), this.Map, Rot4.West, Faction, null);
+                    if (TryFindHopperSpot(out IntVec3 spot))
+                        GenConstruct.PlaceBlueprintForBuild(Defs.ThingDefOf.RR_Hopper, spot, this.Map, Rot4.West, Faction, null);
                 }
             };
+        }
+
+        private bool TryFindHopperSpot(out IntVec3 spot)
+        {
+            foreach (IntVec3 c in GenAdj.CellsAdjacentCardinal(this))
+            {
+                if (!c.InBounds(base.Map))
+                    continue;
+                if (c.GetEdifice(base.Map) != null)
+                    continue;
+                if (!c.Walkable(base.Map))
+                    continue;
+                // Don't sit on top of an existing hopper or food
+                if (c.GetThingList(base.Map).Any(t => t.def == ThingDefOf.Hopper || t.def == Defs.ThingDefOf.RR_Hopper || this.IsAcceptableFeedstock(t.def)))
+                    continue;
+                spot = c;
+                return true;
+            }
+            spot = IntVec3.Invalid;
+            return false;
         }
 
         protected override void Tick()
@@ -40,21 +76,21 @@ namespace RimRound.FeedingTube
             ProcessFood();
         }
 
-        private bool CanProcessNow 
+        private bool CanProcessNow
         {
-            get 
+            get
             {
                 return trader.IsOn && trader.CanBeOn && trader.TransmitsFoodNow && this.HasEnoughFeedstockInHoppers();
             }
         }
 
-        private bool ShouldProcessFood 
+        private bool ShouldProcessFood
         {
-            get 
+            get
             {
-                if (FoodTransmitter_NetManager.For(this.Map)?.FoodNetAt(this.Position) is FoodNet f && 
-                    f.Stored < f.StorageCapacity && 
-                    CanProcessNow) 
+                if (FoodTransmitter_NetManager.For(this.Map)?.FoodNetAt(this.Position) is FoodNet f &&
+                    f.Stored < f.StorageCapacity &&
+                    CanProcessNow)
                 {
                     return true;
                 }
@@ -63,48 +99,46 @@ namespace RimRound.FeedingTube
             }
         }
 
-        private void ProcessFood() 
+        private void ProcessFood()
         {
-            if (FeedingTubeUtility.IsHashIntervalTick((int)processingFrequency) && ShouldProcessFood) 
-            {
-                //Not used right now, but can be used with CompIngredients.RegisterIngredient();
-                List<ThingDef> listOfIngredients = new List<ThingDef>();
+            if (!FeedingTubeUtility.IsHashIntervalTick((int)processingFrequency) || !ShouldProcessFood)
+                return;
 
-                float remainingStorageSpace = trader.FoodNet.StorageCapacity - trader.FoodNet.Stored;
+            float remainingStorageSpace = trader.FoodNet.StorageCapacity - trader.FoodNet.Stored;
+            if (remainingStorageSpace <= FeedingTubeUtility.MinRQ)
+                return;
 
-                if (remainingStorageSpace > FeedingTubeUtility.MinRQ && CanProcessNow)
-                {
-                    Thing foodInHopper = TryGetFoodInHopper();
-                    if (foodInHopper is null) 
-                        return;
+            Thing foodInHopper = TryGetFoodInHopper();
+            if (foodInHopper is null)
+                return;
 
+            float nutritionForOneUnitOfFoodInHopper = foodInHopper.GetStatValue(StatDefOf.Nutrition, true);
+            if (nutritionForOneUnitOfFoodInHopper <= 0f)
+                return;
 
-                    float nutritionForOneUnitOfFoodInHopper = foodInHopper.GetStatValue(StatDefOf.Nutrition, true);
+            float ftnRatio = GetNutritionDensityOfFoodInHopper(foodInHopper);
 
-                    float ftnRatio = GetNutritionDensityOfFoodInHopper(foodInHopper);
-                   
+            // Convert up to maxNutritionToProcessPerTurn worth of nutrition, but
+            // never more than we have room for or than the hopper holds.
+            float volumePerItem = ftnRatio * nutritionForOneUnitOfFoodInHopper;
+            int numberOfFoodItemsPerProcess = Mathf.Min(
+                foodInHopper.stackCount,
+                Mathf.CeilToInt(remainingStorageSpace / Mathf.Max(volumePerItem, 0.0001f)),
+                Mathf.CeilToInt(maxNutritionToProcessPerTurn / Mathf.Max(nutritionForOneUnitOfFoodInHopper, 0.0001f)));
 
-                    int numberOfFoodItemsPerProcess = Mathf.Min(
-                        foodInHopper.stackCount, 
-                        Mathf.CeilToInt(remainingStorageSpace / (nutritionForOneUnitOfFoodInHopper * ftnRatio)), 
-                        Mathf.CeilToInt(maxNutritionToProcessPerTick / nutritionForOneUnitOfFoodInHopper));
+            if (numberOfFoodItemsPerProcess <= 0)
+                return;
 
-                    float amountOfFoodVolumeToAdd = numberOfFoodItemsPerProcess * ftnRatio * nutritionForOneUnitOfFoodInHopper;
-                    
-                    foodInHopper.SplitOff(numberOfFoodItemsPerProcess);
+            float amountOfFoodVolumeToAdd = numberOfFoodItemsPerProcess * volumePerItem;
 
-                    listOfIngredients.Add(foodInHopper.def);
-
-                    trader.FoodNet.Fill(amountOfFoodVolumeToAdd, ftnRatio);
-                }
-            }
+            foodInHopper.SplitOff(numberOfFoodItemsPerProcess);
+            trader.FoodNet.Fill(amountOfFoodVolumeToAdd, ftnRatio);
         }
 
-
-        private float GetNutritionDensityOfFoodInHopper(Thing foodInHopper) 
+        private float GetNutritionDensityOfFoodInHopper(Thing foodInHopper)
         {
             float ftnRatio = 1;
-            
+
             ThingComp_FoodItems_NutritionDensity NDComp = foodInHopper.TryGetComp<ThingComp_FoodItems_NutritionDensity>();
             if (NDComp != null)
             {
@@ -114,38 +148,30 @@ namespace RimRound.FeedingTube
             return ftnRatio;
         }
 
-        private bool HasEnoughFeedstockInHoppers() 
+        private bool HasEnoughFeedstockInHoppers()
         {
             float totalNutritionInHoppers = 0;
 
-            foreach (var c in AdjCellsCardinalInBounds) 
+            foreach (var c in AdjCellsCardinalInBounds)
             {
                 Thing hopper = null;
                 Thing foodOnHopper = null;
 
                 List<Thing> thingsInCell = c.GetThingList(base.Map);
-                foreach (Thing thing in thingsInCell) 
+                foreach (Thing thing in thingsInCell)
                 {
-                    if (this.IsAcceptableFeedstock(thing.def)) 
-                    {
-                        foodOnHopper = thing;
-                    }
-
-                    if (thing.def == ThingDefOf.Hopper || thing.def == Defs.ThingDefOf.RR_Hopper) 
-                    {
+                    if (thing.def == ThingDefOf.Hopper || thing.def == Defs.ThingDefOf.RR_Hopper)
                         hopper = thing;
-                    }
+
+                    if (this.IsAcceptableFeedstock(thing.def))
+                        foodOnHopper = thing;
                 }
 
-                if (foodOnHopper != null && hopper != null) 
-                {
+                if (foodOnHopper != null && hopper != null)
                     totalNutritionInHoppers += (float)foodOnHopper.stackCount * foodOnHopper.GetStatValue(StatDefOf.Nutrition, true);
-                }
 
-                if (totalNutritionInHoppers >= nutritionCostPerUse) 
-                {
+                if (totalNutritionInHoppers >= minNutritionPerUse)
                     return true;
-                }
             }
 
             return false;
@@ -158,23 +184,23 @@ namespace RimRound.FeedingTube
                 if (cachedAdjCells == null)
                 {
                     cachedAdjCells = (from c in GenAdj.CellsAdjacentCardinal(this)
-                     where c.InBounds(base.Map)
-                     select c).ToList<IntVec3>();
+                                      where c.InBounds(base.Map)
+                                      select c).ToList<IntVec3>();
                 }
 
-                return cachedAdjCells;      
+                return cachedAdjCells;
             }
         }
 
-        private bool IsAcceptableFeedstock(ThingDef def) 
+        private bool IsAcceptableFeedstock(ThingDef def)
         {
-            return def.IsNutritionGivingIngestible && 
-                def.ingestible.preferability != FoodPreferability.Undefined && 
-                (def.ingestible.foodType & FoodTypeFlags.Plant) != FoodTypeFlags.Plant && 
+            return def.IsNutritionGivingIngestible &&
+                def.ingestible.preferability != FoodPreferability.Undefined &&
+                (def.ingestible.foodType & FoodTypeFlags.Plant) != FoodTypeFlags.Plant &&
                 (def.ingestible.foodType & FoodTypeFlags.Tree) != FoodTypeFlags.Tree;
         }
 
-        private Thing TryGetFoodInHopper() 
+        private Thing TryGetFoodInHopper()
         {
             for (int i = 0; i < this.AdjCellsCardinalInBounds.Count; i++)
             {
@@ -185,31 +211,26 @@ namespace RimRound.FeedingTube
                 {
                     Thing thingInCell = thingList[j];
                     if (this.IsAcceptableFeedstock(thingInCell.def))
-                    {
                         foodItem = thingInCell;
-                    }
                     if (thingInCell.def == ThingDefOf.Hopper || thingInCell.def == Defs.ThingDefOf.RR_Hopper)
-                    {
                         hopper = thingInCell;
-                    }
                 }
                 if (foodItem != null && hopper != null)
-                {
                     return foodItem;
-                }
             }
             return null;
         }
 
-
         FoodNetTrader_ThingComp trader;
 
-        //amount of ticks between processing
-        float processingFrequency = 60;
+        // Amount of ticks between processing passes.
+        float processingFrequency = 45;
 
-        float nutritionCostPerUse = 0;
+        // Required nutrition in an adjacent hopper before the processor will run.
+        float minNutritionPerUse = 0.9f;
 
-        float maxNutritionToProcessPerTick = 0.1f;
+        // Max nutrition converted per processing pass.
+        float maxNutritionToProcessPerTurn = 0.5f;
 
         List<IntVec3> cachedAdjCells;
     }
