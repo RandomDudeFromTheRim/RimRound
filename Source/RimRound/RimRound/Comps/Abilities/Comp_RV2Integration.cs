@@ -14,20 +14,20 @@ namespace RimRound.Comps
 
         static Type voreTrackerRecordType;
         static Type struggleManagerType;
-        static Type rollModifierType;
+        static Type rollType;
         static Type digestionUtilityType;
         static Type voreValidatorType;
         static Type statPartType;
 
         static FieldInfo recordPreyFI, recordPredFI;
-        static FieldInfo struggleRecordFI;
+        static FieldInfo struggleRecordFI, struggleRequiredFI;
 
         public static void PatchAll(Harmony harmony)
         {
             harmonyInstance = harmony;
             voreTrackerRecordType = AccessTools.TypeByName("RimVore2.VoreTrackerRecord");
             struggleManagerType = AccessTools.TypeByName("RimVore2.StruggleManager");
-            rollModifierType = AccessTools.TypeByName("RimVore2.RollModifier");
+            rollType = AccessTools.TypeByName("RimVore2.Roll");
             digestionUtilityType = AccessTools.TypeByName("RimVore2.DigestionUtility");
             voreValidatorType = AccessTools.TypeByName("RimVore2.VoreValidator");
             statPartType = AccessTools.TypeByName("RimVore2.StatPart_VoreCapacityMultiplier");
@@ -41,9 +41,10 @@ namespace RimRound.Comps
             recordPreyFI = voreTrackerRecordType.GetField("Prey", BindingFlags.Public | BindingFlags.Instance);
             recordPredFI = voreTrackerRecordType.GetField("Predator", BindingFlags.Public | BindingFlags.Instance);
             struggleRecordFI = struggleManagerType?.GetField("record", BindingFlags.NonPublic | BindingFlags.Instance);
+            struggleRequiredFI = struggleManagerType?.GetField("requiredStruggles", BindingFlags.NonPublic | BindingFlags.Instance);
 
             // 1
-            TryPatchMethod(rollModifierType, "ModifyValue", "Postfix_VoreRoll");
+            TryPatchMethod(rollType, "GetRollStrength", "Postfix_VoreRoll");
             // 2
             TryPatchMethod(statPartType, "TransformValue", "Postfix_Capacity");
             // 3
@@ -74,9 +75,10 @@ namespace RimRound.Comps
         static Pawn GetPred(object record) => recordPredFI?.GetValue(record) as Pawn;
 
         // 1
-        // RollModifier.ModifyValue passes the VoreTrackerRecord as a parameter —
-        // the modifier itself has no Predator/Prey fields.
-        static void Postfix_VoreRoll(ref float __result, object __instance, object record)
+        // Roll.GetRollStrength runs once per roll, after all of the roll's modifiers.
+        // (Patching RollModifier.ModifyValue instead compounded this multiplier once
+        // per modifier in the chain, whether or not the modifier applied.)
+        static void Postfix_VoreRoll(ref float __result, object record)
         {
             if (record == null || recordPredFI == null || recordPreyFI == null) return;
             var pred = GetPred(record);
@@ -118,9 +120,7 @@ namespace RimRound.Comps
 
             float nutrition = GetPreyNutrition(pred, prey);
             float kilos = Math.Min(nutrition * 0.15f, 20f);
-            var fnd = pred.TryGetComp<FullnessAndDietStats_ThingComp>();
-            if (fnd != null && !fnd.Disabled)
-                fnd.activeWeightGainRequests.Enqueue(new WeightGainRequest(kilos, Find.TickManager.TicksGame + 10, 60000, false));
+            Utilities.HediffUtility.QueueWeightGain(pred, kilos);
         }
 
         // 4
@@ -141,17 +141,20 @@ namespace RimRound.Comps
         }
 
         // 5
+        // Heavier prey are sluggish and wedged in: scale RV2's own required
+        // struggles (default 60) up. Overwriting it with (int)(severity * 2) made
+        // fat prey need 0-4 struggles, so they escaped almost instantly.
         static void Postfix_StruggleReq(object __instance)
         {
-            if (__instance == null || struggleRecordFI == null) return;
+            if (__instance == null || struggleRecordFI == null || struggleRequiredFI == null) return;
             var rec = struggleRecordFI.GetValue(__instance);
             var prey = GetPrey(rec);
             if (prey == null) return;
             float s = GetWeightSev(prey);
             if (s > 0.05f)
             {
-                var fi = struggleManagerType?.GetField("requiredStruggles", BindingFlags.NonPublic | BindingFlags.Instance);
-                if (fi != null) fi.SetValue(__instance, (int)(s * 2f));
+                int required = (int)struggleRequiredFI.GetValue(__instance);
+                struggleRequiredFI.SetValue(__instance, Math.Max(1, (int)Math.Round(required * (1f + s * 0.5f))));
             }
         }
 

@@ -45,12 +45,7 @@ namespace RimRound.Comps
             float gain = Rand.Range(0.02f, 0.08f);
             weight.Severity += gain;
 
-            var fnd = target.TryGetComp<FullnessAndDietStats_ThingComp>();
-            if (fnd != null && !fnd.Disabled)
-            {
-                fnd.activeWeightGainRequests.Enqueue(
-                    new WeightGainRequest(gain * 10f, Find.TickManager.TicksGame + 5, 30000, false));
-            }
+            Utilities.HediffUtility.QueueWeightGain(target, gain * 10f);
 
             var att = target.TryGetComp<ThingComp_PawnAttitude>();
             if (att?.weightOpinion >= WeightOpinion.Like)
