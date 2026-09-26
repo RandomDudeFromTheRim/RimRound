@@ -45,8 +45,7 @@
     <defName>RR_FleshFloor</defName>
     <label>warm flesh</label>
     <description>Soft, warm flesh covers every surface. It dimples underfoot and slowly springs back.</description>
-    <texturePath>Terrain/Surfaces/Soil</texturePath>
-    <color>(205,110,125)</color>
+    <texturePath>Terrain/RR_FleshFloor</texturePath>
     <edgeType>Fade</edgeType>
     <renderPrecedence>90</renderPrecedence>
     <layerable>true</layerable>

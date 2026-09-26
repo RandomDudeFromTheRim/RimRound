@@ -33,6 +33,7 @@ namespace RimRound.Defs
         public static ThingDef RR_VoidPortal;
         public static ThingDef RR_VoidPortalReturn;
         public static ThingDef RR_VoidMilk;
+        public static ThingDef RR_BloatGeyser;
         public static ThingDef RimRound_NovaTechApparel_Collar;
         public static ThingDef RimRound_NovaTechApparel_Gloves;
         public static ThingDef RimRound_NovaTechApparel_ProtoSuit;

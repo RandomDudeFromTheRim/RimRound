@@ -182,6 +182,7 @@
     <Compile Include="RimRound\Comps\Buildings\Comp_AssignableToPawnModified.cs" />
     <Compile Include="RimRound\Comps\Buildings\Comp_RestingWeightGainMod.cs" />
     <Compile Include="RimRound\Comps\Building\CompDestroyDrop.cs" />
+    <Compile Include="RimRound\Comps\Building\CompGasOnDestroy.cs" />
     <Compile Include="RimRound\Comps\Map\MapComp_RRGasGrid.cs" />
     <Compile Include="RimRound\Comps\PsychicShips\CompCauseGameCondition_HungerDrone.cs" />
     <Compile Include="RimRound\Comps\PsychicShips\CompIncreaseHunger.cs" />
@@ -426,6 +427,7 @@
     <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_VoidFascination.cs" />
     <Compile Include="RimRound\Comps\Buildings\CompProperties_VoidPortal.cs" />
     <Compile Include="RimRound\Comps\Buildings\Comp_VoidPortal.cs" />
+    <Compile Include="RimRound\Comps\Buildings\Comp_BloatGeyser.cs" />
     <Compile Include="RimRound\Comps\Map\CompProperties_GluttoniumRadiation.cs" />
     <Compile Include="RimRound\Comps\Map\Comp_GluttoniumRadiation.cs" />
     <Compile Include="RimRound\Comps\Map\MapComp_GluttoniumRadiation.cs" />

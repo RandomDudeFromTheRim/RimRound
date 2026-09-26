@@ -1,5 +1,6 @@
 using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace RimRound.GenSteps
@@ -22,6 +23,9 @@ namespace RimRound.GenSteps
         const float ShellFraction = 0.48f; // tunnels stay inside this fraction of the map width
         const int HardenedShellDepth = 3;
         const int MaxRewards = 45;
+        const int MaxGeysers = 8;
+        const float GeyserSpacing = 16f;
+        const float GeyserPortalClearance = 14f;
 
         // Per-run state. GenStep instances belong to the (shared) def, so these
         // are cleared again once generation finishes.
@@ -67,6 +71,7 @@ namespace RimRound.GenSteps
                 CarveFeederTunnel();
 
             FillUncarvedWithFlesh();
+            PlaceGeysers();
             PlaceRewards();
 
             // the way home
@@ -181,6 +186,35 @@ namespace RimRound.GenSteps
             }
         }
 
+        /// <summary>
+        /// Bloatgas geysers in the roomier stretches (not 1-wide squeezes), spread
+        /// apart and kept clear of the portal chamber.
+        /// </summary>
+        void PlaceGeysers()
+        {
+            var placed = new List<IntVec3>();
+            for (int i = 0; i < 600 && placed.Count < MaxGeysers; i++)
+            {
+                IntVec3 spot = RandomCarvedCell();
+                if (spot.DistanceTo(center) < GeyserPortalClearance || !spot.Standable(map))
+                    continue;
+                if (OpenNeighbors(spot) < 7 || placed.Any(p => p.DistanceTo(spot) < GeyserSpacing))
+                    continue;
+
+                GenSpawn.Spawn(ThingMaker.MakeThing(Defs.ThingDefOf.RR_BloatGeyser), spot, map);
+                placed.Add(spot);
+            }
+        }
+
+        int OpenNeighbors(IntVec3 spot)
+        {
+            int open = 0;
+            foreach (IntVec3 n in GenAdj.AdjacentCells)
+                if (carved.Contains(spot + n))
+                    open++;
+            return open;
+        }
+
         /// <summary>Mineables and gluttonium tucked into dead pockets away from the portal.</summary>
         void PlaceRewards()
         {
@@ -211,13 +245,6 @@ namespace RimRound.GenSteps
         }
 
         /// <summary>Mostly surrounded by wall: no more than 3 of the 8 neighbours are open.</summary>
-        bool IsDeadPocket(IntVec3 spot)
-        {
-            int openNeighbors = 0;
-            foreach (IntVec3 n in GenAdj.AdjacentCells)
-                if (carved.Contains(spot + n))
-                    openNeighbors++;
-            return openNeighbors <= 3;
-        }
+        bool IsDeadPocket(IntVec3 spot) => OpenNeighbors(spot) <= 3;
     }
 }

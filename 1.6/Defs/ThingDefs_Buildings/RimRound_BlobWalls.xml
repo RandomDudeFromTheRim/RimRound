@@ -58,6 +58,11 @@
         <dropDefName>Meat_Twisted</dropDefName>
         <dropCount>5</dropCount>
       </li>
+      <!-- cutting into bloated mass lets out a puff of bloatgas -->
+      <li Class="RimRound.Comps.CompProperties_GasOnDestroy">
+        <radius>1.5</radius>
+        <gasPerCell>110</gasPerCell>
+      </li>
     </comps>
   </ThingDef>
 
@@ -67,12 +72,15 @@
     <label>void blob wall</label>
     <description>A thicker, vein-ridden section of blob wall. Pulses with a purple glow. Can be mined for void gluttonium.</description>
     <thingClass>Mineable</thingClass>
+    <!-- Linked atlases for the flesh dimension walls: all share Custom2 with the blob
+         wall so the maze reads as one continuous mass. Made by Source/TextureGen. -->
     <graphicData>
-      <texPath>Things/Building/RR_FleshWall</texPath>
+      <texPath>Things/Building/FleshDimension/RR_VoidBlobWall_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <shaderType>CutoutComplex</shaderType>
-      <color>(170,110,210)</color>
-      <drawSize>(1,1)</drawSize>
+      <linkType>CornerFiller</linkType>
+      <linkFlags>
+        <li>Custom2</li>
+      </linkFlags>
     </graphicData>
     <stuffCategories />
     <passability>Impassable</passability>
@@ -106,6 +114,10 @@
         <exposurePerTick>0.015</exposurePerTick>
         <tickInterval>200</tickInterval>
       </li>
+      <li Class="RimRound.Comps.CompProperties_GasOnDestroy">
+        <radius>2.9</radius>
+        <gasPerCell>200</gasPerCell>
+      </li>
     </comps>
   </ThingDef>
 
@@ -120,11 +132,12 @@
     <neverMultiSelect>true</neverMultiSelect>
     <stuffCategories />
     <graphicData>
-      <texPath>Things/Building/RR_FleshWall</texPath>
+      <texPath>Things/Building/FleshDimension/RR_FleshWall_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <shaderType>CutoutComplex</shaderType>
-      <color>(190,120,130)</color>
-      <drawSize>(1,1)</drawSize>
+      <linkType>CornerFiller</linkType>
+      <linkFlags>
+        <li>Custom2</li>
+      </linkFlags>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Impassable</passability>
@@ -161,6 +174,7 @@
         <dropDefName>Meat_Twisted</dropDefName>
         <dropCount>3</dropCount>
       </li>
+      <li Class="RimRound.Comps.CompProperties_GasOnDestroy" />
     </comps>
   </ThingDef>
 
@@ -175,10 +189,13 @@
     <neverMultiSelect>true</neverMultiSelect>
     <stuffCategories />
     <graphicData>
-      <texPath>Things/Building/RR_HardenedFlesh</texPath>
+      <texPath>Things/Building/FleshDimension/RR_HardenedFlesh_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <shaderType>CutoutComplex</shaderType>
-      <drawSize>(1,1)</drawSize>
+      <linkType>CornerFiller</linkType>
+      <linkFlags>
+        <li>Custom2</li>
+        <li>MapEdge</li>
+      </linkFlags>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Impassable</passability>
@@ -208,5 +225,48 @@
       <destroyShakeAmount>0</destroyShakeAmount>
       <quickTargetable>false</quickTargetable>
     </building>
+  </ThingDef>
+
+  <!-- Bloatgas geyser: a vent in the flesh dimension that swells with bloatgas
+       (fattening gas) and erupts. Placed by GenStep_RRVoidMaze. -->
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_BloatGeyser</defName>
+    <thingClass>Building</thingClass>
+    <label>bloatgas geyser</label>
+    <description>A puckered vent in the living flesh. It slowly swells with sweet, heavy bloatgas and then erupts, flooding the area with gas that swells anyone who breathes it. It fills faster when something warm is close by - it seems to want an audience.
+
+Pawns caught right on top of an eruption take the blast head-on: it soaks them in void saturation and leaves those who enjoy growing flushed and aching.</description>
+    <graphicData>
+      <texPath>Things/Building/FleshDimension/RR_BloatGeyser</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1.8,1.8)</drawSize>
+    </graphicData>
+    <altitudeLayer>FloorEmplacement</altitudeLayer>
+    <passability>Standable</passability>
+    <rotatable>false</rotatable>
+    <selectable>true</selectable>
+    <useHitPoints>false</useHitPoints>
+    <destroyable>false</destroyable>
+    <tickerType>Normal</tickerType>
+    <building>
+      <isInert>true</isInert>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+      <isEdifice>false</isEdifice>
+      <ai_chillDestination>false</ai_chillDestination>
+    </building>
+    <statBases>
+      <Beauty>-4</Beauty>
+    </statBases>
+    <comps>
+      <li Class="RimRound.Comps.CompProperties_BloatGeyser">
+        <warningSound>RR_StomachGurgles_Heavy</warningSound>
+        <eruptSound>RR_StomachBurp_Heavy</eruptSound>
+      </li>
+      <li Class="CompProperties_Glower">
+        <glowRadius>3.5</glowRadius>
+        <glowColor>(230,90,170,0)</glowColor>
+      </li>
+    </comps>
   </ThingDef>
 </Defs>
