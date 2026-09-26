@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- The void portal's way into a normal game. Anomaly-only: the maze is built from
+       Anomaly flesh, fleshbeasts and entity-faction echoes. The worker only fires
+       when no portal exists yet and a free colonist is Chubby or heavier. -->
+  <IncidentDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_VoidPortalOpens</defName>
+    <label>void portal</label>
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>RimRound.Incidents.IncidentWorker_VoidPortalOpens</workerClass>
+    <baseChance>0.6</baseChance>
+    <minRefireDays>30</minRefireDays>
+    <letterLabel>Void portal</letterLabel>
+    <letterText>A pulsating wound has torn open in reality. Warm, sweet air breathes out of it, and your heavier colonists feel strangely drawn to it.\n\nAnyone Chubby or heavier can step through into the void maze: a cramped, living flesh dimension where weight grows freely and void gluttonium can be gathered. Fleshbeasts lurk in the warm dark, and lingering too long may tear something loose.</letterText>
+    <letterDef>NeutralEvent</letterDef>
+  </IncidentDef>
+</Defs>

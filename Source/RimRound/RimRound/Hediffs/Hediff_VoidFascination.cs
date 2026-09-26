@@ -15,8 +15,9 @@ namespace RimRound.Hediffs
     public class Hediff_VoidFascination : Hediff
     {
         const int CheckIntervalTicks = 180;
-        // Reaches full fascination after roughly a day of lingering.
-        const float GainPerInterval = 0.00035f;
+        // Reaches full fascination after roughly a day of lingering, so every
+        // stage (up to insatiable at 0.8) is reachable within a maze run.
+        const float GainPerInterval = (float)CheckIntervalTicks / GenDate.TicksPerDay;
         const float DrainPerInterval = 0.0005f;
 
         public override void Tick()

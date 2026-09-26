@@ -292,6 +292,20 @@ namespace RimRound.Comps
                     action = () => ReturnEveryone()
                 };
             }
+            else if (!Props.exitPortal)
+            {
+                // the portal can't be deconstructed, so give the player a way to be rid of it
+                yield return new Command_Action
+                {
+                    defaultLabel = "Seal portal",
+                    defaultDesc = "Seal the void portal for good. Another may tear open some day.",
+                    icon = ContentFinder<Texture2D>.Get("UI/Designators/Deconstruct"),
+                    action = () => Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(
+                        "Seal the void portal for good?",
+                        () => parent.Destroy(DestroyMode.Vanish),
+                        destructive: true))
+                };
+            }
         }
     }
 }
