@@ -17,6 +17,8 @@ namespace RimRound.Hediffs
     /// </summary>
     public class Hediff_VoidEchoVigor : Hediff
     {
+        const int MilkIntervalTicks = 25000;
+
         public Pawn markedPrey;
         List<Pawn> contained = new List<Pawn>();
 
@@ -58,11 +60,7 @@ namespace RimRound.Hediffs
                 {
                     GenSpawn.Spawn(p, CellFinder.RandomClosewalkCellNear(at, map, 2), map);
                     p.stances?.stunner?.StunFor(600, p, addBattleLog: false, showMote: true);
-
-                    var fnd = p.TryGetComp<Comps.FullnessAndDietStats_ThingComp>();
-                    if (fnd != null && !fnd.Disabled)
-                        fnd.activeWeightGainRequests.Enqueue(
-                            new Comps.WeightGainRequest(15f, Find.TickManager.TicksGame + 5, 30000, false));
+                    Utilities.HediffUtility.QueueWeightGain(p, 15f, 30000);
                 }
                 contained.RemoveAt(i);
             }
@@ -72,22 +70,9 @@ namespace RimRound.Hediffs
         {
             base.Tick();
 
-            // voidmilk flows while the echo digests its guests on a holding platform
             if (contained.Count > 0 && pawn != null && !pawn.Dead &&
-                pawn.holdingOwner != null && pawn.IsHashIntervalTick(25000))
-            {
-                Map map = pawn.Map;
-                if (map != null)
-                {
-                    Thing milk = ThingMaker.MakeThing(ThingDef.Named("RR_VoidMilk"));
-                    milk.stackCount = 2 + contained.Count * 2;
-                    GenPlace.TryPlaceThing(milk, pawn.Position, map, ThingPlaceMode.Near);
-                    Messages.Message(
-                        $"The void echo produces {milk.stackCount} voidmilk.",
-                        new LookTargets(pawn),
-                        MessageTypeDefOf.PositiveEvent);
-                }
-            }
+                pawn.holdingOwner != null && pawn.IsHashIntervalTick(MilkIntervalTicks))
+                ProduceVoidMilk();
 
             if (pawn == null || pawn.Dead || !pawn.Spawned || !pawn.IsHashIntervalTick(120))
                 return;
@@ -100,6 +85,25 @@ namespace RimRound.Hediffs
                 return;
 
             TryStartRV2OralHold(prey);
+        }
+
+        /// <summary>
+        /// Voidmilk flows while the echo digests its guests on a holding platform.
+        /// A held pawn is despawned, so it has to go through MapHeld/PositionHeld.
+        /// </summary>
+        void ProduceVoidMilk()
+        {
+            Map map = pawn.MapHeld;
+            if (map == null)
+                return;
+
+            Thing milk = ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidMilk);
+            milk.stackCount = 2 + contained.Count * 2;
+            GenPlace.TryPlaceThing(milk, pawn.PositionHeld, map, ThingPlaceMode.Near);
+            Messages.Message(
+                $"The void echo produces {milk.stackCount} voidmilk.",
+                new LookTargets(pawn.SpawnedParentOrMe),
+                MessageTypeDefOf.PositiveEvent);
         }
 
         Pawn ChoosePrey()

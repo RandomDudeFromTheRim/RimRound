@@ -25,6 +25,13 @@ namespace RimRound.Utilities
                 !comp.PersonallyExempt;
         }
 
+        // Only genuinely overweight pawns make stomach noises at all —
+        // otherwise an entire colony gurgles nonstop
+        private static bool IsBigEnoughForStomachSounds(Pawn pawn)
+        {
+            return BodyTypeUtility.PawnIsOverWeightThreshold(pawn, Defs.BodyTypeDefOf.F_006_Chonky);
+        }
+
 
         public static SoundDef GetSwallowSoundByWeightOpinionAndGender(Pawn pawn, AutoFeederMode mode) 
         {
@@ -180,9 +187,7 @@ namespace RimRound.Utilities
                 fndComp.parent.AsPawn() == null ||
                 !PawnShouldPlaySound(fndComp.parent.AsPawn()) ||
                 fndComp.CurrentFullness <= 0.05f || // Arbitrarily low number above zero
-                // Only genuinely overweight pawns make stomach noises at all —
-                // otherwise an entire colony gurgles nonstop
-                !BodyTypeUtility.PawnIsOverWeightThreshold(fndComp.parent.AsPawn(), Defs.BodyTypeDefOf.F_006_Chonky))
+                !IsBigEnoughForStomachSounds(fndComp.parent.AsPawn()))
             {
                 return null;
             }
@@ -210,7 +215,7 @@ namespace RimRound.Utilities
                 fndComp.parent.AsPawn() == null ||
                 !PawnShouldPlaySound(fndComp.parent.AsPawn()) ||
                 fndComp.CurrentFullness <= 0.05f || // Arbitrarily low number above zero
-                !BodyTypeUtility.PawnIsOverWeightThreshold(fndComp.parent.AsPawn(), Defs.BodyTypeDefOf.F_006_Chonky))
+                !IsBigEnoughForStomachSounds(fndComp.parent.AsPawn()))
             {
                 return null;
             }
@@ -343,7 +348,7 @@ namespace RimRound.Utilities
                 fndComp.parent.AsPawn() == null ||
                 !PawnShouldPlaySound(fndComp.parent.AsPawn()) ||
                 fndComp.CurrentFullness > 0.05f ||  // Arbitrarily low number above zero
-                !BodyTypeUtility.PawnIsOverWeightThreshold(fndComp.parent.AsPawn(), Defs.BodyTypeDefOf.F_006_Chonky))
+                !IsBigEnoughForStomachSounds(fndComp.parent.AsPawn()))
             {
                 return null;
             }

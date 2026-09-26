@@ -1,8 +1,6 @@
-using RimRound.Comps;
 using RimRound.Utilities;
 using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -16,6 +14,7 @@ namespace RimRound.AI
     /// </summary>
     public class JobDriver_RRSharedFeeding : JobDriver
     {
+        const int SettleTicks = 120;
         const int DurationTicks = 2400;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -34,7 +33,7 @@ namespace RimRound.AI
             Toil settle = new Toil
             {
                 defaultCompleteMode = ToilCompleteMode.Delay,
-                defaultDuration = 120,
+                defaultDuration = SettleTicks,
                 initAction = delegate
                 {
                     var partner = (Pawn)TargetThingB;
@@ -54,46 +53,34 @@ namespace RimRound.AI
                 defaultDuration = DurationTicks,
                 initAction = delegate
                 {
-                    pawn.rotationTracker.Face(((Pawn)TargetThingB).DrawPos);
+                    pawn.rotationTracker.Face(TargetThingB.DrawPos);
                     FleckMaker.ThrowSmoke(pawn.DrawPos, pawn.Map, 0.8f);
                 },
                 tickAction = delegate
                 {
-                    var partner = TargetThingB as Pawn;
-                    if (partner != null && partner.Spawned)
-                        pawn.rotationTracker.Face(partner.DrawPos);
+                    if (TargetThingB.Spawned)
+                        pawn.rotationTracker.Face(TargetThingB.DrawPos);
                     if (pawn.IsHashIntervalTick(600))
                         FleckMaker.ThrowSmoke(pawn.DrawPos, pawn.Map, 0.5f);
                 }
             };
             yield return feed;
 
-            Toil finish = new Toil
-            {
-                defaultCompleteMode = ToilCompleteMode.Instant,
-                initAction = delegate
-                {
-                    Reward(pawn, TargetThingB as Pawn);
-                }
-            };
-            yield return finish;
+            yield return Toils_General.Do(() => Reward(pawn, TargetThingB as Pawn));
         }
 
         static void Reward(Pawn self, Pawn other)
         {
             if (self == null) return;
 
-            var intimacy = self.needs?.AllNeeds?.FirstOrDefault(n => n.def.defName == "SEX_Intimacy");
+            var intimacy = self.IntimacyNeed();
             if (intimacy != null)
                 intimacy.CurLevelPercentage = Mathf.Clamp01(intimacy.CurLevelPercentage - 0.3f);
 
-            var fnd = self.TryGetComp<FullnessAndDietStats_ThingComp>();
-            if (fnd != null && !fnd.Disabled)
-                fnd.activeWeightGainRequests.Enqueue(
-                    new WeightGainRequest(Rand.Range(3f, 6f), Find.TickManager.TicksGame + 5, 9000, false));
+            Utilities.HediffUtility.QueueWeightGain(self, Rand.Range(3f, 6f), 9000);
 
-            if (other != null && self.needs?.mood != null)
-                self.needs.mood.thoughts.memories.TryGainMemory(ThoughtDef.Named("RR_SharedFeedingThought"), other);
+            if (other != null)
+                self.needs?.mood?.thoughts.memories.TryGainMemory(Defs.ThoughtDefOf.RR_SharedFeedingThought, other);
 
             if (other == null || self.thingIDNumber >= other.thingIDNumber)
                 return; // one message per session, from whichever pawn is first by ID

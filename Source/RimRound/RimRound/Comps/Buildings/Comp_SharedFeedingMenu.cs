@@ -1,4 +1,3 @@
-using RimRound.Comps;
 using RimRound.Utilities;
 using RimWorld;
 using System.Collections.Generic;
@@ -13,6 +12,9 @@ namespace RimRound.Comps
     /// </summary>
     public class Comp_SharedFeedingMenu : ThingComp
     {
+        const float MinPartnerOpinion = 20f;
+        const float MaxPartnerDistance = 40f;
+
         public override IEnumerable<FloatMenuOption> CompFloatMenuOptions(Pawn selPawn)
         {
             foreach (FloatMenuOption o in base.CompFloatMenuOptions(selPawn))
@@ -55,11 +57,11 @@ namespace RimRound.Comps
                     continue;
 
                 float opinion = initiator.relations?.OpinionOf(p) ?? -100f;
-                if (opinion < 20f)
+                if (opinion < MinPartnerOpinion)
                     continue;
 
                 float dist = p.Position.DistanceTo(initiator.Position);
-                if (dist > 40f)
+                if (dist > MaxPartnerDistance)
                     continue;
 
                 float score = opinion - dist;

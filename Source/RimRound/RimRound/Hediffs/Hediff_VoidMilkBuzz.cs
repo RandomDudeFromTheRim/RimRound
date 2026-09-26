@@ -1,5 +1,3 @@
-using RimRound.Comps;
-using RimRound.Utilities;
 using Verse;
 
 namespace RimRound.Hediffs
@@ -13,10 +11,7 @@ namespace RimRound.Hediffs
         public override void PostAdd(DamageInfo? dinfo)
         {
             base.PostAdd(dinfo);
-            var fnd = pawn?.TryGetComp<FullnessAndDietStats_ThingComp>();
-            if (fnd != null && !fnd.Disabled)
-                fnd.activeWeightGainRequests.Enqueue(
-                    new WeightGainRequest(4f, Find.TickManager.TicksGame + 5, 45000, false));
+            Utilities.HediffUtility.QueueWeightGain(pawn, 4f, 45000);
         }
     }
 }

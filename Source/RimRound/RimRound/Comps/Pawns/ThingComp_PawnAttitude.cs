@@ -86,12 +86,7 @@ namespace RimRound.Comps
             if (Prefs.DevMode)
                 Log.Message($"Current opinion is now: {weightOpinion}");
 
-            TraitDef increasedTrait = WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion);
-            if (increasedTrait != null && !((Pawn)parent).story.traits.HasTrait(increasedTrait))
-            {
-                WeightOpinionUtility.RemoveWeightOpinionTraits((Pawn)parent);
-                ((Pawn)parent).story.traits.GainTrait(new Trait(increasedTrait));
-            }
+            SwapToOpinionTraitIfMissing();
 
 
             return weightOpinion;
@@ -135,14 +130,24 @@ namespace RimRound.Comps
             if (Prefs.DevMode)
                 Log.Message($"Current opinion is now: {weightOpinion}");
 
-            TraitDef loweredTrait = WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion);
-            if (loweredTrait != null && !((Pawn)parent).story.traits.HasTrait(loweredTrait))
-            {
-                WeightOpinionUtility.RemoveWeightOpinionTraits((Pawn)parent);
-                ((Pawn)parent).story.traits.GainTrait(new Trait(loweredTrait));
-            }
+            SwapToOpinionTraitIfMissing();
 
             return weightOpinion;
+        }
+
+        /// <summary>
+        /// Gives the pawn the trait for their current opinion, replacing any other
+        /// weight-opinion trait. Opinions without a trait (None, Extreme) leave traits as they are.
+        /// </summary>
+        private void SwapToOpinionTraitIfMissing()
+        {
+            Pawn pawn = (Pawn)parent;
+            TraitDef opinionTrait = WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion);
+            if (opinionTrait == null || pawn.story.traits.HasTrait(opinionTrait))
+                return;
+
+            WeightOpinionUtility.RemoveWeightOpinionTraits(pawn);
+            pawn.story.traits.GainTrait(new Trait(opinionTrait));
         }
 
         public void SetWeightOpinion(WeightOpinion weightOpinion)

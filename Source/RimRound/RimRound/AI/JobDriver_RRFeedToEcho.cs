@@ -1,4 +1,4 @@
-using RimRound.Hediffs;
+using RimRound.Utilities;
 using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,15 +48,14 @@ namespace RimRound.AI
                 defaultCompleteMode = ToilCompleteMode.Instant,
                 initAction = delegate
                 {
-                    var platform = TargetThingA as Building_HoldingPlatform;
-                    var echo = platform?.HeldPawn;
-                    var vigor = echo?.health?.hediffSet?.GetFirstHediffOfDef(HediffDef.Named("RR_VoidEchoVigor")) as Hediff_VoidEchoVigor;
+                    var echo = (TargetThingA as Building_HoldingPlatform)?.HeldPawn;
+                    var vigor = VoidMazeUtility.VoidEchoVigor(echo);
                     if (vigor == null)
                         return;
 
                     vigor.Contain(pawn);
 
-                    var weight = echo.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight);
+                    var weight = Utilities.HediffUtility.WeightHediff(echo);
                     if (weight != null)
                         weight.Severity = Mathf.Min(weight.Severity + 0.06f, 1.6f);
 

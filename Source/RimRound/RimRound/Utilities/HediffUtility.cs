@@ -65,6 +65,27 @@ namespace RimRound.Utilities
             }
         }
 
+        /// <summary>
+        /// Queues kilograms of weight gain that apply a few ticks from now and last
+        /// for durationTicks. Does nothing for pawns without a working diet comp.
+        /// </summary>
+        public static void QueueWeightGain(Pawn pawn, float kilos, int durationTicks)
+        {
+            var fnd = pawn?.TryGetComp<FullnessAndDietStats_ThingComp>();
+            if (fnd != null && !fnd.Disabled)
+                fnd.activeWeightGainRequests.Enqueue(
+                    new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, durationTicks, false));
+        }
+
+        /// <summary>Adds a fresh hediff of def to the pawn at the given severity.</summary>
+        public static Hediff AddHediffWithSeverity(HediffDef def, Pawn pawn, float severity)
+        {
+            Hediff hediff = HediffMaker.MakeHediff(def, pawn);
+            hediff.Severity = severity;
+            pawn.health.AddHediff(hediff);
+            return hediff;
+        }
+
         public static Hediff AddHediffOfDefTo(HediffDef def, Pawn pawn)
         {
             if (pawn is null)

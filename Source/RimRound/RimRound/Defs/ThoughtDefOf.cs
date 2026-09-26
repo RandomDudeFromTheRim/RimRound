@@ -52,5 +52,7 @@ namespace RimRound.Defs
         public static ThoughtDef RR_WetSmotherGood;
         public static ThoughtDef RR_WetSmotherGreat;
         public static ThoughtDef RR_TailGropeInitiator;
+
+        public static ThoughtDef RR_SharedFeedingThought;
     }
 }

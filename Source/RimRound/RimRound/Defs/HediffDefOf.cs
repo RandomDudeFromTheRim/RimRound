@@ -33,5 +33,6 @@ namespace RimRound.Defs
         public static HediffDef RR_MeldAerosol;
         public static HediffDef RR_BloatedDeathAffliction;
         public static HediffDef RR_VoidSaturation;
+        public static HediffDef RR_VoidEchoVigor;
     }
 }

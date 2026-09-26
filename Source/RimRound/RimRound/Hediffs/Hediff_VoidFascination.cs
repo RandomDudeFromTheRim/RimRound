@@ -1,3 +1,4 @@
+using RimRound.Utilities;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -13,43 +14,32 @@ namespace RimRound.Hediffs
     /// </summary>
     public class Hediff_VoidFascination : Hediff
     {
+        const int CheckIntervalTicks = 180;
+        // Reaches full fascination after roughly a day of lingering.
+        const float GainPerInterval = 0.00035f;
+        const float DrainPerInterval = 0.0005f;
+
         public override void Tick()
         {
             base.Tick();
-            if (pawn == null || pawn.Dead || !pawn.IsHashIntervalTick(180))
+            if (pawn == null || pawn.Dead || !pawn.IsHashIntervalTick(CheckIntervalTicks))
                 return;
 
-            // The same in-maze marker used by VoidSaturation: present only while
-            // the pawn is inside the flesh dimension / void maze.
-            bool inMaze =
-                pawn.health?.hediffSet?.GetFirstHediffOfDef(
-                    Defs.HediffDefOf.RR_VoidWarmth) != null;
-
-            if (inMaze)
+            if (VoidMazeUtility.IsInVoidMaze(pawn))
             {
-                // Reaches full fascination after roughly a day of lingering.
-                Severity += 0.00035f;
-                Severity = Mathf.Clamp(Severity, 0f, 1f);
+                Severity = Mathf.Clamp01(Severity + GainPerInterval);
             }
             else
             {
-                Severity -= 0.0005f;
+                Severity -= DrainPerInterval;
                 if (Severity <= 0f)
                     pawn.health.RemoveHediff(this);
             }
         }
 
-        public override string TipStringExtra
-        {
-            get
-            {
-                if (pawn.health?.hediffSet?.GetFirstHediffOfDef(
-                        Defs.HediffDefOf.RR_VoidWarmth) != null)
-                {
-                    return "The void calls to you. The longer you stay, the more it hungers.";
-                }
-                return "The memory of the void is fading.";
-            }
-        }
+        public override string TipStringExtra =>
+            VoidMazeUtility.IsInVoidMaze(pawn)
+                ? "The void calls to you. The longer you stay, the more it hungers."
+                : "The memory of the void is fading.";
     }
 }

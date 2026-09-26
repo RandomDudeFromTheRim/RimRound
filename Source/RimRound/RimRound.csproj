@@ -332,6 +332,7 @@
     <Compile Include="RimRound\Utilities\SoundUtility.cs" />
     <Compile Include="RimRound\Utilities\StatChangeUtility.cs" />
     <Compile Include="RimRound\Utilities\WeightOpinionUtility.cs" />
+    <Compile Include="RimRound\Utilities\VoidMazeUtility.cs" />
     <None Include="app.config" />
     <Compile Include="RimRound\AI\PrisonerStuff\WorkGivers\WorkGiver_ForceFeedPrisoner.cs" />
     <Compile Include="RimRound\Comps\Food\CompProperties_FoodItems_NutritionDensity.cs" />

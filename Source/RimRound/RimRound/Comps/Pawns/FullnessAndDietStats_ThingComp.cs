@@ -235,12 +235,17 @@ namespace RimRound.Comps
             breathSound = null;
         }
 
+        /// <summary>Spreads a sound interval by +-30% so a whole colony doesn't gurgle in lockstep.</summary>
+        private static float Jittered(float seconds)
+        {
+            return seconds * (1f + ((float)Values.random.NextDouble() - 0.5f) * 0.6f);
+        }
+
         private void DoStomachStretchSounds()
         {
             const float SECONDS_BETWEEN_STRETCH_SOUNDS = 20;
-            float jitter = 1f + (((float)Values.random.NextDouble() - 0.5f) * 0.6f); // +-30%
             SoundDef soundDef = SoundUtility.GetStomachStretchingSoundByFullness(this);
-            SoundUtility.PlayOneShotForPawnIfNotWaiting(parent.AsPawn(), soundDef, SECONDS_BETWEEN_STRETCH_SOUNDS * jitter);
+            SoundUtility.PlayOneShotForPawnIfNotWaiting(parent.AsPawn(), soundDef, Jittered(SECONDS_BETWEEN_STRETCH_SOUNDS));
         }
 
         private bool _isConnectedToFeedingMachine = false;
@@ -315,9 +320,8 @@ namespace RimRound.Comps
         private void DoGurgleSounds()
         {
             const float SECONDS_BETWEEN_GURGLE_SOUNDS = 45;
-            float jitter = 1f + (((float)Values.random.NextDouble() - 0.5f) * 0.6f); // +-30%
             SoundDef soundDef = SoundUtility.GetStomachGurgleSoundsByWeight(this);
-            SoundUtility.PlayOneShotForPawnIfNotWaiting(parent.AsPawn(), soundDef, SECONDS_BETWEEN_GURGLE_SOUNDS * jitter);
+            SoundUtility.PlayOneShotForPawnIfNotWaiting(parent.AsPawn(), soundDef, Jittered(SECONDS_BETWEEN_GURGLE_SOUNDS));
         }
 
         private void DoBurpSounds() 
@@ -331,9 +335,8 @@ namespace RimRound.Comps
         private void DoEmptyStomachSounds()
         {
             const float SECONDS_BETWEEN_EMPTY_SOUND = 60;
-            float jitter = 1f + (((float)Values.random.NextDouble() - 0.5f) * 0.6f); // +-30%
             SoundDef soundDef = SoundUtility.GetEmptyStomachSoundsByWeight(this);
-            SoundUtility.PlayOneShotForPawnIfNotWaiting(parent.AsPawn(), soundDef, SECONDS_BETWEEN_EMPTY_SOUND * jitter);
+            SoundUtility.PlayOneShotForPawnIfNotWaiting(parent.AsPawn(), soundDef, Jittered(SECONDS_BETWEEN_EMPTY_SOUND));
         }
 
         private void DoFootstepSounds()

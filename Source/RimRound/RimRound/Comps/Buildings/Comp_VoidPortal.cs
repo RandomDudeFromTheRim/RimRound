@@ -1,4 +1,3 @@
-using RimRound.Hediffs;
 using RimRound.Utilities;
 using RimWorld;
 using System.Collections.Generic;
@@ -17,6 +16,9 @@ namespace RimRound.Comps
     {
         public new CompProperties_VoidPortal Props => (CompProperties_VoidPortal)props;
 
+        static readonly IntVec3 PocketMapSize = new IntVec3(110, 1, 110);
+        const int CheckIntervalTicks = 120;
+
         Map mazeMap;
         Building linkedPortal; // set on exit portals: the entry portal that spawned this maze
         int mazeStartTick = -1;
@@ -26,6 +28,9 @@ namespace RimRound.Comps
 
         public override bool Active => mazeMap != null || generating;
 
+        /// <summary>The entry portal that owns the maze: this comp, or the one an exit portal links back to.</summary>
+        Comp_VoidPortal EntryPortal => Props.exitPortal ? linkedPortal?.GetComp<Comp_VoidPortal>() : this;
+
         public override void PostExposeData()
         {
             base.PostExposeData();
@@ -34,55 +39,6 @@ namespace RimRound.Comps
             Scribe_Collections.Look(ref pawnsInMaze, "pawnsInMaze", LookMode.Reference);
             Scribe_Values.Look(ref mazeStartTick, "mazeStartTick");
             Scribe_Values.Look(ref nextSpawnTick, "nextSpawnTick");
-        }
-
-        protected override void OnInteracted(Pawn caster)
-        {
-            if (Props.exitPortal)
-            {
-                ReturnPawn(caster);
-                return;
-            }
-
-            if (pawnsInMaze.Contains(caster) || generating)
-                return;
-
-            if (mazeMap == null)
-            {
-                generating = true;
-                Pawn enterer = caster;
-                LongEventHandler.QueueLongEvent(delegate
-                {
-                    try
-                    {
-                        mazeMap = PocketMapUtility.GeneratePocketMap(
-                            new IntVec3(110, 1, 110),
-                            DefDatabase<MapGeneratorDef>.GetNamed("RR_VoidMazeMapGen"),
-                            null,
-                            parent.MapHeld);
-                        mazeStartTick = Find.TickManager.TicksGame;
-                        nextSpawnTick = Find.TickManager.TicksGame + Props.respawnIntervalTicks / 2;
-
-                        Building exitPortal = mazeMap.listerThings
-                            .ThingsOfDef(ThingDef.Named("RR_VoidPortalReturn"))
-                            .FirstOrDefault() as Building;
-                        exitPortal?.GetComp<Comp_VoidPortal>().SetLinkedPortal((Building)parent);
-                    }
-                    finally
-                    {
-                        generating = false;
-                    }
-                    TeleportIntoMaze(enterer);
-                    CameraJumper.TryJump(enterer, CameraJumper.MovementMode.Cut);
-                }, "GeneratingLabyrinth", doAsynchronously: true,
-                   GameAndMapInitExceptionHandlers.ErrorWhileGeneratingMap,
-                   showExtraUIInfo: false, forceHideUI: false, callback: null);
-            }
-            else
-            {
-                TeleportIntoMaze(caster);
-                CameraJumper.TryJump(caster, CameraJumper.MovementMode.Cut);
-            }
         }
 
         public void SetLinkedPortal(Building source)
@@ -112,7 +68,57 @@ namespace RimRound.Comps
             return base.CanInteract(activateBy, checkOptionalItems);
         }
 
-        void TeleportIntoMaze(Pawn pawn)
+        protected override void OnInteracted(Pawn caster)
+        {
+            if (Props.exitPortal)
+            {
+                ReturnPawn(caster);
+                return;
+            }
+
+            if (pawnsInMaze.Contains(caster) || generating)
+                return;
+
+            if (mazeMap != null)
+            {
+                EnterMaze(caster);
+                return;
+            }
+
+            generating = true;
+            LongEventHandler.QueueLongEvent(delegate
+            {
+                try
+                {
+                    GenerateMaze();
+                }
+                finally
+                {
+                    generating = false;
+                }
+                EnterMaze(caster);
+            }, "GeneratingLabyrinth", doAsynchronously: true,
+               GameAndMapInitExceptionHandlers.ErrorWhileGeneratingMap,
+               showExtraUIInfo: false, forceHideUI: false, callback: null);
+        }
+
+        void GenerateMaze()
+        {
+            mazeMap = PocketMapUtility.GeneratePocketMap(
+                PocketMapSize,
+                DefDatabase<MapGeneratorDef>.GetNamed("RR_VoidMazeMapGen"),
+                null,
+                parent.MapHeld);
+            mazeStartTick = Find.TickManager.TicksGame;
+            nextSpawnTick = Find.TickManager.TicksGame + Props.respawnIntervalTicks / 2;
+
+            Building exitPortal = mazeMap.listerThings
+                .ThingsOfDef(Defs.ThingDefOf.RR_VoidPortalReturn)
+                .FirstOrDefault() as Building;
+            exitPortal?.GetComp<Comp_VoidPortal>().SetLinkedPortal((Building)parent);
+        }
+
+        void EnterMaze(Pawn pawn)
         {
             if (mazeMap == null)
                 return;
@@ -126,46 +132,46 @@ namespace RimRound.Comps
                 $"{pawn.LabelShort} steps through the warm, pulsing portal into the void maze...",
                 new LookTargets(pawn),
                 MessageTypeDefOf.NeutralEvent);
+            CameraJumper.TryJump(pawn, CameraJumper.MovementMode.Cut);
         }
 
-        void ApplyMazeHediffs(Pawn pawn)
+        static void ApplyMazeHediffs(Pawn pawn)
         {
-            var warmth = HediffMaker.MakeHediff(Defs.HediffDefOf.RR_VoidWarmth, pawn);
-            warmth.Severity = 1f;
-            pawn.health.AddHediff(warmth);
+            Utilities.HediffUtility.AddHediffWithSeverity(Defs.HediffDefOf.RR_VoidWarmth, pawn, 1f);
+            Utilities.HediffUtility.AddHediffWithSeverity(Defs.HediffDefOf.RR_VoidFascination, pawn, 0.25f);
 
-            var fascination = HediffMaker.MakeHediff(Defs.HediffDefOf.RR_VoidFascination, pawn);
-            fascination.Severity = 0.25f;
-            pawn.health.AddHediff(fascination);
-
-            var existingSaturation = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_VoidSaturation);
-            if (existingSaturation == null)
-            {
-                var saturation = HediffMaker.MakeHediff(Defs.HediffDefOf.RR_VoidSaturation, pawn);
-                saturation.Severity = 0.05f;
-                pawn.health.AddHediff(saturation);
-            }
+            if (Utilities.HediffUtility.GetHediffOfDefFrom(Defs.HediffDefOf.RR_VoidSaturation, pawn) == null)
+                Utilities.HediffUtility.AddHediffWithSeverity(Defs.HediffDefOf.RR_VoidSaturation, pawn, 0.05f);
         }
 
-        void ReturnPawn(Pawn pawn, bool forced = false)
+        /// <param name="forced">Pulled out early (timeout, "Close Portal", portal destroyed): no loot.</param>
+        /// <param name="homeMapOverride">The entry portal's map, for when it can no longer be read off the portal (after it is destroyed).</param>
+        void ReturnPawn(Pawn pawn, bool forced = false, Map homeMapOverride = null)
         {
-            Comp_VoidPortal source = linkedPortal?.GetComp<Comp_VoidPortal>();
-            Map homeMap = source?.parent?.MapHeld ?? parent.MapHeld;
+            Comp_VoidPortal entry = EntryPortal;
+            Map homeMap = homeMapOverride ?? entry?.parent.MapHeld ?? parent.MapHeld;
             if (homeMap == null || pawn == null)
                 return;
 
-            IntVec3 drop = source != null
-                ? CellFinder.RandomClosewalkCellNear(source.parent.Position, homeMap, 2)
+            IntVec3 drop = entry != null
+                ? CellFinder.RandomClosewalkCellNear(entry.parent.Position, homeMap, 2)
                 : homeMap.Center;
 
             SkipUtility.SkipTo(pawn, drop, homeMap);
 
-            RemoveHediffSafe(pawn, Defs.HediffDefOf.RR_VoidWarmth);
-            RemoveHediffSafe(pawn, Defs.HediffDefOf.RR_VoidFascination);
-            RemoveHediffSafe(pawn, Defs.HediffDefOf.RR_MeldGrowth);
+            Utilities.HediffUtility.RemoveHediffOfDefFrom(Defs.HediffDefOf.RR_VoidWarmth, pawn);
+            Utilities.HediffUtility.RemoveHediffOfDefFrom(Defs.HediffDefOf.RR_VoidFascination, pawn);
+            Utilities.HediffUtility.RemoveHediffOfDefFrom(Defs.HediffDefOf.RR_MeldGrowth, pawn);
             // saturation deliberately lingers and drains outside
 
-            if (!forced)
+            if (forced)
+            {
+                Messages.Message(
+                    $"{pawn.LabelShort} was pulled from the void maze early!",
+                    new LookTargets(pawn),
+                    MessageTypeDefOf.NeutralEvent);
+            }
+            else
             {
                 int count = Rand.RangeInclusive(5, 15);
                 var glut = ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidGluttonium);
@@ -177,19 +183,12 @@ namespace RimRound.Comps
                     new LookTargets(pawn),
                     MessageTypeDefOf.PositiveEvent);
             }
-            else
-            {
-                Messages.Message(
-                    $"{pawn.LabelShort} was pulled from the void maze early!",
-                    new LookTargets(pawn),
-                    MessageTypeDefOf.NeutralEvent);
-            }
 
-            if (source != null)
+            if (entry != null)
             {
-                source.pawnsInMaze.Remove(pawn);
-                if (source.pawnsInMaze.Count == 0)
-                    source.CloseMaze();
+                entry.pawnsInMaze.Remove(pawn);
+                if (entry.pawnsInMaze.Count == 0)
+                    entry.CloseMaze();
             }
         }
 
@@ -199,15 +198,10 @@ namespace RimRound.Comps
             if (Props.exitPortal || mazeMap == null || !parent.Spawned)
                 return;
 
-            if (!parent.IsHashIntervalTick(120))
+            if (!parent.IsHashIntervalTick(CheckIntervalTicks))
                 return;
 
-            for (int i = pawnsInMaze.Count - 1; i >= 0; i--)
-            {
-                Pawn p = pawnsInMaze[i];
-                if (p == null || p.Dead || p.Map != mazeMap)
-                    pawnsInMaze.RemoveAt(i);
-            }
+            pawnsInMaze.RemoveAll(p => p == null || p.Dead || p.Map != mazeMap);
 
             if (pawnsInMaze.Count == 0)
             {
@@ -222,13 +216,13 @@ namespace RimRound.Comps
                 ReturnEveryone();
         }
 
-        void ReturnEveryone()
+        void ReturnEveryone(Map homeMapOverride = null)
         {
             for (int i = pawnsInMaze.Count - 1; i >= 0; i--)
             {
                 Pawn p = pawnsInMaze[i];
                 if (p != null && !p.Dead && p.Map == mazeMap)
-                    ReturnPawn(p, forced: true);
+                    ReturnPawn(p, forced: true, homeMapOverride);
                 else
                     pawnsInMaze.RemoveAt(i);
             }
@@ -253,8 +247,9 @@ namespace RimRound.Comps
         public override void PostDestroy(DestroyMode mode, Map previousMap)
         {
             base.PostDestroy(mode, previousMap);
+            // parent.MapHeld is already null here, so hand the returning pawns the old map
             if (!Props.exitPortal)
-                ReturnEveryone();
+                ReturnEveryone(previousMap);
         }
 
         void TrySpawnMeldBeast(Map map)
@@ -263,12 +258,8 @@ namespace RimRound.Comps
             if (target == null || !ModsConfig.AnomalyActive)
                 return;
 
-            int nearby = 0;
-            foreach (Pawn p in map.mapPawns.AllPawns)
-            {
-                if (FleshbeastUtility.IsFleshBeast(p.kindDef) && p.Position.DistanceTo(target.Position) < 30f)
-                    nearby++;
-            }
+            int nearby = map.mapPawns.AllPawns.Count(p =>
+                FleshbeastUtility.IsFleshBeast(p.kindDef) && p.Position.DistanceTo(target.Position) < 30f);
             if (nearby >= Props.maxMeldBeasts)
                 return;
 
@@ -283,13 +274,6 @@ namespace RimRound.Comps
             nextSpawnTick = Find.TickManager.TicksGame + Props.respawnIntervalTicks;
         }
 
-        static void RemoveHediffSafe(Pawn pawn, HediffDef def)
-        {
-            var h = pawn.health?.hediffSet?.GetFirstHediffOfDef(def);
-            if (h != null)
-                pawn.health.RemoveHediff(h);
-        }
-
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
             foreach (Gizmo g in base.CompGetGizmosExtra())
@@ -302,10 +286,7 @@ namespace RimRound.Comps
                     defaultLabel = "Close Portal",
                     defaultDesc = "Pull all pawns out of the void maze early.",
                     icon = ContentFinder<Texture2D>.Get("UI/Commands/Cancel"),
-                    action = delegate
-                    {
-                        ReturnEveryone();
-                    }
+                    action = () => ReturnEveryone()
                 };
             }
         }

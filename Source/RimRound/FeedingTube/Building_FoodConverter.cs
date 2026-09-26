@@ -31,7 +31,7 @@ namespace RimRound.FeedingTube
         protected override void Tick()
         {
             base.Tick();
-            if (!IsHashIntervalTick(30))
+            if (!FeedingTubeUtility.IsHashIntervalTick(CheckIntervalTicks))
                 return;
             if (powerComp != null && !powerComp.PowerOn)
                 return;
@@ -109,17 +109,13 @@ namespace RimRound.FeedingTube
             Scribe_Values.Look(ref exportingToLegacy, "exportingToLegacy", true);
         }
 
-        private bool IsHashIntervalTick(int interval)
-        {
-            return Find.TickManager.TicksGame % interval == 0;
-        }
-
         PipeSystem.CompResource vnpeComp;
         FoodNetTrader_ThingComp foodTrader;
         CompPowerTrader powerComp;
 
         bool exportingToLegacy = true;
 
+        const int CheckIntervalTicks = 30;
         const float pasteDensity = 1f;
         const float mealsPerConversion = 0.5f;
         const float pasteNutrition = 0.9f;

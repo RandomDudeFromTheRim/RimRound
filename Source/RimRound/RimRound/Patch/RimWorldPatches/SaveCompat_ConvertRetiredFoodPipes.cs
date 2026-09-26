@@ -33,15 +33,10 @@ namespace RimRound.Patch.RimWorldPatches
                 return;
             }
 
-            var candidates = new List<Thing>();
-            foreach (Thing thing in map.listerThings.AllThings)
-            {
-                if (thing != null && thing.def != null &&
-                    retiredPipeDefs.Contains(thing.def.defName))
-                {
-                    candidates.Add(thing);
-                }
-            }
+            // copy first: converting despawns things out of the lister
+            List<Thing> candidates = map.listerThings.AllThings
+                .Where(thing => thing?.def != null && retiredPipeDefs.Contains(thing.def.defName))
+                .ToList();
 
             if (candidates.Count == 0)
             {
@@ -60,45 +55,27 @@ namespace RimRound.Patch.RimWorldPatches
 
         private static void ConvertToSteel(Map map, Thing pipe)
         {
-            if (map == null || pipe == null || !pipe.Spawned)
+            if (!pipe.Spawned)
             {
                 return;
             }
 
-            // Refund a fair amount of steel as loose items based on the pipe's
-            // build cost (item form, not mineable): the retired pipes cost
-            // 5 / 10 / 15 steel depending on type.
-            int steelAmount = GetSteelRefund(pipe.def);
-            Map mapHeld = pipe.MapHeld ?? map;
+            // Refund the steel the pipe cost to build as loose items (the retired
+            // pipes cost 5 / 10 / 15 steel depending on type).
+            Thing steel = ThingMaker.MakeThing(ThingDefOf.Steel);
+            steel.stackCount = GetSteelRefund(pipe.def);
             IntVec3 pos = pipe.Position;
-            if (mapHeld != null && pos.InBounds(mapHeld) && steelAmount > 0)
-            {
-                Thing steel = ThingMaker.MakeThing(ThingDefOf.Steel);
-                steel.stackCount = steelAmount;
-                GenSpawn.Spawn(steel, pos, mapHeld);
-            }
 
-            pipe.DeSpawn(DestroyMode.Vanish);
             pipe.Destroy(DestroyMode.Vanish);
+            GenSpawn.Spawn(steel, pos, map);
         }
 
         private static int GetSteelRefund(ThingDef def)
         {
-            if (def == null || def.costList == null)
-            {
-                return 1;
-            }
-
-            int refund = 1;
-            ThingDefCountClass steelCost =
-                def.costList.FirstOrDefault((ThingDefCountClass c) =>
-                    c != null && c.thingDef == ThingDefOf.Steel);
-            if (steelCost != null)
-            {
-                refund = Mathf.Max(1, steelCost.count);
-            }
-
-            return refund;
+            int steelCost = def.costList?
+                .FirstOrDefault(c => c?.thingDef == ThingDefOf.Steel)?
+                .count ?? 0;
+            return Mathf.Max(1, steelCost);
         }
     }
 }

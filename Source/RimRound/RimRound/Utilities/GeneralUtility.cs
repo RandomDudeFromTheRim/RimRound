@@ -30,6 +30,12 @@ namespace RimRound.Utilities
             return t as Pawn;
         }
 
+        /// <summary>The intimacy need added by sex mods (e.g. RJW), or null if none is loaded.</summary>
+        public static Need IntimacyNeed(this Pawn pawn)
+        {
+            return pawn?.needs?.AllNeeds?.FirstOrDefault(n => n.def.defName == "SEX_Intimacy");
+        }
+
         public static bool IsNotNull(object o) 
         {
             return !(o is null);

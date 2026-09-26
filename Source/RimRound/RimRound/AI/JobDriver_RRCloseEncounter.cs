@@ -37,14 +37,9 @@ namespace RimRound.AI
                     target.stances?.stunner?.StunFor(DurationTicks, pawn, addBattleLog: false, showMote: true);
                     FleckMaker.ThrowSmoke(target.DrawPos, target.Map, 1.2f);
                 },
-                tickAction = delegate
-                {
-                    var target = TargetThingA as Pawn;
-                    if (target != null && target.Spawned)
-                        pawn.rotationTracker.Face(target.DrawPos);
-                }
+                // FailOnDespawnedOrNull above already ends the job if the target leaves
+                tickAction = () => pawn.rotationTracker.Face(TargetThingA.DrawPos)
             };
-            press.AddFailCondition(() => !(((Pawn)TargetThingA)?.Spawned ?? false));
             yield return press;
         }
     }

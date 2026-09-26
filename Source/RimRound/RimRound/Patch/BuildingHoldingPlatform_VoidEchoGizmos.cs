@@ -1,5 +1,4 @@
-using RimRound.AI;
-using RimRound.Hediffs;
+using RimRound.Utilities;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +20,7 @@ namespace RimRound.Patch
             if (!ModsConfig.AnomalyActive || __instance.Faction != Faction.OfPlayer)
                 return;
 
-            var echo = __instance.HeldPawn;
-            var vigor = echo?.health?.hediffSet?.GetFirstHediffOfDef(HediffDef.Named("RR_VoidEchoVigor")) as Hediff_VoidEchoVigor;
+            var vigor = VoidMazeUtility.VoidEchoVigor(__instance.HeldPawn);
             if (vigor == null)
                 return;
 
@@ -67,23 +65,16 @@ namespace RimRound.Patch
             __result = list;
         }
 
+        const float MaxCandidateDistance = 60f;
+
+        /// <summary>The closest free adult colonist within range, if any.</summary>
         static Pawn FindCandidate(Building_HoldingPlatform platform)
         {
-            Map map = platform.Map;
-            Pawn best = null;
-            float bestDist = 1e6f;
-            foreach (Pawn p in map.mapPawns.FreeColonistsSpawned)
-            {
-                if (p.Drafted || p.InMentalState || p.DevelopmentalStage != DevelopmentalStage.Adult)
-                    continue;
-                float d = p.Position.DistanceTo(platform.Position);
-                if (d < bestDist && d < 60f)
-                {
-                    bestDist = d;
-                    best = p;
-                }
-            }
-            return best;
+            return platform.Map.mapPawns.FreeColonistsSpawned
+                .Where(p => !p.Drafted && !p.InMentalState && p.DevelopmentalStage == DevelopmentalStage.Adult
+                    && p.Position.DistanceTo(platform.Position) < MaxCandidateDistance)
+                .OrderBy(p => p.Position.DistanceTo(platform.Position))
+                .FirstOrDefault();
         }
     }
 }

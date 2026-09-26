@@ -1,5 +1,6 @@
 using RimRound.Hediffs;
 using RimRound.Utilities;
+using System.Linq;
 using UnityEngine;
 using RimWorld;
 using Verse;
@@ -25,10 +26,10 @@ namespace RimRound.Comps
     {
         public CompProperties_MeldFleshbeast Props => (CompProperties_MeldFleshbeast)props;
 
-        static bool MergeTargetStillReachable(Pawn pawn, Pawn target)
+        bool MergeTargetStillReachable(Pawn pawn, Pawn target)
         {
             return target != null && target.Spawned && !target.Dead && target.Map == pawn.Map
-                && (pawn.Position - target.Position).LengthHorizontal <= 6f;
+                && (pawn.Position - target.Position).LengthHorizontal <= Props.mergeRange;
         }
 
         /// <summary>Fraction of the pawn's body parts not covered by any worn apparel.</summary>
@@ -41,29 +42,22 @@ namespace RimRound.Comps
             if (parts.Count == 0)
                 return 1f;
 
-            var worn = p.apparel.WornApparel;
-            int uncovered = 0;
-            foreach (BodyPartRecord part in parts)
-            {
-                bool covered = false;
-                for (int i = 0; i < worn.Count && !covered; i++)
-                {
-                    var groups = worn[i].def.apparel?.bodyPartGroups;
-                    if (groups == null)
-                        continue;
-                    for (int j = 0; j < groups.Count; j++)
-                    {
-                        if (part.groups.Contains(groups[j]))
-                        {
-                            covered = true;
-                            break;
-                        }
-                    }
-                }
-                if (!covered)
-                    uncovered++;
-            }
+            int uncovered = parts.Count(part => !part.groups.Any(g => p.apparel.BodyPartGroupIsCovered(g)));
             return uncovered / (float)parts.Count;
+        }
+
+        /// <summary>Sum of every body part's max HP, scaled by the pawn's health scale.</summary>
+        static float MaxBodyHitPoints(Pawn p)
+        {
+            return p.RaceProps.body.AllParts.Sum(part => (float)part.def.hitPoints) * p.HealthScale;
+        }
+
+        /// <summary>Stuns the pawn unless it is already stunned, so an existing longer stun isn't cut short.</summary>
+        static void StunIfNotStunned(Pawn p, int ticks, Pawn instigator)
+        {
+            var stunner = p.stances?.stunner;
+            if (stunner != null && !stunner.Stunned)
+                stunner.StunFor(ticks, instigator, addBattleLog: false, showMote: false);
         }
 
         int tickCounter = 0;
@@ -110,8 +104,7 @@ namespace RimRound.Comps
             if (tickCounter < Props.tickInterval)
             {
                 // Keep target immobilized between merge ticks
-                if (!(target.stances?.stunner?.Stunned ?? true))
-                    target.stances?.stunner?.StunFor(Props.tickInterval + 60, pawn, addBattleLog: false, showMote: false);
+                StunIfNotStunned(target, Props.tickInterval + 60, pawn);
                 return;
             }
             tickCounter = 0;
@@ -148,12 +141,7 @@ namespace RimRound.Comps
 
             // Self-damage as exchange: a fixed fraction of total body HP per merge,
             // so any fleshbeast dies after roughly ten merges regardless of species
-            float maxBodyHP = 0f;
-            foreach (BodyPartRecord part in pawn.RaceProps.body.AllParts)
-                maxBodyHP += part.def.hitPoints;
-            maxBodyHP *= pawn.HealthScale;
-
-            float selfDamage = Mathf.Max(1f, maxBodyHP * 0.10f * Props.selfDamageMultiplier);
+            float selfDamage = Mathf.Max(1f, MaxBodyHitPoints(pawn) * 0.10f * Props.selfDamageMultiplier);
             pawn.TakeDamage(new DamageInfo(
                 DamageDefOf.Cut,
                 selfDamage,
@@ -164,8 +152,8 @@ namespace RimRound.Comps
 
             // The beast braces itself against its victim for the next pulse —
             // a true grapple that only ends when one of them drops
-            if (!pawn.Downed && !(pawn.stances?.stunner?.Stunned ?? true))
-                pawn.stances?.stunner?.StunFor(Props.tickInterval + 60, pawn, addBattleLog: false, showMote: false);
+            if (!pawn.Downed)
+                StunIfNotStunned(pawn, Props.tickInterval + 60, pawn);
 
             if (lastTarget != target)
             {
