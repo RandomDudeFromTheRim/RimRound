@@ -1,6 +1,8 @@
 using HarmonyLib;
 using System.Reflection;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using RimRound.FeedingTube;
 using RimRound.FeedingTube.Patches;
 using RimWorld;
@@ -66,12 +68,56 @@ namespace RimRound.FeedOther
             MethodInfo postureMethod = AccessTools.Method(typeof(PawnUtility),
                 nameof(PawnUtility.GetPosture));
 
-            if (capacityMethod != null)
-                harmony.Unpatch(capacityMethod, HarmonyPatchType.Prefix, "RRHarmony");
-            if (downedMethod != null)
-                harmony.Unpatch(downedMethod, HarmonyPatchType.Postfix, "RRHarmony");
-            if (postureMethod != null)
-                harmony.Unpatch(postureMethod, HarmonyPatchType.Transpiler, "RRHarmony");
+            // Only the hoverchair parts: RimRound's perk capacity postfix and the
+            // heavy-pawn downed pose postfix live on the same methods and stay.
+            UnpatchRimRound(harmony, capacityMethod,
+                "PawnCapacityUtility_CalculateCapacityLevel_AlterForPerksAndSooter",
+                HarmonyPatchType.Prefix);
+            UnpatchRimRound(harmony, downedMethod,
+                "Pawn_HealthTracker_MakeDowned_DropHoverChair");
+            UnpatchRimRound(harmony, postureMethod,
+                "PawnUtility_GetPosture_AlterPostureIfWearingScooter");
+        }
+
+        /// <summary>
+        /// Removes one of RimRound's own (RRHarmony) patches from original,
+        /// identified by its patch class, leaving any other RimRound patches on
+        /// the same method in place. Unpatch(original, type, "RRHarmony") would
+        /// strip all of them.
+        /// </summary>
+        private static void UnpatchRimRound(
+            Harmony harmony,
+            MethodBase original,
+            string patchClassName,
+            HarmonyPatchType? onlyType = null)
+        {
+            if (original == null)
+                return;
+
+            HarmonyLib.Patches info = Harmony.GetPatchInfo(original);
+            if (info == null)
+                return;
+
+            List<HarmonyLib.Patch> matching = new List<HarmonyLib.Patch>();
+            void Collect(IEnumerable<HarmonyLib.Patch> patches, HarmonyPatchType type)
+            {
+                if (onlyType.HasValue && onlyType.Value != type)
+                    return;
+                matching.AddRange(patches.Where(delegate(HarmonyLib.Patch patch)
+                {
+                    return patch.owner == "RRHarmony" &&
+                        patch.PatchMethod != null &&
+                        patch.PatchMethod.DeclaringType != null &&
+                        patch.PatchMethod.DeclaringType.Name == patchClassName;
+                }));
+            }
+            Collect(info.Prefixes, HarmonyPatchType.Prefix);
+            Collect(info.Postfixes, HarmonyPatchType.Postfix);
+            Collect(info.Transpilers, HarmonyPatchType.Transpiler);
+            Collect(info.Finalizers, HarmonyPatchType.Finalizer);
+
+            foreach (HarmonyLib.Patch patch in matching)
+                harmony.Unpatch(original, patch.PatchMethod);
         }
 
         private static void RemoveFaultyBaseNotRegalBedPatches(Harmony harmony)
@@ -92,21 +138,12 @@ namespace RimRound.FeedOther
                 nameof(Building_Bed.GetFootSlotPos),
                 new Type[] { typeof(int) });
 
-            if (slotCount != null)
-                harmony.Unpatch(
-                    slotCount,
-                    HarmonyPatchType.Prefix,
-                    "RRHarmony");
-            if (sleepingSlot != null)
-                harmony.Unpatch(
-                    sleepingSlot,
-                    HarmonyPatchType.Postfix,
-                    "RRHarmony");
-            if (footSlot != null)
-                harmony.Unpatch(
-                    footSlot,
-                    HarmonyPatchType.Postfix,
-                    "RRHarmony");
+            UnpatchRimRound(harmony, slotCount,
+                "Building_Bed_SleepingSlotsCount_AdjustForRRBed");
+            UnpatchRimRound(harmony, sleepingSlot,
+                "Building_Bed_GetSleepingSlotPos_AdjustForRRBed");
+            UnpatchRimRound(harmony, footSlot,
+                "Building_Bed_GetFootSlotPos_AdjustForRRBed");
         }
 
         private static void InstallHoverchairRenderPatch(Harmony harmony)
@@ -301,21 +338,18 @@ namespace RimRound.FeedOther
                 nameof(ThingListGroupHelper.Includes),
                 new Type[] { typeof(ThingRequestGroup), typeof(ThingDef) });
 
-            if (spawnedFoodScan != null)
-                harmony.Unpatch(spawnedFoodScan, HarmonyPatchType.Prefix, "RRHarmony");
-            if (makeNewToils != null)
-                harmony.Unpatch(makeNewToils, HarmonyPatchType.Prefix, "RRHarmony");
-            if (prepareToIngest != null)
-                harmony.Unpatch(prepareToIngest, HarmonyPatchType.Prefix, "RRHarmony");
-            if (reserve != null)
-                harmony.Unpatch(reserve, HarmonyPatchType.Prefix, "RRHarmony");
-            if (getFinalIngestibleDef != null)
-                harmony.Unpatch(
-                    getFinalIngestibleDef,
-                    HarmonyPatchType.Prefix,
-                    "RRHarmony");
-            if (includes != null)
-                harmony.Unpatch(includes, HarmonyPatchType.Postfix, "RRHarmony");
+            UnpatchRimRound(harmony, spawnedFoodScan,
+                nameof(FoodUtility_SpawnedFoodSearchInnerScan_ChangeValidatorToAccountForFoodFaucet));
+            UnpatchRimRound(harmony, makeNewToils,
+                nameof(JobDriver_Ingest_MakeNewToils_AddExceptionForFaucet));
+            UnpatchRimRound(harmony, prepareToIngest,
+                nameof(JobDriver_Ingest_PrepareToIngestToils_AddFaucetSupport));
+            UnpatchRimRound(harmony, reserve,
+                nameof(JobDriver_Ingest_TryMakePreToilReservations_AddExceptionForFaucet));
+            UnpatchRimRound(harmony, getFinalIngestibleDef,
+                nameof(FoodUtility_GetFinalIngestibleDef_AddFoodFaucetSupport));
+            UnpatchRimRound(harmony, includes,
+                nameof(ThingListGroupHelper_Includes_AddSupportForFaucet));
         }
     }
 }

@@ -16,13 +16,28 @@
   <!-- Pawn-operated dispensers now create a genuine vanilla nutrient-paste
        meal. The extra component is dormant on ordinary paste and stores exact
        nutrition/density only on meals drawn from Food Network v2. -->
-  <Operation Class="PatchOperationAdd">
+  <!-- Conditional: patches run before def inheritance, so the paste meal may
+       not have a <comps> node of its own to add to. -->
+  <Operation Class="PatchOperationConditional">
     <xpath>Defs/ThingDef[defName="MealNutrientPaste"]/comps</xpath>
-    <value>
-      <li Class="RimRound.FeedOther.CompProperties_FoodNetworkServing">
-        <compClass>RimRound.FeedOther.CompFoodNetworkServing</compClass>
-      </li>
-    </value>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[defName="MealNutrientPaste"]/comps</xpath>
+      <value>
+        <li Class="RimRound.FeedOther.CompProperties_FoodNetworkServing">
+          <compClass>RimRound.FeedOther.CompFoodNetworkServing</compClass>
+        </li>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[defName="MealNutrientPaste"]</xpath>
+      <value>
+        <comps>
+          <li Class="RimRound.FeedOther.CompProperties_FoodNetworkServing">
+            <compClass>RimRound.FeedOther.CompFoodNetworkServing</compClass>
+          </li>
+        </comps>
+      </value>
+    </nomatch>
   </Operation>
 
   <!-- Keep the XL hopper's accepted contents identical to RimWorld's vanilla

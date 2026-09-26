@@ -297,8 +297,11 @@ namespace RimRound.AI
             if (!initiator.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
                 return false;
 
-            // Must be lactating
-            var lactating = initiator.health?.hediffSet?.GetFirstHediffOfDef(HediffDef.Named("Lactating"));
+            // Must be lactating. Lactating is a Biotech hediff: null without Biotech,
+            // where HediffDef.Named would log an error on every interaction check.
+            if (RimWorld.HediffDefOf.Lactating == null)
+                return false;
+            var lactating = initiator.health?.hediffSet?.GetFirstHediffOfDef(RimWorld.HediffDefOf.Lactating);
             if (lactating is null || lactating.Severity < 0.1f)
                 return false;
 
