@@ -3,34 +3,65 @@ using RimRound.Comps;
 using RimRound.Utilities;
 using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace RimRound.Patch
 {
-    public static class CorpseBloatManager
+    /// <summary>
+    /// Runs the bloat that replaces an awoken unnatural corpse's killing blow:
+    /// the corpse swells up and bursts into flesh, and its victim survives
+    /// downed, heavier and afflicted. A saved game component, ticked by the game,
+    /// so it survives save/load and behaves the same paused or at any speed.
+    /// </summary>
+    public class CorpseBloatManager : GameComponent
     {
-        private struct BloatState
+        private class BloatState : IExposable
         {
             public Pawn attacker;
             public Pawn victim;
             public int startTick;
+            // where to burst if the corpse vanishes before the swell completes
+            public Map map;
+            public IntVec3 lastPosition = IntVec3.Invalid;
+
+            public void ExposeData()
+            {
+                Scribe_References.Look(ref attacker, "attacker");
+                Scribe_References.Look(ref victim, "victim");
+                Scribe_Values.Look(ref startTick, "startTick");
+                Scribe_References.Look(ref map, "map");
+                Scribe_Values.Look(ref lastPosition, "lastPosition", IntVec3.Invalid);
+            }
         }
 
-        private static List<BloatState> activeBloats = new List<BloatState>();
+        // Vanilla makes the awoken corpse vanish 600 ticks after its "kill", so
+        // burst just before that.
+        const int SwellDurationTicks = 590;
+
+        private List<BloatState> activeBloats = new List<BloatState>();
+
+        public CorpseBloatManager(Game game)
+        {
+        }
 
         public static void StartBloat(Pawn attacker, Pawn victim)
         {
-            if (Find.TickManager == null) return;
+            Current.Game?.GetComponent<CorpseBloatManager>()?.Start(attacker, victim);
+        }
 
-            for (int i = 0; i < activeBloats.Count; i++)
-                if (activeBloats[i].attacker == attacker)
-                    return;
+        private void Start(Pawn attacker, Pawn victim)
+        {
+            if (activeBloats.Any(b => b.attacker == attacker))
+                return;
 
             activeBloats.Add(new BloatState
             {
                 attacker = attacker,
                 victim = victim,
-                startTick = Find.TickManager.TicksGame
+                startTick = Find.TickManager.TicksGame,
+                map = attacker.MapHeld,
+                lastPosition = attacker.PositionHeld
             });
 
             if (victim?.stances?.stunner != null)
@@ -42,41 +73,26 @@ namespace RimRound.Patch
                 MessageTypeDefOf.ThreatBig);
         }
 
-        public static void Tick()
+        public override void GameComponentTick()
         {
-            if (activeBloats.Count == 0) return;
-            if (Find.TickManager == null) return;
+            if (activeBloats.Count == 0)
+                return;
 
             int curTick = Find.TickManager.TicksGame;
-            int swellDuration = 600;
-
             for (int i = activeBloats.Count - 1; i >= 0; i--)
             {
-                var state = activeBloats[i];
-                int elapsed = curTick - state.startTick;
-
-                if (state.attacker == null || state.attacker.Dead)
+                BloatState state = activeBloats[i];
+                if (state.attacker != null && state.attacker.Spawned)
                 {
-                    activeBloats.RemoveAt(i);
-                    continue;
+                    state.map = state.attacker.Map;
+                    state.lastPosition = state.attacker.Position;
                 }
 
-                if (elapsed < swellDuration)
+                int elapsed = curTick - state.startTick;
+                if (elapsed < SwellDurationTicks)
                 {
-                    if (elapsed % 10 == 0 && elapsed > 0)
-                    {
-                        var attacker = state.attacker;
-
-                        var sudden = attacker.health?.hediffSet?.GetFirstHediffOfDef(RimRound.Defs.HediffDefOf.RimRound_SuddenWeightGain);
-                        if (sudden != null)
-                            sudden.Severity += 0.15f;
-                        else if (attacker.health != null)
-                        {
-                            var s = HediffMaker.MakeHediff(RimRound.Defs.HediffDefOf.RimRound_SuddenWeightGain, attacker);
-                            s.Severity = 0.15f;
-                            attacker.health.AddHediff(s);
-                        }
-                    }
+                    if (elapsed > 0 && elapsed % 10 == 0 && state.attacker != null && !state.attacker.Dead)
+                        Swell(state.attacker);
                 }
                 else
                 {
@@ -86,13 +102,40 @@ namespace RimRound.Patch
             }
         }
 
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Collections.Look(ref activeBloats, "activeBloats", LookMode.Deep);
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (activeBloats == null)
+                    activeBloats = new List<BloatState>();
+                activeBloats.RemoveAll(b => b == null || b.map == null);
+            }
+        }
+
+        static void Swell(Pawn attacker)
+        {
+            var sudden = attacker.health?.hediffSet?.GetFirstHediffOfDef(RimRound.Defs.HediffDefOf.RimRound_SuddenWeightGain);
+            if (sudden != null)
+                sudden.Severity += 0.15f;
+            else if (attacker.health != null)
+            {
+                var s = HediffMaker.MakeHediff(RimRound.Defs.HediffDefOf.RimRound_SuddenWeightGain, attacker);
+                s.Severity = 0.15f;
+                attacker.health.AddHediff(s);
+            }
+        }
+
         static void Explode(BloatState state)
         {
-            Map map = state.attacker?.Map;
-            IntVec3 pos = state.attacker?.Position ?? IntVec3.Invalid;
-            if (map == null || !pos.IsValid) return;
+            // burst where the corpse last stood, even if it has already vanished
+            Map map = state.map;
+            IntVec3 pos = state.lastPosition;
+            if (map == null || !pos.InBounds(map)) return;
 
-            state.attacker.Kill(null);
+            if (state.attacker != null && !state.attacker.Dead && !state.attacker.Destroyed)
+                state.attacker.Kill(null);
 
             // Spawn blob wall cluster (roughly 4x4 lump)
             foreach (IntVec3 cell in GenRadial.RadialCellsAround(pos, 2.5f, useCenter: true))
@@ -185,13 +228,4 @@ namespace RimRound.Patch
         }
     }
 
-    [HarmonyPatch(typeof(Root_Play))]
-    [HarmonyPatch(nameof(Root_Play.Update))]
-    public class CorpseBlast_GlobalTick
-    {
-        static void Postfix()
-        {
-            CorpseBloatManager.Tick();
-        }
-    }
 }

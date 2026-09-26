@@ -427,7 +427,6 @@
     <Compile Include="RimRound\Comps\Buildings\CompProperties_VoidPortal.cs" />
     <Compile Include="RimRound\Comps\Buildings\Comp_VoidPortal.cs" />
     <Compile Include="RimRound\Comps\Map\CompProperties_GluttoniumRadiation.cs" />
-    <Compile Include="RimRound\Comps\Map\Comp_CorpseBloat.cs" />
     <Compile Include="RimRound\Comps\Map\Comp_GluttoniumRadiation.cs" />
     <Compile Include="RimRound\Comps\Map\MapComp_GluttoniumRadiation.cs" />
     <Compile Include="RimRound\Comps\Map\Comp_MeldFleshbeast.cs" />

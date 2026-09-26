@@ -346,7 +346,7 @@ namespace RimRound.AI
             {
                 float kilos = milkNutrition * 0.6f;
                 recFN.activeWeightGainRequests.Enqueue(
-                    new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, 6000, false));
+                    new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, 0, false));
             }
 
             var recAtt = recipient.TryGetComp<ThingComp_PawnAttitude>();

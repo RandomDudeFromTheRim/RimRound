@@ -36,7 +36,7 @@ namespace RimRound.Hediffs
                 return;
 
             fndComp.activeWeightGainRequests.Enqueue(
-                new WeightGainRequest(kilosToAdd, Find.TickManager.TicksGame + 10, 18000, false));
+                new WeightGainRequest(kilosToAdd, Find.TickManager.TicksGame + 10, 0, false));
 
             this.Severity -= 0.001f;
         }

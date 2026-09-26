@@ -77,7 +77,7 @@ namespace RimRound.Comps
             float kilos = nutrition * 0.5f;
 
             recFN.activeWeightGainRequests.Enqueue(
-                new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, 6000, false));
+                new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, 0, false));
 
             food.Destroy(DestroyMode.Vanish);
 
