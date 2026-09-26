@@ -78,6 +78,10 @@
       <li>
         <minSeverity>0</minSeverity>
         <label>flowing</label>
+        <!-- the void sustains it: held on a platform it neither starves, tires nor breaks -->
+        <hungerRateFactor>0</hungerRateFactor>
+        <restFallFactor>0</restFallFactor>
+        <blocksMentalBreaks>true</blocksMentalBreaks>
         <capMods>
           <li><capacity>Moving</capacity><offset>0.5</offset></li>
           <li><capacity>Manipulation</capacity><offset>0.25</offset></li>

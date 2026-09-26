@@ -419,6 +419,7 @@
     <Compile Include="RimRound\Hediffs\Hediff_VoidMilkBuzz.cs" />
     <Compile Include="RimRound\Comps\Buildings\Comp_SharedFeedingMenu.cs" />
     <Compile Include="RimRound\Patch\BuildingHoldingPlatform_VoidEchoGizmos.cs" />
+    <Compile Include="RimRound\Patch\HoldingPlatformTarget_CaptureVoidEchoes.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_VoidSaturation.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_VoidFascination.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_VoidEchoVigor.cs" />

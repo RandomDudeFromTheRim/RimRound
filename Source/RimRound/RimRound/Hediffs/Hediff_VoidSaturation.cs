@@ -82,6 +82,11 @@ namespace RimRound.Hediffs
 
             echo.Name = new NameSingle("Echo of " + pawn.LabelShort);
 
+            // Downed entities die outright 50-90% of the time at typical threat
+            // points; an echo should go down so it can be captured.
+            echo.health.overrideDeathOnDownedChance = 0f;
+            WarnIfEchoesCantBeCaptured(echo);
+
             // the echo wears the pawn's own age — no fountain of youth in the void
             echo.ageTracker.AgeBiologicalTicks = pawn.ageTracker.AgeBiologicalTicks;
             echo.ageTracker.AgeChronologicalTicks = pawn.ageTracker.AgeChronologicalTicks;
@@ -110,6 +115,16 @@ namespace RimRound.Hediffs
                 $"{pawn.LabelShort}'s excess mass tears free and takes shape — a void echo stalks the flesh halls!",
                 new LookTargets(echo),
                 MessageTypeDefOf.ThreatBig);
+        }
+
+        static bool warnedUncapturable;
+
+        static void WarnIfEchoesCantBeCaptured(Pawn echo)
+        {
+            if (warnedUncapturable || !ModsConfig.AnomalyActive || echo.TryGetComp<CompHoldingPlatformTarget>() != null)
+                return;
+            warnedUncapturable = true;
+            Log.Warning($"[RimRound] {echo.def.defName} has no CompHoldingPlatformTarget, so void echoes can't be captured on holding platforms.");
         }
 
         public override string TipStringExtra
