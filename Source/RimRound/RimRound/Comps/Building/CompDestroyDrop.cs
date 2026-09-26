@@ -27,7 +27,8 @@ namespace RimRound.Comps
 
             if (previousMap == null) return;
 
-            ThingDef dropDef = ThingDef.Named(Props.dropDefName);
+            // silent: e.g. Meat_Twisted only exists with Anomaly
+            ThingDef dropDef = DefDatabase<ThingDef>.GetNamedSilentFail(Props.dropDefName);
             if (dropDef == null) return;
 
             int count = Props.dropCount;

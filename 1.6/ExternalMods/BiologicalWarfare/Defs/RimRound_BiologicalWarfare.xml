@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- RimRound x Ushanka's Biological Warfare: meld aerosol as a BW chemical
+     weapon family (gas, shell, barrel, vent, grenade and missile launchers).
+     Loaded only when BW is active, via loadFolders.xml IfModActive (by packageId).
+     The old version lived in a PatchOperationFindMod keyed on the packageId, but
+     FindMod matches mod display names, so it never applied. -->
+  <USH_BW.CombatDiseaseDef ParentName="USH_CombatDiseaseBase">
+    <defName>RR_BW_MeldAerosol</defName>
+    <label>meld aerosol</label>
+    <giveHediffDef>RR_MeldAerosol</giveHediffDef>
+    <diseaseType>Chemical</diseaseType>
+    <colorInt>(180, 60, 160, 255)</colorInt>
+    <thingDefsToColor>
+      <li>RR_BW_MeldAerosolGas</li>
+      <li>RR_BW_MeldAerosolShell</li>
+      <li>RR_BW_MeldAerosolBarrel</li>
+      <li>RR_BW_MeldAerosolVent</li>
+      <li>RR_BW_MeldAerosolMissileLauncherTurret</li>
+      <li>RR_BW_MeldAerosolShellBullet</li>
+      <li>RR_BW_MeldAerosolMissileBullet</li>
+      <li>RR_BW_MeldAerosolGrenadeBullet</li>
+      <li>RR_BW_MeldAerosolGrenadeLauncher</li>
+      <li>RR_BW_MeldConcentrate</li>
+    </thingDefsToColor>
+    <thingDefsToColorIcons>
+      <li>RR_BW_MeldAerosolMissileLauncher</li>
+    </thingDefsToColorIcons>
+    <thingDefsToFormat>
+      <li>RR_BW_MeldAerosolMissileLauncher</li>
+    </thingDefsToFormat>
+    <researchProjectsDefsToFormat>
+      <li>RR_BW_MeldAerosolOperationRes</li>
+    </researchProjectsDefsToFormat>
+  </USH_BW.CombatDiseaseDef>
+  <ThingDef ParentName="USH_VirusPathogenBase">
+    <defName>RR_BW_MeldConcentrate</defName>
+    <label>meld concentrate</label>
+    <description>A synthesized chemical concentrate of gluttonium and anomalous flesh. It feeds meld aerosol gas weapons, whose clouds force rapid fleshmass growth and weight gain in anyone caught inside.</description>
+    <descriptionHyperlinks>
+      <HediffDef>RR_MeldAerosol</HediffDef>
+    </descriptionHyperlinks>
+    <statBases>
+      <MarketValue>8</MarketValue>
+    </statBases>
+    <!-- the pathogen base rots away in 0.75 days; this chemical keeps -->
+    <comps Inherit="False"/>
+  </ThingDef>
+  <RecipeDef>
+    <defName>RR_BW_Make_MeldConcentrate</defName>
+    <label>synthesize meld concentrate</label>
+    <description>Synthesize meld concentrate from gluttonium (and anomalous meat, with Anomaly).</description>
+    <jobString>Synthesizing meld concentrate.</jobString>
+    <workAmount>800</workAmount>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_CookMeal</soundWorking>
+    <recipeUsers>
+      <li>DrugLab</li>
+    </recipeUsers>
+    <researchPrerequisite>RR_BW_MeldAerosolOperationRes</researchPrerequisite>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>RR_Gluttonium</li>
+          </thingDefs>
+        </filter>
+        <count>2</count>
+      </li>
+      <li MayRequire="Ludeon.RimWorld.Anomaly">
+        <filter>
+          <thingDefs>
+            <li>Meat_Twisted</li>
+          </thingDefs>
+        </filter>
+        <count>3</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>RR_Gluttonium</li>
+        <li MayRequire="Ludeon.RimWorld.Anomaly">Meat_Twisted</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <RR_BW_MeldConcentrate>5</RR_BW_MeldConcentrate>
+    </products>
+    <skillRequirements>
+      <Intellectual>4</Intellectual>
+    </skillRequirements>
+  </RecipeDef>
+  <DamageDef ParentName="USH_BiologicalDamageBase">
+    <defName>RR_BW_MeldAerosolDamage</defName>
+  </DamageDef>
+  <ThingDef ParentName="USH_BiologicalGasBase">
+    <defName>RR_BW_MeldAerosolGas</defName>
+    <label>meld aerosol gas</label>
+    <description>A thick cloud of weaponized meld aerosol that forces fleshmass growth in living tissue.</description>
+    <!-- Vanilla Graphic_Gas instead of BW's GraphicPathogenGas: the meld gas rendered
+         invisible with the latter in testing. PathogenGas is a Gas, so it draws fine. -->
+    <graphicData>
+      <texPath>Things/Gas/ThickSmoke</texPath>
+      <drawSize>2.6</drawSize>
+      <graphicClass>Graphic_Gas</graphicClass>
+      <shaderType>Transparent</shaderType>
+    </graphicData>
+    <modExtensions>
+      <li Class="USH_BW.PathogenGasExtension">
+        <HediffDef>RR_MeldAerosol</HediffDef>
+        <SeverityPerPeriod>0.08</SeverityPerPeriod>
+        <PeriodTicks>60</PeriodTicks>
+      </li>
+    </modExtensions>
+  </ThingDef>
+  <ThingDef ParentName="USH_BiologicalShellBase">
+    <defName>RR_BW_MeldAerosolShell</defName>
+    <label>meld aerosol gas shell</label>
+    <description>A mortar shell filled with meld aerosol gas. Explodes into a cloud of fleshmass-inducing bioaerosol. Victims gain significant weight before transforming into fleshbeasts.</description>
+    <comps>
+      <li Class="CompProperties_Explosive">
+        <explosiveRadius>5.5</explosiveRadius>
+        <postExplosionSpawnChance>1</postExplosionSpawnChance>
+        <postExplosionSpawnThingCount>1</postExplosionSpawnThingCount>
+        <explosiveDamageType>RR_BW_MeldAerosolDamage</explosiveDamageType>
+        <postExplosionSpawnThingDef>RR_BW_MeldAerosolGas</postExplosionSpawnThingDef>
+        <explosiveExpandPerStackcount>0.4</explosiveExpandPerStackcount>
+        <startWickHitPointsPercent>0.7</startWickHitPointsPercent>
+        <wickTicks>30~60</wickTicks>
+      </li>
+    </comps>
+    <projectileWhenLoaded>RR_BW_MeldAerosolShellBullet</projectileWhenLoaded>
+    <costList>
+      <RR_BW_MeldConcentrate>3</RR_BW_MeldConcentrate>
+    </costList>
+    <recipeMaker>
+      <researchPrerequisites>
+        <li>RR_BW_MeldAerosolOperationRes</li>
+      </researchPrerequisites>
+    </recipeMaker>
+  </ThingDef>
+  <ThingDef ParentName="USH_BiologicalShellBulletBase">
+    <defName>RR_BW_MeldAerosolShellBullet</defName>
+    <label>meld aerosol gas shell</label>
+    <projectile>
+      <damageDef>RR_BW_MeldAerosolDamage</damageDef>
+      <postExplosionSpawnThingDef>RR_BW_MeldAerosolGas</postExplosionSpawnThingDef>
+    </projectile>
+  </ThingDef>
+  <ThingDef ParentName="USH_BiologicalBarrelBase">
+    <defName>RR_BW_MeldAerosolBarrel</defName>
+    <label>meld aerosol gas barrel</label>
+    <description>A barrel full of meld aerosol gas. Ignites when shot, covering the area in fleshmass-inducing bioaerosol.</description>
+    <comps>
+      <li Class="CompProperties_Explosive">
+        <explosiveRadius>6.9</explosiveRadius>
+        <postExplosionSpawnChance>1</postExplosionSpawnChance>
+        <postExplosionSpawnThingCount>1</postExplosionSpawnThingCount>
+        <explosiveDamageType>RR_BW_MeldAerosolDamage</explosiveDamageType>
+        <postExplosionSpawnThingDef>RR_BW_MeldAerosolGas</postExplosionSpawnThingDef>
+        <startWickHitPointsPercent>0.95</startWickHitPointsPercent>
+        <wickTicks>30~60</wickTicks>
+      </li>
+    </comps>
+    <costList>
+      <RR_BW_MeldConcentrate>15</RR_BW_MeldConcentrate>
+    </costList>
+    <researchPrerequisites>
+      <li>RR_BW_MeldAerosolOperationRes</li>
+    </researchPrerequisites>
+    <specialDisplayRadius>6.9</specialDisplayRadius>
+  </ThingDef>
+  <ThingDef ParentName="USH_BiologicalVentBase">
+    <defName>RR_BW_MeldAerosolVent</defName>
+    <label>meld aerosol gas vent</label>
+    <description>A wall-mounted vent that releases weaponized meld aerosol gas into the targeted area.</description>
+    <comps>
+      <li Class="CompProperties_Refuelable">
+        <fuelConsumptionRate>0</fuelConsumptionRate>
+        <initialFuelPercent>1</initialFuelPercent>
+        <consumeFuelOnlyWhenUsed>true</consumeFuelOnlyWhenUsed>
+        <targetFuelLevelConfigurable>true</targetFuelLevelConfigurable>
+        <showAllowAutoRefuelToggle>true</showAllowAutoRefuelToggle>
+        <initialConfigurableTargetFuelLevel>5</initialConfigurableTargetFuelLevel>
+        <fuelCapacity>10</fuelCapacity>
+        <fuelFilter>
+          <thingDefs>
+            <li>RR_BW_MeldConcentrate</li>
+          </thingDefs>
+        </fuelFilter>
+      </li>
+      <li Class="USH_BW.CompProperties_GasVent">
+        <gasDef>RR_BW_MeldAerosolGas</gasDef>
+        <pathogensPerCell>0.1</pathogensPerCell>
+        <activeTicks>1</activeTicks>
+        <ticksToActivate>60</ticksToActivate>
+        <jobString>activate</jobString>
+        <onCooldownString>cooling off</onCooldownString>
+        <cooldownTicks>2500</cooldownTicks>
+        <cooldownFleck>FlashRed</cooldownFleck>
+        <cooldownFleckSpawnIntervalTicks>60</cooldownFleckSpawnIntervalTicks>
+        <cooldownFleckScale>0.7</cooldownFleckScale>
+        <cooldownPreventsRefuel>false</cooldownPreventsRefuel>
+        <activateTexPath>UI/Gizmo/ActivateGasVent</activateTexPath>
+        <soundActivate>USH_GasVentActivated</soundActivate>
+        <targetingParameters>
+          <canTargetBuildings>false</canTargetBuildings>
+          <canTargetAnimals>false</canTargetAnimals>
+          <canTargetMechs>false</canTargetMechs>
+          <onlyTargetControlledPawns>true</onlyTargetControlledPawns>
+        </targetingParameters>
+      </li>
+    </comps>
+    <costList>
+      <RR_BW_MeldConcentrate>10</RR_BW_MeldConcentrate>
+    </costList>
+    <researchPrerequisites>
+      <li>RR_BW_MeldAerosolOperationRes</li>
+    </researchPrerequisites>
+  </ThingDef>
+  <ThingDef ParentName="USH_BiologicalGrenadeLauncherBase">
+    <defName>RR_BW_MeldAerosolGrenadeLauncher</defName>
+    <label>meld aerosol gas grenade launcher</label>
+    <description>A grenade launcher that fires meld aerosol gas grenades, covering a medium area with fleshmass-inducing bioaerosol.</description>
+    <costList>
+      <RR_BW_MeldConcentrate>65</RR_BW_MeldConcentrate>
+    </costList>
+    <verbs>
+      <li>
+        <verbClass>Verb_Shoot</verbClass>
+        <hasStandardCommand>true</hasStandardCommand>
+        <defaultProjectile>RR_BW_MeldAerosolGrenadeBullet</defaultProjectile>
+        <warmupTime>3.5</warmupTime>
+        <range>23.9</range>
+        <forcedMissRadius>2.9</forcedMissRadius>
+        <burstShotCount>1</burstShotCount>
+        <soundCast>USH_GasLauncherShot</soundCast>
+        <soundCastTail>GunTail_Medium</soundCastTail>
+        <muzzleFlashScale>14</muzzleFlashScale>
+        <targetParams>
+          <canTargetLocations>true</canTargetLocations>
+        </targetParams>
+      </li>
+    </verbs>
+    <recipeMaker>
+      <researchPrerequisites>
+        <li>RR_BW_MeldAerosolOperationRes</li>
+      </researchPrerequisites>
+    </recipeMaker>
+  </ThingDef>
+  <ThingDef ParentName="USH_BiologicalGrenadeBulletBase">
+    <defName>RR_BW_MeldAerosolGrenadeBullet</defName>
+    <projectile>
+      <damageDef>RR_BW_MeldAerosolDamage</damageDef>
+      <postExplosionSpawnThingDef>RR_BW_MeldAerosolGas</postExplosionSpawnThingDef>
+      <explosionRadius>4.9</explosionRadius>
+    </projectile>
+  </ThingDef>
+  <ThingDef ParentName="USH_BiologicalMissileLauncherBase">
+    <defName>RR_BW_MeldAerosolMissileLauncher</defName>
+    <label>meld aerosol gas missile launcher</label>
+    <description>A military-grade missile launcher that fires a barrage of meld aerosol rockets covering a large area with fleshmass-inducing bioaerosol. Extremely effective against sieges.</description>
+    <comps>
+      <li Class="CompProperties_Explosive">
+        <wickTicks>240</wickTicks>
+        <explosiveRadius>6.9</explosiveRadius>
+        <postExplosionSpawnChance>1</postExplosionSpawnChance>
+        <postExplosionSpawnThingCount>1</postExplosionSpawnThingCount>
+        <explosiveDamageType>RR_BW_MeldAerosolDamage</explosiveDamageType>
+        <postExplosionSpawnThingDef>RR_BW_MeldAerosolGas</postExplosionSpawnThingDef>
+        <chanceNeverExplodeFromDamage>0.8</chanceNeverExplodeFromDamage>
+      </li>
+      <li Class="CompProperties_Refuelable">
+        <fuelLabel>Missiles</fuelLabel>
+        <fuelGizmoLabel>Missiles</fuelGizmoLabel>
+        <outOfFuelMessage>Missing missiles</outOfFuelMessage>
+        <drawOutOfFuelOverlay>false</drawOutOfFuelOverlay>
+        <showAllowAutoRefuelToggle>true</showAllowAutoRefuelToggle>
+        <fuelFilter>
+          <thingDefs>
+            <li>RR_BW_MeldConcentrate</li>
+          </thingDefs>
+        </fuelFilter>
+        <fuelCapacity>7</fuelCapacity>
+        <fuelMultiplier>0.23335</fuelMultiplier>
+        <initialFuelPercent>1</initialFuelPercent>
+        <autoRefuelPercent>1</autoRefuelPercent>
+        <showFuelGizmo>true</showFuelGizmo>
+        <minimumFueledThreshold>7</minimumFueledThreshold>
+        <factorByDifficulty>false</factorByDifficulty>
+        <consumeFuelOnlyWhenUsed>true</consumeFuelOnlyWhenUsed>
+      </li>
+      <li Class="CompProperties_Interactable">
+        <compClass>CompInteractableRocketswarmLauncher</compClass>
+        <activeTicks>1</activeTicks>
+        <cooldownTicks>7500</cooldownTicks>
+        <ticksToActivate>60</ticksToActivate>
+        <jobString>activate</jobString>
+        <onCooldownString>cooling off</onCooldownString>
+        <cooldownFleck>FlashRed</cooldownFleck>
+        <cooldownFleckSpawnIntervalTicks>60</cooldownFleckSpawnIntervalTicks>
+        <cooldownFleckScale>0.7</cooldownFleckScale>
+        <cooldownPreventsRefuel>true</cooldownPreventsRefuel>
+        <activateTexPath>UI/Commands/ActivateTurret</activateTexPath>
+        <targetingParameters>
+          <canTargetBuildings>false</canTargetBuildings>
+          <canTargetAnimals>false</canTargetAnimals>
+          <canTargetMechs>false</canTargetMechs>
+          <onlyTargetControlledPawns>true</onlyTargetControlledPawns>
+        </targetingParameters>
+      </li>
+    </comps>
+    <building>
+      <turretGunDef>RR_BW_MeldAerosolMissileLauncherTurret</turretGunDef>
+    </building>
+    <costList>
+      <RR_BW_MeldConcentrate>45</RR_BW_MeldConcentrate>
+    </costList>
+    <researchPrerequisites>
+      <li>RR_BW_MeldAerosolOperationRes</li>
+    </researchPrerequisites>
+  </ThingDef>
+  <ThingDef ParentName="USH_BiologicalMissileLauncherTurretBase">
+    <defName>RR_BW_MeldAerosolMissileLauncherTurret</defName>
+    <verbs>
+      <li>
+        <verbClass>Verb_Shoot</verbClass>
+        <defaultProjectile>RR_BW_MeldAerosolMissileBullet</defaultProjectile>
+        <range>80.9</range>
+        <consumeFuelPerShot>1</consumeFuelPerShot>
+        <ticksBetweenBurstShots>12</ticksBetweenBurstShots>
+        <burstShotCount>7</burstShotCount>
+        <forcedMissRadius>9</forcedMissRadius>
+        <forcedMissEvenDispersal>true</forcedMissEvenDispersal>
+        <requireLineOfSight>false</requireLineOfSight>
+        <minRange>29.9</minRange>
+        <targetParams>
+          <canTargetPawns>false</canTargetPawns>
+          <canTargetLocations>true</canTargetLocations>
+          <canTargetBuildings>false</canTargetBuildings>
+        </targetParams>
+        <soundCast>USH_MissileLauncherFired</soundCast>
+        <soundCastTail>GunTail_Heavy</soundCastTail>
+        <muzzleFlashScale>14</muzzleFlashScale>
+      </li>
+    </verbs>
+  </ThingDef>
+  <ThingDef ParentName="USH_BiologicalMissileBulletBase">
+    <defName>RR_BW_MeldAerosolMissileBullet</defName>
+    <projectile>
+      <damageDef>RR_BW_MeldAerosolDamage</damageDef>
+      <postExplosionSpawnThingDef>RR_BW_MeldAerosolGas</postExplosionSpawnThingDef>
+    </projectile>
+  </ThingDef>
+  <ResearchProjectDef ParentName="USH_DiseaseOprationResBase">
+    <defName>RR_BW_MeldAerosolOperationRes</defName>
+    <label>meld aerosol weapons</label>
+    <description>Develop weaponized meld aerosol delivery systems using the Biological Warfare framework. Craft mortar shells, grenade launchers, explosive barrels, wall vents, and missile launchers that saturate the target area with fleshmass-inducing bioaerosol. Victims gain significant weight before potentially transforming into fleshbeasts. Requires gluttonium and anomalous meat.</description>
+    <baseCost>1500</baseCost>
+    <prerequisites>
+      <li>RR_Research_MeldAerosol</li>
+    </prerequisites>
+    <researchViewX>1.50</researchViewX>
+    <researchViewY>4.60</researchViewY>
+  </ResearchProjectDef>
+</Defs>

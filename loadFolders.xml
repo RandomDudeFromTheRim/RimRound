@@ -77,5 +77,6 @@
 		<li IfModActive="zal.ursine">1.5/ExternalMods/UrsineOfTheRimSupport</li>
 		<li IfModActive="Razar1.Mal0Race">1.5/ExternalMods/MaloRaceSupport</li>
 		<li IfModActive="JPT.speakup">1.6/SpeakUp</li>
+		<li IfModActive="Ushanka.BiologicalWarfare">1.6/ExternalMods/BiologicalWarfare</li>
 	</v1.6>	
 </loadFolders>

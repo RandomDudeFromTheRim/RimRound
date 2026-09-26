@@ -57,9 +57,13 @@ underground, 30 °C, breathable warm-flesh floor):
   give less weight; a swarm accumulates.
 - **Meld Aerosol** — craftable shells/grenades apply `RR_MeldAerosol` (pink RR gas);
   at max progression a pawn **detonates** into `RR_BlobWall` clusters that drop
-  `RR_VoidGluttonium`.
-- **Bloated unnatural corpses** — killed unnatural corpses balloon ~810 kg then explode
-  into blob walls, leaving void gluttonium; witnesses react by weight opinion.
+  `RR_VoidGluttonium`. Twisted meat is an extra ingredient only with Anomaly.
+- **Biological Warfare integration** (Ushanka's Biological Warfare) — meld aerosol as a
+  BW chemical weapon family: meld concentrate (drug lab), gas shells, barrels, vents,
+  grenade and missile launchers. Loaded via `loadFolders.xml` only when BW is active.
+- **Bloated unnatural corpses** — when an awoken unnatural corpse goes for the kill, it
+  swells instead and bursts into blob walls and void gluttonium; its victim survives,
+  downed and permanently heavier. Witnesses react by weight opinion.
 - **Blob walls** (`RR_BlobWall` / mineable `RR_BlobWallMineable`) + **Feast of the Void**.
 - **Obelisk mutation** — Twisted Obelisk mutations add weight + gluttonium exposure;
   weight-likers get a mood boost.

@@ -28,7 +28,7 @@
     </recipeMaker>
     <costList>
       <RR_Gluttonium>20</RR_Gluttonium>
-      <Meat_Twisted>15</Meat_Twisted>
+      <Meat_Twisted MayRequire="Ludeon.RimWorld.Anomaly">15</Meat_Twisted>
     </costList>
   </ThingDef>
 
@@ -73,7 +73,7 @@
     </recipeMaker>
     <costList>
       <RR_Gluttonium>5</RR_Gluttonium>
-      <Meat_Twisted>5</Meat_Twisted>
+      <Meat_Twisted MayRequire="Ludeon.RimWorld.Anomaly">5</Meat_Twisted>
     </costList>
   </ThingDef>
 
@@ -93,10 +93,10 @@
     <researchPrerequisite>RR_Research_MeldAerosol</researchPrerequisite>
     <ingredients>
       <li><filter><thingDefs><li>RR_Gluttonium</li></thingDefs></filter><count>20</count></li>
-      <li><filter><thingDefs><li>Meat_Twisted</li></thingDefs></filter><count>15</count></li>
+      <li MayRequire="Ludeon.RimWorld.Anomaly"><filter><thingDefs><li>Meat_Twisted</li></thingDefs></filter><count>15</count></li>
     </ingredients>
     <fixedIngredientFilter>
-      <thingDefs><li>RR_Gluttonium</li><li>Meat_Twisted</li></thingDefs>
+      <thingDefs><li>RR_Gluttonium</li><li MayRequire="Ludeon.RimWorld.Anomaly">Meat_Twisted</li></thingDefs>
     </fixedIngredientFilter>
     <products><RR_MeldAerosolShell>1</RR_MeldAerosolShell></products>
     <skillRequirements><Crafting>6</Crafting></skillRequirements>
@@ -117,10 +117,10 @@
     <researchPrerequisite>RR_Research_MeldAerosol</researchPrerequisite>
     <ingredients>
       <li><filter><thingDefs><li>RR_Gluttonium</li></thingDefs></filter><count>5</count></li>
-      <li><filter><thingDefs><li>Meat_Twisted</li></thingDefs></filter><count>5</count></li>
+      <li MayRequire="Ludeon.RimWorld.Anomaly"><filter><thingDefs><li>Meat_Twisted</li></thingDefs></filter><count>5</count></li>
     </ingredients>
     <fixedIngredientFilter>
-      <thingDefs><li>RR_Gluttonium</li><li>Meat_Twisted</li></thingDefs>
+      <thingDefs><li>RR_Gluttonium</li><li MayRequire="Ludeon.RimWorld.Anomaly">Meat_Twisted</li></thingDefs>
     </fixedIngredientFilter>
     <products><RR_MeldAerosolGrenade>1</RR_MeldAerosolGrenade></products>
     <skillRequirements><Crafting>4</Crafting></skillRequirements>
