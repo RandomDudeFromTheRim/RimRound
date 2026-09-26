@@ -38,7 +38,8 @@ namespace RimRound.AI
                 {
                     var partner = (Pawn)TargetThingB;
                     if (partner.CurJobDef != Defs.JobDefOf.RR_SharedFeeding &&
-                        partner.jobs != null && !partner.Drafted)
+                        partner.jobs != null && !partner.Drafted &&
+                        partner.CanReserve(job.targetA, 2) && partner.CanReserve(pawn))
                     {
                         Job partnerJob = JobMaker.MakeJob(Defs.JobDefOf.RR_SharedFeeding, job.targetA, pawn);
                         partner.jobs.StartJob(partnerJob, JobCondition.InterruptForced);

@@ -66,6 +66,40 @@ namespace RimRound.Hediffs
             }
         }
 
+        public override void Notify_PawnDied(DamageInfo? dinfo, Hediff culprit = null)
+        {
+            base.Notify_PawnDied(dinfo, culprit);
+            ReleaseOnLoss();
+        }
+
+        public override void PostRemoved()
+        {
+            base.PostRemoved();
+            ReleaseOnLoss();
+        }
+
+        /// <summary>
+        /// A dead or cured echo can't hold anyone. Swallowed pawns live in the world
+        /// pawn list, so without this they would be lost for good.
+        /// </summary>
+        void ReleaseOnLoss()
+        {
+            if (contained.Count == 0 || pawn == null)
+                return;
+
+            Map map = pawn.MapHeld ?? pawn.prevMap;
+            if (map == null)
+                return;
+
+            IntVec3 at = pawn.PositionHeld.InBounds(map) ? pawn.PositionHeld : map.Center;
+            int count = contained.Count;
+            ReleaseAll(at, map);
+            Messages.Message(
+                $"The void echo's hold breaks — {count} swallowed {(count == 1 ? "pawn spills" : "pawns spill")} back out.",
+                new TargetInfo(at, map),
+                MessageTypeDefOf.NeutralEvent);
+        }
+
         public override void Tick()
         {
             base.Tick();

@@ -12,20 +12,31 @@ namespace RimRound.Comps
     {
         public static void PatchAll(HarmonyLib.Harmony harmony)
         {
-            // Patch the mutator obelisk to add weight gain on mutation
-            ModCompatibilityUtility.TryPatch(
-                harmony,
-                new ModPatchInfo("Ludeon.RimWorld", "RimWorld.CompObelisk_Mutator", "TryMutate", MethodType.Normal),
-                new PatchCollection
-                {
-                    postfix = typeof(Comp_ObeliskIntegration).GetMethod("Postfix_MutatorMutate", BindingFlags.Static | BindingFlags.NonPublic)
-                });
+            // The mutator obelisk is Anomaly content but its class ships with the base
+            // game, so patch it directly. (ModCompatibilityUtility.TryPatch matches mods
+            // by display name, which "Ludeon.RimWorld" never was.)
+            if (!ModsConfig.AnomalyActive)
+                return;
+
+            MethodInfo doMutation = AccessTools.Method(typeof(CompObelisk_Mutator), "DoMutation");
+            if (doMutation is null)
+            {
+                Log.Warning("[RimRound] CompObelisk_Mutator.DoMutation not found; mutator obelisk weight gain is disabled.");
+                return;
+            }
+
+            harmony.Patch(doMutation, postfix: new HarmonyMethod(typeof(Comp_ObeliskIntegration), nameof(Postfix_DoMutation)));
         }
 
-        static void Postfix_MutatorMutate(Pawn target)
+        /// <summary>The mutator obelisk's fleshmass lung/stomach mutations also pile on flesh.</summary>
+        static void Postfix_DoMutation(Pawn pawn, HediffDef mutation)
         {
-            if (target is null || !target.RaceProps.Humanlike)
+            // DoMutation also runs when the mutation fails; only react to a real one
+            if (pawn is null || mutation is null || !pawn.RaceProps.Humanlike ||
+                pawn.health?.hediffSet?.HasHediff(mutation) != true)
                 return;
+
+            Pawn target = pawn;
 
             var weight = target.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight);
             if (weight is null)

@@ -48,7 +48,7 @@ namespace RimRound.Patch
 
             int demonicDevourmentLevel = comp.perkLevels.PerkToLevels?["RR_Demonic_Devourment_Title"] ?? 0;
             int breakneckbuffetLevel = comp.perkLevels.PerkToLevels?["RR_Breakneck_Buffet_Title"] ?? 0;
-            int makesAllTheRulesLevel = comp.perkLevels.PerkToLevels?["RR_Breakneck_Buffet_Title"] ?? 0;
+            int makesAllTheRulesLevel = comp.perkLevels.PerkToLevels?["RR_MakesAllTheRules_Title"] ?? 0;
             int heavyRevianLevel = comp.perkLevels.PerkToLevels?["RR_HeavyRevian_Title"] ?? 0;
 
             if (makesAllTheRulesLevel > 0)
@@ -72,7 +72,7 @@ namespace RimRound.Patch
                 demonicDevourmentLevel * 0.1f + 
                 breakneckbuffetLevel * 0.25f + 
                 makesAllTheRulesLevel * 1.5f + 
-                heavyRevianLevel + 0.5f;
+                heavyRevianLevel * 0.5f;
         }
 
         private static void AlterManipulationForPerks(ref float __result, HediffSet diffSet, PawnCapacityDef capacity, List<PawnCapacityUtility.CapacityImpactor> impactors) 

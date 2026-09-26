@@ -85,6 +85,8 @@ namespace RimRound.Comps
                 return;
             }
 
+            // Generate off the main thread like vanilla's labyrinth, but only move
+            // the pawn and camera in the callback, which runs back on the main thread.
             generating = true;
             LongEventHandler.QueueLongEvent(delegate
             {
@@ -96,10 +98,10 @@ namespace RimRound.Comps
                 {
                     generating = false;
                 }
-                EnterMaze(caster);
             }, "GeneratingLabyrinth", doAsynchronously: true,
                GameAndMapInitExceptionHandlers.ErrorWhileGeneratingMap,
-               showExtraUIInfo: false, forceHideUI: false, callback: null);
+               showExtraUIInfo: false, forceHideUI: false,
+               callback: () => EnterMaze(caster));
         }
 
         void GenerateMaze()
@@ -120,7 +122,8 @@ namespace RimRound.Comps
 
         void EnterMaze(Pawn pawn)
         {
-            if (mazeMap == null)
+            // the pawn may have died or left while the maze was generating
+            if (mazeMap == null || pawn == null || pawn.Dead || !pawn.Spawned)
                 return;
 
             IntVec3 drop = CellFinder.RandomClosewalkCellNear(mazeMap.Center, mazeMap, 4);

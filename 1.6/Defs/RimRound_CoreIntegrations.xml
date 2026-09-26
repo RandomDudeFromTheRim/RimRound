@@ -27,13 +27,19 @@
   </ThoughtDef>
 
   <!-- Intimacy series: shared feeding sessions -->
+  <!-- Social memory: without a duration a memory expires the tick after it's gained. -->
   <ThoughtDef>
     <defName>RR_SharedFeedingThought</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>2</durationDays>
+    <stackLimit>3</stackLimit>
+    <stackLimitForSameOtherPawn>1</stackLimitForSameOtherPawn>
     <stages>
       <li>
         <label>shared a feeding session</label>
         <description>We just... ate, together, for hours. I can still feel their warmth against my side.</description>
         <baseMoodEffect>8</baseMoodEffect>
+        <baseOpinionOffset>12</baseOpinionOffset>
       </li>
     </stages>
   </ThoughtDef>

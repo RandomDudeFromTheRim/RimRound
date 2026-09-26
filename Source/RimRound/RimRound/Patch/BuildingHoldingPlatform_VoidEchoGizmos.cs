@@ -71,8 +71,9 @@ namespace RimRound.Patch
         static Pawn FindCandidate(Building_HoldingPlatform platform)
         {
             return platform.Map.mapPawns.FreeColonistsSpawned
-                .Where(p => !p.Drafted && !p.InMentalState && p.DevelopmentalStage == DevelopmentalStage.Adult
-                    && p.Position.DistanceTo(platform.Position) < MaxCandidateDistance)
+                .Where(p => !p.Drafted && !p.InMentalState && !p.Downed && p.DevelopmentalStage == DevelopmentalStage.Adult
+                    && p.Position.DistanceTo(platform.Position) < MaxCandidateDistance
+                    && p.CanReserveAndReach(platform, PathEndMode.ClosestTouch, Danger.Some))
                 .OrderBy(p => p.Position.DistanceTo(platform.Position))
                 .FirstOrDefault();
         }

@@ -16,6 +16,8 @@
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <selectable>true</selectable>
+    <!-- needed for Comp_VoidPortal.CompTick: maze timeout, fleshbeast spawns, cleanup -->
+    <tickerType>Normal</tickerType>
     <statBases>
       <MaxHitPoints>500</MaxHitPoints>
       <Flammability>0</Flammability>
