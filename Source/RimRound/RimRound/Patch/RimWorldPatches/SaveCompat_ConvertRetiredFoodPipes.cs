@@ -2,18 +2,17 @@ using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 
 namespace RimRound.Patch.RimWorldPatches
 {
     /// <summary>
     /// One-time save-repair for saves that still contain the old VPE-style
-    /// food pipes (RR_FoodPipe / RR_UndergroundFoodPipe). Those defs were
-    /// retired during the network consolidation; their defs are still provided
-    /// (hidden, non-buildable) purely so old saves deserialize. After a map
-    /// finishes loading, any leftover instances are converted into the steel
-    /// they cost to build, so the player can continue the save cleanly.
+    /// food pipes (RR_FoodPipe / RR_UndergroundFoodPipe / RR_FoodValve). Those
+    /// defs were retired during the network consolidation; their defs are still
+    /// provided (hidden, non-buildable) purely so old saves deserialize. After a
+    /// map finishes loading, any leftover instances are converted back into the
+    /// materials they cost to build, so the player can continue the save cleanly.
     /// </summary>
     [HarmonyPatch(typeof(Map), "FinalizeLoading")]
     internal static class Map_FinalizeLoading_ConvertRetiredFoodPipes
@@ -23,6 +22,7 @@ namespace RimRound.Patch.RimWorldPatches
             {
                 "RR_FoodPipe",
                 "RR_UndergroundFoodPipe",
+                "RR_FoodValve",
             };
 
         private static void Postfix(Map __instance)
@@ -45,37 +45,43 @@ namespace RimRound.Patch.RimWorldPatches
 
             foreach (Thing pipe in candidates)
             {
-                ConvertToSteel(map, pipe);
+                RefundAndRemove(map, pipe);
             }
 
             Log.Message(
                 "[RimRound] Converted " + candidates.Count +
-                " retired food pipe(s) into steel for save compatibility.");
+                " retired food pipe(s) back into their build materials for save compatibility.");
         }
 
-        private static void ConvertToSteel(Map map, Thing pipe)
+        /// <summary>Removes the pipe and drops its full build cost (e.g. 15 steel + 1 component for the valve).</summary>
+        private static void RefundAndRemove(Map map, Thing pipe)
         {
             if (!pipe.Spawned)
             {
                 return;
             }
 
-            // Refund the steel the pipe cost to build as loose items (the retired
-            // pipes cost 5 / 10 / 15 steel depending on type).
-            Thing steel = ThingMaker.MakeThing(ThingDefOf.Steel);
-            steel.stackCount = GetSteelRefund(pipe.def);
             IntVec3 pos = pipe.Position;
-
             pipe.Destroy(DestroyMode.Vanish);
-            GenSpawn.Spawn(steel, pos, map);
-        }
 
-        private static int GetSteelRefund(ThingDef def)
-        {
-            int steelCost = def.costList?
-                .FirstOrDefault(c => c?.thingDef == ThingDefOf.Steel)?
-                .count ?? 0;
-            return Mathf.Max(1, steelCost);
+            List<ThingDefCountClass> cost = pipe.def.costList;
+            if (cost.NullOrEmpty())
+            {
+                GenPlace.TryPlaceThing(ThingMaker.MakeThing(ThingDefOf.Steel), pos, map, ThingPlaceMode.Near);
+                return;
+            }
+
+            foreach (ThingDefCountClass entry in cost)
+            {
+                if (entry?.thingDef == null || entry.count <= 0)
+                {
+                    continue;
+                }
+
+                Thing refund = ThingMaker.MakeThing(entry.thingDef);
+                refund.stackCount = entry.count;
+                GenPlace.TryPlaceThing(refund, pos, map, ThingPlaceMode.Near);
+            }
         }
     }
 }

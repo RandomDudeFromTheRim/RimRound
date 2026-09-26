@@ -5,7 +5,7 @@
   <ThingDef ParentName="BuildingBase">
     <defName>RR_FoodConverter</defName>
     <label>food converter</label>
-    <description>Converts nutrient paste from the paste pipe network into dense liquid food for the feeding tube system — or back. Can adjust the nutrition density of the output. Place it so it touches both a nutrient paste pipe and a food tube line.</description>
+    <description>Converts nutrient paste from the paste pipe network into liquid food for the feeding tube system — or back; toggle the direction with its gizmo. Converted paste enters at plain-food density; run it through a nutrient distillery to condense it. Place it so it touches both a nutrient paste pipe and a food pipe.</description>
     <thingClass>RimRound.FeedingTube.Building_FoodConverter</thingClass>
     <drawerType>MapMeshAndRealTime</drawerType>
     <graphicData>

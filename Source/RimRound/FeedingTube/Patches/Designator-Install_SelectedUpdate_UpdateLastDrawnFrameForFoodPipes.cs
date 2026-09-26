@@ -23,7 +23,7 @@ namespace RimRound.FeedingTube.Patches
 
             IEnumerable<CompProperties> validCompProps =
                 from x in thingDef.comps
-                where x.compClass == typeof(FoodTransmitter_ThingComp)
+                where x.compClass != null && typeof(FoodTransmitter_ThingComp).IsAssignableFrom(x.compClass)
                 select x;
 
             if (validCompProps.Count() > 0)

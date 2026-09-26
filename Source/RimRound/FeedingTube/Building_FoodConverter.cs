@@ -10,9 +10,11 @@ namespace RimRound.FeedingTube
 {
     /// <summary>
     /// Bridges the VNPE (Vanilla Nutrient Paste Expanded) VEF pipe network with
-    /// RimRound's density-aware liter FoodNet. It registers as a member of BOTH
-    /// the VNPE paste net (via PipeSystem.CompResource) and a RimRound legacy
-    /// FoodNet (via FoodNetTrader_ThingComp), and moves resource between the two.
+    /// RimRound's density-aware liquid food network. It is a member of BOTH the
+    /// VNPE paste net (via PipeSystem.CompResource) and the food conduit network
+    /// (via FoodNetTrader_ThingComp), and moves resource between the two. The
+    /// food side goes through FoodNetworkAccess, so it works with the legacy
+    /// FoodNet and with Food Network v2 alike.
     ///
     /// Paste is treated like RimRound's FoodProcessor does for plain food (density
     /// 1), so it can be further condensed by a Nutrient Distillery if desired.
@@ -40,42 +42,43 @@ namespace RimRound.FeedingTube
 
         private void ProcessConversion()
         {
-            PipeSystem.PipeNet vnpeNet = vnpeComp?.PipeNet;
-            FoodNet foodNet = foodTrader?.FoodNet;
-
-            if (vnpeNet == null || foodNet == null)
+            PipeSystem.PipeNet pasteNet = vnpeComp?.PipeNet;
+            if (pasteNet == null || foodTrader == null)
                 return;
 
             if (exportingToLegacy)
-            {
-                // VNPE paste -> RimRound liters at plain-food density (1).
-                if (vnpeNet.Stored < mealsPerConversion || foodNet.StorageCapacity - foodNet.Stored <= FeedingTubeUtility.MinRQ)
-                    return;
-
-                vnpeNet.DrawAmongStorage(mealsPerConversion, out float drawnMeals, null, drawFromOverflow: true);
-                if (drawnMeals <= 0f)
-                    return;
-
-                float nutrition = drawnMeals * pasteNutrition;
-                foodNet.Fill(nutrition, pasteDensity);
-            }
+                PasteToLiquid(pasteNet, FoodNetworkAccess.Current);
             else
-            {
-                // RimRound liters -> VNPE paste.
-                float ftnRatio = Mathf.Max(foodNet.FullnessToNutritionRatio, 0.0001f);
-                if (foodNet.Stored <= FeedingTubeUtility.MinRQ || vnpeNet.AvailableCapacity <= FeedingTubeUtility.MinRQ)
-                    return;
+                LiquidToPaste(pasteNet, FoodNetworkAccess.Current);
+        }
 
-                float litersToDrain = Mathf.Min(mealsPerConversion * pasteNutrition / ftnRatio, foodNet.Stored);
-                float amountLeft = foodNet.Drain(litersToDrain);
-                float litersDrained = litersToDrain - amountLeft;
-                if (litersDrained <= 0f)
-                    return;
+        /// <summary>VNPE paste -> liquid food at plain-food density (1).</summary>
+        private void PasteToLiquid(PipeSystem.PipeNet pasteNet, IFoodNetworkAccess foodNet)
+        {
+            // check for room first, so no paste is drawn that can't be stored
+            float fullnessNeeded = mealsPerConversion * pasteNutrition * pasteDensity;
+            if (pasteNet.Stored < mealsPerConversion || foodNet.FreeCapacity(this) < fullnessNeeded)
+                return;
 
-                // nutrition = liters * NutritionToFullnessRatio = liters / ftnRatio; then back to paste meals
-                float nutrition = litersDrained / ftnRatio;
-                vnpeNet.DistributeAmongStorage(nutrition / pasteNutrition, out _);
-            }
+            pasteNet.DrawAmongStorage(mealsPerConversion, out float drawnMeals, null, drawFromOverflow: true);
+            if (drawnMeals <= 0f)
+                return;
+
+            if (!foodNet.TryStore(this, drawnMeals * pasteNutrition, pasteDensity))
+                pasteNet.DistributeAmongStorage(drawnMeals, out _); // put it back rather than lose it
+        }
+
+        /// <summary>Liquid food -> VNPE paste.</summary>
+        private void LiquidToPaste(PipeSystem.PipeNet pasteNet, IFoodNetworkAccess foodNet)
+        {
+            if (pasteNet.AvailableCapacity < mealsPerConversion)
+                return;
+
+            float nutrition = foodNet.DrawNutrition(this, mealsPerConversion * pasteNutrition);
+            if (nutrition <= 0f)
+                return;
+
+            pasteNet.DistributeAmongStorage(nutrition / pasteNutrition, out _);
         }
 
         public override IEnumerable<Gizmo> GetGizmos()

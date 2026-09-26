@@ -107,6 +107,7 @@
     <Compile Include="FeedingTube\Building_FoodVatSmall.cs" />
     <Compile Include="FeedingTube\Building_NutrientDistillery.cs" />
     <Compile Include="FeedingTube\Building_FoodConverter.cs" />
+    <Compile Include="FeedingTube\FoodNetworkAccess.cs" />
     <Compile Include="FeedingTube\Comps\FoodNetStorage_CompProperties.cs" />
     <Compile Include="FeedingTube\Comps\FoodNetStorage_ThingComp.cs" />
     <Compile Include="FeedingTube\Comps\FoodNetTrader_CompProperties.cs" />

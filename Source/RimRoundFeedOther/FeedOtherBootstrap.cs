@@ -34,6 +34,10 @@ namespace RimRound.FeedOther
             harmony.PatchAll(Assembly.GetExecutingAssembly());
             InstallHoverchairRenderPatch(harmony);
 
+            // RimRound machines without a dedicated v2 patch (the food converter)
+            // reach the liquid food network through FoodNetworkAccess.
+            FoodNetworkAccess.Current = new FoodNetworkV2Access(FoodNetworkAccess.Current);
+
             // Install beta generation probabilities before any new pawn can
             // be generated. The category finalizer itself is Harmony-patched
             // after vanilla and RimRound trait generation.

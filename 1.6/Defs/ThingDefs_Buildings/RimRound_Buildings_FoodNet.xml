@@ -63,6 +63,29 @@
 		<researchPrerequisites>
 			<li>RR_Research_FoodStorage</li>
 		</researchPrerequisites>
+		<replaceTags>
+			<li>RR_FoodConduit</li>
+		</replaceTags>
+	</ThingDef>
+	<!--Hidden food conduit: the same pipe run out of sight. Only the food grid overlay
+	    (shown while a food building is selected or being placed) reveals it.-->
+	<ThingDef ParentName="FoodConduit">
+		<defName>RR_TD_FeedingTubeConduitHidden</defName>
+		<label>hidden food pipe</label>
+		<description>A food pipe run beneath the floor. It is invisible except in the food grid overlay, which shows while a food building is selected or placed. It can't catch fire, doesn't make rooms uglier, and can be built directly over a regular food pipe to replace it.</description>
+		<graphicData>
+			<color>(0,0,0,0)</color>
+			<shaderType>Transparent</shaderType>
+		</graphicData>
+		<statBases>
+			<MaxHitPoints>120</MaxHitPoints>
+			<WorkToBuild>600</WorkToBuild>
+			<Flammability>0</Flammability>
+			<Beauty>0</Beauty>
+		</statBases>
+		<costList>
+			<Steel>6</Steel>
+		</costList>
 	</ThingDef>
 	<!--Food Valve-->
 	<ThingDef ParentName="BuildingBase" Name="FoodValve">

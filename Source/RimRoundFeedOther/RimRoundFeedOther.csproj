@@ -64,6 +64,7 @@
     <Compile Include="FeedOtherSettings.cs" />
     <Compile Include="FeedOtherUtility.cs" />
     <Compile Include="FeedPartnerFloatMenuPatch.cs" />
+    <Compile Include="FoodNetworkV2Access.cs" />
     <Compile Include="FoodNetworkV2AutoFeeders.cs" />
     <Compile Include="FoodNetworkV2Core.cs" />
     <Compile Include="FoodNetworkV2Machines.cs" />

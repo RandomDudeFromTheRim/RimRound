@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
+  <!-- Retired: liquid food now runs on the RimRound food conduit network. This net
+       and its pipe/valve defs only remain so old saves load; the pipes are turned
+       back into their build materials on load (SaveCompat_ConvertRetiredFoodPipes). -->
   <PipeSystem.PipeNetDef>
     <defName>RR_FoodNet</defName>
     <noStorageAlert>true</noStorageAlert>
@@ -14,10 +17,6 @@
       <li>RR_FoodPipe</li>
       <li>RR_UndergroundFoodPipe</li>
     </pipeDefs>
-    <designator>
-      <deconstructIconPath>Things/Building/Production/FoodPipe_MenuIcon</deconstructIconPath>
-      <designationCategoryDef>VCHE_PipeNetworks</designationCategoryDef>
-    </designator>
     <overlayOptions>
       <overlayColor>(0.95, 0.90, 0.80)</overlayColor>
     </overlayOptions>

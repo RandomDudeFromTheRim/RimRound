@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RimWorld;
 using Verse;
 
 namespace RimRound.FeedingTube
@@ -15,6 +16,10 @@ namespace RimRound.FeedingTube
 			List<Thing> thingList = loc.GetThingList(map);
 			for (int i = 0; i < thingList.Count; i++)
 			{
+				// e.g. a hidden food pipe built over a regular one replaces it
+				if (GenConstruct.CanReplace(checkingDef, thingList[i].def))
+					continue;
+
 				if (EverTransmitsFood(thingList[i].def))
 				{
 					return false;
