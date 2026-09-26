@@ -60,7 +60,7 @@ namespace RimRound.Hediffs
                 {
                     GenSpawn.Spawn(p, CellFinder.RandomClosewalkCellNear(at, map, 2), map);
                     p.stances?.stunner?.StunFor(600, p, addBattleLog: false, showMote: true);
-                    Utilities.HediffUtility.QueueWeightGain(p, 15f, 30000);
+                    Utilities.HediffUtility.QueueWeightGain(p, 15f);
                 }
                 contained.RemoveAt(i);
             }

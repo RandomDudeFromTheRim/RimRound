@@ -77,7 +77,7 @@ namespace RimRound.AI
             if (intimacy != null)
                 intimacy.CurLevelPercentage = Mathf.Clamp01(intimacy.CurLevelPercentage - 0.3f);
 
-            Utilities.HediffUtility.QueueWeightGain(self, Rand.Range(3f, 6f), 9000);
+            Utilities.HediffUtility.QueueWeightGain(self, Rand.Range(3f, 6f));
 
             if (other != null)
                 self.needs?.mood?.thoughts.memories.TryGainMemory(Defs.ThoughtDefOf.RR_SharedFeedingThought, other);

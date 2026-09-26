@@ -88,6 +88,13 @@
     <maxSeverity>1.0</maxSeverity>
     <initialSeverity>1.0</initialSeverity>
     <tendable>false</tendable>
+    <comps>
+      <!-- A full dose lasts ~0.75 days; another drink tops it back up. -->
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-1.333</severityPerDay>
+        <showHoursToRecover>true</showHoursToRecover>
+      </li>
+    </comps>
     <stages>
       <li>
         <label>glowing</label>

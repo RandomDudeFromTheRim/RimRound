@@ -66,10 +66,11 @@ namespace RimRound.Utilities
         }
 
         /// <summary>
-        /// Queues kilograms of weight gain that apply a few ticks from now and last
-        /// for durationTicks. Does nothing for pawns without a working diet comp.
+        /// Queues kilograms of weight gain that apply a few ticks from now. Permanent
+        /// by default; with durationTicks > 0 the same weight is taken back off after
+        /// that many ticks. Does nothing for pawns without a working diet comp.
         /// </summary>
-        public static void QueueWeightGain(Pawn pawn, float kilos, int durationTicks)
+        public static void QueueWeightGain(Pawn pawn, float kilos, int durationTicks = 0)
         {
             var fnd = pawn?.TryGetComp<FullnessAndDietStats_ThingComp>();
             if (fnd != null && !fnd.Disabled)

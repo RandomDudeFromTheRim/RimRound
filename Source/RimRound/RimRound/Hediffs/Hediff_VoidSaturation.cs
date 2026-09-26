@@ -22,7 +22,6 @@ namespace RimRound.Hediffs
         const int GainPulseInterval = 600;
         const float BaseKilosPerPulse = 0.03f;
         const float KilosPerPulsePerSeverity = 0.10f;
-        const int GainDurationTicks = 6000;
 
         float KilosPerPulse => BaseKilosPerPulse + Severity * KilosPerPulsePerSeverity;
 
@@ -67,7 +66,7 @@ namespace RimRound.Hediffs
             if (intimacy != null)
                 kilos *= 1f + Mathf.Clamp01(intimacy.CurLevelPercentage) * 0.5f;
 
-            Utilities.HediffUtility.QueueWeightGain(pawn, kilos, GainDurationTicks);
+            Utilities.HediffUtility.QueueWeightGain(pawn, kilos);
         }
 
         void SpawnVoidEcho()
