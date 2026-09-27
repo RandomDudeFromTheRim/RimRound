@@ -5,7 +5,7 @@
        when no portal exists yet and a free colonist is Chubby or heavier. -->
   <IncidentDef MayRequire="Ludeon.RimWorld.Anomaly">
     <defName>RR_VoidPortalOpens</defName>
-    <label>void portal</label>
+    <label>void seam</label>
     <category>Misc</category>
     <targetTags>
       <li>Map_PlayerHome</li>
@@ -13,8 +13,8 @@
     <workerClass>RimRound.Incidents.IncidentWorker_VoidPortalOpens</workerClass>
     <baseChance>0.6</baseChance>
     <minRefireDays>30</minRefireDays>
-    <letterLabel>Void portal</letterLabel>
-    <letterText>A pulsating wound has torn open in reality. Warm, sweet air breathes out of it, and your heavier colonists feel strangely drawn to it.\n\nAnyone Chubby or heavier can step through into the void maze: a cramped, living flesh dimension where weight grows freely and void gluttonium can be gathered. Fleshbeasts lurk in the warm dark, and lingering too long may tear something loose.</letterText>
+    <letterLabel>Void seam</letterLabel>
+    <letterText>The ground has split open into a mouth. Something unimaginably large lies beneath the crust, and it has opened up to be fed. Warm, sweet breath rolls out of it, flesh is creeping across the ground around it, and your heavier colonists feel strangely drawn to it.\n\nAnyone Chubby or heavier can climb down into the void maze: one long, living gut where weight grows freely and void gluttonium can be gathered. The way home lies at the far end, and whoever reaches it in time comes back with a haul. Linger too long and the maze pushes you out empty-handed - or tears something loose. Fleshbeasts, maws and spitting organs lurk in the warm dark.</letterText>
     <letterDef>NeutralEvent</letterDef>
   </IncidentDef>
 </Defs>

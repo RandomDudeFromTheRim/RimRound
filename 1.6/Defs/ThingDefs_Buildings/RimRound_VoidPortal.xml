@@ -4,17 +4,23 @@
     <defName>RR_VoidPortal</defName>
     <thingClass>Building</thingClass>
     <category>Building</category>
-    <label>void portal</label>
-    <description>A pulsating vertical wound in reality. Warm, humid air wafts through it, carrying a sweet, heavy scent. Pawns with Chubby+ body types feel drawn to it... entering sends them into the void maze where weight grows freely, but fleshbeasts lurk in the warm dark.</description>
+    <label>void seam</label>
+    <description>The ground has split open into a mouth. Something unimaginably large lies beneath the crust, and it has opened up to be fed. Warm, sweet breath rolls out of it, and flesh spreads across the ground around it for as long as it stays open.
+
+Pawns who are Chubby or heavier can climb in, into the void maze: one long, living gut. The way home lies at its far end. Seal the seam and the flesh around it withers back.</description>
     <stuffCategories />
     <graphicData>
-      <texPath>Things/Building/Obelisk_Warped/WarpedObelisk</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <shaderType>CutoutComplex</shaderType>
-      <drawSize>(2,2)</drawSize>
+      <texPath>Things/Building/FleshDimension/RR_VoidSeam</texPath>
+      <!-- breathes, like Anomaly's fleshmass organs -->
+      <graphicClass>Graphic_Single_SquashNStretch</graphicClass>
+      <shaderType>BuildingSquashNStretch</shaderType>
+      <maxSnS>(.95, .9)</maxSnS>
+      <offsetSnS>(.5, -.45)</offsetSnS>
+      <drawSize>(4.5,4.5)</drawSize>
     </graphicData>
-    <altitudeLayer>Building</altitudeLayer>
-    <passability>PassThroughOnly</passability>
+    <drawerType>RealtimeOnly</drawerType>
+    <altitudeLayer>FloorEmplacement</altitudeLayer>
+    <passability>Standable</passability>
     <selectable>true</selectable>
     <!-- needed for Comp_VoidPortal.CompTick: maze timeout, fleshbeast spawns, cleanup -->
     <tickerType>Normal</tickerType>
@@ -28,11 +34,17 @@
       <li Class="RimRound.Comps.CompProperties_VoidPortal">
         <activateTexPath>UI/Activate/Activate</activateTexPath>
         <minWeightToEnter>0.09</minWeightToEnter>
-        <mazeDurationTicks>120000</mazeDurationTicks>
-        <respawnIntervalTicks>60000</respawnIntervalTicks>
+        <mazeDurationTicks>45000</mazeDurationTicks> <!-- 18 in-game hours to walk the gut to the way home -->
+        <respawnIntervalTicks>12000</respawnIntervalTicks>
         <maxMeldBeasts>4</maxMeldBeasts>
         <activateLabelString>Enter the void maze</activateLabelString>
         <jobString>entering the void maze</jobString>
+      </li>
+      <!-- flesh spreads over the ground around the seam while it is open, and
+           withers back to the original ground when it is sealed -->
+      <li Class="RimRound.Comps.CompProperties_FleshSpread">
+        <maxRadius>7.9</maxRadius>
+        <ticksToFullSpread>30000</ticksToFullSpread>
       </li>
       <li Class="CompProperties_Glower">
         <glowRadius>8</glowRadius>
@@ -54,9 +66,10 @@
 
   <EntityCodexEntryDef MayRequire="Ludeon.RimWorld.Anomaly">
     <defName>RR_VoidPortal</defName>
-    <label>void portal</label>
+    <label>void seam</label>
     <useDescriptionFrom>RR_VoidPortal</useDescriptionFrom>
-    <uiIconPath>Things/Building/Obelisk_Warped/WarpedObelisk</uiIconPath>
+    <!-- codex entries also load <uiIconPath>_Silhouette; both are made by Source/TextureGen -->
+    <uiIconPath>UI/CodexEntries/RR_VoidSeam</uiIconPath>
     <category>Advanced</category>
     <linkedThings>
       <li>RR_VoidPortal</li>

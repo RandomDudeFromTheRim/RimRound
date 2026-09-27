@@ -1,4 +1,4 @@
-﻿using RimRound.Comps;
+using RimRound.Comps;
 using RimRound.FeedingTube.Comps;
 using RimRound.Utilities;
 using RimWorld;
@@ -122,6 +122,11 @@ namespace RimRound.FeedingTube
             HandleDestruction();
         }
 
+        /// <summary>
+        /// Unhooks the pawn and stops the sounds. Safe to call more than once and with
+        /// nobody hooked up: Destroy, DeSpawn and Discard can all reach it for the same
+        /// feeder, and an idle feeder has no pawn or fullness comp to clean up.
+        /// </summary>
         private void HandleDestruction() 
         {
             onSound?.End();
@@ -130,35 +135,59 @@ namespace RimRound.FeedingTube
             drinkingSustainer?.End();
             drinkingSustainer = null;
 
-            if (CurrentPawn != null) 
+            Pawn pawn = _currentPawn ?? forcedTarget.Pawn;
+            if (pawn != null && pawn.health?.hediffSet != null)
             {
-                this.CurrentPawn.health.RemoveHediff(
-                    (from h
-                    in this.CurrentPawn.health.hediffSet.hediffs
-                     where h.def.defName == Defs.HediffDefOf.RimRound_UsingFeedingTube.defName
-                     select h).FirstOrDefault()
-                    );
-
-                CurrentPawn = null;
+                Hediff tube = pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.def == Defs.HediffDefOf.RimRound_UsingFeedingTube);
+                if (tube != null)
+                    pawn.health.RemoveHediff(tube);
             }
 
-            this.CachedFNDComp.SloshDurationSeconds = 60;
-            this.CachedFNDComp.SloshStartTick = Find.TickManager.TicksAbs;
-            this.CachedFNDComp.IsConnectedToFeedingMachine = false;
-            this.CachedFNDComp = null;
+            FullnessAndDietStats_ThingComp fnd = _cachedFNDComp ?? pawn?.TryGetComp<FullnessAndDietStats_ThingComp>();
+            if (fnd != null)
+            {
+                fnd.SloshDurationSeconds = 60;
+                fnd.SloshStartTick = Find.TickManager.TicksAbs;
+                fnd.IsConnectedToFeedingMachine = false;
+            }
 
+            _currentPawn = null;
+            _cachedFNDComp = null;
+            forcedTarget = LocalTargetInfo.Invalid;
+            currentModeInternal = AutoFeederMode.off;
+        }
 
-            this.forcedTarget = LocalTargetInfo.Invalid;
-            
-            CurrentMode = AutoFeederMode.off;
+        const float HoseRange = 9f;
+
+        /// <summary>Why the hooked-up pawn can't stay on the tube, or null if they can.</summary>
+        string DisconnectReason(Pawn pawn)
+        {
+            if (pawn.Dead || pawn.Destroyed)
+                return "died";
+            if (!pawn.Spawned || pawn.Map != Map)
+                return "was taken away";
+            if (!pawn.InBed())
+                return "left bed";
+            if (!pawn.Position.InHorDistOf(Position, HoseRange))
+                return "is out of the hose's reach";
+            return null;
         }
 
 
         protected override void Tick()
         {
             base.Tick();
-            if (CurrentPawn != null && CurrentPawn.IsHashIntervalTick(tickCheckInterval))
+            if (forcedTarget.IsValid && CurrentPawn != null && CurrentPawn.IsHashIntervalTick(tickCheckInterval))
             {
+                // unhook anyone who can't stay on the tube instead of feeding them across the map
+                string reason = DisconnectReason(CurrentPawn);
+                if (reason != null)
+                {
+                    Messages.Message($"The feeding tube came loose: {CurrentPawn.LabelShort} {reason}.", new LookTargets(this), MessageTypeDefOf.NeutralEvent, historical: false);
+                    HandleDestruction();
+                    return;
+                }
+
                 if (onSound == null)
                 {
                     onSound = RimRound.Defs.SoundDefOf.RR_FeedingTube_On.TrySpawnSustainer(SoundInfo.InMap(new TargetInfo(this)));
@@ -205,8 +234,7 @@ namespace RimRound.FeedingTube
         public override void DrawExtraSelectionOverlays()
         {
             base.DrawExtraSelectionOverlays();
-            float range = 9;
-            GenDraw.DrawRadiusRing(base.Position, range);
+            GenDraw.DrawRadiusRing(base.Position, HoseRange);
 
             if (forcedTarget != LocalTargetInfo.Invalid) 
             {
@@ -483,6 +511,8 @@ namespace RimRound.FeedingTube
                 delegate (LocalTargetInfo t) //validator
                     {
                         if (t.Pawn is null || !t.Pawn.RaceProps.Humanlike || !t.Pawn.InBed())
+                            return false;
+                        if (!t.Pawn.Position.InHorDistOf(Position, HoseRange))
                             return false;
 
                         return true;

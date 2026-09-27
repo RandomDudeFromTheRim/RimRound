@@ -23,4 +23,12 @@
     <reportString>offering themselves to TargetA.</reportString>
     <casualInterruptible>false</casualInterruptible>
   </JobDef>
+
+  <!-- Hauling a downed pawn (a void echo, or a fallen colonist) out of the void maze -->
+  <JobDef>
+    <defName>RR_CarryThroughVoidPortal</defName>
+    <driverClass>RimRound.AI.JobDriver_RRCarryThroughVoidPortal</driverClass>
+    <reportString>carrying TargetA home through the void portal.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
 </Defs>

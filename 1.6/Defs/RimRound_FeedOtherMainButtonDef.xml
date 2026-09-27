@@ -8,6 +8,7 @@
     <order>70</order>
     <validWithoutMap>true</validWithoutMap>
     <minimized>true</minimized>
-    <iconPath>UI/Buttons/MainButtons/RRFeedOtherSettingsButton</iconPath>
+    <!-- the FeedOther port never shipped its own icon; reuse RimRound's until one is drawn -->
+    <iconPath>UI/Buttons/MainButtons/RRGlobalSettingsButton</iconPath>
   </MainButtonDef>
 </Defs>

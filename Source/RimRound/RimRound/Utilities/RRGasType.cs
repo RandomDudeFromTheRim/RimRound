@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +11,7 @@ namespace RimRound.Utilities
         fatteningGas = 0,
         enbiggenerGas = 8,
         meldGas = 16,
-        unused2 = 24,
+        // flab grenades: the same swelling as fatteningGas, but the weight wears off
+        temporaryFatteningGas = 24,
     }
 }

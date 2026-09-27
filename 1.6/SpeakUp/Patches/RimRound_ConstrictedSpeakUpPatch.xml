@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- A pawn with a gorge constrictor's proboscis down their throat can't really talk.
+     Whenever they would say anything (any interaction, SpeakUp replies included), a
+     muffled line wins instead: priority beats every other r_logentry, and SpeakUp
+     lets the condition match any of the pawn's active thoughts. The tone follows
+     their weight opinion. -->
+<Patch>
+  <!-- interactions whose speech is written inline -->
+  <Operation Class="PatchOperationAdd">
+    <success>Always</success>
+    <xpath>/Defs/InteractionDef/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Hate)->[constricted_hate]</li>
+      <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Dislike)->[constricted_hate]</li>
+      <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Neutral-)->[constricted_scared]</li>
+      <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Neutral)->[constricted_scared]</li>
+      <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Neutral+)->[constricted_torn]</li>
+      <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Like)->[constricted_into_it]</li>
+      <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Love)->[constricted_into_it]</li>
+      <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Fanatical)->[constricted_lost]</li>
+      <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Extreme)->[constricted_lost]</li>
+      <!-- no weight opinion trait at all -->
+      <li>r_logentry(priority=99,INITIATOR_thoughtDefName==RR_BeingConstricted)->[constricted_scared]</li>
+
+      <li>constricted_hate->MMPH! Mmph-mmph! *thrashes*</li>
+      <li>constricted_hate->Hhgk- get it- MMPHH!</li>
+      <li>constricted_hate->*gags around the proboscis, eyes wide with panic*</li>
+      <li>constricted_hate->Nnngh! Mmph! *claws at the coils*</li>
+      <li>constricted_scared->Mmph...? Mmmph! Hhlp mm...</li>
+      <li>constricted_scared->*muffled whimpering*</li>
+      <li>constricted_scared->Nnn... mmph... *swallows, and swallows again*</li>
+      <li>constricted_scared->Hhh- hhhelp... mmph...</li>
+      <li>constricted_torn->Mmph... mmh... *squirms, not very hard*</li>
+      <li>constricted_torn->Hhn... mmph... *a confused, muffled moan*</li>
+      <li>constricted_torn->Mmh? ...mmmh... *stops struggling for a moment*</li>
+      <li>constricted_into_it->Mmphh...~</li>
+      <li>constricted_into_it->Mmmh~ *gulps greedily*</li>
+      <li>constricted_into_it->Hhnn... mmph~ *leans into the squeeze*</li>
+      <li>constricted_into_it->*a long, blissful, muffled moan*</li>
+      <li>constricted_lost->MMMPHH~! Mmph~ mmph~!</li>
+      <li>constricted_lost->*moans around the proboscis, begging for more*</li>
+      <li>constricted_lost->Hhhn~ mmph... m-mmore... mmph~</li>
+    </value>
+  </Operation>
+
+  <!-- interactions whose speech lives only in included rule packs -->
+  <Operation Class="PatchOperationAdd">
+    <success>Always</success>
+    <xpath>/Defs/InteractionDef/logRulesInitiator[not(rulesStrings)]</xpath>
+    <value>
+      <rulesStrings>
+        <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Hate)->MMPH! Mmph-mmph! *thrashes*</li>
+        <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Dislike)->Hhgk- get it- MMPHH!</li>
+        <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Neutral+)->Mmph... mmh... *squirms, not very hard*</li>
+        <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Like)->Mmphh...~</li>
+        <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Love)->Mmmh~ *gulps greedily*</li>
+        <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Fanatical)->MMMPHH~! Mmph~ mmph~!</li>
+        <li>r_logentry(priority=100,INITIATOR_thoughtDefName==RR_BeingConstricted,INITIATOR_trait==Weight Opinion: Extreme)->*moans around the proboscis, begging for more*</li>
+        <li>r_logentry(priority=99,INITIATOR_thoughtDefName==RR_BeingConstricted)->*muffled whimpering*</li>
+      </rulesStrings>
+    </value>
+  </Operation>
+</Patch>

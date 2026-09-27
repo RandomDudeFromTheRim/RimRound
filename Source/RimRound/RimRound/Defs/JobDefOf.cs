@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +16,9 @@ namespace RimRound.Defs
         public static JobDef RR_CloseEncounter;
         public static JobDef RR_SharedFeeding;
         public static JobDef RR_FeedToEcho;
+        public static JobDef RR_CarryThroughVoidPortal;
+        public static JobDef RR_TearOffConstrictor;
+        public static JobDef RR_ConstrictorLatchOn;
+        public static JobDef RR_ApplyBoundConstrictor;
     }
 }

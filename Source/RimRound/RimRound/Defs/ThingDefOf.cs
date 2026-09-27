@@ -32,6 +32,7 @@ namespace RimRound.Defs
         public static ThingDef RR_VoidGluttonium;
         public static ThingDef RR_VoidPortal;
         public static ThingDef RR_VoidPortalReturn;
+        public static ThingDef RR_VoidMazeEntryScar;
         public static ThingDef RR_VoidMilk;
         public static ThingDef RR_BloatGeyser;
         public static ThingDef RimRound_NovaTechApparel_Collar;

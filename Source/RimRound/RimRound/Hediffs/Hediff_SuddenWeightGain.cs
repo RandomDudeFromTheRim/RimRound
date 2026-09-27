@@ -1,4 +1,4 @@
-﻿using RimRound.Comps;
+using RimRound.Comps;
 using RimRound.Utilities;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace RimRound.Hediffs
 
 
             float kilosToAdd = GetStageWeightGainMultiplier();
-            fndComp.activeWeightGainRequests.Enqueue(new WeightGainRequest(kilosToAdd, Find.TickManager.TicksGame + 10, 0, true));
+            fndComp.activeWeightGainRequests.Enqueue(new WeightGainRequest(kilosToAdd, Find.TickManager.TicksGame + 10, GainDurationTicks, true));
 
             fndComp.CumulativeSeverityKilosGained += kilosToAdd;
 
@@ -33,6 +33,9 @@ namespace RimRound.Hediffs
 
             this.Severity -= (0.01f);
         }
+
+        /// <summary>How long each pulse of gained weight stays on. 0 = permanent.</summary>
+        protected virtual int GainDurationTicks => 0;
 
         private void AddOrMaxOutImmunityHediffIfOverMaxSeverity(FullnessAndDietStats_ThingComp fndComp)
         {
@@ -95,5 +98,13 @@ namespace RimRound.Hediffs
 
             } 
         }
+    }
+
+    /// <summary>Sudden weight gain from flab grenades: the same swelling, but it wears off after a few hours.</summary>
+    public class Hediff_SuddenWeightGainTemporary : Hediff_SuddenWeightGain
+    {
+        const int WearsOffTicks = 7500; // 3 in-game hours
+
+        protected override int GainDurationTicks => WearsOffTicks;
     }
 }

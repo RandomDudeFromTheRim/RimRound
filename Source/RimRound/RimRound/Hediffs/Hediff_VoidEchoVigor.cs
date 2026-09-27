@@ -100,9 +100,33 @@ namespace RimRound.Hediffs
                 MessageTypeDefOf.NeutralEvent);
         }
 
+        /// <summary>Plays the gorged belly heave while someone is inside, and stops it once they're out.</summary>
+        public void UpdateGorgedAnimation()
+        {
+            PawnRenderer renderer = pawn?.Drawer?.renderer;
+            if (renderer == null)
+                return;
+
+            AnimationDef gorged = Defs.RRAnimationDefOf.RR_EchoGorged;
+            if (contained.Count > 0 && !pawn.Dead)
+            {
+                if (renderer.CurAnimation != gorged)
+                    renderer.SetAnimation(gorged);
+            }
+            else if (renderer.CurAnimation == gorged)
+            {
+                renderer.SetAnimation(null);
+            }
+        }
+
         public override void Tick()
         {
             base.Tick();
+
+            // on a holding platform the platform owns the animation (see the
+            // BuildingHoldingPlatform_UpdateAnimation patch)
+            if (pawn != null && pawn.Spawned && pawn.IsHashIntervalTick(60))
+                UpdateGorgedAnimation();
 
             if (contained.Count > 0 && pawn != null && !pawn.Dead &&
                 pawn.holdingOwner != null && pawn.IsHashIntervalTick(MilkIntervalTicks))
@@ -130,6 +154,16 @@ namespace RimRound.Hediffs
             Map map = pawn.MapHeld;
             if (map == null)
                 return;
+
+            // only a colony that follows the Feedees knows how to milk it
+            if (!Utilities.FeedeesUtility.PlayerFollowsFeedees())
+            {
+                Messages.Message(
+                    "The void echo swells with voidmilk, but nobody here knows how to draw it out. It seeps away. (Requires an ideoligion with the Feedees meme.)",
+                    new LookTargets(pawn.SpawnedParentOrMe),
+                    MessageTypeDefOf.NeutralEvent);
+                return;
+            }
 
             Thing milk = ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidMilk);
             milk.stackCount = 2 + contained.Count * 2;

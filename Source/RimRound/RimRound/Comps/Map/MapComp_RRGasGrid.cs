@@ -1,4 +1,4 @@
-﻿using LudeonTK;
+using LudeonTK;
 using RimRound.Utilities;
 using RimWorld;
 using System;
@@ -38,6 +38,7 @@ namespace RimRound.Comps
             { RRGasType.fatteningGas, 4},
             { RRGasType.enbiggenerGas, 3},
             { RRGasType.meldGas, 3},
+            { RRGasType.temporaryFatteningGas, 4},
         };
 
         private static Dictionary<RRGasType, Color> gasToColor = new Dictionary<RRGasType, Color>()
@@ -45,13 +46,14 @@ namespace RimRound.Comps
             { RRGasType.fatteningGas, new Color(0.91f, 0.43f, 0.68f, 0.5f) },
             { RRGasType.enbiggenerGas, new Color(0.6f, 0.9f, 0.4f, 0.5f) },
             { RRGasType.meldGas, new Color(0.8f, 0.2f, 0.8f, 0.5f) },
+            { RRGasType.temporaryFatteningGas, new Color(0.96f, 0.62f, 0.8f, 0.45f) },
         };
 
         private static readonly FloatRange AlphaRange = new FloatRange(0.2f, 0.8f);
 
 
 
-        private static RRGasType[] allGasesToConsider = new RRGasType[] { RRGasType.fatteningGas, RRGasType.enbiggenerGas, RRGasType.meldGas };
+        private static RRGasType[] allGasesToConsider = new RRGasType[] { RRGasType.fatteningGas, RRGasType.enbiggenerGas, RRGasType.meldGas, RRGasType.temporaryFatteningGas };
 
         public bool CalculateGasEffects
         {

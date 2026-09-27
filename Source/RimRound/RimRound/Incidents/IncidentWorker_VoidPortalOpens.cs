@@ -17,7 +17,7 @@ namespace RimRound.Incidents
             if (!base.CanFireNowSub(parms) || !(parms.target is Map map))
                 return false;
 
-            if (map.listerThings.ThingsOfDef(Defs.ThingDefOf.RR_VoidPortal).Any())
+            if (PortalExists(map))
                 return false;
 
             return map.mapPawns.FreeColonistsSpawned.Any(p =>
@@ -30,10 +30,27 @@ namespace RimRound.Incidents
             if (!RCellFinder.TryFindRandomCellNearTheCenterOfTheMapWith(c => IsGoodSpot(c, map), map, out IntVec3 cell))
                 return false;
 
-            Thing portal = GenSpawn.Spawn(ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidPortal), cell, map);
-            FleckMaker.ThrowSmoke(portal.DrawPos, map, 3f);
+            Thing portal = OpenAt(cell, map);
             SendStandardLetter(parms, new LookTargets(portal));
             return true;
+        }
+
+        public static bool PortalExists(Map map) => map.listerThings.ThingsOfDef(Defs.ThingDefOf.RR_VoidPortal).Any();
+
+        /// <summary>Tears a void seam open as close to the given cell as it will fit (the Feedees' seam calling), or returns null.</summary>
+        public static Thing TryOpenNear(IntVec3 near, Map map)
+        {
+            if (!CellFinder.TryFindRandomCellNear(near, map, 8, c => IsGoodSpot(c, map) && c.DistanceTo(near) >= 3f, out IntVec3 cell) &&
+                !RCellFinder.TryFindRandomCellNearTheCenterOfTheMapWith(c => IsGoodSpot(c, map), map, out cell))
+                return null;
+            return OpenAt(cell, map);
+        }
+
+        static Thing OpenAt(IntVec3 cell, Map map)
+        {
+            Thing portal = GenSpawn.Spawn(ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidPortal), cell, map);
+            FleckMaker.ThrowSmoke(portal.DrawPos, map, 3f);
+            return portal;
         }
 
         static bool IsGoodSpot(IntVec3 c, Map map)

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Constrictor binding: a late Anomaly psychic ritual that calls up a gorge
+       constrictor and leashes it. The bound constrictor never bursts anyone - it
+       pumps them as big as they can go, lets go and is used again.
+       Code: Rituals/PsychicRitualDef_RRBindConstrictor.cs, the leashed flag in
+       Hediff_RRConstricted, JobDriver_RRApplyBoundConstrictor. -->
+
+  <ResearchProjectDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_ConstrictorBinding</defName>
+    <label>constrictor binding</label>
+    <description>Perform a psychic ritual over a lure of twisted meat and a dark archotech shard to call a gorge constrictor up out of the ground - and bind it. A bound constrictor can be set on anyone to pump them full. It is leashed: it will never make anyone burst.</description>
+    <tab>Anomaly</tab>
+    <prerequisites>
+      <li>SummonPitGate</li>
+    </prerequisites>
+    <knowledgeCost>90</knowledgeCost>
+    <knowledgeCategory>Advanced</knowledgeCategory>
+    <researchViewX>7.50</researchViewX>
+    <researchViewY>1.30</researchViewY>
+    <generalRules>
+      <rulesStrings>
+        <li>subject-&gt;constrictor binding</li>
+        <li>subject_story-&gt;watched a gorge constrictor pump a raider until the shard in its back went dark</li>
+        <li>subject_story-&gt;kept a fleshbeast as a pet for three days, until it wasn't one</li>
+        <li>subject_story-&gt;read the feeding logs of a cult that bred worms in its cellars</li>
+        <li>subject_gerund-&gt;binding gorge constrictors</li>
+        <li>subject_gerund-&gt;leashing fleshbeasts</li>
+      </rulesStrings>
+    </generalRules>
+  </ResearchProjectDef>
+
+  <ThingDef ParentName="ResourceBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_ConstrictorLure</defName>
+    <label>constrictor lure</label>
+    <description>A heap of twisted meat wrapped around a dark archotech shard, still faintly warm. Offered in a constrictor binding ritual, it draws a gorge constrictor up out of the ground. It is useless otherwise.</description>
+    <graphicData>
+      <texPath>Things/Item/Special/RR_ConstrictorLure</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <soundInteract>Standard_Pickup</soundInteract>
+    <soundDrop>Standard_Drop</soundDrop>
+    <stackLimit>5</stackLimit>
+    <healthAffectsPrice>false</healthAffectsPrice>
+    <genericMarketSellable>false</genericMarketSellable>
+    <resourceReadoutPriority>Middle</resourceReadoutPriority>
+    <statBases>
+      <MaxHitPoints>80</MaxHitPoints>
+      <MarketValue>550</MarketValue>
+      <Mass>2</Mass>
+      <Flammability>0.5</Flammability>
+      <DeteriorationRate>2</DeteriorationRate>
+      <Beauty>-8</Beauty>
+      <WorkToMake>6000</WorkToMake>
+    </statBases>
+    <thingCategories>
+      <li>Manufactured</li>
+    </thingCategories>
+    <recipeMaker>
+      <researchPrerequisite>RR_ConstrictorBinding</researchPrerequisite>
+      <recipeUsers>
+        <li>BioferriteShaper</li>
+      </recipeUsers>
+      <skillRequirements>
+        <Crafting>5</Crafting>
+      </skillRequirements>
+      <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+      <workSkill>Crafting</workSkill>
+      <effectWorking>ButcherFlesh</effectWorking>
+      <soundWorking>Recipe_ButcherCorpseFlesh</soundWorking>
+      <displayPriority>130</displayPriority>
+    </recipeMaker>
+    <costList>
+      <Shard>1</Shard>
+      <Meat_Twisted>100</Meat_Twisted>
+    </costList>
+  </ThingDef>
+
+  <ThingDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BoundConstrictor</defName>
+    <label>bound gorge constrictor</label>
+    <description>A gorge constrictor curled around the dark archotech shard in its back, cinched with bioferrite and leashed by a psychic ritual. It lies docile until someone sets it on a person.
+
+It then wraps around them, forces its proboscis into their mouth and empties its load into them, shrinking as it goes. Its leash holds: it never makes anyone burst. It lets go once it is empty, or once they are as big as they can go.
+
+An emptied constrictor is shrivelled and useless until it reswells: keep it in a constrictor vat and feed the vat. Outside a vat it slowly shrivels. It can be torn off early.</description>
+    <thingClass>ThingWithComps</thingClass>
+    <category>Item</category>
+    <drawerType>MapMeshOnly</drawerType>
+    <alwaysHaulable>true</alwaysHaulable>
+    <selectable>true</selectable>
+    <useHitPoints>false</useHitPoints>
+    <pathCost>14</pathCost>
+    <altitudeLayer>Item</altitudeLayer>
+    <stackLimit>1</stackLimit>
+    <tradeNeverStack>true</tradeNeverStack>
+    <genericMarketSellable>false</genericMarketSellable>
+    <resourceReadoutPriority>Middle</resourceReadoutPriority>
+    <rotatable>false</rotatable>
+    <graphicData>
+      <texPath>Things/Item/Special/RR_BoundConstrictor</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <soundInteract>Standard_Pickup</soundInteract>
+    <soundDrop>Standard_Drop</soundDrop>
+    <statBases>
+      <MarketValue>1500</MarketValue>
+      <Mass>6</Mass>
+      <Flammability>0</Flammability>
+      <DeteriorationRate>0</DeteriorationRate>
+      <Beauty>-10</Beauty>
+    </statBases>
+    <thingCategories>
+      <li>ItemsMisc</li>
+    </thingCategories>
+    <tickerType>Rare</tickerType>
+    <comps>
+      <!-- its load and mutations (Things/BoundConstrictorData.cs) -->
+      <li Class="RimRound.Things.CompProperties_RRBoundConstrictor" />
+      <li Class="CompProperties_Usable">
+        <useJob>RR_ApplyBoundConstrictor</useJob>
+        <useLabel>Set on someone</useLabel>
+        <showUseGizmo>true</showUseGizmo>
+      </li>
+      <li Class="CompProperties_Targetable">
+        <compClass>RimRound.Comps.Things.CompTargetable_RRBoundConstrictor</compClass>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <JobDef>
+    <defName>RR_ApplyBoundConstrictor</defName>
+    <driverClass>RimRound.AI.JobDriver_RRApplyBoundConstrictor</driverClass>
+    <reportString>setting the bound gorge constrictor on TargetB.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
+  <RimRound.Rituals.PsychicRitualDef_RRBindConstrictor MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BindConstrictor</defName>
+    <label>constrictor binding</label>
+    <description>Offer a constrictor lure in a psychic ritual to call a gorge constrictor up out of the ground and bind it to the invoker's will. A bound constrictor can be set on anyone to pump them full, and it never makes anyone burst.\n\nIf the binding slips, the constrictor rises wild and hostile.</description>
+    <iconPath>Things/Item/Special/RR_BoundConstrictor</iconPath>
+    <researchPrerequisite>RR_ConstrictorBinding</researchPrerequisite>
+    <outcomeDescription>With the current ritual quality, there is a {0} chance that the binding slips and the constrictor rises wild.</outcomeDescription>
+    <hoursUntilOutcome>5</hoursUntilOutcome>
+    <castableOnPocketMaps>false</castableOnPocketMaps>
+    <layerWhitelist>
+      <li>Surface</li>
+    </layerWhitelist>
+    <wildChanceFromQualityCurve>
+      <points>
+        <li>(0, 0.8)</li>
+        <li>(0.5, 0.35)</li>
+        <li>(0.8, 0.1)</li>
+        <li>(1, 0.02)</li>
+      </points>
+    </wildChanceFromQualityCurve>
+    <requiredOffering>
+      <filter>
+        <thingDefs>
+          <li>RR_ConstrictorLure</li>
+        </thingDefs>
+      </filter>
+      <count>1</count>
+    </requiredOffering>
+    <cooldownHours>720</cooldownHours>
+    <chanterRole>ChanterAdvanced</chanterRole>
+  </RimRound.Rituals.PsychicRitualDef_RRBindConstrictor>
+
+</Defs>

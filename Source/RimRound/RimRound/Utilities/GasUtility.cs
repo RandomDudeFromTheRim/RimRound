@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,7 @@ namespace RimRound.Utilities
             { RRGasType.fatteningGas, Defs.HediffDefOf.RimRound_SuddenWeightGain },
             { RRGasType.enbiggenerGas, HediffDef.Named("FatToxicBuildup") },
             { RRGasType.meldGas, HediffDef.Named("RR_MeldAerosol") },
+            { RRGasType.temporaryFatteningGas, Defs.HediffDefOf.RimRound_SuddenWeightGainTemporary },
         };
     }
 }

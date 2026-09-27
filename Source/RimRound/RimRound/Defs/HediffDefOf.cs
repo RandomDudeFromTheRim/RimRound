@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +33,9 @@ namespace RimRound.Defs
         public static HediffDef RR_MeldAerosol;
         public static HediffDef RR_BloatedDeathAffliction;
         public static HediffDef RR_VoidSaturation;
+        public static HediffDef RimRound_SuddenWeightGainTemporary;
+        public static HediffDef RR_Constricted;
+        public static HediffDef RR_Bursting;
         public static HediffDef RR_VoidEchoVigor;
     }
 }

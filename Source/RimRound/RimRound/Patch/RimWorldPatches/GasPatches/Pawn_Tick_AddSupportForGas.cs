@@ -38,8 +38,10 @@ namespace RimRound.Patch
 
                 Hediff hediff = Utilities.HediffUtility.GetHediffOfDefFrom(gasHediffCombo.Value, __instance);
 
-                if (hediff != null && hediff.CurStageIndex == hediff.def.stages.Count - 1)
-                    gasDensityPercent *= 0.1f; // Dampen additional severity for extended exposure
+                // Dampen additional severity for extended exposure - except meld, which
+                // should carry a victim all the way to detonation
+                if (hediff != null && hediff.CurStageIndex == hediff.def.stages.Count - 1 && gasHediffCombo.Key != RRGasType.meldGas)
+                    gasDensityPercent *= 0.1f;
 
 
                 if (hediff is null)

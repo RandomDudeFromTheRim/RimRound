@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Constrictor vat: where a bound gorge constrictor reswells after emptying
+       itself into someone, and where it grows mutations.
+       Code: Things/Building_RRConstrictorVat.cs, AI/WorkGiver_RRHaulToConstrictorVat.cs,
+       Things/BoundConstrictorData.cs (RRConstrictorMutationDef). -->
+
+  <ThingDef ParentName="BuildingBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_ConstrictorVat</defName>
+    <label>constrictor vat</label>
+    <description>A round tank of warm slurry, ringed in bioferrite, where a bound gorge constrictor floats between uses. A constrictor empties itself into whoever it is set on; in here it reswells.\n\nThe vat stores feed - food carried to it, nutrient paste from a paste pipe, or liquid food from a feed line - and while powered it feeds the constrictor until it is full again. That takes a lot of food.\n\nThe vat can also shape its constrictor: pick a mutation, and once haulers have brought the ingredients the vat spends feed and grows it over a few days. A constrictor can carry up to three.</description>
+    <thingClass>RimRound.Things.Building_RRConstrictorVat</thingClass>
+    <tickerType>Normal</tickerType>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <graphicData>
+      <texPath>Things/Building/RR_ConstrictorVat/RR_ConstrictorVat</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,2)</drawSize>
+      <shadowData>
+        <volume>(1.7, 0.4, 1.7)</volume>
+      </shadowData>
+    </graphicData>
+    <size>(2,2)</size>
+    <rotatable>false</rotatable>
+    <castEdgeShadows>true</castEdgeShadows>
+    <statBases>
+      <MaxHitPoints>400</MaxHitPoints>
+      <WorkToBuild>9000</WorkToBuild>
+      <Mass>60</Mass>
+      <Flammability>0.4</Flammability>
+      <Beauty>-6</Beauty>
+    </statBases>
+    <costList>
+      <Bioferrite>120</Bioferrite>
+      <Steel>80</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+    </costList>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <pathCost>42</pathCost>
+    <blockWind>true</blockWind>
+    <fillPercent>0.5</fillPercent>
+    <canOverlapZones>false</canOverlapZones>
+    <hasInteractionCell>true</hasInteractionCell>
+    <interactionCellOffset>(0,0,-1)</interactionCellOffset>
+    <designationCategory>Anomaly</designationCategory>
+    <uiOrder>2600</uiOrder>
+    <constructEffect>ConstructMetal</constructEffect>
+    <researchPrerequisites>
+      <li>RR_ConstrictorBinding</li>
+    </researchPrerequisites>
+    <inspectorTabs>
+      <li>ITab_BiosculpterNutritionStorage</li>
+    </inspectorTabs>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+      <haulToContainerDuration>90</haulToContainerDuration>
+      <fixedStorageSettings>
+        <filter>
+          <categories>
+            <li>Foods</li>
+          </categories>
+        </filter>
+      </fixedStorageSettings>
+      <defaultStorageSettings>
+        <filter>
+          <categories>
+            <li>FoodRaw</li>
+          </categories>
+          <thingDefs>
+            <li>MealNutrientPaste</li>
+          </thingDefs>
+          <disallowedCategories>
+            <li>EggsFertilized</li>
+          </disallowedCategories>
+          <disallowedThingDefs>
+            <li>InsectJelly</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">HemogenPack</li>
+          </disallowedThingDefs>
+        </filter>
+      </defaultStorageSettings>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>150</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!-- draws nutrient paste from a VNPE paste pipe -->
+      <li Class="PipeSystem.CompProperties_Resource">
+        <pipeNet>VNPE_NutrientPasteNet</pipeNet>
+      </li>
+      <!-- and liquid food from a RimRound feed line -->
+      <li Class="RimRound.FeedingTube.Comps.FoodNetTrader_CompProperties">
+        <compClass>RimRound.FeedingTube.Comps.FoodNetTrader_ThingComp</compClass>
+      </li>
+    </comps>
+    <placeWorkers>
+      <li>RimRound.FeedingTube.FoodTransmitter_PlaceWorker</li>
+    </placeWorkers>
+  </ThingDef>
+
+  <WorkGiverDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_HaulToConstrictorVat</defName>
+    <label>fill constrictor vats</label>
+    <giverClass>RimRound.AI.WorkGiver_RRHaulToConstrictorVat</giverClass>
+    <workType>Hauling</workType>
+    <verb>fill</verb>
+    <gerund>filling</gerund>
+    <priorityInType>108</priorityInType>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+  </WorkGiverDef>
+
+  <!-- ============================================================ mutations -->
+
+  <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Mutation_QuickenedPulse</defName>
+    <label>quickened pulse</label>
+    <description>A second, faster heart grows along its length. It pumps about two thirds again as often.</description>
+    <displayOrder>10</displayOrder>
+    <nutritionCost>20</nutritionCost>
+    <growDays>1.5</growDays>
+    <costList>
+      <Bioferrite>30</Bioferrite>
+    </costList>
+    <pumpIntervalFactor>0.6</pumpIntervalFactor>
+  </RimRound.Things.RRConstrictorMutationDef>
+
+  <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Mutation_DistendedSac</defName>
+    <label>distended sac</label>
+    <description>Its body stretches into a bigger sac. It swells with twice the load - and takes twice the feeding to reswell.</description>
+    <displayOrder>20</displayOrder>
+    <nutritionCost>30</nutritionCost>
+    <growDays>2</growDays>
+    <costList>
+      <Meat_Twisted>60</Meat_Twisted>
+    </costList>
+    <capacityFactor>2</capacityFactor>
+  </RimRound.Things.RRConstrictorMutationDef>
+
+  <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Mutation_VoidLinedGut</defName>
+    <label>void-lined gut</label>
+    <description>Void gluttonium threads its gut. The same feed swells it with two thirds again as much load.</description>
+    <displayOrder>30</displayOrder>
+    <nutritionCost>15</nutritionCost>
+    <growDays>2</growDays>
+    <costList>
+      <RR_VoidGluttonium>10</RR_VoidGluttonium>
+    </costList>
+    <feedPerKiloFactor>0.6</feedPerKiloFactor>
+  </RimRound.Things.RRConstrictorMutationDef>
+
+  <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Mutation_StretchingCoils</defName>
+    <label>stretching coils</label>
+    <description>Its coils learn to give. It keeps pumping one Gelatinous tier past where it would normally let go. It still never bursts anyone.</description>
+    <displayOrder>40</displayOrder>
+    <nutritionCost>40</nutritionCost>
+    <growDays>3</growDays>
+    <costList>
+      <Bioferrite>50</Bioferrite>
+      <Shard>1</Shard>
+    </costList>
+    <extraBurstTiers>1</extraBurstTiers>
+  </RimRound.Things.RRConstrictorMutationDef>
+
+  <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Mutation_EuphoricMucus</defName>
+    <label>euphoric mucus</label>
+    <description>It coats whoever it holds in a warm, numbing slime. Anyone it holds loves every moment of it, whatever they think of weight, and comes away glowing.</description>
+    <displayOrder>50</displayOrder>
+    <nutritionCost>10</nutritionCost>
+    <growDays>1</growDays>
+    <costList>
+      <RR_VoidGluttonium>5</RR_VoidGluttonium>
+      <Meat_Twisted>20</Meat_Twisted>
+    </costList>
+    <euphoric>true</euphoric>
+  </RimRound.Things.RRConstrictorMutationDef>
+
+  <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Mutation_PersuasiveSaliva</defName>
+    <label>persuasive saliva</label>
+    <description>Something in what it pumps changes minds. Whoever it fills to the brim comes away thinking better of weight.</description>
+    <displayOrder>60</displayOrder>
+    <nutritionCost>25</nutritionCost>
+    <growDays>2</growDays>
+    <costList>
+      <RR_VoidGluttonium>5</RR_VoidGluttonium>
+      <Meat_Twisted>30</Meat_Twisted>
+    </costList>
+    <persuasive>true</persuasive>
+  </RimRound.Things.RRConstrictorMutationDef>
+
+  <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Mutation_LingeringHunger</defName>
+    <label>lingering hunger</label>
+    <description>It leaves a seed of its own hunger behind. For two days after it lets go, its victim is ravenous.</description>
+    <displayOrder>70</displayOrder>
+    <nutritionCost>10</nutritionCost>
+    <growDays>1</growDays>
+    <costList>
+      <Meat_Twisted>20</Meat_Twisted>
+    </costList>
+    <afterHediff>RR_ConstrictorCraving</afterHediff>
+  </RimRound.Things.RRConstrictorMutationDef>
+
+  <!-- ============================================================ aftereffects -->
+
+  <HediffDef>
+    <defName>RR_ConstrictorCraving</defName>
+    <label>constrictor craving</label>
+    <description>A gorge constrictor left a seed of its own hunger behind. Eats far more than usual.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.9, 0.6, 0.7)</defaultLabelColor>
+    <isBad>false</isBad>
+    <stages>
+      <li>
+        <hungerRateFactor>1.75</hungerRateFactor>
+      </li>
+    </stages>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>120000</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <ThoughtDef>
+    <defName>RR_ConstrictorAfterglow</defName>
+    <durationDays>1.5</durationDays>
+    <stackLimit>1</stackLimit>
+    <stages>
+      <li>
+        <label>constrictor afterglow</label>
+        <description>Warm, full, slick with that numbing slime. I can't stop smiling.</description>
+        <baseMoodEffect>10</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+</Defs>

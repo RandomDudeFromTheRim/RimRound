@@ -66,41 +66,30 @@
     </comps>
   </ThingDef>
 
-  <!-- Mineable blob wall that drops void gluttonium -->
-  <ThingDef>
+  <!-- Mineable blob wall that drops void gluttonium. Based on vanilla's mineable
+       rock (RockBase) so it is a proper selectable, linking building. -->
+  <ThingDef ParentName="RockBase">
     <defName>RR_BlobWallMineable</defName>
     <label>void blob wall</label>
     <description>A thicker, vein-ridden section of blob wall. Pulses with a purple glow. Can be mined for void gluttonium.</description>
-    <thingClass>Mineable</thingClass>
     <!-- Linked atlases for the flesh dimension walls: all share Custom2 with the blob
          wall so the maze reads as one continuous mass. Made by Source/TextureGen. -->
     <graphicData>
       <texPath>Things/Building/FleshDimension/RR_VoidBlobWall_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <linkType>CornerFiller</linkType>
-      <linkFlags>
+      <linkFlags Inherit="False">
         <li>Custom2</li>
       </linkFlags>
     </graphicData>
-    <stuffCategories />
-    <passability>Impassable</passability>
-    <blockWind>true</blockWind>
-    <castEdgeShadows>true</castEdgeShadows>
-    <fillPercent>0.5</fillPercent>
-    <coversFloor>false</coversFloor>
-    <rotatable>false</rotatable>
-    <holdsRoof>true</holdsRoof>
-    <blockLight>true</blockLight>
-    <fertility>0</fertility>
     <statBases>
       <MaxHitPoints>2000</MaxHitPoints>
       <Flammability>0</Flammability>
     </statBases>
-    <mineable>true</mineable>
     <building>
       <isNaturalRock>false</isNaturalRock>
       <isResourceRock>true</isResourceRock>
-      <isInert>true</isInert>
+      <claimable>false</claimable>
       <mineableThing>RR_VoidGluttonium</mineableThing>
       <mineableYield>2</mineableYield>
     </building>
@@ -238,9 +227,14 @@
 Pawns caught right on top of an eruption take the blast head-on: it soaks them in void saturation and leaves those who enjoy growing flushed and aching.</description>
     <graphicData>
       <texPath>Things/Building/FleshDimension/RR_BloatGeyser</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
+      <!-- breathes, like Anomaly's fleshmass organs -->
+      <graphicClass>Graphic_Single_SquashNStretch</graphicClass>
+      <shaderType>BuildingSquashNStretch</shaderType>
+      <maxSnS>(.92, .95)</maxSnS>
+      <offsetSnS>(.5, -.45)</offsetSnS>
       <drawSize>(1.8,1.8)</drawSize>
     </graphicData>
+    <drawerType>RealtimeOnly</drawerType>
     <altitudeLayer>FloorEmplacement</altitudeLayer>
     <passability>Standable</passability>
     <rotatable>false</rotatable>

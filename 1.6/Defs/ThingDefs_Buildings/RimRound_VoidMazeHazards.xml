@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Bloat spitter: a gut organ in the void maze's chambers that lobs bile globs
+       down the tunnels. Wears Anomaly's fleshmass spitter sprite, tinted pink.
+       Placed by GenStep_RRVoidMaze. -->
+  <ThingDef ParentName="BuildingNaturalBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BloatSpitter</defName>
+    <label>bloat spitter</label>
+    <description>A swollen gut organ grown into the wall of the flesh dimension. It fills itself with thick, sweet bile and spits globs of it at anything warm it can see. The glob bursts into a cloud of bloatgas.\n\nIt can be killed.</description>
+    <thingClass>Building</thingClass>
+    <size>(2, 2)</size>
+    <statBases>
+      <MaxHitPoints>260</MaxHitPoints>
+      <Flammability>0.7</Flammability>
+      <Beauty>-12</Beauty>
+    </statBases>
+    <graphicData>
+      <graphicClass>Graphic_Indexed_SquashNStretch</graphicClass>
+      <texPath>Things/Building/Fleshmass/FleshmassSpitter</texPath>
+      <color>(255, 180, 205)</color>
+      <drawSize>(2.5, 2.5)</drawSize>
+      <drawOffset>(0, 0.02, 0)</drawOffset>
+      <shaderType>BuildingSquashNStretch</shaderType>
+      <maxSnS>(.9, .95)</maxSnS>
+      <offsetSnS>(.5, -.45)</offsetSnS>
+      <damageData>
+        <rect>(0.3, 0.3, 1.4, 1.4)</rect>
+        <scratches>
+          <li>Damage/FleshScratch1</li>
+          <li>Damage/FleshScratch2</li>
+          <li>Damage/FleshScratch3</li>
+        </scratches>
+      </damageData>
+    </graphicData>
+    <drawerType>RealtimeOnly</drawerType>
+    <tickerType>Normal</tickerType>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <fillPercent>0.75</fillPercent>
+    <soundImpactDefault>Fleshmass_Damaged</soundImpactDefault>
+    <rotatable>false</rotatable>
+    <building>
+      <isInert>true</isInert>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+      <quickTargetable>true</quickTargetable>
+      <isTargetable>true</isTargetable>
+      <destroyEffecter>FleshmassDestroyed</destroyEffecter>
+    </building>
+    <killedLeavings>
+      <RR_VoidGluttonium>4</RR_VoidGluttonium>
+    </killedLeavings>
+    <verbs>
+      <!-- a direct lob, not a mortar: the maze's thick roof swallows overhead shells -->
+      <li>
+        <verbClass>Verb_Shoot</verbClass>
+        <warmupTime>2.5</warmupTime>
+        <defaultProjectile>RR_Proj_BileGlob</defaultProjectile>
+        <requireLineOfSight>true</requireLineOfSight>
+        <minRange>1.9</minRange>
+        <range>22.9</range>
+        <burstShotCount>1</burstShotCount>
+        <soundCast>SpitterSpit</soundCast>
+      </li>
+    </verbs>
+    <comps>
+      <li Class="RimRound.Comps.CompProperties_BloatSpitter" />
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="BaseBullet" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Proj_BileGlob</defName>
+    <label>bile glob</label>
+    <thingClass>RimRound.Projectiles.Projectile_RRBileGlob</thingClass>
+    <graphicData>
+      <graphicClass>Graphic_Single_AgeSecs</graphicClass>
+      <texPath>Things/Projectile/FleshmassSpitterProjectileSheet</texPath>
+      <color>(255, 150, 200)</color>
+      <drawSize>(.75, .75)</drawSize>
+      <shaderType>MoteGlow</shaderType>
+    </graphicData>
+    <projectile>
+      <useGraphicClass>True</useGraphicClass>
+      <shadowSize>1</shadowSize>
+      <damageDef>RR_FatGas</damageDef>
+      <damageAmountBase>0</damageAmountBase>
+      <spinRate>20</spinRate>
+      <speed>28</speed>
+      <arcHeightFactor>0.6</arcHeightFactor>
+      <soundExplode>SpitterSpitLands</soundExplode>
+    </projectile>
+  </ThingDef>
+
+  <!-- Gorge maw: a hidden mouth in the void maze's squeezes. Swallows a pawn whole,
+       swells and twitches around them, pumps them full and spits them back out.
+       Placed by GenStep_RRVoidMaze. -->
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_GorgeMaw</defName>
+    <label>gorge maw</label>
+    <description>A puckered mouth in the flesh floor, easy to mistake for another fold of the tunnel. Anything warm that steps on it is swallowed whole. The maw swells around its meal, pumps it full of thick, sweet slurry, and spits it back out bigger than before.\n\nKilling the maw cuts free whoever is inside.</description>
+    <thingClass>RimRound.Buildings.Building_RRGorgeMaw</thingClass>
+    <graphicData>
+      <texPath>Things/Building/FleshDimension/RR_GorgeMaw</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1.2, 1.2)</drawSize>
+    </graphicData>
+    <drawerType>RealtimeOnly</drawerType>
+    <altitudeLayer>FloorEmplacement</altitudeLayer>
+    <passability>Standable</passability>
+    <rotatable>false</rotatable>
+    <selectable>true</selectable>
+    <tickerType>Normal</tickerType>
+    <statBases>
+      <MaxHitPoints>120</MaxHitPoints>
+      <Flammability>0.5</Flammability>
+      <Beauty>-6</Beauty>
+    </statBases>
+    <building>
+      <isInert>true</isInert>
+      <isEdifice>false</isEdifice>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+      <ai_chillDestination>false</ai_chillDestination>
+      <isTargetable>true</isTargetable>
+    </building>
+  </ThingDef>
+
+</Defs>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Defs>
-	<HediffDef>
+	<HediffDef Name="RR_SuddenWeightGainBase">
 		<defName>RimRound_SuddenWeightGain</defName>
 		<label>Sudden weight gain</label>
 		<defaultLabelColor>(1,0,0.5)</defaultLabelColor>
@@ -86,4 +86,12 @@
 	
 	
 	
+	<!-- Flab grenade gas: the same swelling, but the weight wears off after 3 in-game hours -->
+	<HediffDef ParentName="RR_SuddenWeightGainBase">
+		<defName>RimRound_SuddenWeightGainTemporary</defName>
+		<label>Sudden weight gain (temporary)</label>
+		<labelNoun>temporary rapid weight gain</labelNoun>
+		<description>Artificially stimulated weight gain. This dose is unstable: the extra weight will wear off after a few hours.</description>
+		<hediffClass>RimRound.Hediffs.Hediff_SuddenWeightGainTemporary</hediffClass>
+	</HediffDef>
 </Defs>

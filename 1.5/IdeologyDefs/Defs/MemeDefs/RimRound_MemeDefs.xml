@@ -1,84 +1,100 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Defs>
+  <!-- Feedees. Kept under its old defName (it began as "Food Indifference") so saves
+       that already use it still load. Unlocks voidmilk harvesting from a held void
+       echo (see FeedeesUtility). -->
   <MemeDef>
     <defName>RR_FoodSupremacy</defName>
-    <label>Food Indifference</label>
-    <description>Food is the foundation of all life. Our lives should revolve around it's production</description>
-    <iconPath>UI/Memes/TreeConnection</iconPath>
+    <label>feedees</label>
+    <description>The body is a vessel, and a vessel is meant to be filled. Every meal is a devotion and every pound gained is a blessing; to grow is holy, and to help another grow is holier still. What goes in hardly matters - only that it keeps going in.\n\nFeedees know the void can be fed, and fed from: only they can milk a void echo on a holding platform, call a void seam open, and worship a Feedee of their own.</description>
+    <iconPath>UI/Memes/RR_Feedees</iconPath>
     <groupDef>Misc</groupDef>
     <impact>3</impact>
     <renderOrder>120</renderOrder>
+    <!-- believers who love weight hold it firmly; those who dislike it waver (and feel it: RR_FeedeesDoubt) -->
+    <agreeableTraits>
+      <li><def>RR_WeightOpinion_Like_Trait</def></li>
+      <li><def>RR_WeightOpinion_Love_Trait</def></li>
+      <li><def>RR_WeightOpinion_Fanatical_Trait</def></li>
+    </agreeableTraits>
+    <disagreeableTraits>
+      <li><def>RR_WeightOpinion_Dislike_Trait</def></li>
+      <li><def>RR_WeightOpinion_Hate_Trait</def></li>
+    </disagreeableTraits>
     <requireOne>
       <li>
         <li>RR_FungusEating_Neutral</li>
       </li>
-	  <li>
-		<li>Cannibalism_Acceptable</li>
-		<li>Cannibalism_Preferred</li>
-	  </li>
+      <li>
+        <li>Cannibalism_Acceptable</li>
+        <li>Cannibalism_Preferred</li>
+      </li>
       <li>
         <li>NutrientPasteEating_DontMind</li>
       </li>
-	  <li>
-		<li>InsectMeatEating_Loved</li>
-	  </li>
+      <li>
+        <li>InsectMeatEating_Loved</li>
+      </li>
     </requireOne>
     <generalRules>
       <rulesStrings>
-        <li>memeCreed->root</li>
-        <li>memeCreed->leaf</li>
-        <li>memeCreed->vine</li>
-        <li>memeCreed->glade</li>
-        <li>memeCreed->forest</li>
-        <li>memeConcept->trees</li>
-        <li>memeConcept->forests</li>
-        <li>memeAdjective->sturdy</li>
-        <li>memeAdjective->barky</li>
-        <li>memeHyphenPrefix->tree</li>
-        <li>memeHyphenPrefix->arbor</li>
-        <li>memeHyphenPrefix->twig</li>
-        <li>memeLeaderNoun->treekeeper</li>
-        <li>memeLeaderNoun->arborist</li>
-        <li>memeLeaderNoun->neodruid</li>
-        <li>memeLeaderAdjective->green</li>
-        <li>memeLeaderAdjective->root</li>
-        <li>memeLeaderAdjective->canopy</li>
-        <li>memeMoralist->treespeaker</li>
+        <li>memeCreed->table</li>
+        <li>memeCreed->feast</li>
+        <li>memeCreed->banquet</li>
+        <li>memeCreed->trough</li>
+        <li>memeCreed->larder</li>
+        <li>memeConcept->plenty</li>
+        <li>memeConcept->abundance</li>
+        <li>memeConcept->the feast</li>
+        <li>memeConcept->fullness</li>
+        <li>memeAdjective->bountiful</li>
+        <li>memeAdjective->overflowing</li>
+        <li>memeAdjective->well-fed</li>
+        <li>memeAdjective->swollen</li>
+        <li>memeHyphenPrefix->feast</li>
+        <li>memeHyphenPrefix->plenty</li>
+        <li>memeHyphenPrefix->gorge</li>
+        <li>memeLeaderNoun->feeder</li>
+        <li>memeLeaderNoun->provider</li>
+        <li>memeLeaderNoun->ladle-bearer</li>
+        <li>memeLeaderAdjective->bountiful</li>
+        <li>memeLeaderAdjective->generous</li>
+        <li>memeLeaderAdjective->ample</li>
+        <li>memeMoralist->feeder</li>
+        <li>memeMoralist->gourmand</li>
+        <li>memeMoralist->plate-keeper</li>
       </rulesStrings>
     </generalRules>
     <descriptionMaker>
       <rules>
         <rulesStrings>
           <!-- theist myth -->
-          <li>creation(tag=meme_TreeConnection)        ->[deity0_name] rooted the trees firmly in the ground, yet made them grow steadily towards heaven. This is [deity0_name]'s first lesson on how to know [deity0_objective].</li>
-          <li>episode(uses=1,tag=meme_TreeConnection)  ->[deity0_name]'s forests renew the air that [deity0_possessive] people breathe, and give the boughs under which they shelter, and is the larder in which they forage.</li>
+          <li>creation(tag=meme_RR_FoodSupremacy)        ->[deity0_name] was so vast that [deity0_possessive] body became the world, and every harvest is a piece of [deity0_objective] offered back to [deity0_possessive] children.</li>
+          <li>episode(uses=1,tag=meme_RR_FoodSupremacy)  ->[deity0_name] laid a table that never emptied, and those who ate from it grew great and soft and glad, and were called [deity0_possessive] beloved.</li>
           <!-- theist founder -->
-          <li>intro(tag=meme_TreeConnection)           ->When the original arborists first came to the [place_summary] [place_name], they created a sacred grove of [TreeType] where they could worship the [deity0_type] [deity0_name].</li>
-          <li>conflict(tag=meme_TreeConnection)        ->A greedy [foeLeader] felled many forests for [foeLeader_possessive] farms and factories, and the [memberNamePlural] wept for the murdered trees.</li>
-          <li>founderJoin(tag=meme_TreeConnection)     ->The prophet [founderName] was miraculously born from a tree in [place_name], and discovered by [founder_possessive] parents in the boughs of an old [TreeType] tree.</li>
-          <li>victory(tag=meme_TreeConnection)         ->[founderName] found the [foeLeader] sleeping in the [place_powerCenter], and placed an acorn upon the [foeLeader]'s chest. With [deity0_name]'s fierce power it rooted there, growing through [foeLeader_possessive] body, taking our revenge on the tree-killer.</li>
+          <li>intro(tag=meme_RR_FoodSupremacy)           ->In the lean years on the [place_summary] [place_name], the [memberNamePlural] heard [deity0_name] promise them a feast without end, if only they would keep on eating.</li>
+          <li>conflict(tag=meme_RR_FoodSupremacy)        ->A cruel [foeLeader] rationed the grain and let the [memberNamePlural] go thin, and the [foeSoldiers] burned any granary that fed more than it should.</li>
+          <li>founderJoin(tag=meme_RR_FoodSupremacy)     ->A cook named [founderName] was the first to feed a stranger until they could not stand, and wept at how beautiful they became.</li>
+          <li>victory(tag=meme_RR_FoodSupremacy)         ->[founderName] invited the [foeLeader] to one last supper, and fed [foeLeader_objective] and fed [foeLeader_objective] until the [foeLeader] could never leave the table again.</li>
           <!-- ideological founder -->
-          <li>setup(tag=meme_TreeConnection)           ->In a world lacking depth and meaning, [founderName] meditated in a forest, connecting with branch and root and leaf, and founded our movement.</li>
-          <li>story(uses=1,tag=meme_TreeConnection)    ->[founderName] brought the tired to the forest so that they might rest in its shade, and breathe in its air, and be renewed.</li>
+          <li>setup(tag=meme_RR_FoodSupremacy)           ->In a world that measured worth in hunger and restraint, [founderName] set out a feast for anyone who wanted it, and founded our movement around the table.</li>
+          <li>story(uses=1,tag=meme_RR_FoodSupremacy)    ->[founderName] fed the frightened and the lonely until they were full and warm and heavy, and they stopped being afraid.</li>
           <!-- ideological lesson -->
-          <li>lessonIntro(tag=meme_TreeConnection)         ->It might seem to you like a joke to say that I learnt this while sitting under a tree. But listening to its whispering leaves, I knew that</li>
-          <li>lesson(tag=meme_TreeConnection)              ->no entity in the universe knows more than the trees</li>
-          <li>lessonReinforcement(tag=meme_TreeConnection) ->Let this seed of truth grow and bear its fruit in your soul.</li>
+          <li>lessonIntro(tag=meme_RR_FoodSupremacy)         ->Some think it is shameful to be full. I learnt otherwise, with a full belly and a clear head:</li>
+          <li>lesson(tag=meme_RR_FoodSupremacy)              ->a body that grows is a body that is loved, and there is no such thing as too much</li>
+          <li>lessonReinforcement(tag=meme_RR_FoodSupremacy) ->So eat, and help each other eat, and never apologise for the space you take up.</li>
           <!-- archist -->
-          <li>archistBasis(tag=meme_TreeConnection)    ->Trees symbolize the archotechs. Like an ancient oak they dwarf the small acorn from which they grew, and their influence spreads through unseen roots beneath the surface.</li>
-          <li>archistFact(tag=meme_TreeConnection)     ->The archotechs developed their psychic abilities after discovering the anima tree.</li>
-          <li>archistFact(tag=meme_TreeConnection)     ->The archotechs choose to express themselves through, of all things, a unique kind of tree.</li>
-          <li>archistProphecy(tag=meme_TreeConnection) ->[inTheEnd], the archotechs will grow a great forest. Transcendence will grown within those that enter the forest and eat its fruit. Those that have forgotten the trees will be forgotten by the archotechs.</li>
+          <li>archistBasis(tag=meme_RR_FoodSupremacy)    ->The archotechs are the greatest feeders of all. They swallowed whole worlds of data and grew beyond measure, and they want us to grow with them.</li>
+          <li>archistFact(tag=meme_RR_FoodSupremacy)     ->The archotechs built the void to be fed. The echoes in its depths are only the first of its mouths.</li>
+          <li>archistFact(tag=meme_RR_FoodSupremacy)     ->Void gluttonium is archotech manna, left for those willing to take it in.</li>
+          <li>archistProphecy(tag=meme_RR_FoodSupremacy) ->[inTheEnd], the archotechs will set a feast across the whole world, and those who have learnt to grow will take their seats at it. The thin and the hungry will be left outside.</li>
           <!-- animist -->
-          <li>animistFact(tag=meme_TreeConnection)     ->The spirits of trees protect those abide beneath their branches.</li>
-          <li>animistFact(tag=meme_TreeConnection)     ->The spirits of trees are powerful, as they bridge the power of the air above with that of the ground beneath.</li>
-          <li>animistFact(tag=meme_TreeConnection)     ->If a tree falls in the forest, its spirit makes a sound that all other spirits can hear.</li>
+          <li>animistFact(tag=meme_RR_FoodSupremacy)     ->Every meal carries the spirit of what it was, and a well-fed body carries many spirits home.</li>
+          <li>animistFact(tag=meme_RR_FoodSupremacy)     ->The spirits of plenty gather where bellies are full, and flee from empty plates.</li>
+          <li>animistFact(tag=meme_RR_FoodSupremacy)     ->The void has a spirit too, a hungry one - and hunger can be shared.</li>
         </rulesStrings>
       </rules>
     </descriptionMaker>
-    <startingResearchProjects>
-      <li>TreeSowing</li>
-    </startingResearchProjects>
   </MemeDef>
 </Defs>

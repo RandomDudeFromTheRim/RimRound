@@ -1,4 +1,4 @@
-﻿using RimRound.Comps;
+using RimRound.Comps;
 using RimRound.Hediffs;
 using System;
 using System.Collections.Generic;
@@ -58,6 +58,8 @@ namespace RimRound.Utilities
 
         public static bool showSpecialDebugSettings = false;
         public static bool showPawnDietManagementGizmo = true;
+        /// <summary>The gorge constrictor wears a monitor with a neon emoticon face in its flesh.</summary>
+        public static bool constrictorScreenFace = true;
         public static bool showSleepPostureManagementGizmo = true;
         public static bool showBlanketManagementGizmo = true;
         public static bool showExemptionGizmo = true;

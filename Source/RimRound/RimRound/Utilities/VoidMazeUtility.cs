@@ -1,4 +1,5 @@
 using RimRound.Hediffs;
+using System.Linq;
 using Verse;
 
 namespace RimRound.Utilities
@@ -12,6 +13,12 @@ namespace RimRound.Utilities
         public static bool IsInVoidMaze(Pawn pawn)
         {
             return pawn?.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_VoidWarmth) != null;
+        }
+
+        /// <summary>The way home out of a void maze map, or null on any other map.</summary>
+        public static Building ReturnPortalOn(Map map)
+        {
+            return map?.listerThings.ThingsOfDef(Defs.ThingDefOf.RR_VoidPortalReturn).FirstOrDefault() as Building;
         }
 
         /// <summary>The void vigor hediff if this pawn is a void echo, otherwise null.</summary>

@@ -410,6 +410,19 @@ namespace RimRound.UI
                 null,
                 "RR_ToolTip_Preferences_showDescriptionTab");
 
+            CheckboxLabeled(new Rect
+            {
+                x = gizmoSettingsCheckBoxesRect.x,
+                y = positionIndex++ * spaceBetweenCheckBoxes + gizmoSettingsCheckBoxesRect.y,
+                width = gizmoSettingsCheckBoxesRect.width - bufferForCheckmarks,
+                height = spaceBetweenCheckBoxes
+            },
+                "RR_Mtw_GizmoSettings_constrictorScreenFace",
+                ref GlobalSettings.constrictorScreenFace,
+                false, null, null, false,
+                null,
+                "RR_ToolTip_Preferences_constrictorScreenFace");
+
             GUI.EndGroup();
         }
 

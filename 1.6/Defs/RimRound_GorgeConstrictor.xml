@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Gorge constrictor: a small fleshbeast of the void maze with a shard of dark
+       archotechnology in its back. When its attack lands it wraps itself round the
+       victim and pumps them until they burst (see Hediff_RRConstricted). -->
+  <ThingDef ParentName="BaseFleshbeast" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_GorgeConstrictor</defName>
+    <label>gorge constrictor</label>
+    <description>A flesh worm swollen tight with slurry, a sliver of dark archotechnology driven into its back. It doesn't need to fight: once it reaches someone it wraps itself around them, holds them still, forces a proboscis into their mouth - and empties itself into them.
+
+It arrives carrying enough to burst an ordinary person. If its victim reaches Gelatinous I before it runs dry, they burst - and the constrictor bursts with them, leaving blob walls and void gluttonium behind. If it runs dry first, it drops off, a spent husk. Every wound it takes before it latches spills some of its load: shoot it enough and it can no longer burst anyone. Someone who is already that big is too much for it: it gives them one surge of weight and bursts on its own.
+
+Another pawn can tear it off, which is harder the fuller it still is. Alone, a victim is very unlikely to wrench free.</description>
+    <statBases>
+      <MoveSpeed>4.8</MoveSpeed>
+      <MinimumContainmentStrength>20</MinimumContainmentStrength>
+      <ToxicResistance>0.5</ToxicResistance>
+    </statBases>
+    <uiIconPath>Things/Pawn/RR_GorgeConstrictor/RR_GorgeConstrictor_MenuIcon</uiIconPath>
+    <race>
+      <body>Fingerspike</body>
+      <baseBodySize>0.5</baseBodySize>
+      <baseHealthScale>1.2</baseHealthScale>
+      <lifeExpectancy>10</lifeExpectancy>
+      <renderTree>Animal</renderTree>
+      <deathAction Class="DeathActionProperties_Vanish">
+        <workerClass>DeathActionWorker_Vanish</workerClass>
+        <filth>Filth_TwistedFlesh</filth>
+        <filthCountRange>1~3</filthCountRange>
+        <meatExplosionSize>Small</meatExplosionSize>
+      </deathAction>
+      <lifeStageAges>
+        <li>
+          <def>EntityFullyFormed</def>
+          <soundWounded>Pawn_Fleshbeast_Fingerspike_Wounded</soundWounded>
+          <soundDeath>Pawn_Fleshbeast_Fingerspike_Death</soundDeath>
+          <soundCall>Pawn_Fleshbeast_Fingerspike_Call</soundCall>
+        </li>
+      </lifeStageAges>
+    </race>
+    <comps>
+      <li Class="CompProperties_AttachPoints">
+        <points>
+          <li>
+            <offset>(-.21, 0, .21)</offset>
+            <type>PlatformRestraint0</type>
+          </li>
+          <li>
+            <offset>(.21, 0, .21)</offset>
+            <type>PlatformRestraint1</type>
+          </li>
+          <li>
+            <offset>(.21, 0, -.21)</offset>
+            <type>PlatformRestraint2</type>
+          </li>
+          <li>
+            <offset>(-.21, 0, -.21)</offset>
+            <type>PlatformRestraint3</type>
+          </li>
+        </points>
+      </li>
+      <li Class="CompProperties_Studiable">
+        <frequencyTicks>120000</frequencyTicks>
+        <knowledgeCategory>Basic</knowledgeCategory>
+        <minMonolithLevelForStudy>1</minMonolithLevelForStudy>
+        <anomalyKnowledge>1.5</anomalyKnowledge>
+        <requiresHoldingPlatform>true</requiresHoldingPlatform>
+      </li>
+      <li Class="CompProperties_ProducesBioferrite">
+        <bioferriteDensity>2</bioferriteDensity>
+      </li>
+      <!-- hunts the nearest hostile humanlike, downed ones included, and latches on -->
+      <li Class="RimRound.Comps.CompProperties_RRConstrictorHunt" />
+    </comps>
+    <tools>
+      <li>
+        <label>grasping coils</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>3</power>
+        <cooldownTime>1.8</cooldownTime>
+        <linkedBodyPartsGroup>MiddleSpike</linkedBodyPartsGroup>
+        <alwaysTreatAsWeapon>true</alwaysTreatAsWeapon>
+        <extraMeleeDamages>
+          <li>
+            <def>RR_ConstrictorLatch</def>
+            <amount>1</amount>
+          </li>
+        </extraMeleeDamages>
+        <soundMeleeHit>Pawn_Fleshbeast_Attack_Blunt</soundMeleeHit>
+      </li>
+    </tools>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseFleshbeastKind" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_GorgeConstrictor</defName>
+    <label>gorge constrictor</label>
+    <race>RR_GorgeConstrictor</race>
+    <combatPower>60</combatPower>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Pawn/RR_GorgeConstrictor/RR_GorgeConstrictor</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.5</drawSize>
+        </bodyGraphicData>
+        <silhouetteGraphicData>
+          <texPath>Things/Pawn/RR_GorgeConstrictor/RR_GorgeConstrictor_MenuIcon</texPath>
+          <graphicClass>Graphic_Single</graphicClass>
+          <drawSize>1.5</drawSize>
+        </silhouetteGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- rides on the constrictor's attack: when it lands, the constrictor latches on -->
+  <DamageDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_ConstrictorLatch</defName>
+    <label>constriction</label>
+    <workerClass>RimRound.Hediffs.DamageWorker_RRConstrictorLatch</workerClass>
+    <externalViolence>true</externalViolence>
+    <harmsHealth>false</harmsHealth>
+    <makesBlood>false</makesBlood>
+    <canInterruptJobs>false</canInterruptJobs>
+    <defaultDamage>1</defaultDamage>
+  </DamageDef>
+
+  <!-- The constrictor wrapped around its victim, drawn by the render nodes below.
+       Its proboscis is drawn in world space by MapComponent_RRConstrictorDraw. -->
+  <HediffDef>
+    <defName>RR_Constricted</defName>
+    <label>gorge constrictor</label>
+    <labelNoun>a gorge constrictor</labelNoun>
+    <description>A gorge constrictor is wrapped around this pawn, holding them still and pumping them full through a proboscis in their mouth. When they outgrow their burst point - Gelatinous I, or later for a pawn whose stomach perks let them take more - they will burst.\n\nAnother pawn can tear it off - harder the bigger it has swollen.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_RRConstricted</hediffClass>
+    <defaultLabelColor>(0.85, 0.45, 0.55)</defaultLabelColor>
+    <isBad>true</isBad>
+    <initialSeverity>0.01</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <stages>
+      <li>
+        <label>swollen, latched on</label>
+        <capMods>
+          <li><capacity>Breathing</capacity><offset>-0.05</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>0.2</minSeverity>
+        <label>pumping</label>
+        <capMods>
+          <li><capacity>Breathing</capacity><offset>-0.1</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>half emptied</label>
+        <capMods>
+          <li><capacity>Breathing</capacity><offset>-0.15</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>0.6</minSeverity>
+        <label>shrinking</label>
+        <capMods>
+          <li><capacity>Breathing</capacity><offset>-0.2</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>0.8</minSeverity>
+        <label>nearly spent</label>
+        <lifeThreatening>true</lifeThreatening>
+        <capMods>
+          <li><capacity>Breathing</capacity><offset>-0.3</offset></li>
+        </capMods>
+      </li>
+    </stages>
+    <renderNodeProperties>
+      <!-- the coils round the body: placed and sized per body type in the worker -->
+      <li>
+        <debugLabel>Gorge constrictor coils</debugLabel>
+        <nodeClass>RimRound.Rendering.PawnRenderNode_RRSingle</nodeClass>
+        <workerClass>RimRound.Rendering.PawnRenderNodeWorker_RRConstrictorCoil</workerClass>
+        <texPath>Things/Pawn/RR_GorgeConstrictor/RR_ConstrictorCoil_0</texPath>
+        <parentTagDef>Body</parentTagDef>
+        <overrideMeshSize>1.5</overrideMeshSize>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <drawData>
+          <defaultData>
+            <layer>45</layer>
+          </defaultData>
+        </drawData>
+      </li>
+      <!-- the monitor face embedded in its flesh (toggle in RimRound's settings) -->
+      <li>
+        <debugLabel>Gorge constrictor face</debugLabel>
+        <nodeClass>RimRound.Rendering.PawnRenderNode_RRSingle</nodeClass>
+        <workerClass>RimRound.Rendering.PawnRenderNodeWorker_RRConstrictorFace</workerClass>
+        <texPath>Things/Pawn/RR_GorgeConstrictor/RR_ConstrictorFace_0</texPath>
+        <parentTagDef>Body</parentTagDef>
+        <overrideMeshSize>1</overrideMeshSize>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <drawData>
+          <defaultData>
+            <layer>46</layer>
+          </defaultData>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </HediffDef>
+
+  <!-- how it feels to have one wrapped around you -->
+  <ThoughtDef>
+    <defName>RR_BeingConstricted</defName>
+    <workerClass>RimRound.Thoughts.ThoughtWorker_RRConstricted</workerClass>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <stages>
+      <li>
+        <label>constricted and pumped</label>
+        <description>It's wrapped around me and it's forcing that thing down my throat, filling me and filling me. It won't stop until I burst. Get it off me!</description>
+        <baseMoodEffect>-25</baseMoodEffect>
+      </li>
+      <li>
+        <label>constricted and pumped</label>
+        <description>It's squeezing me so tight, and it just keeps filling me up... I should be scared. Why am I not scared?</description>
+        <baseMoodEffect>-5</baseMoodEffect>
+      </li>
+      <li>
+        <label>pumped full</label>
+        <description>Mmph... it's wrapped all around me, squeezing and pumping and filling me up, bigger and bigger. Oh, that's hot.</description>
+        <baseMoodEffect>15</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- the last few seconds before bursting (meld aerosol, gorge constrictor) -->
+  <HediffDef>
+    <defName>RR_Bursting</defName>
+    <label>bursting</label>
+    <description>Swollen far past bearing. Any second now...</description>
+    <hediffClass>RimRound.Hediffs.Hediff_RRBursting</hediffClass>
+    <defaultLabelColor>(1, 0.3, 0.35)</defaultLabelColor>
+    <isBad>true</isBad>
+    <everCurableByItem>false</everCurableByItem>
+    <stages>
+      <li>
+        <lifeThreatening>true</lifeThreatening>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <!-- swelling and trembling for the last three seconds before a burst -->
+  <AnimationDef>
+    <defName>RR_BurstSwell</defName>
+    <durationTicks>180</durationTicks>
+    <playWhenDowned>true</playWhenDowned>
+    <keyframeParts>
+      <li>
+        <key>Root</key>
+        <value>
+          <workerType>AnimationWorker_Keyframes</workerType>
+          <keyframes>
+            <li><tick>0</tick><scale>(1, 1, 1)</scale><angle>0</angle></li>
+            <li><tick>20</tick><scale>(1.04, 1, 1.02)</scale><angle>2</angle></li>
+            <li><tick>35</tick><scale>(1.02, 1, 1.05)</scale><angle>-2</angle></li>
+            <li><tick>55</tick><scale>(1.08, 1, 1.05)</scale><angle>3</angle></li>
+            <li><tick>70</tick><scale>(1.05, 1, 1.09)</scale><angle>-3</angle></li>
+            <li><tick>90</tick><scale>(1.12, 1, 1.08)</scale><angle>4</angle></li>
+            <li><tick>100</tick><scale>(1.09, 1, 1.13)</scale><angle>-4</angle></li>
+            <li><tick>115</tick><scale>(1.17, 1, 1.12)</scale><angle>5</angle></li>
+            <li><tick>125</tick><scale>(1.13, 1, 1.18)</scale><angle>-5</angle></li>
+            <li><tick>138</tick><scale>(1.22, 1, 1.17)</scale><angle>6</angle></li>
+            <li><tick>146</tick><scale>(1.18, 1, 1.23)</scale><angle>-6</angle></li>
+            <li><tick>155</tick><scale>(1.27, 1, 1.22)</scale><angle>7</angle></li>
+            <li><tick>161</tick><scale>(1.23, 1, 1.28)</scale><angle>-7</angle></li>
+            <li><tick>167</tick><scale>(1.31, 1, 1.27)</scale><angle>6</angle></li>
+            <li><tick>172</tick><scale>(1.28, 1, 1.32)</scale><angle>-6</angle></li>
+            <li><tick>176</tick><scale>(1.35, 1, 1.32)</scale><angle>4</angle></li>
+            <li><tick>180</tick><scale>(1.38, 1, 1.36)</scale><angle>0</angle></li>
+          </keyframes>
+        </value>
+      </li>
+    </keyframeParts>
+  </AnimationDef>
+
+  <JobDef>
+    <defName>RR_ConstrictorLatchOn</defName>
+    <driverClass>RimRound.AI.JobDriver_RRConstrictorLatchOn</driverClass>
+    <reportString>crawling onto TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
+  <JobDef>
+    <defName>RR_TearOffConstrictor</defName>
+    <driverClass>RimRound.AI.JobDriver_RRTearOffConstrictor</driverClass>
+    <reportString>tearing the gorge constrictor off TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
+  <!-- Seeing one reveals constrictor binding in the Anomaly research tab, the way the
+       dreadmeld reveals pit gate provocation. The icon and its _Silhouette come from
+       Source/TextureGen (constrictor_body). -->
+  <EntityCodexEntryDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_GorgeConstrictor</defName>
+    <label>gorge constrictor</label>
+    <useDescriptionFrom>RR_GorgeConstrictor</useDescriptionFrom>
+    <uiIconPath>UI/CodexEntries/RR_GorgeConstrictor</uiIconPath>
+    <category>Advanced</category>
+    <linkedThings>
+      <li>RR_GorgeConstrictor</li>
+    </linkedThings>
+    <discoveredResearchProjects>
+      <li>RR_ConstrictorBinding</li>
+    </discoveredResearchProjects>
+    <provocationIncidents>
+      <li>RR_VoidPortalOpens</li>
+    </provocationIncidents>
+    <orderInCategory>1510</orderInCategory>
+  </EntityCodexEntryDef>
+
+</Defs>

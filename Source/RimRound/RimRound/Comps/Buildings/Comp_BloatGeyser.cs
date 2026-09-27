@@ -19,7 +19,12 @@ namespace RimRound.Comps
         public float warningPressure = 0.9f;
 
         public float gasRadius = 4.9f;
-        public int gasPerCell = 220;
+        // Bloatgas is the same fattening gas as the grenades, whose sudden weight gain
+        // runs 10-20 kg/s at high severity. A dense eruption added hundreds of kilos,
+        // so the geyser vents a thin cloud: tens of kilos for a pawn caught in it.
+        public int gasPerCell = 70;
+        /// <summary>Gas leaked at the vent every check while it hisses its warning.</summary>
+        public int hissGasPerPulse = 10;
         /// <summary>Pawns this close take the eruption head-on.</summary>
         public float blastRadius = 2.5f;
         public float saturationPerBlast = 0.06f;
@@ -100,7 +105,7 @@ namespace RimRound.Comps
                 Props.warningSound?.PlayOneShot(new TargetInfo(parent.Position, map));
             }
             FleckMaker.ThrowAirPuffUp(parent.TrueCenter(), map);
-            map.GetComponent<MapComp_RRGasGrid>()?.AddGas(parent.Position, RRGasType.fatteningGas, 30);
+            map.GetComponent<MapComp_RRGasGrid>()?.AddGas(parent.Position, RRGasType.fatteningGas, Props.hissGasPerPulse);
         }
 
         public void Erupt()

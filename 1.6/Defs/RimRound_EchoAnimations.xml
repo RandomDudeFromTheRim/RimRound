@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- A void echo with swallowed colonists inside: a slow, heavy belly heave
+       (squash and stretch) with a lazy sway. Played while it roams and while it
+       sits chained on a holding platform. -->
+  <AnimationDef>
+    <defName>RR_EchoGorged</defName>
+    <durationTicks>150</durationTicks>
+    <startOnRandomTick>true</startOnRandomTick>
+    <playWhenDowned>true</playWhenDowned>
+    <keyframeParts>
+      <li>
+        <key>Root</key>
+        <value>
+          <workerType>AnimationWorker_Keyframes</workerType>
+          <keyframes>
+            <li>
+              <tick>0</tick>
+              <scale>(1, 1, 1)</scale>
+              <angle>0</angle>
+            </li>
+            <li>
+              <tick>35</tick>
+              <scale>(1.06, 1, 0.95)</scale>
+              <angle>2.5</angle>
+            </li>
+            <li>
+              <tick>70</tick>
+              <scale>(0.97, 1, 1.04)</scale>
+              <angle>0</angle>
+            </li>
+            <li>
+              <tick>80</tick>
+              <!-- something shifts inside -->
+              <scale>(1.03, 1, 0.99)</scale>
+              <offset>(0.03, 0, 0)</offset>
+              <angle>-1</angle>
+            </li>
+            <li>
+              <tick>110</tick>
+              <scale>(1.05, 1, 0.96)</scale>
+              <angle>-2.5</angle>
+            </li>
+            <li>
+              <tick>150</tick>
+              <scale>(1, 1, 1)</scale>
+              <angle>0</angle>
+            </li>
+          </keyframes>
+        </value>
+      </li>
+    </keyframeParts>
+  </AnimationDef>
+</Defs>

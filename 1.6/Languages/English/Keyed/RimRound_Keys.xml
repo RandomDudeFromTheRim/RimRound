@@ -163,6 +163,8 @@
 	
 	<!--Other-->
 	<RR_ToolTip_Preferences_showDescriptionTab>Disabling this will hide the description tab from pawns when they are selected.</RR_ToolTip_Preferences_showDescriptionTab>
+	<RR_Mtw_GizmoSettings_constrictorScreenFace>Gorge constrictor screen face</RR_Mtw_GizmoSettings_constrictorScreenFace>
+	<RR_ToolTip_Preferences_constrictorScreenFace>Shows a bloodied monitor embedded in the gorge constrictor, with a glowing emoticon face that gets more flushed as it feeds. Disable for a plain flesh mass.</RR_ToolTip_Preferences_constrictorScreenFace>
 	<RR_ToolTip_Preferences_showPerkTab>Disabling this will hide the perk tab from pawns when they are selected. This does not disable perks, only makes the menu invisible.</RR_ToolTip_Preferences_showPerkTab>
 	<RR_ToolTip_HediffSettings_WeightManipulationPenaltyMultiplier>Multiplier affecting to what degree a pawn's weight should impact their manipulation.</RR_ToolTip_HediffSettings_WeightManipulationPenaltyMultiplier>
 	<RR_ToolTip_HediffSettings_WeightMovementPenaltyMultiplier>Multiplier affecting to what degree a pawn's weight should impact their movement.</RR_ToolTip_HediffSettings_WeightMovementPenaltyMultiplier>

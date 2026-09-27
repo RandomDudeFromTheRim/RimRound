@@ -43,7 +43,7 @@
       <MarketValue>80</MarketValue>
     </statBases>
     <graphicData>
-      <texPath>Things/Item/Equipment/WeaponRanged/flab_grenade</texPath>
+      <texPath>Things/Item/Equipment/WeaponRanged/RR_MeldGrenade</texPath>
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
     <thingCategories>
@@ -132,7 +132,7 @@
     <label>meld aerosol cloud</label>
     <thingClass>Projectile_Explosive</thingClass>
     <graphicData>
-      <texPath>Things/Projectile/Grenade</texPath>
+      <texPath>Things/Projectile/RR_MeldGrenadeThrown</texPath>
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
     <projectile>

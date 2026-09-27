@@ -10,6 +10,12 @@ namespace RimRound.Hediffs
 {
     public class Hediff_MeldAerosol : Hediff
     {
+        // Past the "growing" stage the meld feeds itself: no more decay, and it
+        // climbs to detonation in about 2 in-game hours (~80 s at normal speed).
+        // A light dose below that still fades away.
+        const float SelfSustainingSeverity = 0.34f;
+        const float SelfGrowthPerInterval = 0.008f;
+
         public override void Tick()
         {
             base.Tick();
@@ -25,7 +31,10 @@ namespace RimRound.Hediffs
                 return;
             }
 
-            DecaySeverity();
+            if (Severity >= SelfSustainingSeverity)
+                Severity += SelfGrowthPerInterval;
+            else
+                DecaySeverity();
 
             if (Severity > 0f)
             {
@@ -70,81 +79,7 @@ namespace RimRound.Hediffs
 
         void TriggerMeldDetonation()
         {
-            if (pawn == null || pawn.Dead || pawn.Map == null)
-                return;
-
-            Map map = pawn.Map;
-            IntVec3 pos = pawn.Position;
-
-            float weightSev = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight)?.Severity ?? 0.035f;
-            float meldSev = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth)?.Severity ?? 0f;
-            float extraKilos = (weightSev / 0.001f) + (meldSev * 10f);
-
-            int blobWallCount = 1 + (int)(extraKilos / 20f);
-            blobWallCount = Mathf.Clamp(blobWallCount, 3, 80);
-            float blobRadius = 1.5f + extraKilos * 0.004f;
-
-            Messages.Message(
-                $"{pawn.LabelShort}'s body swells and bursts, releasing a torrent of fleshmass that solidifies into blob walls!",
-                new LookTargets(pawn),
-                MessageTypeDefOf.ThreatBig);
-
-            GenExplosion.DoExplosion(pos, map, 2.9f, DamageDefOf.Smoke, null);
-            Find.CameraDriver.shaker.DoShake(1f);
-
-            pawn.Kill(null);
-            pawn.Corpse?.Destroy();
-
-            int spawned = 0;
-            foreach (IntVec3 cell in GenRadial.RadialCellsAround(pos, blobRadius, useCenter: true))
-            {
-                if (spawned >= blobWallCount)
-                    break;
-
-                if (!cell.InBounds(map) || !cell.Walkable(map))
-                    continue;
-
-                if (!Rand.Chance(0.65f))
-                    continue;
-
-                Thing wall = ThingMaker.MakeThing(ThingDef.Named("RR_BlobWall"));
-                GenSpawn.Spawn(wall, cell, map, Rot4.North, WipeMode.Vanish);
-                spawned++;
-            }
-
-            int gluttoniumCount = Rand.RangeInclusive(3, 8) + Mathf.Min((int)(extraKilos * 0.005f), 12);
-            IntVec3[] offsets = {
-                new IntVec3(1, 0, 0), new IntVec3(-1, 0, 0),
-                new IntVec3(0, 0, 1), new IntVec3(0, 0, -1)
-            };
-            foreach (IntVec3 offset in offsets)
-            {
-                IntVec3 cell = pos + offset;
-                if (cell.InBounds(map) && cell.Walkable(map))
-                {
-                    int dropCount = gluttoniumCount;
-                    if (dropCount > 8) dropCount = 8;
-                    if (dropCount > 0)
-                    {
-                        Thing ore = ThingMaker.MakeThing(ThingDef.Named("RR_VoidGluttonium"));
-                        ore.stackCount = dropCount;
-                        gluttoniumCount -= dropCount;
-                        GenPlace.TryPlaceThing(ore, cell, map, ThingPlaceMode.Near);
-                    }
-                }
-            }
-
-            foreach (Pawn p in map.mapPawns.FreeColonistsSpawned)
-            {
-                float dist = (p.Position - pos).LengthHorizontal;
-                if (dist > 30f) continue;
-                ThingComp_PawnAttitude witnessAtt = p.TryGetComp<ThingComp_PawnAttitude>();
-                if (witnessAtt == null) continue;
-                if (witnessAtt.weightOpinion >= WeightOpinion.NeutralPlus)
-                    p.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtDef.Named("RR_WitnessedBloatedDeath_Aroused"));
-                else
-                    p.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtDef.Named("RR_WitnessedBloatedDeath_Horror"));
-            }
+            Utilities.MeldBurstUtility.BeginBurst(pawn);
         }
 
         public override string TipStringExtra

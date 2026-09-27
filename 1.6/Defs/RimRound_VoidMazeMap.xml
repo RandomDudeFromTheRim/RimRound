@@ -61,7 +61,32 @@
     </statBases>
   </TerrainDef>
 
-  <!-- The way home, spawned at the heart of the maze -->
+  <!-- Where pawns arrive: the start of the maze's run. Decorative; Comp_VoidPortal
+       drops entering pawns next to it. -->
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_VoidMazeEntryScar</defName>
+    <label>healed tear</label>
+    <description>A long tear in the flesh floor that has knitted itself shut. This is where you came in. The way home is at the far end of the maze.</description>
+    <graphicData>
+      <texPath>Things/Building/FleshDimension/RR_VoidMazeEntryScar</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2.4, 2.4)</drawSize>
+    </graphicData>
+    <altitudeLayer>FloorEmplacement</altitudeLayer>
+    <passability>Standable</passability>
+    <rotatable>false</rotatable>
+    <selectable>true</selectable>
+    <useHitPoints>false</useHitPoints>
+    <destroyable>false</destroyable>
+    <building>
+      <isInert>true</isInert>
+      <isEdifice>false</isEdifice>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+    </building>
+  </ThingDef>
+
+  <!-- The way home, spawned at the far end of the maze -->
   <ThingDef>
     <defName>RR_VoidPortalReturn</defName>
     <thingClass>Building</thingClass>

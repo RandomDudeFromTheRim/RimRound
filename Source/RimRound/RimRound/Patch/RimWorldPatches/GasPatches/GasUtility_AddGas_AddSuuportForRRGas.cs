@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimRound.Comps;
 using RimRound.Utilities;
 using System;
@@ -23,7 +23,7 @@ namespace RimRound.Patch
         const GasType rimRoundFatteningGas = (GasType)32;
         const GasType rimRoundGasType1 = (GasType)64;
         const GasType rimRoundGasType2 = (GasType)128;
-        const GasType rimRoundGasType3 = (GasType)256;
+        const GasType rimRoundGasType3 = (GasType)256; // temporary fattening gas (flab grenades)
 
         public static bool Prefix(IntVec3 cell, Map map, GasType gasType, int amount) 
         {
@@ -39,7 +39,7 @@ namespace RimRound.Patch
                     map.GetComponent<MapComp_RRGasGrid>().AddGas(cell, RRGasType.meldGas, amount, true);
                     return false;
                 case rimRoundGasType3:
-                    map.GetComponent<MapComp_RRGasGrid>().AddGas(cell, RRGasType.unused2, amount, true);
+                    map.GetComponent<MapComp_RRGasGrid>().AddGas(cell, RRGasType.temporaryFatteningGas, amount, true);
                     return false;
                 default:
                     return true;

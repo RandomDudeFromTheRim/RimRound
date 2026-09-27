@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- The Feedees meme's role and rituals. Rituals with requiredMemes are added to an
+       ideoligion when it takes the meme; GameComponent_RRFeedeesPrecepts adds them
+       (and the role) to ideoligions that already had it. Code: Rituals/FeedeesRituals.cs -->
+
+  <!-- ============================================================ the Feedee -->
+
+  <RulePackDef>
+    <defName>NamerRoleRRFeedee</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_roleName(p=4)->feedee</li>
+        <li>r_roleName(p=2)->[memeAdjective] one</li>
+        <li>r_roleName->vessel of [memeConcept]</li>
+        <li>r_roleName->[memeHyphenPrefix]-vessel</li>
+        <li>r_roleName->cherished of [memeConcept]</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <PreceptDef ParentName="PreceptRoleSingleBase">
+    <defName>RR_IdeoRole_Feedee</defName>
+    <label>feedee</label>
+    <description>The ideoligion's most cherished vessel: a believer who loves to grow, pampered, fed and worshipped by the faithful. The Feedee eats faster, is spared hauling, cleaning and mining, and can be worshipped at their bed once they are big enough.</description>
+    <iconPath>UI/Memes/RR_Feedees</iconPath>
+    <nameMaker>NamerRoleRRFeedee</nameMaker>
+    <displayOrderInImpact>90</displayOrderInImpact>
+    <restrictToSupremeGenderChance>0</restrictToSupremeGenderChance>
+    <createsRoleEmptyThought>false</createsRoleEmptyThought>
+    <requiredMemes>
+      <li>RR_FoodSupremacy</li>
+    </requiredMemes>
+    <roleRequirements>
+      <li Class="RimRound.Rituals.RoleRequirement_RRLikesWeight" />
+    </roleRequirements>
+    <roleTags>
+      <li>Feedee</li>
+    </roleTags>
+    <roleEffects>
+      <li Class="RoleEffect_PawnStatOffset">
+        <statDef>EatingSpeed</statDef>
+        <modifier>0.3</modifier>
+      </li>
+    </roleEffects>
+    <roleDisabledWorkTags>
+      <li>Hauling</li>
+      <li>Cleaning</li>
+      <li>Mining</li>
+    </roleDisabledWorkTags>
+  </PreceptDef>
+
+  <!-- ============================================================ feedee worship -->
+
+  <RitualObligationTargetFilterDef>
+    <defName>RR_FeedeeBed</defName>
+    <workerClass>RimRound.Rituals.RitualObligationTargetWorker_RRFeedeeBed</workerClass>
+  </RitualObligationTargetFilterDef>
+
+  <PreceptDef>
+    <defName>RR_FeedeeWorship</defName>
+    <label>feedee worship</label>
+    <description>Those who love growing gather around the Feedee's bed to adore them and feed them their offerings. The Feedee must be Obese or bigger, and only believers who like weight will come. The bigger the Feedee, the better it goes.</description>
+    <issue>Ritual</issue>
+    <impact>Medium</impact>
+    <iconPath>UI/Memes/RR_Feedees</iconPath>
+    <preceptClass>Precept_Ritual</preceptClass>
+    <ritualPatternBase>RR_FeedeeWorship</ritualPatternBase>
+    <visible>true</visible>
+    <countsTowardsPreceptLimit>false</countsTowardsPreceptLimit>
+    <selectionWeight>1.0</selectionWeight>
+    <canGenerateAsSpecialPrecept>false</canGenerateAsSpecialPrecept>
+    <capitalizeAsTitle>false</capitalizeAsTitle>
+    <receivesExpectationsQualityOffset>true</receivesExpectationsQualityOffset>
+    <requiredMemes>
+      <li>RR_FoodSupremacy</li>
+    </requiredMemes>
+    <associatedMemes>
+      <li>RR_FoodSupremacy</li>
+    </associatedMemes>
+  </PreceptDef>
+
+  <RitualPatternDef>
+    <defName>RR_FeedeeWorship</defName>
+    <ritualBehavior>RR_FeedeeWorship</ritualBehavior>
+    <ritualOutcomeEffect>RR_FeedeeWorship</ritualOutcomeEffect>
+    <ritualObligationTargetFilter>RR_FeedeeBed</ritualObligationTargetFilter>
+    <alwaysStartAnytime>true</alwaysStartAnytime>
+    <canMergeGizmosFromDifferentIdeos>false</canMergeGizmosFromDifferentIdeos>
+    <iconPathOverride>UI/Memes/RR_Feedees</iconPathOverride>
+  </RitualPatternDef>
+
+  <RitualBehaviorDef>
+    <defName>RR_FeedeeWorship</defName>
+    <workerClass>RimRound.Rituals.RitualBehaviorWorker_RRFeedeeWorship</workerClass>
+    <durationTicks>5000</durationTicks>
+    <spectatorFilter Class="RimRound.Rituals.RitualSpectatorFilter_RRLikesWeight">
+      <description>Only those who like weight (Weight Opinion: Like or higher) will worship the Feedee.</description>
+    </spectatorFilter>
+    <roles>
+      <li Class="RimRound.Rituals.RitualRole_RRFeedee">
+        <label>feedee</label>
+        <id>feedee</id>
+        <tag>Feedee</tag>
+        <precept>RR_IdeoRole_Feedee</precept>
+        <required>True</required>
+        <maxCount>1</maxCount>
+        <countsAsParticipant>False</countsAsParticipant>
+        <allowChild>false</allowChild>
+        <allowDowned>true</allowDowned>
+        <allowKeepLayingDown>true</allowKeepLayingDown>
+        <missingDesc>a Feedee who is Obese or bigger</missingDesc>
+      </li>
+    </roles>
+    <stages>
+      <!-- the Feedee settles into bed (or is already there) -->
+      <li>
+        <defaultDuty>Spectate</defaultDuty>
+        <showProgressBar>false</showProgressBar>
+        <endTriggers>
+          <li Class="StageEndTrigger_RoleArrivedOrInTargetBed">
+            <roleIds>
+              <li>feedee</li>
+            </roleIds>
+          </li>
+        </endTriggers>
+        <roleBehaviors>
+          <li>
+            <roleId>feedee</roleId>
+            <dutyDef>GoToBed</dutyDef>
+          </li>
+        </roleBehaviors>
+      </li>
+      <!-- and is adored -->
+      <li>
+        <defaultDuty>Spectate</defaultDuty>
+        <spectatorsRequired>true</spectatorsRequired>
+        <endTriggers>
+          <li Class="StageEndTrigger_DurationPercentage">
+            <percentage>1</percentage>
+          </li>
+        </endTriggers>
+        <roleBehaviors>
+          <li>
+            <roleId>feedee</roleId>
+            <dutyDef>GoToBed</dutyDef>
+          </li>
+        </roleBehaviors>
+      </li>
+    </stages>
+  </RitualBehaviorDef>
+
+  <RitualOutcomeEffectDef>
+    <defName>RR_FeedeeWorship</defName>
+    <description>Depending on ritual quality, worshippers will get between {MINMOOD} and {MAXMOOD} mood for {MOODDAYS} days, and feed the Feedee their offerings.</description>
+    <workerClass>RimRound.Rituals.RitualOutcomeEffectWorker_RRFeedeeWorship</workerClass>
+    <comps>
+      <li Class="RimRound.Rituals.RitualOutcomeComp_RRFeedeeSize">
+        <label>{PAWN_labelShort}'s size</label>
+        <labelAbstract>the Feedee's size</labelAbstract>
+        <curve>
+          <points>
+            <li>(0.4, 0.05)</li>
+            <li>(0.9, 0.2)</li>
+            <li>(1.4, 0.35)</li>
+            <li>(2.5, 0.5)</li>
+            <li>(5, 0.6)</li>
+          </points>
+        </curve>
+      </li>
+      <li Class="RitualOutcomeComp_ParticipantCount">
+        <label>worshipper count</label>
+        <curve>
+          <points>
+            <li>(1, 0.05)</li>
+            <li>(4, 0.2)</li>
+            <li>(8, 0.3)</li>
+          </points>
+        </curve>
+      </li>
+      <li Class="RitualOutcomeComp_RoomStat">
+        <label>room impressiveness</label>
+        <statDef>Impressiveness</statDef>
+        <curve>
+          <points>
+            <li>0, 0</li>
+            <li>50, 0.1</li>
+            <li>120, 0.2</li>
+          </points>
+        </curve>
+      </li>
+    </comps>
+    <outcomeChances>
+      <li>
+        <label>Awkward</label>
+        <chance>0.05</chance>
+        <memory>RR_FeedeeWorship_Awkward</memory>
+        <description>The {0} was awkward. Nobody knew where to look, and the offerings stayed on their plates.</description>
+        <positivityIndex>-2</positivityIndex>
+      </li>
+      <li>
+        <label>Half-hearted</label>
+        <chance>0.15</chance>
+        <memory>RR_FeedeeWorship_HalfHearted</memory>
+        <description>The {0} was half-hearted. A few offerings were fed, a few prayers mumbled.</description>
+        <positivityIndex>-1</positivityIndex>
+      </li>
+      <li>
+        <label>Devout</label>
+        <chance>0.6</chance>
+        <memory>RR_FeedeeWorship_Devout</memory>
+        <description>The {0} was devout. The worshippers adored the Feedee and fed them with love.</description>
+        <positivityIndex>1</positivityIndex>
+      </li>
+      <li>
+        <label>Rapturous</label>
+        <chance>0.2</chance>
+        <memory>RR_FeedeeWorship_Rapturous</memory>
+        <description>The {0} was rapturous. The worshippers could hardly stop feeding the Feedee, and the Feedee could hardly stop eating.</description>
+        <positivityIndex>2</positivityIndex>
+      </li>
+    </outcomeChances>
+  </RitualOutcomeEffectDef>
+
+  <InteractionDef>
+    <defName>RR_Speech_FeedeeWorship</defName>
+    <label>feedee praise</label>
+    <workerClass>InteractionWorker</workerClass>
+    <ignoreTimeSinceLastInteraction>True</ignoreTimeSinceLastInteraction>
+    <symbol>Things/Mote/SpeechSymbols/Speech</symbol>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry->[INITIATOR_nameDef] [praised] [RECIPIENT_nameDef]'s [part].</li>
+        <li>r_logentry->[INITIATOR_nameDef] fed [RECIPIENT_nameDef] another [offering] and [praised] [RECIPIENT_possessive] [part].</li>
+        <li>r_logentry->[INITIATOR_nameDef] told [RECIPIENT_nameDef] [RECIPIENT_pronoun] was the [bigword] thing [INITIATOR_pronoun] had ever seen.</li>
+        <li>praised->praised</li>
+        <li>praised->worshipped</li>
+        <li>praised->adored</li>
+        <li>praised->sang the praises of</li>
+        <li>praised->gave thanks for</li>
+        <li>part->belly</li>
+        <li>part->size</li>
+        <li>part->softness</li>
+        <li>part->appetite</li>
+        <li>part->curves</li>
+        <li>part->rolls</li>
+        <li>offering->spoonful</li>
+        <li>offering->pastry</li>
+        <li>offering->handful of sweets</li>
+        <li>offering->bowl of slurry</li>
+        <li>bigword->biggest</li>
+        <li>bigword->most beautiful</li>
+        <li>bigword->holiest</li>
+        <li>bigword->softest</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <ThoughtDef>
+    <defName>RR_Worshipped</defName>
+    <durationDays>3</durationDays>
+    <stackLimit>1</stackLimit>
+    <stages>
+      <li>
+        <label>worshipped</label>
+        <description>They gathered around me, told me how wonderful I am, and fed me until I couldn't move. This is what I was made for.</description>
+        <baseMoodEffect>12</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_FeedeeWorship_Awkward</defName>
+    <thoughtClass>Thought_AttendedRitual</thoughtClass>
+    <durationDays>6</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>awkward worship</label>
+        <description>That worship was so awkward. Nobody knew what to do with their hands.</description>
+        <baseMoodEffect>-3</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_FeedeeWorship_HalfHearted</defName>
+    <thoughtClass>Thought_AttendedRitual</thoughtClass>
+    <durationDays>6</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>half-hearted worship</label>
+        <description>That worship could have been so much more.</description>
+        <baseMoodEffect>-1</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_FeedeeWorship_Devout</defName>
+    <thoughtClass>Thought_AttendedRitual</thoughtClass>
+    <durationDays>6</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>devout worship</label>
+        <description>We adored the Feedee and fed them with our own hands. I feel close to something holy.</description>
+        <baseMoodEffect>6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_FeedeeWorship_Rapturous</defName>
+    <thoughtClass>Thought_AttendedRitual</thoughtClass>
+    <durationDays>6</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>rapturous worship</label>
+        <description>I have never seen anything so beautiful as the Feedee, full and glowing. I could have fed them forever.</description>
+        <baseMoodEffect>10</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- ============================================================ seam calling (Anomaly) -->
+
+  <PreceptDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SeamCalling</defName>
+    <label>seam calling</label>
+    <description>The faithful gather around a heavy vessel and call to the hungry thing beneath the crust. If it answers, a void seam tears open near the ritual spot - no need to wait for one to open on its own. The heavier the congregation, the likelier it answers. Can't be held while a seam is already open.</description>
+    <issue>Ritual</issue>
+    <impact>Medium</impact>
+    <iconPath>UI/CodexEntries/RR_VoidSeam</iconPath>
+    <preceptClass>Precept_Ritual</preceptClass>
+    <ritualPatternBase>RR_SeamCalling</ritualPatternBase>
+    <visible>true</visible>
+    <countsTowardsPreceptLimit>false</countsTowardsPreceptLimit>
+    <selectionWeight>1.0</selectionWeight>
+    <canGenerateAsSpecialPrecept>false</canGenerateAsSpecialPrecept>
+    <capitalizeAsTitle>false</capitalizeAsTitle>
+    <requiredMemes>
+      <li>RR_FoodSupremacy</li>
+    </requiredMemes>
+    <associatedMemes>
+      <li>RR_FoodSupremacy</li>
+    </associatedMemes>
+  </PreceptDef>
+
+  <RitualPatternDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SeamCalling</defName>
+    <ritualBehavior>RR_SeamCalling</ritualBehavior>
+    <ritualOutcomeEffect>RR_SeamCalling</ritualOutcomeEffect>
+    <ritualObligationTargetFilter>RitualSpotOrAltar</ritualObligationTargetFilter>
+    <ritualTargetFilter>AltarOrRitualSpot</ritualTargetFilter>
+    <alwaysStartAnytime>true</alwaysStartAnytime>
+    <canMergeGizmosFromDifferentIdeos>false</canMergeGizmosFromDifferentIdeos>
+    <iconPathOverride>UI/CodexEntries/RR_VoidSeam</iconPathOverride>
+  </RitualPatternDef>
+
+  <RitualBehaviorDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SeamCalling</defName>
+    <workerClass>RimRound.Rituals.RitualBehaviorWorker_RRSeamCalling</workerClass>
+    <durationTicks>5000</durationTicks>
+    <roles>
+      <li Class="RitualRoleTag">
+        <label>caller</label>
+        <id>caller</id>
+        <precept>IdeoRole_Moralist</precept>
+        <tag>Moralist</tag>
+        <maxCount>1</maxCount>
+        <substitutable>true</substitutable>
+        <required>true</required>
+        <missingDesc>someone to call the void</missingDesc>
+        <countsAsParticipant>False</countsAsParticipant>
+        <allowChild>false</allowChild>
+      </li>
+      <li Class="RimRound.Rituals.RitualRole_RRSeamVessel">
+        <label>vessel</label>
+        <id>vessel</id>
+        <maxCount>1</maxCount>
+        <required>true</required>
+        <missingDesc>a colonist Chubby or bigger for the void to answer to</missingDesc>
+        <countsAsParticipant>False</countsAsParticipant>
+        <allowChild>false</allowChild>
+      </li>
+    </roles>
+    <stages>
+      <li>
+        <defaultDuty>Spectate</defaultDuty>
+        <spectatorsRequired>true</spectatorsRequired>
+        <endTriggers>
+          <li Class="StageEndTrigger_RolesArrived">
+            <roleIds>
+              <li>caller</li>
+              <li>vessel</li>
+            </roleIds>
+          </li>
+        </endTriggers>
+        <roleBehaviors>
+          <li>
+            <roleId>caller</roleId>
+            <dutyDef>ArriveToCell</dutyDef>
+            <customPositions>
+              <li Class="RitualPosition_BehindThingCenter" />
+            </customPositions>
+          </li>
+          <li>
+            <roleId>vessel</roleId>
+            <dutyDef>ArriveToCell</dutyDef>
+            <customPositions>
+              <li Class="RitualPosition_InFrontThingCenter" />
+            </customPositions>
+          </li>
+        </roleBehaviors>
+      </li>
+      <li>
+        <defaultDuty>Spectate</defaultDuty>
+        <spectatorsRequired>true</spectatorsRequired>
+        <endTriggers>
+          <li Class="StageEndTrigger_DurationPercentage">
+            <percentage>1</percentage>
+          </li>
+        </endTriggers>
+        <roleBehaviors>
+          <li>
+            <roleId>caller</roleId>
+            <dutyDef>SpeakOnCellFacingSpectators</dutyDef>
+            <speakerInteraction>RR_Speech_SeamCalling</speakerInteraction>
+            <customPositions>
+              <li Class="RitualPosition_BehindThingCenter" />
+            </customPositions>
+          </li>
+          <li>
+            <roleId>vessel</roleId>
+            <dutyDef>ArriveToCell</dutyDef>
+            <customPositions>
+              <li Class="RitualPosition_InFrontThingCenter" />
+            </customPositions>
+          </li>
+        </roleBehaviors>
+        <visualEffectDef>Speech</visualEffectDef>
+      </li>
+    </stages>
+  </RitualBehaviorDef>
+
+  <RitualOutcomeEffectDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SeamCalling</defName>
+    <description>Depending on ritual quality, participants will get between {MINMOOD} and {MAXMOOD} mood for {MOODDAYS} days. If the void answers, a void seam opens near the ritual spot.</description>
+    <workerClass>RimRound.Rituals.RitualOutcomeEffectWorker_RRSeamCalling</workerClass>
+    <startingQuality>0.2</startingQuality>
+    <comps>
+      <li Class="RitualOutcomeComp_RolePresentNotSubstituted">
+        <roleId>caller</roleId>
+        <label>moral guide calling</label>
+        <qualityOffset>0.15</qualityOffset>
+        <disableInClassicMode>true</disableInClassicMode>
+      </li>
+      <li Class="RitualOutcomeComp_ParticipantCount">
+        <label>participant count</label>
+        <curve>
+          <points>
+            <li>(1, 0.0)</li>
+            <li>(4, 0.15)</li>
+            <li>(8, 0.25)</li>
+          </points>
+        </curve>
+      </li>
+      <li Class="RimRound.Rituals.RitualOutcomeComp_RRCongregationWeight">
+        <label>combined weight of the congregation</label>
+        <labelAbstract>combined weight of the congregation</labelAbstract>
+        <curve>
+          <points>
+            <li>(0, 0)</li>
+            <li>(0.5, 0.1)</li>
+            <li>(1.5, 0.3)</li>
+            <li>(4, 0.45)</li>
+          </points>
+        </curve>
+      </li>
+    </comps>
+    <outcomeChances>
+      <li>
+        <label>Unanswered</label>
+        <chance>0.25</chance>
+        <memory>RR_SeamCalling_Unanswered</memory>
+        <description>The {0} went unanswered. The ground stayed shut, and everyone went home hungry.</description>
+        <positivityIndex>-1</positivityIndex>
+      </li>
+      <li>
+        <label>Answered</label>
+        <chance>0.55</chance>
+        <memory>RR_SeamCalling_Answered</memory>
+        <description>The {0} was answered. Something vast beneath the crust stirred and opened a mouth.</description>
+        <positivityIndex>1</positivityIndex>
+      </li>
+      <li>
+        <label>Ravenously answered</label>
+        <chance>0.2</chance>
+        <memory>RR_SeamCalling_Ravenous</memory>
+        <description>The {0} was answered ravenously. The ground heaved and split, and warm, sweet breath rolled over everyone.</description>
+        <positivityIndex>2</positivityIndex>
+      </li>
+    </outcomeChances>
+  </RitualOutcomeEffectDef>
+
+  <InteractionDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Speech_SeamCalling</defName>
+    <label>seam calling speech</label>
+    <workerClass>InteractionWorker</workerClass>
+    <ignoreTimeSinceLastInteraction>True</ignoreTimeSinceLastInteraction>
+    <symbol>Things/Mote/SpeechSymbols/Speech</symbol>
+    <logRulesInitiator>
+      <include><li>SpeechUtility</li></include>
+      <rulesStrings>
+        <li>r_logentry->[INITIATOR_nameDef] [spokeof] [speechtopic].</li>
+        <li>speechtopic->the hunger beneath the crust</li>
+        <li>speechtopic->the mouth that opens for the faithful</li>
+        <li>speechtopic->the warm gut of the void</li>
+        <li>speechtopic->feeding and being fed</li>
+        <li>speechtopic->the weight that calls to the void</li>
+        <li>speechtopic->what waits at the end of the maze</li>
+        <li>speechtopic->void gluttonium</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <ThoughtDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SeamCalling_Unanswered</defName>
+    <thoughtClass>Thought_AttendedRitual</thoughtClass>
+    <durationDays>4</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>unanswered calling</label>
+        <description>We called and called and the void didn't care.</description>
+        <baseMoodEffect>-3</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SeamCalling_Answered</defName>
+    <thoughtClass>Thought_AttendedRitual</thoughtClass>
+    <durationDays>6</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>the void answered</label>
+        <description>We called, and the ground opened. It heard us.</description>
+        <baseMoodEffect>6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SeamCalling_Ravenous</defName>
+    <thoughtClass>Thought_AttendedRitual</thoughtClass>
+    <durationDays>6</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>the void answered hungrily</label>
+        <description>The ground split open like it had been waiting for us. I can still smell its breath. Sweet.</description>
+        <baseMoodEffect>10</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- ============================================================ dislikers stuck in a Feedees ideoligion -->
+
+  <ThoughtDef>
+    <defName>RR_FeedeesDoubt</defName>
+    <workerClass>RimRound.Rituals.ThoughtWorker_RRFeedeesDoubt</workerClass>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>doubting the feedees</label>
+        <description>My ideoligion says growing is holy. I'm not so sure I want any part of that.</description>
+        <baseMoodEffect>-4</baseMoodEffect>
+      </li>
+      <li>
+        <label>revolted by the feedees</label>
+        <description>Everyone around me worships gluttony, and I'm supposed to believe it too. It makes me sick.</description>
+        <baseMoodEffect>-8</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+</Defs>

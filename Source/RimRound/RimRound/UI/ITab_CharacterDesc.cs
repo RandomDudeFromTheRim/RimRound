@@ -1,4 +1,4 @@
-﻿using RimRound.Utilities;
+using RimRound.Utilities;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,10 @@ namespace RimRound.UI
         {
             get
             {
-                return GlobalSettings.showDescriptionTab &&PawnToShowInfoAbout.Faction == Faction.OfPlayer && PawnToShowInfoAbout.RaceProps.Humanlike;
+                Pawn pawn = PawnToShowInfoAbout;
+                // only for pawns that can gain weight: androids, mechs and anyone else without the weight hediff just get clutter
+                return GlobalSettings.showDescriptionTab && pawn != null && pawn.Faction == Faction.OfPlayer && pawn.RaceProps.Humanlike
+                    && RimRound.Utilities.HediffUtility.WeightHediff(pawn) != null;
             }
         }
 

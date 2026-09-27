@@ -15,8 +15,9 @@ namespace RimRound.Hediffs
     public class Hediff_VoidSaturation : Hediff
     {
         const int CheckIntervalTicks = 60;
-        // full saturation after roughly one day of lingering
-        const float SaturationPerInterval = 0.001f;
+        // full saturation after ~10 in-game hours: inside the 18-hour maze run, so
+        // a pawn who dawdles tears an echo loose before reaching the way home
+        const float SaturationPerInterval = 0.0024f;
         const float SeverityAfterEcho = 0.35f; // camping longer tears another echo free
 
         const int GainPulseInterval = 600;
@@ -75,21 +76,26 @@ namespace RimRound.Hediffs
                 return;
             Map map = pawn.Map;
 
-            // entities faction: makes the echo capturable on Anomaly holding platforms
-            Pawn echo = PawnGenerator.GeneratePawn(pawn.kindDef, Faction.OfEntities);
+            // Anomaly's duplicator gives an exact copy: gender, age, backstories,
+            // traits, looks. Being a duplicate also lets a humanlike join the
+            // entities faction without Faction.Notify_PawnJoined logging an error.
+            Pawn echo = Find.PawnDuplicator.Duplicate(pawn);
             if (echo == null)
                 return;
 
+            // entities faction: makes the echo capturable on Anomaly holding platforms
+            echo.SetFaction(Faction.OfEntities);
             echo.Name = new NameSingle("Echo of " + pawn.LabelShort);
+
+            // Duplicate copies hediffs too. Drop the void ones, or the echo would
+            // saturate in turn and tear echoes of its own loose.
+            foreach (HediffDef def in new[] { Defs.HediffDefOf.RR_VoidSaturation, Defs.HediffDefOf.RR_VoidWarmth, Defs.HediffDefOf.RR_VoidFascination })
+                Utilities.HediffUtility.RemoveHediffOfDefFrom(def, echo);
 
             // Downed entities die outright 50-90% of the time at typical threat
             // points; an echo should go down so it can be captured.
             echo.health.overrideDeathOnDownedChance = 0f;
             WarnIfEchoesCantBeCaptured(echo);
-
-            // the echo wears the pawn's own age — no fountain of youth in the void
-            echo.ageTracker.AgeBiologicalTicks = pawn.ageTracker.AgeBiologicalTicks;
-            echo.ageTracker.AgeChronologicalTicks = pawn.ageTracker.AgeChronologicalTicks;
 
             // their weight, and then some — but capped so it can still move
             float original = Utilities.HediffUtility.WeightHediff(pawn)?.Severity ?? 0f;
