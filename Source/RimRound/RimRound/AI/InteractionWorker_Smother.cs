@@ -68,7 +68,7 @@ namespace RimRound.AI
             letterDef = null;
             lookTargets = new LookTargets(initiator, recipient);
 
-            CloseContactUtility.TryStartEncounter(initiator, recipient);
+            CloseContactUtility.TryStartEncounter(initiator, recipient, Defs.JobDefOf.RR_PinAgainstWall);
 
             var recAtt = recipient.TryGetComp<ThingComp_PawnAttitude>();
             var initAtt = initiator.TryGetComp<ThingComp_PawnAttitude>();
@@ -191,7 +191,7 @@ namespace RimRound.AI
             letterDef = null;
             lookTargets = new LookTargets(initiator, recipient);
 
-            CloseContactUtility.TryStartEncounter(initiator, recipient);
+            CloseContactUtility.TryStartEncounter(initiator, recipient, Defs.JobDefOf.RR_ExploreCurves);
 
             var recAtt = recipient.TryGetComp<ThingComp_PawnAttitude>();
             var initThought = initiator.needs?.mood?.thoughts;
@@ -333,7 +333,7 @@ namespace RimRound.AI
             }
             else
             {
-                CloseContactUtility.TryStartEncounter(initiator, recipient);
+                CloseContactUtility.TryStartEncounter(initiator, recipient, Defs.JobDefOf.RR_NurseHold);
             }
 
             float milkNutrition = 0.15f;

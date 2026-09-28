@@ -59,7 +59,7 @@ namespace RimRound.AI
             letterDef = null;
             lookTargets = new LookTargets(initiator, recipient);
 
-            CloseContactUtility.TryStartEncounter(initiator, recipient);
+            CloseContactUtility.TryStartEncounter(initiator, recipient, Defs.JobDefOf.RR_FondleAct);
 
             var recAtt = recipient.TryGetComp<ThingComp_PawnAttitude>();
             var initAtt = initiator.TryGetComp<ThingComp_PawnAttitude>();

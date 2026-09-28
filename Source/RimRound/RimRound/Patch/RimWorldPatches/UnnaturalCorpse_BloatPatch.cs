@@ -208,7 +208,9 @@ namespace RimRound.Patch
     [HarmonyPatch(nameof(Thing.TakeDamage))]
     public class UnnaturalCorpse_BloatPatch
     {
-        static bool Prefix(Thing __instance, DamageInfo dinfo)
+        // Skipping TakeDamage leaves its result null unless we set one, and other mods'
+        // TakeDamage postfixes (DamageMotes, EBSG...) read it and crash on null.
+        static bool Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
             if (!(__instance is Pawn victim))
                 return true;
@@ -224,6 +226,7 @@ namespace RimRound.Patch
                 return true;
 
             CorpseBloatManager.StartBloat(attacker, victim);
+            __result = new DamageWorker.DamageResult();
             return false;
         }
     }

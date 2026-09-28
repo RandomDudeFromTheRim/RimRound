@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,16 +21,10 @@ namespace RimRound.Comps
 {
     public class FullnessAndDietStats_ThingComp : ThingComp
     {
-        private bool? disabled = null;
 
-        public bool Disabled {
-            get {
-                if (disabled == null) {
-                    disabled = this.parent.AsPawn()?.needs?.food == null;
-                }
-                return disabled.GetValueOrDefault();
-            }
-        }
+        // Checked live, not cached: a pawn can lose its food need after spawning (an
+        // awoken unnatural corpse, a new mutant) and a stale "enabled" crashes CompTick.
+        public bool Disabled => this.parent.AsPawn()?.needs?.food == null;
 
         public FullnessAndDietStats_ThingComp()
         {

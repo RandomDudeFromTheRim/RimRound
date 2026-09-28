@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Fattening commission: host a friendly faction's guest until they reach a target
+       size (Obese to Gelatinous I). Days and rewards scale with the target; the Empire
+       can pay in honor. Code: Incidents/QuestNode_Root_RRFatteningCommission.cs -->
+
+  <QuestScriptDef>
+    <defName>RR_FatteningCommission</defName>
+    <rootSelectionWeight>0.6</rootSelectionWeight>
+    <rootMinPoints>0</rootMinPoints>
+    <expireDaysRange>4~8</expireDaysRange>
+    <affectedByPoints>false</affectedByPoints>
+    <questNameRules>
+      <rulesStrings>
+        <li>questName->Fattening [asker_nameShort]</li>
+        <li>questName->[asker_nameShort] the [bigword]</li>
+        <li>questName->A [bigword] homecoming</li>
+        <li>questName->Send [asker_objective] home [targetLabel]</li>
+        <li>bigword->ample</li>
+        <li>bigword->well-fed</li>
+        <li>bigword->swollen</li>
+        <li>bigword->bountiful</li>
+      </rulesStrings>
+    </questNameRules>
+    <questDescriptionRules>
+      <rulesStrings>
+        <li>questDescription->[faction_name] have an unusual request. One of their people, [asker_nameDef], wants to grow - properly big - and they have heard your colony knows how to feed someone.\n\n[asker_nameDef] will stay with you for [questDurationTicks_duration]. By the time [asker_pronoun] leaves, [asker_pronoun] needs to be at least [targetLabel]. You'll be able to direct [asker_objective] like one of your own colonists in the meantime.\n\nSend [asker_objective] home [targetLabel] and [faction_name] will reward you. Send [asker_objective] home smaller and they'll be disappointed; lose [asker_objective] and they'll be furious. [rewardNote]</li>
+      </rulesStrings>
+    </questDescriptionRules>
+    <root Class="RimRound.Incidents.QuestNode_Root_RRFatteningCommission" />
+  </QuestScriptDef>
+
+</Defs>

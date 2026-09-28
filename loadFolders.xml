@@ -78,5 +78,9 @@
 		<li IfModActive="Razar1.Mal0Race">1.5/ExternalMods/MaloRaceSupport</li>
 		<li IfModActive="JPT.speakup">1.6/SpeakUp</li>
 		<li IfModActive="Ushanka.BiologicalWarfare">1.6/ExternalMods/BiologicalWarfare</li>
+		<li IfModActive="Ludeon.RimWorld.Odyssey">1.6/ExternalMods/UniqueWeapons</li>
+		<li IfModActive="shunter.uniqueweaponsunbound">1.6/ExternalMods/UniqueWeaponsUnbound</li>
+		<li IfModActive="Ludeon.RimWorld.Royalty">1.6/ExternalMods/PersonaWeapons</li>
+		<li IfModActive="VanillaExpanded.VWENL">1.6/ExternalMods/NonLethalWeapons</li>
 	</v1.6>	
 </loadFolders>

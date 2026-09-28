@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- Vanilla Nutrient Paste Expanded: Reimagined Progression gives paste its own
+       research tab. With it loaded, RimRound's feed line branch moves onto that tab,
+       to the right of its tree, and follows on from the matching paste techs: liquid
+       food after the paste system, the faucet after the dripper, the auto-feeder
+       after its feeding tube, distillation after its filter. -->
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Vanilla Nutrient Paste Expanded: Reimagined Progression</li>
+    </mods>
+    <match Class="PatchOperationSequence">
+      <operations>
+
+        <!-- onto the paste tab -->
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_FoodProcessing" or defName="RR_Research_FoodStorage" or defName="RR_Research_ExpandedFoodStorage" or defName="RR_Research_FoodFaucet" or defName="RR_Research_AutoFeeder" or defName="RR_Research_ImprovedAutoFeeder" or defName="RR_Research_NutrientDistillation"]/tab</xpath>
+          <value>
+            <tab>VNPEReimaginedProgression</tab>
+          </value>
+        </li>
+
+        <!-- laid out in two rows beside the paste tree (its columns run 0-3) -->
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_FoodProcessing"]/researchViewX</xpath>
+          <value><researchViewX>4</researchViewX></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_FoodProcessing"]/researchViewY</xpath>
+          <value><researchViewY>1.7</researchViewY></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_NutrientDistillation"]/researchViewX</xpath>
+          <value><researchViewX>5</researchViewX></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_NutrientDistillation"]/researchViewY</xpath>
+          <value><researchViewY>2.5</researchViewY></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_FoodFaucet"]/researchViewX</xpath>
+          <value><researchViewX>5</researchViewX></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_FoodFaucet"]/researchViewY</xpath>
+          <value><researchViewY>0.8</researchViewY></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_FoodStorage"]/researchViewX</xpath>
+          <value><researchViewX>5</researchViewX></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_FoodStorage"]/researchViewY</xpath>
+          <value><researchViewY>1.7</researchViewY></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_AutoFeeder"]/researchViewX</xpath>
+          <value><researchViewX>6</researchViewX></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_AutoFeeder"]/researchViewY</xpath>
+          <value><researchViewY>0.8</researchViewY></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_ExpandedFoodStorage"]/researchViewX</xpath>
+          <value><researchViewX>6</researchViewX></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_ExpandedFoodStorage"]/researchViewY</xpath>
+          <value><researchViewY>1.7</researchViewY></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_ImprovedAutoFeeder"]/researchViewX</xpath>
+          <value><researchViewX>7</researchViewX></value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_ImprovedAutoFeeder"]/researchViewY</xpath>
+          <value><researchViewY>0.8</researchViewY></value>
+        </li>
+
+        <!-- and chained after the paste techs they build on -->
+        <li Class="PatchOperationAdd">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_FoodProcessing"]/prerequisites</xpath>
+          <value>
+            <li>VNPERPNutrientPasteSystem</li>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_FoodFaucet"]/prerequisites</xpath>
+          <value>
+            <li>VNPERPNutrientPasteDripper</li>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_AutoFeeder"]/prerequisites</xpath>
+          <value>
+            <li>VNPERPNutrientPasteFeedingTube</li>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+          <xpath>/Defs/ResearchProjectDef[defName="RR_Research_NutrientDistillation"]/prerequisites</xpath>
+          <value>
+            <li>VNPERPNutrientPasteFilter</li>
+          </value>
+        </li>
+
+      </operations>
+    </match>
+  </Operation>
+
+</Patch>

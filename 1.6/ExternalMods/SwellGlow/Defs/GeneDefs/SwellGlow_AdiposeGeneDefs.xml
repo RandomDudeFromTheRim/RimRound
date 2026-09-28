@@ -1,0 +1,57 @@
+<Defs>
+
+    <!-- Adipose engineering: genes for bodies built to carry a lot of weight. Plain
+         GeneDef fields only (makeImmuneTo, capMods), so they need no code. -->
+
+    <GeneDef MayRequire="Ludeon.RimWorld.Biotech">
+        <defName>SG_GeneHardyAdipose</defName>
+        <label>hardy adipose</label>
+        <labelShortAdj>hardy-adipose</labelShortAdj>
+        <description>Carriers of this gene have organs and joints engineered to carry enormous weight. They never develop diabetes, fatty liver disease or weight-related arthritis, however big they get.</description>
+        <iconPath>UI/Icons/Genes/Gene_StrongStomach</iconPath>
+        <displayOrderInCategory>150</displayOrderInCategory>
+        <makeImmuneTo>
+            <li>RimRound_Diabetes</li>
+            <li>RimRound_FLD</li>
+            <li>RimRound_AFLD</li>
+            <li>RimRound_Arthritis</li>
+        </makeImmuneTo>
+        <biostatCpx>2</biostatCpx>
+        <biostatMet>-2</biostatMet>
+    </GeneDef>
+
+    <GeneDef MayRequire="Ludeon.RimWorld.Biotech">
+        <defName>SG_GeneBuoyantFrame</defName>
+        <label>buoyant frame</label>
+        <labelShortAdj>buoyant</labelShortAdj>
+        <description>Carriers of this gene have a reinforced frame and oversized leg muscles that carry weight far better than most. They stay on their feet through several more sizes before their weight pins them down.</description>
+        <iconPath>UI/Icons/Genes/Gene_QuickMovespeed</iconPath>
+        <displayOrderInCategory>151</displayOrderInCategory>
+        <capMods>
+            <li>
+                <capacity>Moving</capacity>
+                <offset>0.6</offset>
+            </li>
+        </capMods>
+        <exclusionTags>
+            <li>SG_WeightFrame</li>
+        </exclusionTags>
+        <biostatCpx>2</biostatCpx>
+        <biostatMet>-2</biostatMet>
+    </GeneDef>
+
+    <GeneDef MayRequire="Ludeon.RimWorld.Biotech">
+        <defName>SG_GeneGluttoniumTolerant</defName>
+        <label>gluttonium tolerance</label>
+        <labelShortAdj>gluttonium-tolerant</labelShortAdj>
+        <description>Carriers of this gene shrug off gluttonium exposure: raw gluttonium never builds up in their bodies.</description>
+        <iconPath>UI/Icons/Genes/Gene_PartialToxicityResistance</iconPath>
+        <displayOrderInCategory>152</displayOrderInCategory>
+        <makeImmuneTo>
+            <li>RR_GluttoniumExposure</li>
+        </makeImmuneTo>
+        <biostatCpx>1</biostatCpx>
+        <biostatMet>-1</biostatMet>
+    </GeneDef>
+
+</Defs>

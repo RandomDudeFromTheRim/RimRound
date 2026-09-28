@@ -14,6 +14,12 @@ namespace RimRound.Defs
         public static JobDef RR_JD_StuffPrisoner;
         public static JobDef RR_PrisonerAttemptReduceReluctance;
         public static JobDef RR_CloseEncounter;
+        public static JobDef RR_FondleAct;
+        public static JobDef RR_PinAgainstWall;
+        public static JobDef RR_ExploreCurves;
+        public static JobDef RR_NurseHold;
+        public static JobDef RR_TailGropeAct;
+        public static JobDef RR_HeldInEncounter;
         public static JobDef RR_SharedFeeding;
         public static JobDef RR_FeedToEcho;
         public static JobDef RR_CarryThroughVoidPortal;

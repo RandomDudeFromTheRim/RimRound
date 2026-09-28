@@ -39,6 +39,10 @@ namespace RimRound.Comps
         // of an open maze.
         public bool MazeOpen => mazeMap != null || generating;
 
+        // studying seams pays off: longer runs, fewer fleshbeasts (and a bigger haul, above)
+        public int MazeDurationTicks => UnityEngine.Mathf.RoundToInt(Props.mazeDurationTicks * (Utilities.GameComponent_RRStudyUnlocks.Has("seam_1") ? 1.25f : 1f));
+        int RespawnIntervalTicks => UnityEngine.Mathf.RoundToInt(Props.respawnIntervalTicks * (Utilities.GameComponent_RRStudyUnlocks.Has("seam_2") ? 1.5f : 1f));
+
         /// <summary>The entry portal that owns the maze: this comp, or the one an exit portal links back to.</summary>
         Comp_VoidPortal EntryPortal => Props.exitPortal ? linkedPortal?.GetComp<Comp_VoidPortal>() : this;
 
@@ -189,7 +193,7 @@ namespace RimRound.Comps
                 null,
                 parent.MapHeld);
             mazeStartTick = Find.TickManager.TicksGame;
-            nextSpawnTick = Find.TickManager.TicksGame + Props.respawnIntervalTicks / 2;
+            nextSpawnTick = Find.TickManager.TicksGame + RespawnIntervalTicks / 2;
 
             Building exitPortal = mazeMap.listerThings
                 .ThingsOfDef(Defs.ThingDefOf.RR_VoidPortalReturn)
@@ -252,6 +256,8 @@ namespace RimRound.Comps
             else
             {
                 int count = Rand.RangeInclusive(5, 15);
+                if (Utilities.GameComponent_RRStudyUnlocks.Has("seam_3"))
+                    count = UnityEngine.Mathf.CeilToInt(count * 1.5f);
                 var glut = ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidGluttonium);
                 glut.stackCount = count;
                 GenPlace.TryPlaceThing(glut, pawn.Position, pawn.Map, ThingPlaceMode.Near);
@@ -333,7 +339,7 @@ namespace RimRound.Comps
             if (Find.TickManager.TicksGame > nextSpawnTick)
                 TrySpawnMeldBeast(mazeMap);
 
-            if (Find.TickManager.TicksGame > mazeStartTick + Props.mazeDurationTicks)
+            if (Find.TickManager.TicksGame > mazeStartTick + MazeDurationTicks)
                 ReturnEveryone();
         }
 
@@ -414,7 +420,7 @@ namespace RimRound.Comps
                 new LookTargets(spawned),
                 MessageTypeDefOf.ThreatSmall);
 
-            nextSpawnTick = Find.TickManager.TicksGame + Props.respawnIntervalTicks;
+            nextSpawnTick = Find.TickManager.TicksGame + RespawnIntervalTicks;
         }
 
         public override string CompInspectStringExtra()
@@ -424,7 +430,7 @@ namespace RimRound.Comps
             if (entry == null || entry.mazeMap == null || entry.mazeStartTick < 0)
                 return text;
 
-            int left = entry.mazeStartTick + entry.Props.mazeDurationTicks - Find.TickManager.TicksGame;
+            int left = entry.mazeStartTick + entry.MazeDurationTicks - Find.TickManager.TicksGame;
             string timer = $"The maze pushes everyone out in {Mathf.Max(0, left).ToStringTicksToPeriod()}.";
             if (Props.exitPortal)
                 timer += "\nMake it here in time to leave with a haul of void gluttonium.";

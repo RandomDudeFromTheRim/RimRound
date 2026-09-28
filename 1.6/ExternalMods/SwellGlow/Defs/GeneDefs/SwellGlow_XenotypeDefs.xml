@@ -1,0 +1,25 @@
+<Defs>
+
+    <XenotypeDef MayRequire="Ludeon.RimWorld.Biotech">
+        <defName>RR_Swellkin</defName>
+        <label>swellkin</label>
+        <description>Swellkin were engineered by a glitterworld leisure culture that considered size the ultimate luxury. Everything about them is built to grow and to carry it well: they gain weight at the slightest excuse, their stomachs stretch and digest with ease, they eat quickly, and their organs and frames are reinforced against everything a heavy body usually suffers. They love every pound.\n\nWhen that culture fell, swellkin scattered across the rim. They are slow on their feet, but they rarely go hungry - and never for long.</description>
+        <descriptionShort>Swellkin are built to grow. They gain weight easily, stretch and digest quickly, eat fast, and their organs and frames are reinforced against the burdens of size. They love being big, but are slow on their feet.</descriptionShort>
+        <iconPath>UI/Icons/Xenotypes/RR_Swellkin</iconPath>
+        <inheritable>true</inheritable>
+        <genes>
+            <li>Body_Fat</li>
+            <li>Skin_PaleRed</li>
+            <li>MoveSpeed_Slow</li>
+            <li>StrongStomach</li>
+            <li>SG_GeneWeightUp</li>
+            <li>SG_GeneElasticUp</li>
+            <li>SG_GeneDigestUp</li>
+            <li>SG_GeneEatSpeedUp</li>
+            <li>SG_GeneWeightLove</li>
+            <li>SG_GeneHardyAdipose</li>
+            <li>SG_GeneBuoyantFrame</li>
+        </genes>
+    </XenotypeDef>
+
+</Defs>

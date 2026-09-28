@@ -56,6 +56,12 @@ namespace RimRound.Hediffs
         /// <summary>Victims on any map, for the proboscis drawn in world space (MapComponent_RRConstrictorDraw).</summary>
         public static readonly HashSet<Pawn> Victims = new HashSet<Pawn>();
 
+        /// <summary>Kilos of slurry still in it.</summary>
+        public float Load => load;
+
+        /// <summary>A wild one that still holds enough to take them past their burst point, and is close to it.</summary>
+        public bool WillBurstSoon => bound == null && !bursting && load >= KilosToBurst(pawn) && KilosToBurst(pawn) <= 300f;
+
         /// <summary>How much of what it latched with is still in it: 1 when it latches, 0 when spent.</summary>
         public float LoadFraction => startLoad <= 0f ? 0f : Mathf.Clamp01(load / startLoad);
 
@@ -324,9 +330,26 @@ namespace RimRound.Hediffs
             // a few seconds of swelling and straining first (Hediff_RRBursting), which
             // then calls ConsumeBeast and bursts the pawn
             bursting = true;
+            WitnessBurst(pawn);
             MeldBurstUtility.BeginBurst(pawn,
                 $"{pawn.LabelShort} swells past bearing in the gorge constrictor's grip and bursts - taking the beast with {pawn.ProObj()}!",
                 bonusGluttonium: Rand.RangeInclusive(8, 14));
+        }
+
+        /// <summary>Everyone close enough to see it happen remembers it: by how they feel about weight.</summary>
+        static void WitnessBurst(Pawn victim)
+        {
+            ThoughtDef def = DefDatabase<ThoughtDef>.GetNamedSilentFail("RR_SawConstrictorBurst");
+            if (def == null || !victim.Spawned)
+                return;
+            foreach (Pawn p in victim.Map.mapPawns.AllPawnsSpawned)
+            {
+                if (p == victim || !p.RaceProps.Humanlike || p.needs?.mood == null || p.Dead || p.Downed
+                    || !p.Position.InHorDistOf(victim.Position, 12f) || !GenSight.LineOfSight(p.Position, victim.Position, victim.Map))
+                    continue;
+                WeightOpinion o = p.TryGetComp<Comps.ThingComp_PawnAttitude>()?.weightOpinion ?? WeightOpinion.Neutral;
+                p.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(def, o >= WeightOpinion.Love ? 1 : 0), victim);
+            }
         }
 
         /// <summary>The constrictor dies with its victim: called at the moment of the burst.</summary>

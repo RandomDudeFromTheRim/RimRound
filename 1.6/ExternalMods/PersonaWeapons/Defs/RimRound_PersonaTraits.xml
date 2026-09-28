@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Persona (bladelink) weapon traits: Royalty's persona weapons, and Vanilla Persona Weapons Expanded's -->
+<Defs>
+  <WeaponTraitDef ParentName="BladelinkBase">
+    <defName>RR_Gorging</defName>
+    <label>gorging</label>
+    <description>This weapon's persona feeds on violence, and it shares the meal. Whenever it kills or downs someone, its wielder feels a wave of warm fullness - real nourishment, and a little extra weight to show for it.</description>
+    <workerClass>RimRound.Things.WeaponTraitWorker_RRGorging</workerClass>
+    <commonality>0.7</commonality>
+    <marketValueOffset>400</marketValueOffset>
+    <exclusionTags>
+      <li>KillThoughts</li>
+    </exclusionTags>
+  </WeaponTraitDef>
+
+  <ThoughtDef>
+    <defName>RR_PersonaFed</defName>
+    <durationDays>1</durationDays>
+    <stackLimit>3</stackLimit>
+    <stackedEffectMultiplier>0.75</stackedEffectMultiplier>
+    <stages>
+      <li>
+        <label>fed by my weapon</label>
+        <description>My weapon shared what it took. Warm, full, and a little heavier.</description>
+        <baseMoodEffect>4</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+</Defs>

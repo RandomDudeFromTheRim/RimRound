@@ -56,6 +56,31 @@ Pawns who are Chubby or heavier can climb in, into the void maze: one long, livi
         <anomalyKnowledge>1</anomalyKnowledge>
         <minMonolithLevelForStudy>1</minMonolithLevelForStudy>
       </li>
+      <!-- studying the seam makes the runs through it easier (Comp_VoidPortal) -->
+      <li Class="RimRound.Utilities.CompProperties_RRStudyPayoffs" MayRequire="Ludeon.RimWorld.Anomaly">
+        <studyNotes>
+          <li>
+            <thresholdRange>2~3</thresholdRange>
+            <label>Void seam study progress</label>
+            <text>{PAWN_nameDef} has learned to read the seam's rhythm. Your pawns can now stay in the void maze a quarter longer before it pushes them out.</text>
+          </li>
+          <li>
+            <thresholdRange>4~5</thresholdRange>
+            <label>Void seam study progress</label>
+            <text>{PAWN_nameDef} has noticed what stirs the maze's flesh into birthing fleshbeasts, and how to avoid it. Fleshbeasts will come for your pawns in the maze less often.</text>
+          </li>
+          <li>
+            <thresholdRange>7~8</thresholdRange>
+            <label>Void seam study complete</label>
+            <text>{PAWN_nameDef} knows where the maze keeps its richest gluttonium. Pawns who reach the end of the maze now come home with half again as much.</text>
+          </li>
+        </studyNotes>
+        <unlockKeys>
+          <li>seam_1</li>
+          <li>seam_2</li>
+          <li>seam_3</li>
+        </unlockKeys>
+      </li>
     </comps>
     <building>
       <isInert>false</isInert>

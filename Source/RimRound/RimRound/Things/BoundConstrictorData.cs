@@ -18,6 +18,8 @@ namespace RimRound.Things
         public float growDays = 1f;
         public List<ThingDefCountClass> costList = new List<ThingDefCountClass>();
         public int displayOrder;
+        /// <summary>Study unlock key needed before the vat can grow it (see GameComponent_RRStudyUnlocks), or none.</summary>
+        public string requiredStudy;
 
         // effects
         public float pumpIntervalFactor = 1f;

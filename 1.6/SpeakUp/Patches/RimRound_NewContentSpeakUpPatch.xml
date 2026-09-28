@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Chitchat about RimRound's newer content, keyed on the thoughts it leaves behind.
+     Like SpeakUp's own thought chitchat: no priority, so these join the pool and
+     come up now and then rather than taking over; a tag lets the listener reply. -->
+<Patch>
+  <Operation Class="PatchOperationAdd">
+    <success>Always</success>
+    <xpath>/Defs/InteractionDef[defName="Chitchat"]/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <!-- ===sweet slime: hugged=== -->
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_SlimeHugged,tag=RR_ReactTo_Slimed)->[rr_slimed]</li>
+      <li>rr_slimed(INITIATOR_thoughtLabel==slimed)->Something grabbed me last night. Something I couldn't see. I'm STILL finding pink goo on me.</li>
+      <li>rr_slimed(INITIATOR_thoughtLabel==slimed)->If anyone sees a patch of air that smells like candy, shoot it.</li>
+      <li>rr_slimed(INITIATOR_thoughtLabel==slimed)->It kissed me. Whatever it was, it kissed me, and now my clothes are tighter.</li>
+      <li>rr_slimed(INITIATOR_thoughtLabel==slime-hugged)->I got hugged by... something. Warm, sticky, weirdly gentle. I don't know how to feel.</li>
+      <li>rr_slimed(INITIATOR_thoughtLabel==slime-hugged)->Something invisible gave me a hug and a kiss and just left. Honestly? Could've been worse.</li>
+      <li>rr_slimed(INITIATOR_thoughtLabel==embraced by the sweet slime)->The sweet slime found me! It held me so close... I think I'm a little rounder already.</li>
+      <li>rr_slimed(INITIATOR_thoughtLabel==embraced by the sweet slime)->I've been leaving my door open at night. Just in case it comes back.</li>
+      <li>rr_slimed(INITIATOR_thoughtLabel==embraced by the sweet slime)->Warm, sweet, and it squeezed me like it meant it. Best night I've had in ages.</li>
+
+      <!-- ===sweet slime: carrying a seed=== -->
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_SweetSlimeWarmth,tag=RR_ReactTo_SlimeWarmth)->[rr_slimewarmth]</li>
+      <li>rr_slimewarmth(INITIATOR_thoughtLabel==sweet warmth)->There's this warmth in my belly that won't go away. It's... nice?</li>
+      <li>rr_slimewarmth(INITIATOR_thoughtLabel==sweet warmth)->I keep leaving little pink smudges wherever I sit. Sorry about that.</li>
+      <li>rr_slimewarmth(INITIATOR_thoughtLabel==sweet warmth)->I've been so hungry lately. Everything tastes sweeter, too.</li>
+      <li>rr_slimewarmth(INITIATOR_thoughtLabel==flushed and glowing)->I feel so warm and full. Come here - you look like you could use a hug.</li>
+      <li>rr_slimewarmth(INITIATOR_thoughtLabel==flushed and glowing)->Do I look pink to you? I feel pink. Warm and pink and wonderful.</li>
+      <li>rr_slimewarmth(INITIATOR_thoughtLabel==flushed and glowing)->Stand a little closer. I want to share this feeling with someone.</li>
+
+      <!-- ===feedee worship=== -->
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_Worshipped,tag=RR_ReactTo_Worshipped)->[rr_worshipped]</li>
+      <li>rr_worshipped->Did you see them all, gathered around me? Offerings piled up to my chin. I've never felt so adored.</li>
+      <li>rr_worshipped->They sang about how big I am. They meant every word.</li>
+      <li>rr_worshipped->I could get used to being worshipped. Pass me something to eat, would you?</li>
+      <li>rr_worshipped(INITIATOR_trait==Weight Opinion: Fanatical)->They worship me because I am WORTHY. And I'll only become worthier.</li>
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_FeedeeWorship_Rapturous)->[rr_worship_good]</li>
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_FeedeeWorship_Devout)->[rr_worship_good]</li>
+      <li>rr_worship_good->That ceremony... being so close to something so vast and soft. I still have chills.</li>
+      <li>rr_worship_good->I brought my offering and they ate it right out of my hands. I'll never forget that.</li>
+      <li>rr_worship_good->Every time I close my eyes I see our Feedee, glowing, surrounded by food. Perfect.</li>
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_FeedeeWorship_Awkward)->[rr_worship_meh]</li>
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_FeedeeWorship_HalfHearted)->[rr_worship_meh]</li>
+      <li>rr_worship_meh->The worship was... fine. Someone dropped the offerings. Our Feedee looked hungry the whole time.</li>
+      <li>rr_worship_meh->Next ceremony we need more food. And more people who actually mean it.</li>
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_FeedeesDoubt)->[rr_feedeesdoubt]</li>
+      <li>rr_feedeesdoubt->Am I the only one who thinks worshipping someone for their size is insane?</li>
+      <li>rr_feedeesdoubt->They keep piling food on that bed like it's an altar. It IS an altar. That's the problem.</li>
+      <li>rr_feedeesdoubt->I don't care how big they get, I'm not bowing to anyone's belly.</li>
+
+      <!-- ===gorge constrictor=== -->
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_ConstrictorAfterglow)->[rr_afterglow]</li>
+      <li>rr_afterglow->I can still feel where the coils were. Tight, and warm, and pumping...</li>
+      <li>rr_afterglow->Everyone keeps asking if I'm alright. I'm better than alright. I'm FULL.</li>
+      <li>rr_afterglow->When is the constrictor ready again? Asking for... me.</li>
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_SawConstrictorBurst,tag=RR_ReactTo_Burst)->[rr_sawburst]</li>
+      <li>rr_sawburst(INITIATOR_thoughtLabel==saw someone burst)->Why didn't anyone tear it off in time? We were RIGHT there.</li>
+      <li>rr_sawburst(INITIATOR_thoughtLabel==saw someone burst)->I can't stop hearing it. That sound, right at the end.</li>
+      <li>rr_sawburst(INITIATOR_thoughtLabel==saw someone burst)->Next time that thing latches on, we shoot it off. No waiting. No matter what.</li>
+      <li>rr_sawburst(INITIATOR_thoughtLabel==saw someone reach their limit)->Did you see how big they got right before...? I've never seen anyone so full.</li>
+      <li>rr_sawburst(INITIATOR_thoughtLabel==saw someone reach their limit)->Terrible. Terrible and... I can't stop thinking about it.</li>
+      <!-- talking to someone who's got one wrapped around them -->
+      <li>r_logentry(RECIPIENT_thoughtDefName==RR_BeingConstricted)->[rr_to_constricted]</li>
+      <li>rr_to_constricted->Hold still, [RECIPIENT_nameDef]! We'll get that thing off you!</li>
+      <li>rr_to_constricted->Keep breathing, [RECIPIENT_nameDef]. Through your nose. We're coming.</li>
+      <li>rr_to_constricted(INITIATOR_trait==Weight Opinion: Love)->Look at you, [RECIPIENT_nameDef]... you're getting so big. Should we even stop it?</li>
+      <li>rr_to_constricted(INITIATOR_trait==Weight Opinion: Fanatical)->Don't fight it, [RECIPIENT_nameDef]. Take everything it gives you.</li>
+
+      <!-- ===fattening commission guest=== -->
+      <li>r_logentry(INITIATOR_thoughtDefName==RR_CommissionGuest,tag=RR_ReactTo_Commission)->[rr_commission]</li>
+      <li>rr_commission(INITIATOR_thoughtLabel==on a fattening commission)->My people are expecting me home a lot bigger than I left. Mind passing the food?</li>
+      <li>rr_commission(INITIATOR_thoughtLabel==on a fattening commission)->Still not there. I've got to eat more - I refuse to go home a disappointment.</li>
+      <li>rr_commission(INITIATOR_thoughtLabel==on a fattening commission)->Your cook is the only reason I'll make my target. Tell them I said so.</li>
+      <li>rr_commission(INITIATOR_thoughtLabel==made weight)->I made it! I'm the size my people asked for. Now I'm just eating because I want to.</li>
+      <li>rr_commission(INITIATOR_thoughtLabel==made weight)->They're going to be so proud when they see me. I can barely fit through the door!</li>
+      <li>rr_commission(INITIATOR_thoughtLabel==made weight)->Target reached. Everything from here on is a bonus - so keep it coming.</li>
+    </value>
+  </Operation>
+
+  <!-- About to burst with a wild constrictor still pumping: even more urgent muffling, winning over the plain constricted lines -->
+  <Operation Class="PatchOperationAdd">
+    <success>Always</success>
+    <xpath>/Defs/InteractionDef/logRulesInitiator/rulesStrings</xpath>
+    <value>
+      <li>r_logentry(priority=101,INITIATOR_thoughtDefName==RR_ConstrictedNearBurst,INITIATOR_thoughtLabel==about to burst)->[constricted_nearburst_dread]</li>
+      <li>r_logentry(priority=101,INITIATOR_thoughtDefName==RR_ConstrictedNearBurst,INITIATOR_thoughtLabel==at the very limit)->[constricted_nearburst_thrill]</li>
+      <li>constricted_nearburst_dread->MMMPH! MMPH! *skin creaking, eyes begging someone to tear it off*</li>
+      <li>constricted_nearburst_dread->Hhhk- mmph- *can't even struggle anymore, stretched too tight*</li>
+      <li>constricted_nearburst_dread->*a thin, muffled whine as the next pump swells them further*</li>
+      <li>constricted_nearburst_thrill->Mmmph~... mmh... *taut as a drum, still leaning into it*</li>
+      <li>constricted_nearburst_thrill->*creaks with every pump, moaning around the proboscis*</li>
+      <li>constricted_nearburst_thrill->Hhn... mm-mmore... mmph~ *doesn't stop it*</li>
+    </value>
+  </Operation>
+</Patch>

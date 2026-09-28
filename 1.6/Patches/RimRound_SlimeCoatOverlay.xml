@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Draw the sweet-slime coat right over the firefoam overlay nodes (body and head) -->
+<Patch>
+  <Operation Class="PatchOperationInsert">
+    <success>Always</success>
+    <xpath>/Defs/PawnRenderTreeDef[defName="Humanlike"]//li[workerClass="PawnRenderNodeWorker_OverlayFirefoam" and overlayLayer="Body"]</xpath>
+    <order>Append</order>
+    <value>
+      <li Class="PawnRenderNodeProperties_Overlay">
+        <debugLabel>RR slime coat</debugLabel>
+        <workerClass>RimRound.SweetSlime.PawnRenderNodeWorker_OverlayRRSlime</workerClass>
+        <overlayLayer>Body</overlayLayer>
+        <baseLayer>41</baseLayer>
+      </li>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationInsert">
+    <success>Always</success>
+    <xpath>/Defs/PawnRenderTreeDef[defName="Humanlike"]//li[workerClass="PawnRenderNodeWorker_OverlayFirefoam" and overlayLayer="Head"]</xpath>
+    <order>Append</order>
+    <value>
+      <li Class="PawnRenderNodeProperties_Overlay">
+        <debugLabel>RR slime coat</debugLabel>
+        <workerClass>RimRound.SweetSlime.PawnRenderNodeWorker_OverlayRRSlime</workerClass>
+        <overlayLayer>Head</overlayLayer>
+        <baseLayer>86</baseLayer>
+      </li>
+    </value>
+  </Operation>
+</Patch>

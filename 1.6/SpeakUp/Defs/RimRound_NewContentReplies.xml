@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Replies to the chitchat in RimRound_NewContentSpeakUpPatch.xml. The one replying is
+     INITIATOR here; what they say follows how they feel about weight. -->
+<Defs>
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_ReactTo_Slimed</defName>
+    <label>slimed reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(INITIATOR_opinion&lt;0)->Maybe it'll come back and finish the job.</li>
+        <li>r_logentry(INITIATOR_opinion>=0)->[reply]</li>
+        <li>reply->I'll keep an eye out. Stay close to people at night, alright?</li>
+        <li>reply->Pink goo? Like the stuff all over the hallway? Great.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Hate)->Disgusting. Burn your clothes. Then burn the goo.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Dislike)->Get that stuff cleaned off before it does anything else to you.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Like)->Lucky. It's never come for me.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Love)->It kissed you? Where was it last? Which way did it go?</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Fanatical)->Tell me EVERYTHING. How warm was it? How much bigger are you?</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_ReactTo_SlimeWarmth</defName>
+    <label>slime warmth reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(INITIATOR_opinion&lt;0)->Keep your pink smudges to yourself.</li>
+        <li>r_logentry(INITIATOR_opinion>=0)->[reply]</li>
+        <li>reply->You should get the doctor to look at that. Just in case.</li>
+        <li>reply->You do look... flushed. And rounder. Are you sure you're alright?</li>
+        <li>reply(INITIATOR_medicine_level>=6)->That's the sweet slime's seed. I can cut it out - but it has to be soon.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Hate)->Don't come near me. Whatever that is, I'm not catching it.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Love)->Can I... sit next to you for a while?</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Fanatical)->Hug me. Please. Share it.</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_ReactTo_Worshipped</defName>
+    <label>worshipped reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(INITIATOR_opinion&lt;0)->Don't let it go to your head. Or your belly.</li>
+        <li>r_logentry(INITIATOR_opinion>=0)->[reply]</li>
+        <li>reply->You deserved every bit of it.</li>
+        <li>reply->I'll bring you something. What are you hungry for?</li>
+        <li>reply(INITIATOR_thoughtDefName==RR_FeedeesDoubt)->I stood at the back. I still don't get it.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Hate)->It was a cult ceremony. For a belly.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Love)->You were radiant. Bigger every time I see you.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Fanatical)->Next time I'm bringing twice as much. You'll need it.</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_ReactTo_Burst</defName>
+    <label>burst reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry->[reply]</li>
+        <li>reply->I know. I was there too.</li>
+        <li>reply->We'll bury what's left properly.</li>
+        <li>reply(INITIATOR_shooting_level>=8)->Next time it latches on, I won't miss.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Hate)->That's where all this weight nonsense ends. Remember it.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Fanatical)->...I've thought about it too. More than I should.</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+
+  <InteractionDef ParentName="SpeakUpReply">
+    <defName>RR_ReactTo_Commission</defName>
+    <label>commission reply</label>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry(INITIATOR_opinion&lt;0)->Eat your own food, then.</li>
+        <li>r_logentry(INITIATOR_opinion>=0)->[reply]</li>
+        <li>reply->Here, have mine. You need it more than I do.</li>
+        <li>reply->We'll get you there. That's a promise.</li>
+        <li>reply(INITIATOR_cooking_level>=8)->I'll make you something extra rich tonight.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Hate)->Your people are strange.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Love)->Honestly, I'm a little jealous of your job.</li>
+        <li>reply(INITIATOR_trait==Weight Opinion: Fanatical)->Why stop at the target? Go home TWICE that.</li>
+      </rulesStrings>
+    </logRulesInitiator>
+  </InteractionDef>
+</Defs>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- Holding platforms (and spots) accept the void milking rig as a facility. -->
+  <Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Anomaly">
+    <xpath>/Defs/ThingDef[@Name="HoldingPlatformBase"]/comps/li[@Class="CompProperties_AffectedByFacilities"]/linkableFacilities</xpath>
+    <value>
+      <li>RR_VoidMilkingRig</li>
+    </value>
+  </Operation>
+
+</Patch>

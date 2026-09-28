@@ -4,6 +4,7 @@ using System.Reflection;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 
@@ -165,13 +166,55 @@ namespace RimRound.Hediffs
                 return;
             }
 
+            int count = 2 + contained.Count * 2;
+            Building rig = MilkingRig();
+            if (rig != null)
+            {
+                // the rig draws it off steadily instead of letting it seep out
+                count = Mathf.CeilToInt(count * MilkingRigYieldFactor);
+                float nutrition = count * Defs.ThingDefOf.RR_VoidMilk.GetStatValueAbstract(StatDefOf.Nutrition);
+                if (FeedingTube.FoodNetworkAccess.Current.TryStore(rig, nutrition, VoidMilkDensity))
+                {
+                    Messages.Message(
+                        $"The milking rig draws {count} voidmilk out of the void echo and into the feed lines.",
+                        new LookTargets(rig),
+                        MessageTypeDefOf.PositiveEvent);
+                    return;
+                }
+            }
+
             Thing milk = ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidMilk);
-            milk.stackCount = 2 + contained.Count * 2;
-            GenPlace.TryPlaceThing(milk, pawn.PositionHeld, map, ThingPlaceMode.Near);
+            milk.stackCount = count;
+            GenPlace.TryPlaceThing(milk, rig?.Position ?? pawn.PositionHeld, map, ThingPlaceMode.Near);
             Messages.Message(
-                $"The void echo produces {milk.stackCount} voidmilk.",
-                new LookTargets(pawn.SpawnedParentOrMe),
+                rig != null
+                    ? $"The milking rig draws {count} voidmilk out of the void echo. With no room on the feed lines, it bottles it."
+                    : $"The void echo produces {count} voidmilk.",
+                new LookTargets(rig ?? pawn.SpawnedParentOrMe),
                 MessageTypeDefOf.PositiveEvent);
+        }
+
+        const float MilkingRigYieldFactor = 1.5f;
+        // voidmilk is thick: it fills a feed line faster than the nutrition it carries
+        const float VoidMilkDensity = 1.5f;
+
+        /// <summary>A powered void milking rig linked to the holding platform the echo is on, if any.</summary>
+        Building MilkingRig()
+        {
+            if (!(pawn.ParentHolder is Thing platform))
+                return null;
+            var facilities = platform.TryGetComp<CompAffectedByFacilities>();
+            if (facilities == null)
+                return null;
+            foreach (Thing f in facilities.LinkedFacilitiesListForReading)
+            {
+                if (f.def.defName != "RR_VoidMilkingRig" || !(f is Building b))
+                    continue;
+                if (b.TryGetComp<CompPowerTrader>() is CompPowerTrader power && !power.PowerOn)
+                    continue;
+                return b;
+            }
+            return null;
         }
 
         Pawn ChoosePrey()

@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Sweet slime: an invisible, revenant-like stalker after Lobotomy Corporation's
+       Melting Love. It hugs, puffkisses and slimes one person at a time and leaves a
+       seed of itself inside them; the seed grows, spreads to whoever lingers close, and
+       ends in a slime cocoon that lets its host out heavier. Never lethal.
+       Code: SweetSlime/SweetSlime.cs -->
+
+  <!-- ============================================================ the slime -->
+
+  <ThingDef ParentName="BaseFleshbeast" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SweetSlime</defName>
+    <label>sweet slime</label>
+    <description>A translucent, gently glowing mass of pink slime that pools on the floor beneath it and gathers itself into something like a figure, with long drooping arms and bones floating in its body. It smells sweet.\n\nIt stalks unseen. When it finds someone alone - or asleep - it folds them into a smothering, sticky hug, kisses them, and bursts over them in a wave of slime, leaving a seed of itself inside. Afterwards it is spent for a few hours and can be seen, shot, or captured; then it slips out of sight again.\n\nA hidden sweet slime can be revealed with disruptor flares, like other psychically veiled entities.</description>
+    <statBases>
+      <MoveSpeed>2.6</MoveSpeed>
+      <MinimumContainmentStrength>60</MinimumContainmentStrength>
+      <PsychicSensitivity>1.5</PsychicSensitivity>
+      <ToxicResistance>1</ToxicResistance>
+      <Flammability>0.4</Flammability>
+      <MeatAmount>0</MeatAmount>
+    </statBases>
+    <uiIconPath>Things/Pawn/RR_SweetSlime/RR_SweetSlime_MenuIcon</uiIconPath>
+    <race>
+      <thinkTreeMain>RR_SweetSlime</thinkTreeMain>
+      <thinkTreeConstant>RR_SweetSlimeConstant</thinkTreeConstant>
+      <body>Fingerspike</body>
+      <baseBodySize>1</baseBodySize>
+      <baseHealthScale>2</baseHealthScale>
+      <lifeExpectancy>1000</lifeExpectancy>
+      <renderTree>Animal</renderTree>
+      <bloodDef>RR_Filth_SweetSlime</bloodDef>
+      <bloodSmearDef>RR_Filth_SweetSlime</bloodSmearDef>
+      <hasCorpse>false</hasCorpse>
+      <deathAction Class="DeathActionProperties_Vanish">
+        <workerClass>DeathActionWorker_Vanish</workerClass>
+        <filth>RR_Filth_SweetSlime</filth>
+        <filthCountRange>4~7</filthCountRange>
+      </deathAction>
+      <lifeStageAges>
+        <li>
+          <def>EntityFullyFormed</def>
+          <soundWounded>Pawn_Fleshbeast_Fingerspike_Wounded</soundWounded>
+          <soundDeath>Pawn_Fleshbeast_Fingerspike_Death</soundDeath>
+        </li>
+      </lifeStageAges>
+    </race>
+    <comps>
+      <li Class="RimRound.SweetSlime.CompProperties_RRSweetSlime" />
+      <li Class="CompProperties_Studiable">
+        <frequencyTicks>120000</frequencyTicks>
+        <knowledgeCategory>Advanced</knowledgeCategory>
+        <anomalyKnowledge>2.5</anomalyKnowledge>
+        <minMonolithLevelForStudy>1</minMonolithLevelForStudy>
+        <requiresHoldingPlatform>true</requiresHoldingPlatform>
+      </li>
+      <li Class="CompProperties_ProducesBioferrite">
+        <bioferriteDensity>2</bioferriteDensity>
+      </li>
+    </comps>
+    <tools>
+      <li>
+        <label>slime</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>1</power>
+        <cooldownTime>3</cooldownTime>
+        <linkedBodyPartsGroup>MiddleSpike</linkedBodyPartsGroup>
+        <alwaysTreatAsWeapon>true</alwaysTreatAsWeapon>
+        <chanceFactor>0.01</chanceFactor>
+      </li>
+    </tools>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseFleshbeastKind" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SweetSlime</defName>
+    <label>sweet slime</label>
+    <race>RR_SweetSlime</race>
+    <combatPower>150</combatPower>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Pawn/RR_SweetSlime/RR_SweetSlime</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>2.4</drawSize>
+        </bodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- the spawn a matured cocoon buds: visible, weak, hug and slime whoever they find -->
+  <ThingDef ParentName="BaseFleshbeast" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SlimeSpawn</defName>
+    <label>slime spawn</label>
+    <description>A small, wobbling blob of pink slime budded from a slime cocoon. It wanders in search of someone to hug, and what it leaves on them sometimes takes root. It is weak and easy to burst.</description>
+    <statBases>
+      <MoveSpeed>2.8</MoveSpeed>
+      <MinimumContainmentStrength>15</MinimumContainmentStrength>
+      <ToxicResistance>1</ToxicResistance>
+      <MeatAmount>0</MeatAmount>
+    </statBases>
+    <uiIconPath>Things/Pawn/RR_SweetSlime/RR_SweetSlime_MenuIcon</uiIconPath>
+    <race>
+      <thinkTreeMain>RR_SweetSlime</thinkTreeMain>
+      <thinkTreeConstant>RR_SweetSlimeConstant</thinkTreeConstant>
+      <body>Fingerspike</body>
+      <baseBodySize>0.5</baseBodySize>
+      <baseHealthScale>0.4</baseHealthScale>
+      <lifeExpectancy>10</lifeExpectancy>
+      <renderTree>Animal</renderTree>
+      <bloodDef>RR_Filth_SweetSlime</bloodDef>
+      <bloodSmearDef>RR_Filth_SweetSlime</bloodSmearDef>
+      <hasCorpse>false</hasCorpse>
+      <deathAction Class="DeathActionProperties_Vanish">
+        <workerClass>DeathActionWorker_Vanish</workerClass>
+        <filth>RR_Filth_SweetSlime</filth>
+        <filthCountRange>1~3</filthCountRange>
+      </deathAction>
+      <lifeStageAges>
+        <li>
+          <def>EntityFullyFormed</def>
+        </li>
+      </lifeStageAges>
+    </race>
+    <comps>
+      <li Class="RimRound.SweetSlime.CompProperties_RRSweetSlime">
+        <isSpawn>true</isSpawn>
+        <huntCooldownDays>0.4~0.8</huntCooldownDays>
+        <infestChance>0.5</infestChance>
+        <burstRadius>1.4</burstRadius>
+        <revealedTicks>0</revealedTicks>
+      </li>
+    </comps>
+    <tools>
+      <li>
+        <label>slime</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>1</power>
+        <cooldownTime>3</cooldownTime>
+        <linkedBodyPartsGroup>MiddleSpike</linkedBodyPartsGroup>
+        <alwaysTreatAsWeapon>true</alwaysTreatAsWeapon>
+        <chanceFactor>0.01</chanceFactor>
+      </li>
+    </tools>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseFleshbeastKind" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SlimeSpawn</defName>
+    <label>slime spawn</label>
+    <race>RR_SlimeSpawn</race>
+    <combatPower>25</combatPower>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Pawn/RR_SweetSlime/RR_SweetSlime</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.1</drawSize>
+          <color>(255, 210, 230)</color>
+        </bodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <ThinkTreeDef>
+    <defName>RR_SweetSlime</defName>
+    <thinkRoot Class="ThinkNode_Priority">
+      <subNodes>
+        <li Class="ThinkNode_Subtree">
+          <treeDef>Despawned</treeDef>
+        </li>
+        <li Class="ThinkNode_Subtree">
+          <treeDef>Downed</treeDef>
+        </li>
+        <li Class="ThinkNode_Subtree">
+          <treeDef>BurningResponse</treeDef>
+        </li>
+        <li Class="RimRound.SweetSlime.JobGiver_RRSweetSlimeGift" />
+        <li Class="JobGiver_WanderAnywhere">
+          <maxDanger>Deadly</maxDanger>
+          <ticksBetweenWandersRange>300~900</ticksBetweenWandersRange>
+        </li>
+        <li Class="JobGiver_IdleError" />
+      </subNodes>
+    </thinkRoot>
+  </ThinkTreeDef>
+
+  <ThinkTreeDef>
+    <defName>RR_SweetSlimeConstant</defName>
+    <thinkRoot Class="ThinkNode_Priority">
+      <subNodes>
+        <li Class="ThinkNode_Subtree">
+          <treeDef>Despawned</treeDef>
+        </li>
+      </subNodes>
+    </thinkRoot>
+  </ThinkTreeDef>
+
+  <JobDef>
+    <defName>RR_SlimeGift</defName>
+    <driverClass>RimRound.SweetSlime.JobDriver_RRSlimeGift</driverClass>
+    <reportString>creeping up on TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
+  <HediffDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <hediffClass>HediffWithComps</hediffClass>
+    <defName>RR_SlimeVeil</defName>
+    <label>sweet veil</label>
+    <description>This slime is psychically bending the perceptions of everything around it so that nothing notices it is there.</description>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Invisibility">
+        <visibleToPlayer>false</visibleToPlayer>
+        <fadeDurationTicks>60</fadeDurationTicks>
+        <recoverFromDisruptedTicks>90</recoverFromDisruptedTicks>
+      </li>
+      <li Class="HediffCompProperties_DisappearsOnDeath" />
+    </comps>
+  </HediffDef>
+
+  <!-- ============================================================ the infestation -->
+
+  <HediffDef>
+    <defName>RR_SweetSlimeInfestation</defName>
+    <hediffClass>RimRound.SweetSlime.Hediff_RRSweetSlimeInfestation</hediffClass>
+    <label>sweet slime infestation</label>
+    <description>A seed of sweet slime is growing inside this person. It is warm and oddly comforting, and it feeds them. Before long they will flush pink and it will begin to spread to anyone who lingers close. When it is full grown, it will swallow them into a slime cocoon.\n\nIt can be surgically extracted.</description>
+    <defaultLabelColor>(0.95, 0.55, 0.75)</defaultLabelColor>
+    <isBad>true</isBad>
+    <makesSickThought>false</makesSickThought>
+    <everCurableByItem>false</everCurableByItem>
+    <initialSeverity>0.001</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>0.2</severityPerDay>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+      </li>
+      <li>
+        <minSeverity>0.15</minSeverity>
+        <label>clinging</label>
+        <hungerRateFactor>1.15</hungerRateFactor>
+      </li>
+      <li>
+        <minSeverity>0.5</minSeverity>
+        <label>flushed</label>
+        <hungerRateFactor>1.3</hungerRateFactor>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <ThoughtDef>
+    <defName>RR_SweetSlimeWarmth</defName>
+    <workerClass>ThoughtWorker_Hediff</workerClass>
+    <hediff>RR_SweetSlimeInfestation</hediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <visible>false</visible>
+      </li>
+      <li>
+        <label>sweet warmth</label>
+        <description>Something warm and sweet is clinging to me from the inside. It's... nice.</description>
+        <baseMoodEffect>4</baseMoodEffect>
+      </li>
+      <li>
+        <label>flushed and glowing</label>
+        <description>I feel so warm. Everyone should feel this warm. I just want to hold someone.</description>
+        <baseMoodEffect>7</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <RecipeDef ParentName="SurgeryFlesh">
+    <defName>RR_ExtractSweetSlime</defName>
+    <label>extract sweet slime</label>
+    <description>Draw the seed of sweet slime out of this person before it swallows them.</description>
+    <workerClass>Recipe_RemoveHediff</workerClass>
+    <jobString>Extracting sweet slime.</jobString>
+    <workAmount>1800</workAmount>
+    <removesHediff>RR_SweetSlimeInfestation</removesHediff>
+    <successfullyRemovedHediffMessage>{0} has successfully extracted the sweet slime from {1}.</successfullyRemovedHediffMessage>
+    <anesthetize>false</anesthetize>
+    <surgerySuccessChanceFactor>1.2</surgerySuccessChanceFactor>
+    <skillRequirements>
+      <Medicine>5</Medicine>
+    </skillRequirements>
+    <recipeUsers>
+      <li>Human</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <categories>
+            <li>Medicine</li>
+          </categories>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <categories>
+        <li>Medicine</li>
+      </categories>
+    </fixedIngredientFilter>
+  </RecipeDef>
+
+  <!-- ============================================================ slime and cocoon -->
+
+  <ThingDef ParentName="BaseFilth">
+    <defName>RR_Filth_SweetSlime</defName>
+    <label>sweet slime</label>
+    <statBases>
+      <Beauty>-15</Beauty>
+      <Cleanliness>-6</Cleanliness>
+    </statBases>
+    <graphicData>
+      <texPath>Things/Filth/FireFoam</texPath>
+      <color>(255, 140, 190, 200)</color>
+      <drawSize>1.6</drawSize>
+    </graphicData>
+    <filth>
+      <disappearsInDays>6~12</disappearsInDays>
+      <rainWashes>true</rainWashes>
+      <cleaningWorkToReduceThickness>90</cleaningWorkToReduceThickness>
+      <cleaningSound>Interact_CleanFilth_Fluid</cleaningSound>
+      <allowsFire>false</allowsFire>
+    </filth>
+  </ThingDef>
+
+  <ThingDef ParentName="BuildingBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SlimeCocoon</defName>
+    <label>slime cocoon</label>
+    <description>A glistening cocoon of hardened pink slime, with someone curled up inside it. Break it open to free them early. Left alone, it will let them out a great deal heavier - and bud slime spawn as it does.</description>
+    <thingClass>RimRound.SweetSlime.Building_RRSlimeCocoon</thingClass>
+    <graphicData>
+      <texPath>Things/Building/RR_SlimeCocoon/RR_SlimeCocoon</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1.6, 1.6)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <pathCost>60</pathCost>
+    <fillPercent>0.5</fillPercent>
+    <tickerType>Normal</tickerType>
+    <rotatable>false</rotatable>
+    <selectable>true</selectable>
+    <statBases>
+      <MaxHitPoints>90</MaxHitPoints>
+      <Flammability>0</Flammability>
+      <Beauty>-8</Beauty>
+    </statBases>
+    <building>
+      <isInert>true</isInert>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+      <isTargetable>true</isTargetable>
+      <quickTargetable>true</quickTargetable>
+      <destroyEffecter>FleshmassDestroyed</destroyEffecter>
+    </building>
+  </ThingDef>
+
+  <!-- ============================================================ arrival and codex -->
+
+  <IncidentDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SweetSlimeArrival</defName>
+    <label>sweet slime</label>
+    <category>ThreatSmall</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>RimRound.SweetSlime.IncidentWorker_RRSweetSlime</workerClass>
+    <baseChance>0.4</baseChance>
+    <minThreatPoints>300</minThreatPoints>
+    <earliestDay>30</earliestDay>
+    <minRefireDays>40</minRefireDays>
+    <letterLabel>A sweet smell</letterLabel>
+    <letterText>A sweet, sticky smell has drifted over the colony, like warm syrup - but nobody can find where it's coming from.\n\nSomething may have arrived, unseen.</letterText>
+    <letterDef>ThreatSmall</letterDef>
+  </IncidentDef>
+
+  <EntityCodexEntryDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_SweetSlime</defName>
+    <label>sweet slime</label>
+    <useDescriptionFrom>RR_SweetSlime</useDescriptionFrom>
+    <uiIconPath>UI/CodexEntries/RR_SweetSlime</uiIconPath>
+    <category>Advanced</category>
+    <linkedThings>
+      <li>RR_SweetSlime</li>
+      <li>RR_SlimeSpawn</li>
+      <li>RR_SlimeCocoon</li>
+    </linkedThings>
+    <provocationIncidents>
+      <li>RR_SweetSlimeArrival</li>
+    </provocationIncidents>
+    <orderInCategory>1520</orderInCategory>
+  </EntityCodexEntryDef>
+
+</Defs>

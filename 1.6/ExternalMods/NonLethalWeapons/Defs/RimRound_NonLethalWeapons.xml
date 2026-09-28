@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Vanilla Weapons Expanded - Non-Lethal: RimRound's takes on stopping someone without hurting them -->
+<Defs>
+  <ResearchProjectDef>
+    <defName>RR_Research_GluttonousRestraint</defName>
+    <label>gluttonous restraint</label>
+    <description>Put gluttonium and sweet slime to work stopping people without hurting them: tranquilizer darts that fatten as they sedate, and grenades that burst into sticky pink foam.</description>
+    <baseCost>1200</baseCost>
+    <techLevel>Industrial</techLevel>
+    <tab>RimRoundTech</tab>
+    <prerequisites>
+      <li>VWE_NonLethal</li>
+      <li>RR_Research_ExperimentalGrenades</li>
+    </prerequisites>
+    <researchViewX>2</researchViewX>
+    <researchViewY>5</researchViewY>
+  </ResearchProjectDef>
+
+  <!-- ==================== gluttonium dart gun ==================== -->
+  <ThingDef ParentName="BaseHumanMakeableGun">
+    <defName>RR_Gun_GluttoniumDartGun</defName>
+    <label>gluttonium dart gun</label>
+    <description>A dart gun loaded with tranquilizer darts that also carry a dose of gluttonium. The target goes down sedated, and wakes up noticeably softer - though most of the swelling fades within half a day.</description>
+    <graphicData>
+      <texPath>Things/Item/Equipment/WeaponRanged/DartGun</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(1, 0.78, 0.88)</color>
+    </graphicData>
+    <soundInteract>Interact_Rifle</soundInteract>
+    <recipeMaker>
+      <researchPrerequisite>RR_Research_GluttonousRestraint</researchPrerequisite>
+      <skillRequirements>
+        <Crafting>6</Crafting>
+      </skillRequirements>
+    </recipeMaker>
+    <statBases>
+      <WorkToMake>36000</WorkToMake>
+      <Mass>2.6</Mass>
+      <AccuracyTouch>0.55</AccuracyTouch>
+      <AccuracyShort>0.74</AccuracyShort>
+      <AccuracyMedium>0.82</AccuracyMedium>
+      <AccuracyLong>0.80</AccuracyLong>
+      <RangedWeapon_Cooldown>4.3</RangedWeapon_Cooldown>
+    </statBases>
+    <costList>
+      <Steel>60</Steel>
+      <ComponentIndustrial>5</ComponentIndustrial>
+      <Neutroamine>15</Neutroamine>
+      <RR_Gluttonium>20</RR_Gluttonium>
+    </costList>
+    <verbs>
+      <li>
+        <verbClass>Verb_Shoot</verbClass>
+        <hasStandardCommand>true</hasStandardCommand>
+        <defaultProjectile>RR_Bullet_GluttoniumDart</defaultProjectile>
+        <warmupTime>3.5</warmupTime>
+        <range>36.9</range>
+        <soundCast>VWENL_Shot_DartGun</soundCast>
+        <soundCastTail>GunTail_Heavy</soundCastTail>
+        <muzzleFlashScale>9</muzzleFlashScale>
+      </li>
+    </verbs>
+    <tools>
+      <li>
+        <label>stock</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>9</power>
+        <cooldownTime>2</cooldownTime>
+      </li>
+      <li>
+        <label>barrel</label>
+        <capacities>
+          <li>Blunt</li>
+          <li>Poke</li>
+        </capacities>
+        <power>9</power>
+        <cooldownTime>2</cooldownTime>
+      </li>
+    </tools>
+    <weaponTags Inherit="False">
+      <li>NonLethal</li>
+    </weaponTags>
+  </ThingDef>
+
+  <ThingDef ParentName="BaseBullet">
+    <defName>RR_Bullet_GluttoniumDart</defName>
+    <label>gluttonium dart</label>
+    <thingClass>RimRound.Things.FatteningBullet</thingClass>
+    <graphicData>
+      <texPath>Things/Projectile/DartSmall</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(1, 0.7, 0.85)</color>
+    </graphicData>
+    <projectile>
+      <damageDef>VWE_AnestheticDart</damageDef>
+      <damageAmountBase>3</damageAmountBase>
+      <stoppingPower>5</stoppingPower>
+      <speed>75</speed>
+    </projectile>
+    <modExtensions>
+      <li Class="RimRound.Things.ME_FatteningBullet">
+        <kilosToAdd>40</kilosToAdd>
+        <ticksBetweenApplication>150</ticksBetweenApplication>
+        <numberOfApplications>4</numberOfApplications>
+        <chanceToInflictIllness>1.00</chanceToInflictIllness>
+        <effectDuration>30000</effectDuration>
+        <triggerMessages>false</triggerMessages>
+      </li>
+    </modExtensions>
+  </ThingDef>
+
+  <!-- ==================== sweet-slime foam grenade ==================== -->
+  <ThingDef ParentName="BaseMakeableGrenade">
+    <defName>RR_SlimeFoamGrenade</defName>
+    <label>sweet-slime foam grenades</label>
+    <description>Canisters of pressurized sweet-slime foam. Each bursts into a wide splash of sticky pink slime that puts out fires, slows everyone it coats, and leaves anyone who can swell a little rounder for a while. It hurts no one.</description>
+    <tickerType>Normal</tickerType>
+    <graphicData>
+      <texPath>Things/Item/Equipment/WeaponRanged/TearGasGrenades</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(1, 0.72, 0.86)</color>
+    </graphicData>
+    <soundInteract>ThrowGrenade</soundInteract>
+    <techLevel>Industrial</techLevel>
+    <statBases>
+      <Mass>1</Mass>
+      <RangedWeapon_Cooldown>5.66</RangedWeapon_Cooldown>
+      <WorkToMake>4600</WorkToMake>
+    </statBases>
+    <recipeMaker>
+      <researchPrerequisite>RR_Research_GluttonousRestraint</researchPrerequisite>
+      <skillRequirements>
+        <Crafting>6</Crafting>
+      </skillRequirements>
+    </recipeMaker>
+    <costList>
+      <Neutroamine>20</Neutroamine>
+      <Steel>10</Steel>
+      <RR_Gluttonium>10</RR_Gluttonium>
+    </costList>
+    <weaponTags Inherit="False">
+      <li>NonLethal</li>
+    </weaponTags>
+    <thingCategories>
+      <li>Grenades</li>
+    </thingCategories>
+    <verbs>
+      <li>
+        <label>throw slime foam grenade</label>
+        <verbClass>Verb_LaunchProjectile</verbClass>
+        <hasStandardCommand>true</hasStandardCommand>
+        <range>15.9</range>
+        <forcedMissRadius>1.9</forcedMissRadius>
+        <warmupTime>2.8</warmupTime>
+        <noiseRadius>4</noiseRadius>
+        <ai_IsBuildingDestroyer>false</ai_IsBuildingDestroyer>
+        <soundCast>ThrowGrenade</soundCast>
+        <targetParams>
+          <canTargetLocations>true</canTargetLocations>
+        </targetParams>
+        <defaultProjectile>RR_Proj_SlimeFoamGrenade</defaultProjectile>
+        <rangedFireRulepack>Combat_RangedFire_Thrown</rangedFireRulepack>
+      </li>
+    </verbs>
+  </ThingDef>
+
+  <ThingDef ParentName="BaseGrenadeProjectile">
+    <defName>RR_Proj_SlimeFoamGrenade</defName>
+    <label>sweet-slime foam grenade</label>
+    <graphicData>
+      <texPath>Things/Projectile/TearGasThrown</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(1, 0.72, 0.86)</color>
+    </graphicData>
+    <projectile>
+      <damageDef>RR_SlimeFoam</damageDef>
+      <speed>10</speed>
+      <explosionRadius>2.9</explosionRadius>
+      <flyOverhead>false</flyOverhead>
+      <postExplosionSpawnThingDef>RR_Filth_SweetSlime</postExplosionSpawnThingDef>
+      <postExplosionSpawnChance>0.8</postExplosionSpawnChance>
+      <postExplosionSpawnThingCount>1</postExplosionSpawnThingCount>
+      <applyDamageToExplosionCellsNeighbors>true</applyDamageToExplosionCellsNeighbors>
+      <arcHeightFactor>2</arcHeightFactor>
+    </projectile>
+  </ThingDef>
+</Defs>

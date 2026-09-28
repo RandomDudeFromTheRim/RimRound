@@ -70,6 +70,31 @@ Another pawn can tear it off, which is harder the fuller it still is. Alone, a v
       <li Class="CompProperties_ProducesBioferrite">
         <bioferriteDensity>2</bioferriteDensity>
       </li>
+      <!-- studying captives teaches the constrictor vat new mutations (Utilities/RRStudyUnlocks.cs) -->
+      <li Class="RimRound.Utilities.CompProperties_RRStudyPayoffs">
+        <studyNotes>
+          <li>
+            <thresholdRange>2~3</thresholdRange>
+            <label>Gorge constrictor study progress</label>
+            <text>{PAWN_nameDef} has worked out how a gorge constrictor's gut turns what it eats into slurry. A constrictor vat can now grow a void-lined gut or lingering hunger on a bound constrictor.</text>
+          </li>
+          <li>
+            <thresholdRange>5~6</thresholdRange>
+            <label>Gorge constrictor study progress</label>
+            <text>{PAWN_nameDef} has found the glands a gorge constrictor uses to calm what it holds. A constrictor vat can now grow euphoric mucus or persuasive saliva on a bound constrictor.</text>
+          </li>
+          <li>
+            <thresholdRange>9~10</thresholdRange>
+            <label>Gorge constrictor study complete</label>
+            <text>{PAWN_nameDef} understands why a gorge constrictor stops where it does. A constrictor vat can now grow stretching coils on a bound constrictor, so it keeps pumping past where it would let go.</text>
+          </li>
+        </studyNotes>
+        <unlockKeys>
+          <li>constrictor_1</li>
+          <li>constrictor_2</li>
+          <li>constrictor_3</li>
+        </unlockKeys>
+      </li>
       <!-- hunts the nearest hostile humanlike, downed ones included, and latches on -->
       <li Class="RimRound.Comps.CompProperties_RRConstrictorHunt" />
     </comps>

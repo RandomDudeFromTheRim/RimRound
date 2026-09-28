@@ -52,19 +52,26 @@ namespace RimRound.AI
             {
                 defaultCompleteMode = ToilCompleteMode.Delay,
                 defaultDuration = DurationTicks,
+                handlingFacing = true,
                 initAction = delegate
                 {
-                    pawn.rotationTracker.Face(TargetThingB.DrawPos);
-                    FleckMaker.ThrowSmoke(pawn.DrawPos, pawn.Map, 0.8f);
+                    pawn.rotationTracker.FaceTarget(TargetThingA);
                 },
                 tickAction = delegate
                 {
-                    if (TargetThingB.Spawned)
+                    // eating at the machine, turning every so often to the partner beside them
+                    int t = DurationTicks - ticksLeftThisToil;
+                    bool glancing = t % 400 >= 340 && TargetThingB.Spawned;
+                    if (glancing)
                         pawn.rotationTracker.Face(TargetThingB.DrawPos);
-                    if (pawn.IsHashIntervalTick(600))
-                        FleckMaker.ThrowSmoke(pawn.DrawPos, pawn.Map, 0.5f);
+                    else
+                        pawn.rotationTracker.FaceTarget(TargetThingA);
+                    if (t % 400 == 360)
+                        FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, FleckDefOf.Heart);
                 }
             };
+            feed.WithEffect(EffecterDefOf.EatMeat, TargetIndex.A);
+            feed.PlaySustainerOrSound(() => DefDatabase<SoundDef>.GetNamedSilentFail("Meal_Eat"));
             yield return feed;
 
             yield return Toils_General.Do(() => Reward(pawn, TargetThingB as Pawn));

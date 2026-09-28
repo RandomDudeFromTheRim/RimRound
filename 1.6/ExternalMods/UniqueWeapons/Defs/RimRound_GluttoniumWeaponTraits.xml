@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Odyssey unique-weapon traits (and, with Unique Weapons Unbound, fittable at a workbench) -->
+<Defs>
+  <ColorDef ParentName="UniqueWeaponColorBase">
+    <defName>RR_UniqueWeapon_Gluttonium</defName>
+    <label>gluttonium pink</label>
+    <color>(214, 112, 160)</color>
+    <randomlyPickable>false</randomlyPickable>
+  </ColorDef>
+
+  <!-- Harmless: the amount is kilos of sudden swelling, which mostly wears off -->
+  <DamageDef>
+    <defName>RR_GluttoniumPuff</defName>
+    <label>gluttonium puff</label>
+    <workerClass>RimRound.Things.DamageWorker_RRGluttoniumPuff</workerClass>
+    <externalViolence>false</externalViolence>
+    <harmsHealth>false</harmsHealth>
+    <makesBlood>false</makesBlood>
+    <canInterruptJobs>false</canInterruptJobs>
+    <defaultDamage>6</defaultDamage>
+    <modExtensions>
+      <li Class="RimRound.Things.RRGluttoniumPuffExtension">
+        <durationTicks>30000</durationTicks>
+        <permanentFraction>0.1</permanentFraction>
+      </li>
+    </modExtensions>
+  </DamageDef>
+
+  <WeaponTraitDef>
+    <defName>RR_GluttoniumRounds</defName>
+    <label>gluttonium rounds</label>
+    <description>This weapon fires rounds laced with a gluttonium payload. Targets it hits often puff up with sudden weight - most of it wears off within half a day, but a little always stays.</description>
+    <commonality>0.6</commonality>
+    <weaponCategory>BulletFiring</weaponCategory>
+    <exclusionTags>
+      <li>AmmoType</li>
+      <li>Color</li>
+    </exclusionTags>
+    <forcedColor>RR_UniqueWeapon_Gluttonium</forcedColor>
+    <extraDamages>
+      <li>
+        <def>RR_GluttoniumPuff</def>
+        <amount>8</amount>
+        <chance>0.4</chance>
+      </li>
+    </extraDamages>
+    <statOffsets>
+      <MarketValue>60</MarketValue>
+    </statOffsets>
+    <traitAdjectives>
+      <li>pink</li>
+      <li>gorging</li>
+      <li>swelling</li>
+      <li>bloating</li>
+      <li>sweet</li>
+    </traitAdjectives>
+  </WeaponTraitDef>
+
+  <WeaponTraitDef>
+    <defName>RR_GluttoniumPellets</defName>
+    <label>gluttonium pellets</label>
+    <description>This weapon fires pellets packed with gluttonium. Each pellet that hits may puff its target up a little; a full spread at close range can swell someone considerably. Most of it wears off within half a day.</description>
+    <commonality>0.6</commonality>
+    <weaponCategory>PelletFiring</weaponCategory>
+    <exclusionTags>
+      <li>AmmoType</li>
+      <li>Color</li>
+    </exclusionTags>
+    <forcedColor>RR_UniqueWeapon_Gluttonium</forcedColor>
+    <extraDamages>
+      <li>
+        <def>RR_GluttoniumPuff</def>
+        <amount>3</amount>
+        <chance>0.5</chance>
+      </li>
+    </extraDamages>
+    <statOffsets>
+      <MarketValue>60</MarketValue>
+    </statOffsets>
+    <traitAdjectives>
+      <li>pink</li>
+      <li>gorging</li>
+      <li>swelling</li>
+      <li>bloating</li>
+    </traitAdjectives>
+  </WeaponTraitDef>
+</Defs>

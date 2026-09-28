@@ -631,6 +631,180 @@ def constrictor_body(size=128):
     return to_image(rgb, alpha, size)
 
 
+def _tapered(px, py, ax, ay, bx, by, w0, w1):
+    """Distance field of a stroke from a (width w0) to b (width w1): teeth, horns."""
+    abx, aby = bx - ax, by - ay
+    t = np.clip(((px - ax) * abx + (py - ay) * aby) / max(abx * abx + aby * aby, 1e-9), 0, 1)
+    d = np.sqrt((px - ax - t * abx) ** 2 + (py - ay - t * aby) ** 2)
+    return d - (w0 + (w1 - w0) * t)
+
+
+def _tube(px, py, spine, radii, light):
+    """A fleshy tube along a spine (list of points) with a radius per point: the
+    union of its cross-section circles. Returns sdf, the spine parameter t (0..1)
+    of the nearest section, and the lit amount from a tube normal."""
+    best = np.full(px.shape, 9.0, np.float32)
+    t_of = np.zeros(px.shape, np.float32)
+    nx = np.zeros(px.shape, np.float32)
+    ny = np.zeros(px.shape, np.float32)
+    k = len(spine)
+    for i, ((cx, cy), r) in enumerate(zip(spine, radii)):
+        dx, dy = px - cx, py - cy
+        d = np.sqrt(dx * dx + dy * dy) - r
+        closer = d < best
+        best = np.where(closer, d, best)
+        t_of = np.where(closer, i / (k - 1), t_of)
+        nx = np.where(closer, dx / r, nx)
+        ny = np.where(closer, dy / r, ny)
+    nz = np.sqrt(np.clip(1 - nx * nx - ny * ny, 0, 1))
+    lit = np.clip(nx * light[0] + ny * light[1] + nz * light[2], -1, 1)
+    return best, t_of, lit
+
+
+def constrictor_engorged(size=256, facing='south'):
+    """The gorge constrictor loose, as it arrives: an engorged leech of a
+    fleshbeast. A thick, segmented body stretched tight with its load, lumpy
+    along the back, a round lamprey mouth ringed with hooked teeth, the monitor
+    face set in its brow and a dark shard driven into its back. Drawn in the
+    manner of Anomaly's devourer - one heavy, softly lit mass, bold outline,
+    light from the top left - in the muted fleshbeast palette.
+    facing: 'south' (mouth toward the viewer), 'east' (side on) or 'north' (from
+    behind); west mirrors east."""
+    n = size * SS
+    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
+    px, py = (x - n / 2) / n, (y - n / 2) / n
+    wob = periodic_noise(n, 173, ((3, 1.0), (7, 0.5)))
+    L = (-0.45, -0.55, 0.7)
+    base, lit_c, dark = (150, 96, 98), (196, 138, 134), (86, 50, 54)
+    taut = (206, 156, 150)                                   # stretched thin over the load
+    fill = lambda sdf: np.clip(-sdf * n / 1.5, 0, 1)
+    line = 0.02
+    rgb = np.zeros((n, n, 3), np.float32)
+    rgb[:] = CON_OUTLINE
+    alpha = np.zeros((n, n), np.float32)
+
+    def lay(col, sdf):
+        """Paint a shape: dark outline band first, then its fill over it."""
+        nonlocal rgb, alpha
+        a_ = np.clip((line - sdf) * n / 1.5, 0, 1)
+        rgb = lerp(rgb, CON_OUTLINE, a_)
+        rgb = lerp(rgb, col, fill(sdf))
+        alpha = np.maximum(alpha, a_)
+
+    def shade(lit):
+        col = lerp(base, lit_c, np.clip(lit, 0, 1))
+        return lerp(col, dark, np.clip(-lit * 1.2 + 0.2, 0, 1))
+
+    def monitor(cx, cy, w, h, squash=1.0):
+        nonlocal rgb, alpha
+        face = constrictor_face(128, 4).resize((max(1, int(n * w * squash)), int(n * h)), Image.LANCZOS)
+        fa = np.asarray(face, np.float32)
+        fw, fh = fa.shape[1], fa.shape[0]
+        fx, fy = int(n / 2 + cx * n - fw / 2), int(n / 2 + cy * n - fh / 2)
+        a_ = fa[..., 3] / 255
+        region = (slice(fy, fy + fh), slice(fx, fx + fw))
+        rgb[region] = lerp(rgb[region], fa[..., :3], a_)
+        alpha[region] = np.maximum(alpha[region], a_)
+
+    def shard(cx, cy, s_):
+        nonlocal rgb, alpha
+        sfill, sedge, scol = _shard(px, py, cx, cy, s_, n)
+        rgb = lerp(rgb, CON_OUTLINE, sedge)
+        rgb = lerp(rgb, scol, sfill)
+        alpha = np.maximum(alpha, np.maximum(sfill, sedge))
+
+    def teeth(tooth_sdfs, inside):
+        nonlocal rgb
+        for tooth, shade_t in tooth_sdfs:
+            m = inside
+            rgb = lerp(rgb, CON_OUTLINE, np.clip((0.006 - tooth) * n / 1.5, 0, 1) * m)
+            rgb = lerp(rgb, lerp((238, 228, 212), (168, 152, 138), shade_t), fill(tooth) * m)
+
+    if facing == 'east':
+        # side on: blunt tail at the left, the load bulging the middle, neck and mouth at the right
+        ts = np.linspace(0, 1, 70)
+        spine = [(-0.38 + 0.72 * t, 0.1 - 0.06 * np.sin(t * np.pi)) for t in ts]
+        prof = []
+        for t in ts:
+            if t < 0.78:
+                r = 0.06 + 0.2 * np.sin(np.clip((t + 0.06) / 0.84, 0, 1) * np.pi) ** 0.7
+            else:
+                r = 0.11 + 0.02 * (t - 0.78) / 0.22            # the neck, flaring a little to the mouth
+            prof.append(r)
+        d, t_of, lit = _tube(px, py, spine, prof, L)
+        # lumpy along the top of the back
+        top = np.clip(-(py - 0.02) * 6, 0, 1) * np.clip(1 - np.abs(t_of - 0.4) / 0.35, 0, 1)
+        d = d - 0.022 * top * np.clip(np.sin(t_of * 40) * 0.5 + 0.5, 0, 1) + 0.01 * (wob - 0.5)
+        col = shade(lit)
+        col = lerp(col, taut, np.clip(lit, 0, 1) * np.clip(1 - np.abs(t_of - 0.4) / 0.3, 0, 1) * 0.35)
+        # segment creases: stretched far apart over the load, close together at the neck
+        tt = t_of + 0.12 * np.sin(t_of * np.pi)
+        seg = np.clip(1 - np.abs(np.sin(tt * np.pi * 8)) / 0.13, 0, 1) * fill(d + 0.025)
+        col = lerp(col, dark, seg * 0.75)
+        lay(col, d)
+        # the lamprey mouth, facing forward, hooked teeth round its rim
+        mx, my = 0.37, spine[-1][1]
+        rim = (np.sqrt(((px - mx) / 0.045) ** 2 + ((py - my) / 0.12) ** 2) - 1) * 0.045
+        lay(lerp((40, 10, 18), (132, 46, 58), np.clip((mx - px) * 10 + 0.3, 0, 1)), rim)
+        tlist = []
+        for k in range(6):
+            ty = my - 0.09 + 0.18 * k / 5
+            tlist.append((_tapered(px, py, mx + 0.025, ty, mx - 0.02, ty + (my - ty) * 0.35, 0.013, 0.002), 0.2))
+        teeth(tlist, fill(rim - 0.006))
+        monitor(0.06, -0.01, 0.24, 0.22, squash=0.75)
+        shard(-0.12, -0.16, 0.2)
+        return to_image(rgb, alpha, size)
+
+    # front (mouth toward the viewer) or back
+    cx, cy, rx, ry = 0.0, 0.03, 0.39, 0.37
+    u, v = (px - cx) / rx, (py - cy) / ry
+    v = v * (1 + 0.16 * np.clip(-v, 0, 1))                     # a little peaked on top, like the devourer
+    r2 = u * u + v * v
+    ang = np.arctan2(v, u)
+    # lumpy across the top of the back, smooth underneath
+    bumps = np.clip(np.sin(ang * 9 + 0.5) * 0.5 + 0.5, 0, 1) * np.clip(-v * 1.5, 0, 1)
+    d = (np.sqrt(r2) - 1) * min(rx, ry) - 0.022 * bumps + 0.01 * (wob - 0.5)
+    nz = np.sqrt(np.clip(1 - r2, 0, 1))
+    lit = np.clip(u * L[0] + v * L[1] + nz * L[2], -1, 1)
+    col = shade(lit)
+    col = lerp(col, taut, np.clip(lit, 0, 1) * np.clip(r2 * 1.5, 0, 1) * 0.3)
+    seg = np.zeros(px.shape, np.float32)
+    oy = 0.1
+    if facing == 'south':
+        # the segment rings run concentric round the mouth, stretched wide by the load
+        rr = np.sqrt(px ** 2 + ((py - oy) / 0.92) ** 2)
+        for R in (0.27, 0.36, 0.46):
+            seg = np.maximum(seg, np.clip(1 - np.abs(rr - R) / 0.007, 0, 1))
+    else:
+        # from behind they wrap round the body as arcs, with a darker ridge down the spine
+        for k in range(5):
+            yk = -0.2 + 0.11 * k
+            seg = np.maximum(seg, np.clip(1 - np.abs(py - (yk - 1.1 * px * px)) / 0.006, 0, 1))
+        col = lerp(col, dark, np.clip(1 - np.abs(px - 0.01) / 0.025, 0, 1) * 0.3 * np.clip(-(py - 0.3) * 3, 0, 1))
+    col = lerp(col, dark, seg * 0.55 * fill(d + 0.025))
+    lay(col, d)
+    if facing == 'south':
+        # a fleshy lip round the mouth, then the throat and its hooked teeth
+        mr = np.sqrt((px / 0.16) ** 2 + ((py - oy) / 0.145) ** 2)
+        lip = np.clip(1 - np.abs(mr - 1.12) / 0.14, 0, 1)
+        rgb = lerp(rgb, lerp(lit_c, taut, 0.5), lip * 0.6 * np.clip(0.7 - (py - oy) * 3, 0, 1))
+        rgb = lerp(rgb, dark, lip * 0.5 * np.clip((py - oy) * 4, 0, 1))
+        throat = lerp((140, 46, 58), (22, 5, 10), np.clip(1 - mr, 0, 1) ** 0.6)
+        lay(throat, (mr - 1) * 0.145)
+        tlist = []
+        for k in range(11):
+            a_ = TAU * k / 11 - np.pi / 2
+            bx, by = np.cos(a_) * 0.15, oy + np.sin(a_) * 0.135
+            tx, ty = np.cos(a_ + 0.12) * 0.075, oy + np.sin(a_ + 0.12) * 0.068
+            tlist.append((_tapered(px, py, bx, by, tx, ty, 0.017, 0.002), np.clip((py - oy) * 6 + 0.5, 0, 1)))
+        teeth(tlist, fill((mr - 1) * 0.145 - 0.004))
+        monitor(0.0, -0.18, 0.26, 0.2)
+        shard(0.14, -0.34, 0.2)
+    else:
+        shard(0.03, -0.1, 0.3)
+    return to_image(rgb, alpha, size)
+
+
 def constrictor_lure(size=128):
     """Constrictor lure: a heap of twisted meat, darker and redder than the
     constrictor's own flesh, with a shard of dark archotechnology stuck in it."""
@@ -726,6 +900,232 @@ def constrictor_vat(size=256, top=False):
     rgb = lerp(rgb, (40, 20, 26), fill(r - rim_inner - 0.012))       # inner lip shadow
     rgb = lerp(rgb, slurry, inner)
     return to_image(rgb, alpha, size)
+
+
+STEEL, STEEL_LIGHT, STEEL_DARK = (118, 116, 122), (170, 168, 174), (62, 60, 68)
+GLUT_PINK, GLUT_LIGHT, GLUT_DARK = (226, 128, 170), (252, 196, 220), (150, 62, 104)
+
+
+def gluttonium_diffuser(size=128):
+    """Gluttonium diffuser, seen from above: a squat steel canister on a square
+    base, a glass dome of glowing pink gluttonium slurry on top and four vent
+    nozzles round its rim, in item style - muted colours, top-left light, dark
+    outline."""
+    n = size * SS
+    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
+    px, py = (x - n / 2) / n, (y - n / 2) / n
+    fill = lambda sdf: np.clip((-sdf) * n / 1.5, 0, 1)
+    line = 0.024
+    light = np.clip(0.5 - (px + py) * 1.1, 0, 1)
+    base = rounded_box_sdf(px, py, -0.36, -0.3, 0.36, 0.4, 0.06)
+    body = np.sqrt(px ** 2 + (py - 0.02) ** 2) - 0.3
+    nozzles = np.full(px.shape, 9.0, np.float32)
+    for a in (0.25, 1.82, 3.39, 4.96):
+        cx, cy = np.cos(a) * 0.31, 0.02 + np.sin(a) * 0.31
+        nozzles = np.minimum(nozzles, np.sqrt((px - cx) ** 2 + (py - cy) ** 2) - 0.055)
+    dome = np.sqrt((px + 0.01) ** 2 + (py + 0.01) ** 2) - 0.19
+    shape = np.minimum.reduce([base, body, nozzles])
+    alpha = np.clip((line - shape) * n / 1.5, 0, 1)
+    rgb = np.zeros((n, n, 3), np.float32)
+    rgb[:] = (30, 26, 34)
+    rgb = lerp(rgb, lerp(STEEL_DARK, STEEL, light), fill(base + line * 0.9))
+    rgb = lerp(rgb, (30, 26, 34), np.clip((line - body) * n / 1.5, 0, 1))
+    rgb = lerp(rgb, lerp(STEEL_DARK, STEEL_LIGHT, light), fill(body + line * 0.9))
+    # nozzles: dark mouths in steel collars
+    rgb = lerp(rgb, (30, 26, 34), np.clip((line - nozzles) * n / 1.5, 0, 1))
+    rgb = lerp(rgb, lerp(STEEL_DARK, STEEL, light), fill(nozzles + line * 0.8))
+    for a in (0.25, 1.82, 3.39, 4.96):
+        cx, cy = np.cos(a) * 0.31, 0.02 + np.sin(a) * 0.31
+        hole = np.sqrt((px - cx) ** 2 + (py - cy) ** 2) - 0.025
+        rgb = lerp(rgb, GLUT_DARK, fill(hole))
+    # the dome of glowing gluttonium, with a glass highlight
+    rgb = lerp(rgb, (30, 26, 34), np.clip((line * 0.8 - dome) * n / 1.5, 0, 1))
+    wob = periodic_noise(n, 211, ((3, 1.0), (6, 0.5)))
+    goo = lerp(GLUT_DARK, GLUT_PINK, np.clip(0.8 - np.sqrt(px ** 2 + py ** 2) * 3, 0, 1))
+    goo = lerp(goo, GLUT_LIGHT, np.clip((wob - 0.6) * 3, 0, 1) * 0.6)
+    rgb = lerp(rgb, goo, fill(dome + line * 0.7))
+    hl = np.clip(1 - np.sqrt(((px + 0.08) / 0.06) ** 2 + ((py + 0.09) / 0.035) ** 2), 0, 1)
+    rgb = lerp(rgb, (252, 240, 246), hl * 0.85 * fill(dome))
+    # warning stripes along the front of the base
+    stripe = fill(base + line) * (py > 0.3) * (np.sin((px + py) * 70) > 0)
+    rgb = lerp(rgb, (206, 170, 60), stripe * 0.7)
+    return to_image(rgb, alpha, size)
+
+
+def stretch_serum(size=64):
+    """Stretch serum: a stubby injector vial of pale pink fluid with a steel cap
+    and needle guard, item style."""
+    n = size * SS
+    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
+    px, py = (x - n / 2) / n, (y - n / 2) / n
+    # tilt the whole vial a little, like vanilla's serums
+    a = -0.5
+    qx, qy = px * np.cos(a) - py * np.sin(a), px * np.sin(a) + py * np.cos(a)
+    fill = lambda sdf: np.clip((-sdf) * n / 1.5, 0, 1)
+    line = 0.03
+    light = np.clip(0.5 - (px + py) * 1.1, 0, 1)
+    glass = rounded_box_sdf(qx, qy, -0.13, -0.18, 0.13, 0.3, 0.07)
+    cap = rounded_box_sdf(qx, qy, -0.15, -0.32, 0.15, -0.16, 0.03)
+    needle = rounded_box_sdf(qx, qy, -0.03, 0.3, 0.03, 0.42, 0.015)
+    shape = np.minimum.reduce([glass, cap, needle])
+    alpha = np.clip((line - shape) * n / 1.5, 0, 1)
+    rgb = np.zeros((n, n, 3), np.float32)
+    rgb[:] = (40, 30, 40)
+    rgb = lerp(rgb, lerp((180, 176, 186), (226, 222, 230), light), fill(glass + line * 0.9))
+    level = fill(glass + line * 1.3) * (qy > -0.06)
+    rgb = lerp(rgb, lerp(GLUT_DARK, GLUT_LIGHT, light), level)
+    rgb = lerp(rgb, (252, 236, 244), np.clip(1 - np.abs(qx + 0.06) / 0.02, 0, 1) * fill(glass + line) * 0.7)
+    rgb = lerp(rgb, lerp(STEEL_DARK, STEEL_LIGHT, light), fill(cap + line * 0.8))
+    rgb = lerp(rgb, lerp(STEEL_DARK, STEEL, light), fill(needle + line * 0.5))
+    return to_image(rgb, alpha, size)
+
+
+
+def swellkin_icon(size=128):
+    """Xenotype icon for the Swellkin, in the style of vanilla's: a white glyph with
+    a thick black outline - a round, soft head swelling into heavy jowls, content
+    closed eyes and a little smile."""
+    n = size * SS
+    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
+    px, py = (x - n / 2) / n, (y - n / 2) / n
+    fill = lambda sdf: np.clip((-sdf) * n / 1.5, 0, 1)
+    # a pear of a head: narrower on top, widening into the jowls
+    widen = 1 + 0.35 * np.clip((py + 0.05) / 0.3, 0, 1)
+    head = (np.sqrt((px / (0.26 * widen)) ** 2 + ((py - 0.02) / 0.34) ** 2) - 1) * 0.28
+    alpha = np.clip((0.045 - head) * n / 1.5, 0, 1)
+    rgb = np.zeros((n, n, 3), np.float32)
+    rgb = lerp(rgb, (255, 255, 255), fill(head))
+    # a chin fold across the jowls, closed happy eyes, a small smile, rosy cheeks outlined
+    fold = np.clip(1 - np.abs(np.sqrt((px / 0.2) ** 2 + ((py - 0.2) / 0.08) ** 2) - 1) / 0.09, 0, 1) * (py > 0.23)
+    smile = np.clip(1 - _arc(px, py, 0.0, 0.07, 0.07, 0.55, np.pi - 0.55) / 0.016, 0, 1)
+    eyes = np.maximum(np.clip(1 - _arc(px, py, -0.11, -0.03, 0.04, np.pi + 0.5, TAU - 0.5) / 0.016, 0, 1),
+                      np.clip(1 - _arc(px, py, 0.11, -0.03, 0.04, np.pi + 0.5, TAU - 0.5) / 0.016, 0, 1))
+    detail = np.maximum.reduce([fold, smile, eyes]) * fill(head)
+    rgb = lerp(rgb, (0, 0, 0), detail)
+    return to_image(rgb, alpha, size)
+
+
+SLIME_BASE, SLIME_LIGHT, SLIME_DARK = (232, 126, 170), (255, 196, 222), (160, 62, 110)
+SLIME_OUTLINE = (70, 20, 44)
+BONE = (246, 234, 222)
+
+
+def _slime_shade(px, py, sdf_parts, n, light=(-0.45, -0.55, 0.7)):
+    """Soft shading for a union of slime blobs given as (cx, cy, rx, ry): each lit as
+    a squashed sphere, merged smoothly, glossy highlight toward the light."""
+    total = np.zeros(px.shape, np.float32)
+    lit = np.zeros(px.shape, np.float32)
+    for cx, cy, rx, ry in sdf_parts:
+        u, v = (px - cx) / rx, (py - cy) / ry
+        r2 = u * u + v * v
+        f = np.clip(1 - r2, 0, 1) ** 2
+        nz = np.sqrt(np.clip(1 - r2, 0, 1))
+        l = np.clip(u * light[0] + v * light[1] + nz * light[2], -1, 1)
+        lit = np.where(f > total, l, lit)
+        total += f
+    return total, lit
+
+
+def sweet_slime(size=256, facing='south'):
+    """Sweet slime: a hunched figure of translucent pink slime pooling on the floor,
+    long arms drooping to the puddle, a lumpy head of slime 'hair', and bones
+    floating inside - a skull, ribs and an arm bone. Glossy, glowing, bold outline."""
+    n = size * SS
+    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
+    px, py = (x - n / 2) / n, (y - n / 2) / n
+    wob = periodic_noise(n, 227, ((3, 1.0), (7, 0.5)))
+    side = facing == 'east'
+    parts = [
+        (0.0, 0.33, 0.44, 0.12),                          # the puddle
+        (0.0 if not side else -0.04, 0.12, 0.25, 0.26),   # the hunched body
+        (0.0 if not side else 0.08, -0.16, 0.17, 0.16),   # the head
+    ]
+    if side:
+        parts += [(0.17, 0.08, 0.07, 0.24), (0.2, 0.3, 0.1, 0.06)]      # one arm hanging in front
+    else:
+        parts += [(-0.17, -0.02, 0.1, 0.08), (0.17, -0.02, 0.1, 0.08),  # shoulders
+                  (-0.22, 0.06, 0.07, 0.12), (0.22, 0.06, 0.07, 0.12),  # upper arms
+                  (-0.25, 0.18, 0.06, 0.12), (0.25, 0.18, 0.06, 0.12),  # forearms drooping to the puddle
+                  (-0.28, 0.31, 0.1, 0.05), (0.28, 0.31, 0.1, 0.05)]
+    # drips of 'hair' off the head
+    for dx in (-0.12, -0.05, 0.05, 0.12):
+        parts.append(((0.08 if side else 0.0) + dx, -0.06, 0.035, 0.09))
+    total, lit = _slime_shade(px, py, parts, n)
+    field = total * (0.92 + 0.16 * wob)
+    inside = np.clip((field - 0.22) * 40, 0, 1)
+    outline = np.clip((field - 0.1) * 40, 0, 1)
+    col = lerp(SLIME_BASE, SLIME_LIGHT, np.clip(lit, 0, 1))
+    col = lerp(col, SLIME_DARK, np.clip(-lit * 1.3 + 0.2, 0, 1))
+    # it is translucent: a deeper glow in the middle of the mass, paler at the thin edges
+    depth = np.clip(field - 0.5, 0, 1.5) / 1.5
+    col = lerp(col, (212, 88, 150), depth * 0.4)
+    # bones floating inside, softened by the slime over them
+    fill = lambda sdf: np.clip((-sdf) * n / 1.5, 0, 1)
+    hx = 0.08 if side else 0.0
+    skull = np.sqrt(((px - hx) / 0.07) ** 2 + ((py + 0.17) / 0.06) ** 2) - 1
+    bones = fill(skull * 0.06)
+    if facing != 'north':
+        # a skull's face: two big sockets, a little nose hole, a row of teeth
+        sock = lambda ex: np.sqrt(((px - hx - ex) / 0.022) ** 2 + ((py + 0.185) / 0.02) ** 2) - 1
+        if side:
+            eye = sock(0.035) * 0.02
+        else:
+            eye = np.minimum(sock(-0.03), sock(0.03)) * 0.02
+        nose = np.maximum(np.abs(px - hx - (0.03 if side else 0)) - 0.008 + (py + 0.155) * 0.4, -(py + 0.165))
+        nose = np.maximum(nose, py + 0.14)
+        teeth = np.maximum(np.abs(py + 0.125) - 0.006, np.abs(px - hx - (0.02 if side else 0)) - 0.04)
+        teeth = np.maximum(teeth, -np.abs(np.sin((px - hx) * 180)) + 0.3)
+        eye = np.minimum(np.minimum(eye, nose), teeth)
+    for k in range(4):
+        ry = 0.03 + k * 0.05
+        rib = np.abs(np.sqrt(((px - (hx * 0.3)) / 0.13) ** 2 + ((py - ry - 0.05) / 0.07) ** 2) - 1) * 0.07 - 0.006
+        rib = np.maximum(rib, -(py - ry - 0.07))
+        bones = np.maximum(bones, fill(rib))
+    spine = _cap(px, py, hx * 0.3, -0.08, hx * 0.3, 0.26) - 0.012
+    bones = np.maximum(bones, fill(spine))
+    arm_bone = _cap(px, py, 0.17 if side else 0.25, -0.02, 0.18 if side else 0.26, 0.24) - 0.01
+    bones = np.maximum(bones, fill(arm_bone))
+    bones *= inside
+    col = lerp(col, lerp(BONE, (236, 180, 200), 0.35), bones * 0.85)
+    if facing != 'north':
+        col = lerp(col, (120, 30, 70), fill(eye) * inside * 0.9)
+    # wet highlights: a glossy streak on the head and body
+    shine = np.clip((lit - 0.72) * 6, 0, 1) * (wob > 0.4)
+    col = lerp(col, (255, 238, 246), shine * 0.8)
+    rgb = np.zeros((n, n, 3), np.float32)
+    rgb[:] = SLIME_OUTLINE
+    rgb = lerp(rgb, col, inside)
+    return to_image(rgb, outline, size)
+
+
+def slime_cocoon(size=128):
+    """A cocoon of hardened pink slime, glossy and lumpy, with the curled shadow of
+    someone inside it."""
+    n = size * SS
+    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
+    px, py = (x - n / 2) / n, (y - n / 2) / n
+    wob = periodic_noise(n, 233, ((3, 1.0), (6, 0.5)))
+    parts = [(0.0, 0.03, 0.3, 0.38), (-0.08, 0.26, 0.24, 0.12), (0.1, -0.2, 0.2, 0.16), (0.0, 0.36, 0.38, 0.08)]
+    total, lit = _slime_shade(px, py, parts, n)
+    field = total * (0.9 + 0.2 * wob)
+    inside = np.clip((field - 0.22) * 40, 0, 1)
+    outline = np.clip((field - 0.1) * 40, 0, 1)
+    col = lerp(SLIME_BASE, SLIME_LIGHT, np.clip(lit, 0, 1))
+    col = lerp(col, SLIME_DARK, np.clip(-lit * 1.3 + 0.2, 0, 1))
+    # the curled figure inside, a darker shadow through the slime
+    body = np.sqrt(((px + 0.02) / 0.15) ** 2 + ((py - 0.05) / 0.22) ** 2) - 1
+    head = np.sqrt(((px - 0.05) / 0.08) ** 2 + ((py + 0.16) / 0.08) ** 2) - 1
+    shadow = np.clip(-np.minimum(body * 0.15, head * 0.08) * n / 6, 0, 1) * inside
+    col = lerp(col, (180, 80, 120), shadow * 0.3)
+    # hardened ridges and a glossy shine
+    ridge = np.clip(1 - np.abs(np.sin((py + 0.3 * px) * 26 + wob * 4)) / 0.12, 0, 1) * inside * 0.25
+    col = lerp(col, SLIME_DARK, ridge)
+    shine = np.clip((lit - 0.7) * 6, 0, 1)
+    col = lerp(col, (255, 238, 246), shine * 0.8)
+    rgb = np.zeros((n, n, 3), np.float32)
+    rgb[:] = SLIME_OUTLINE
+    rgb = lerp(rgb, col, inside)
+    return to_image(rgb, outline, size)
 
 
 # ------------------------------------------------------------------ feedees meme icon
@@ -833,7 +1233,10 @@ if __name__ == '__main__':
         constrictor_face(128, stage).save(f'{out}/RR_ConstrictorFace_{stage}.png')
     constrictor_proboscis().save(f'{out}/RR_ConstrictorProboscis.png')
     constrictor_bolus().save(f'{out}/RR_ConstrictorBolus.png')
-    constrictor_body(128).save(f'{out}/RR_GorgeConstrictor_south.png')
+    # the loose constrictor, swollen with its load (drawn scaled by load in game)
+    for facing in ('south', 'east', 'north'):
+        constrictor_engorged(256, facing).save(f'{out}/RR_GorgeConstrictor_{facing}.png')
+    constrictor_engorged(256, 'south').save(f'{out}/RR_GorgeConstrictor_MenuIcon.png')
     # ideology (goes to Textures/UI/Memes)
     feedees_icon().save(f'{out}/RR_Feedees.png')
     # item art (goes to Textures/Things/Item/Equipment/WeaponRanged and Textures/Things/Projectile)
@@ -843,8 +1246,21 @@ if __name__ == '__main__':
     constrictor_lure().save(f'{out}/RR_ConstrictorLure.png')
     bound_constrictor().save(f'{out}/RR_BoundConstrictor.png')
     # codex icon for the gorge constrictor (goes to Textures/UI/CodexEntries)
-    constrictor_body(128).save(f'{out}/RR_GorgeConstrictor_Codex.png')
-    silhouette(constrictor_body(128)).save(f'{out}/RR_GorgeConstrictor_Silhouette.png')
+    constrictor_engorged(128).save(f'{out}/RR_GorgeConstrictor_Codex.png')
+    silhouette(constrictor_engorged(128)).save(f'{out}/RR_GorgeConstrictor_Silhouette.png')
     # constrictor vat (goes to Textures/Things/Building/RR_ConstrictorVat)
     constrictor_vat().save(f'{out}/RR_ConstrictorVat.png')
     constrictor_vat(top=True).save(f'{out}/RR_ConstrictorVatTop.png')
+    # gluttonium diffuser (goes to Textures/Things/Building/RR_GluttoniumDiffuser)
+    gluttonium_diffuser().save(f'{out}/RR_GluttoniumDiffuser.png')
+    # stretch serum (goes to Textures/Things/Item/Drug)
+    stretch_serum().save(f'{out}/RR_StretchSerum.png')
+    # Swellkin xenotype icon (goes to SwellGlow's Textures/UI/Icons/Xenotypes)
+    swellkin_icon().save(f'{out}/RR_Swellkin.png')
+    # sweet slime (goes to Textures/Things/Pawn/RR_SweetSlime; the menu icon is the south view)
+    for facing in ('south', 'east', 'north'):
+        sweet_slime(256, facing).save(f'{out}/RR_SweetSlime_{facing}.png')
+    sweet_slime(256, 'south').save(f'{out}/RR_SweetSlime_MenuIcon.png')
+    slime_cocoon().save(f'{out}/RR_SlimeCocoon.png')
+    sweet_slime(128).save(f'{out}/RR_SweetSlime_Codex.png')
+    silhouette(sweet_slime(128)).save(f'{out}/RR_SweetSlime_Silhouette.png')

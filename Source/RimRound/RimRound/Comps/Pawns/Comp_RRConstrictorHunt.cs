@@ -50,6 +50,21 @@ namespace RimRound.Comps
         /// <summary>How swollen it looks, 0 (spent) to 1 (as full as they come).</summary>
         public float Swell => load < 0f ? FullLoad / MaxLoad : Mathf.Clamp01(load / MaxLoad);
 
+        // Drawn width of the sac, in cells, by the kilos it carries: about as wide as a
+        // human pawn carrying that much extra weight is drawn (Obese ~1.7 at 200 kg,
+        // Gigantic/Titanic ~4 at 1000-1400 kg), capped so the biggest stay readable.
+        static readonly SimpleCurve WidthByLoad = new SimpleCurve
+        {
+            new CurvePoint(0f, 0.9f),
+            new CurvePoint(200f, 1.7f),
+            new CurvePoint(660f, 3.0f),
+            new CurvePoint(1000f, 3.9f),
+            new CurvePoint(1410f, 4.1f),
+            new CurvePoint(1860f, 4.6f),
+        };
+
+        public float DrawWidth => WidthByLoad.Evaluate(load < 0f ? FullLoad : load);
+
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);

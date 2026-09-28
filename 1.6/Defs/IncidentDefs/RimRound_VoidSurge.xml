@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Void surge: RimRound's toxic fallout. Fattening gas wells up everywhere out of
+       doors for a day or two. Code: Incidents/GameCondition_RRVoidSurge.cs -->
+
+  <GameConditionDef>
+    <defName>RR_VoidSurge</defName>
+    <conditionClass>RimRound.Incidents.GameCondition_RRVoidSurge</conditionClass>
+    <label>void surge</label>
+    <description>Something vast beneath the crust has overeaten and is belching it back up. Sweet, fattening gas wells out of the ground everywhere, and anyone caught outdoors keeps breathing it in. Roofs keep it out.</description>
+    <descriptionFuture>fattening gas will well up out of the ground around [map_definite] for [gameConditionDuration_duration]</descriptionFuture>
+    <endMessage>The void surge subsides. The ground stops breathing.</endMessage>
+    <letterText>Something vast beneath the crust has overeaten, and it is belching it back up.\n\nSweet, fattening gas is welling out of the ground all over the area. Anyone caught outdoors will keep breathing it in and swelling up - stay under a roof until it passes.\n\nIt should blow over in a day or two.</letterText>
+    <letterDef>ThreatSmall</letterDef>
+    <canBePermanent>false</canBePermanent>
+    <allowUnderground>false</allowUnderground>
+    <pennedAnimalsSeekShelter>true</pennedAnimalsSeekShelter>
+  </GameConditionDef>
+
+  <IncidentDef>
+    <defName>RR_VoidSurge</defName>
+    <label>void surge</label>
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>IncidentWorker_MakeGameCondition</workerClass>
+    <gameCondition>RR_VoidSurge</gameCondition>
+    <letterLabel>Void surge</letterLabel>
+    <letterDef>ThreatSmall</letterDef>
+    <baseChance>0.12</baseChance>
+    <earliestDay>25</earliestDay>
+    <minRefireDays>45</minRefireDays>
+    <disabledWhen>
+      <extremeWeatherIncidentsDisabled>true</extremeWeatherIncidentsDisabled>
+    </disabledWhen>
+    <durationDays>0.5~2</durationDays>
+  </IncidentDef>
+
+</Defs>

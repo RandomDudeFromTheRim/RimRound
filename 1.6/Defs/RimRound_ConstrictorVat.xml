@@ -144,6 +144,7 @@
 
   <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
     <defName>RR_Mutation_VoidLinedGut</defName>
+    <requiredStudy>constrictor_1</requiredStudy>
     <label>void-lined gut</label>
     <description>Void gluttonium threads its gut. The same feed swells it with two thirds again as much load.</description>
     <displayOrder>30</displayOrder>
@@ -157,6 +158,7 @@
 
   <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
     <defName>RR_Mutation_StretchingCoils</defName>
+    <requiredStudy>constrictor_3</requiredStudy>
     <label>stretching coils</label>
     <description>Its coils learn to give. It keeps pumping one Gelatinous tier past where it would normally let go. It still never bursts anyone.</description>
     <displayOrder>40</displayOrder>
@@ -171,6 +173,7 @@
 
   <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
     <defName>RR_Mutation_EuphoricMucus</defName>
+    <requiredStudy>constrictor_2</requiredStudy>
     <label>euphoric mucus</label>
     <description>It coats whoever it holds in a warm, numbing slime. Anyone it holds loves every moment of it, whatever they think of weight, and comes away glowing.</description>
     <displayOrder>50</displayOrder>
@@ -185,6 +188,7 @@
 
   <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
     <defName>RR_Mutation_PersuasiveSaliva</defName>
+    <requiredStudy>constrictor_2</requiredStudy>
     <label>persuasive saliva</label>
     <description>Something in what it pumps changes minds. Whoever it fills to the brim comes away thinking better of weight.</description>
     <displayOrder>60</displayOrder>
@@ -199,6 +203,7 @@
 
   <RimRound.Things.RRConstrictorMutationDef MayRequire="Ludeon.RimWorld.Anomaly">
     <defName>RR_Mutation_LingeringHunger</defName>
+    <requiredStudy>constrictor_1</requiredStudy>
     <label>lingering hunger</label>
     <description>It leaves a seed of its own hunger behind. For two days after it lets go, its victim is ravenous.</description>
     <displayOrder>70</displayOrder>

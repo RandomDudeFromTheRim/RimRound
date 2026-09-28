@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- A coat of sweet slime, drawn over the pawn like firefoam (see the render tree patch) -->
+  <HediffDef>
+    <defName>RR_SlimeCoated</defName>
+    <label>covered in sweet slime</label>
+    <description>Coated in warm, sticky pink slime. It slows them down a little and won't burn, and it smells unmistakably sweet. It dries and flakes off after a while.</description>
+    <hediffClass>RimRound.SweetSlime.Hediff_RRSlimeCoated</hediffClass>
+    <defaultLabelColor>(0.93, 0.52, 0.72)</defaultLabelColor>
+    <isBad>false</isBad>
+    <stages>
+      <li>
+        <statFactors>
+          <Flammability>0</Flammability>
+        </statFactors>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <postFactor>0.85</postFactor>
+          </li>
+        </capMods>
+      </li>
+    </stages>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>15000</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <!-- Sweet-slime foam: puts out fires, coats pawns, a light puff of weight that wears off -->
+  <DamageDef>
+    <defName>RR_SlimeFoam</defName>
+    <label>sweet-slime foam</label>
+    <workerClass>RimRound.SweetSlime.DamageWorker_RRSlimeFoam</workerClass>
+    <canInterruptJobs>false</canInterruptJobs>
+    <makesBlood>false</makesBlood>
+    <defaultDamage>1</defaultDamage>
+    <explosionCellFleck>BlastExtinguisher</explosionCellFleck>
+    <explosionColorCenter>(1, 0.72, 0.86, 0.35)</explosionColorCenter>
+    <explosionColorEdge>(1, 0.55, 0.78, 0.08)</explosionColorEdge>
+    <soundExplosion>Explosion_FirefoamPopper</soundExplosion>
+    <harmsHealth>false</harmsHealth>
+    <combatLogRules>Damage_Extinguish</combatLogRules>
+  </DamageDef>
+</Defs>

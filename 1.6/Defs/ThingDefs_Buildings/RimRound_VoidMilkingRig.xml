@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Void milking rig: a holding platform facility. A void echo held on a linked
+       platform has its voidmilk drawn off into the feed lines (half again as much),
+       or bottled beside the rig when the lines are full. Still needs the Feedees.
+       Code: Hediffs/Hediff_VoidEchoVigor.cs (MilkingRig), linked to platforms by
+       Patches/RimRound_HoldingPlatformMilkingRig.xml. Art: the bioferrite harvester,
+       retinted through its mask. -->
+
+  <ThingDef ParentName="BuildingBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_VoidMilkingRig</defName>
+    <label>void milking rig</label>
+    <description>A pump rigged to hook into a void echo held on a nearby holding platform. It draws the echo's voidmilk off steadily - half again as much as seeps out on its own - and pumps it into a connected feed line, or bottles it beside the rig when the lines are full.\n\nOnly a colony that follows the Feedees knows how to milk a void echo at all.</description>
+    <tickerType>Normal</tickerType>
+    <size>(1,2)</size>
+    <graphicData>
+      <texPath>Things/Building/BioferriteHarvester/BioferriteHarvester</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(2,3)</drawSize>
+      <shaderType>CutoutComplex</shaderType>
+      <color>(214, 190, 196)</color>
+      <colorTwo>(232, 132, 172)</colorTwo>
+      <addTopAltitudeBias>true</addTopAltitudeBias>
+    </graphicData>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>0.20</staticSunShadowHeight>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+      <buildingTags>
+        <li>Anomaly</li>
+      </buildingTags>
+    </building>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.5</fillPercent>
+    <pathCost>50</pathCost>
+    <designationCategory>Anomaly</designationCategory>
+    <uiOrder>116</uiOrder>
+    <canOverlapZones>false</canOverlapZones>
+    <defaultPlacingRot>East</defaultPlacingRot>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <thingCategories>
+      <li>BuildingsProduction</li>
+    </thingCategories>
+    <statBases>
+      <MaxHitPoints>200</MaxHitPoints>
+      <WorkToBuild>4000</WorkToBuild>
+      <Flammability>0.75</Flammability>
+      <Beauty>-10</Beauty>
+      <Mass>20</Mass>
+    </statBases>
+    <costList>
+      <ComponentIndustrial>2</ComponentIndustrial>
+      <Steel>60</Steel>
+      <Bioferrite>30</Bioferrite>
+    </costList>
+    <researchPrerequisites>
+      <li>BioferriteHarvesting</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>PlaceWorker_ShowFacilitiesConnections</li>
+      <li>RimRound.FeedingTube.FoodTransmitter_PlaceWorker</li>
+    </placeWorkers>
+    <comps>
+      <li Class="CompProperties_Breakdownable"/>
+      <li Class="CompProperties_Facility">
+        <maxDistance>5.1</maxDistance>
+        <statOffsets>
+          <ContainmentStrength>-10</ContainmentStrength>
+        </statOffsets>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>120</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!-- pumps into a RimRound feed line -->
+      <li Class="RimRound.FeedingTube.Comps.FoodNetTrader_CompProperties">
+        <compClass>RimRound.FeedingTube.Comps.FoodNetTrader_ThingComp</compClass>
+      </li>
+      <li Class="CompProperties_AttachPoints">
+        <points>
+          <li><offset>(.1, 0, .8)</offset><type>CableConnection0</type></li>
+          <li><offset>(.1, 0, .8)</offset><type>CableConnection1</type></li>
+          <li><offset>(.1, 0, .8)</offset><type>CableConnection2</type></li>
+          <li><offset>(.1, 0, .8)</offset><type>CableConnection3</type></li>
+          <li><offset>(0, 0, .28)</offset><type>Exhaust</type></li>
+        </points>
+      </li>
+      <li Class="CompProperties_CableConnection">
+        <color>(0.78, 0.42, 0.56, 1)</color>
+        <drawMote>false</drawMote>
+        <offsets>
+          <li>
+            <li>(0, 0, 0.9)</li>
+            <li>(0, 0, 0.48)</li>
+            <li>(0, 0, 0.3)</li>
+            <li>(0, 0, 0.1)</li>
+          </li>
+          <li>
+            <li>(0.6, 0, 0.3)</li>
+            <li>(-0.2, 0, 0)</li>
+            <li>(0.2, 0, 0)</li>
+            <li>(0.4, 0, 0)</li>
+          </li>
+          <li>
+            <li>(0, 0, -0.25)</li>
+            <li>(0.4, 0, 0.48)</li>
+            <li>(0.4, 0, 0.3)</li>
+            <li>(0.4, 0, 0.1)</li>
+          </li>
+          <li>
+            <li>(-0.65, 0, 0.3)</li>
+            <li>(-0.2, 0, 0.65)</li>
+            <li>(0.2, 0, 0.65)</li>
+            <li>(0.4, 0, 0.65)</li>
+          </li>
+        </offsets>
+      </li>
+    </comps>
+  </ThingDef>
+
+</Defs>

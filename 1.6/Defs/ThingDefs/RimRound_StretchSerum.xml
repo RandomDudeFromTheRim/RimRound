@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Stretch serum: each dose permanently stretches the stomach (soft capacity and
+       elasticity), up to five doses. Code: Hediffs/Hediff_RRStretchSerum.cs -->
+
+  <ResearchProjectDef>
+    <defName>RR_Research_StretchSerum</defName>
+    <label>stretch serum</label>
+    <tab>RimRoundTech</tab>
+    <description>Synthesise a gluttonium-laced serum that loosens the stomach wall for good. Each dose lets a stomach hold a little more - up to a point.</description>
+    <baseCost>1500</baseCost>
+    <techLevel>Spacer</techLevel>
+    <prerequisites>
+      <li>RR_Research_GlutoniumDrugs</li>
+    </prerequisites>
+    <researchViewX>3</researchViewX>
+    <researchViewY>2</researchViewY>
+  </ResearchProjectDef>
+
+  <ThingDef ParentName="ResourceBase">
+    <defName>RR_StretchSerum</defName>
+    <label>stretch serum</label>
+    <description>A single-dose injector of gluttonium-laced serum that loosens the stomach wall for good. Each dose permanently increases stomach capacity by 12% and stomach elasticity by 10%. A stomach can only take five doses before it won't stretch any further.</description>
+    <thingClass>ThingWithComps</thingClass>
+    <graphicData>
+      <texPath>Things/Item/Drug/RR_StretchSerum</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>0.8</drawSize>
+    </graphicData>
+    <stackLimit>10</stackLimit>
+    <useHitPoints>true</useHitPoints>
+    <resourceReadoutPriority>Middle</resourceReadoutPriority>
+    <statBases>
+      <MaxHitPoints>50</MaxHitPoints>
+      <MarketValue>320</MarketValue>
+      <Mass>0.05</Mass>
+      <DeteriorationRate>2</DeteriorationRate>
+      <Flammability>0.7</Flammability>
+      <WorkToMake>2500</WorkToMake>
+    </statBases>
+    <thingCategories>
+      <li>ItemsMisc</li>
+    </thingCategories>
+    <recipeMaker>
+      <researchPrerequisite>RR_Research_StretchSerum</researchPrerequisite>
+      <recipeUsers>
+        <li>DrugLab</li>
+      </recipeUsers>
+      <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+      <workSkill>Intellectual</workSkill>
+      <skillRequirements>
+        <Intellectual>6</Intellectual>
+      </skillRequirements>
+      <soundWorking>Recipe_Drug</soundWorking>
+    </recipeMaker>
+    <costList>
+      <Neutroamine>4</Neutroamine>
+      <RR_Gluttonium>3</RR_Gluttonium>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Usable">
+        <useJob>UseItem</useJob>
+        <useLabel>Inject stretch serum</useLabel>
+        <useDuration>300</useDuration>
+      </li>
+      <li Class="CompProperties_UseEffect">
+        <compClass>RimRound.Hediffs.CompUseEffect_RRStretchSerum</compClass>
+      </li>
+      <li Class="CompProperties_UseEffectDestroySelf" />
+    </comps>
+  </ThingDef>
+
+  <HediffDef>
+    <defName>RR_StretchSerum</defName>
+    <label>stretched stomach</label>
+    <description>Stretch serum has loosened this stomach wall for good. It holds more, and gives more before it's too full.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_RRStretchSerum</hediffClass>
+    <defaultLabelColor>(0.9, 0.6, 0.75)</defaultLabelColor>
+    <isBad>false</isBad>
+    <initialSeverity>0</initialSeverity>
+    <maxSeverity>5</maxSeverity>
+    <everCurableByItem>false</everCurableByItem>
+  </HediffDef>
+
+</Defs>

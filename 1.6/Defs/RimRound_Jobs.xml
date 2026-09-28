@@ -8,6 +8,60 @@
     <casualInterruptible>false</casualInterruptible>
   </JobDef>
 
+  <!-- Each touch act plays out as itself: the same driver, told which act by the extension -->
+  <JobDef>
+    <defName>RR_FondleAct</defName>
+    <driverClass>RimRound.AI.JobDriver_RRCloseEncounter</driverClass>
+    <reportString>fondling TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+    <modExtensions>
+      <li Class="RimRound.AI.RRCloseActExtension"><act>Fondle</act><duration>300</duration></li>
+    </modExtensions>
+  </JobDef>
+  <JobDef>
+    <defName>RR_PinAgainstWall</defName>
+    <driverClass>RimRound.AI.JobDriver_RRCloseEncounter</driverClass>
+    <reportString>pinning TargetA with their bulk.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+    <modExtensions>
+      <li Class="RimRound.AI.RRCloseActExtension"><act>Pin</act><duration>420</duration></li>
+    </modExtensions>
+  </JobDef>
+  <JobDef>
+    <defName>RR_ExploreCurves</defName>
+    <driverClass>RimRound.AI.JobDriver_RRCloseEncounter</driverClass>
+    <reportString>exploring TargetA's curves.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+    <modExtensions>
+      <li Class="RimRound.AI.RRCloseActExtension"><act>Explore</act><duration>150</duration></li>
+    </modExtensions>
+  </JobDef>
+  <JobDef>
+    <defName>RR_NurseHold</defName>
+    <driverClass>RimRound.AI.JobDriver_RRCloseEncounter</driverClass>
+    <reportString>holding TargetA to their chest.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+    <modExtensions>
+      <li Class="RimRound.AI.RRCloseActExtension"><act>Nurse</act><duration>480</duration></li>
+    </modExtensions>
+  </JobDef>
+  <JobDef>
+    <defName>RR_TailGropeAct</defName>
+    <driverClass>RimRound.AI.JobDriver_RRCloseEncounter</driverClass>
+    <reportString>stroking TargetA's tail.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+    <modExtensions>
+      <li Class="RimRound.AI.RRCloseActExtension"><act>TailGrope</act><duration>300</duration></li>
+    </modExtensions>
+  </JobDef>
+  <!-- the other side of a touch act: held in place until the initiator lets go -->
+  <JobDef>
+    <defName>RR_HeldInEncounter</defName>
+    <driverClass>RimRound.AI.JobDriver_RRHeldInEncounter</driverClass>
+    <reportString>being held by TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
   <!-- Intimacy series: two pawns share a long feeding session at a machine -->
   <JobDef>
     <defName>RR_SharedFeeding</defName>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- Swellkin turn up now and then among mixed-xenotype factions: any faction that
+       has pigskins as a rare minority (not the pigskin factions themselves). -->
+  <Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Biotech">
+    <xpath>/Defs/FactionDef[xenotypeSet/xenotypeChances/Pigskin &lt; 1]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <RR_Swellkin>0.02</RR_Swellkin>
+    </value>
+    <success>Always</success>
+  </Operation>
+
+</Patch>

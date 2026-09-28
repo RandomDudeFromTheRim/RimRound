@@ -54,6 +54,8 @@ namespace RimRound.AI
             letterDef = null;
             lookTargets = new LookTargets(initiator, recipient);
 
+            CloseContactUtility.TryStartEncounter(initiator, recipient, Defs.JobDefOf.RR_TailGropeAct);
+
             var recThought = recipient.needs?.mood?.thoughts;
             var initThought = initiator.needs?.mood?.thoughts;
             var recAtt = recipient.TryGetComp<Comps.ThingComp_PawnAttitude>();

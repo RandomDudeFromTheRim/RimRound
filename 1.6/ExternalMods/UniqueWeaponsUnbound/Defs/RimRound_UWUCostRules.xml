@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Unique Weapons Unbound: fitting a gluttonium trait costs gluttonium -->
+<Defs>
+  <UniqueWeaponsUnbound.TraitCostRuleDef>
+    <defName>RR_UWU_GluttoniumPayload</defName>
+    <label>gluttonium payload</label>
+    <description>Adds gluttonium to the cost of fitting a gluttonium-laced ammunition trait.</description>
+    <workerClass>UniqueWeaponsUnbound.AddIngredientsWorker</workerClass>
+    <priority>1450</priority>
+    <labelKeywords>
+      <li>gluttonium</li>
+    </labelKeywords>
+    <addIngredients>
+      <li>
+        <thingDef>RR_Gluttonium</thingDef>
+        <count>12</count>
+      </li>
+    </addIngredients>
+  </UniqueWeaponsUnbound.TraitCostRuleDef>
+</Defs>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Gluttonium diffuser: burns gluttonium to vent fattening gas round itself, all the
+       time (a fattening ward) or only while hostiles are in sight (a raid trap).
+       Code: Comps/Buildings/Comp_RRGasDiffuser.cs -->
+
+  <ResearchProjectDef>
+    <defName>RR_Research_GluttoniumDiffuser</defName>
+    <label>gluttonium diffusion</label>
+    <tab>RimRoundTech</tab>
+    <description>Burn gluttonium in a pressurised vent to fill the air around it with fattening gas. Useful for fattening wards - and for making raiders think twice about the front door.</description>
+    <baseCost>1400</baseCost>
+    <techLevel>Spacer</techLevel>
+    <prerequisites>
+      <li>RR_Research_Glutonium</li>
+      <li>RR_Research_ExperimentalGrenades</li>
+    </prerequisites>
+    <researchViewX>5</researchViewX>
+    <researchViewY>2</researchViewY>
+  </ResearchProjectDef>
+
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_GluttoniumDiffuser</defName>
+    <label>gluttonium diffuser</label>
+    <description>A pressurised vent that burns gluttonium into a sweet, fattening gas and pumps it into the air around it. Set it to vent all the time, or to wait in ambush and only vent while hostiles are in sight. Needs power and a supply of gluttonium.\n\nIt doesn't care whose lungs the gas ends up in.</description>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/RR_GluttoniumDiffuser/RR_GluttoniumDiffuser</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1.2, 1.2)</drawSize>
+      <damageData>
+        <rect>(0.1, 0.1, 0.8, 0.8)</rect>
+      </damageData>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
+    <fillPercent>0.4</fillPercent>
+    <tickerType>Normal</tickerType>
+    <rotatable>false</rotatable>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <thingCategories>
+      <li>BuildingsSecurity</li>
+    </thingCategories>
+    <statBases>
+      <MaxHitPoints>150</MaxHitPoints>
+      <WorkToBuild>2500</WorkToBuild>
+      <Mass>25</Mass>
+      <Flammability>0.5</Flammability>
+      <Beauty>-4</Beauty>
+    </statBases>
+    <costList>
+      <Steel>60</Steel>
+      <ComponentIndustrial>2</ComponentIndustrial>
+      <RR_Gluttonium>10</RR_Gluttonium>
+    </costList>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+    </building>
+    <designationCategory>Security</designationCategory>
+    <constructEffect>ConstructMetal</constructEffect>
+    <researchPrerequisites>
+      <li>RR_Research_GluttoniumDiffuser</li>
+    </researchPrerequisites>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>80</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Refuelable">
+        <fuelConsumptionRate>0</fuelConsumptionRate>
+        <fuelCapacity>20</fuelCapacity>
+        <fuelFilter>
+          <thingDefs>
+            <li>RR_Gluttonium</li>
+          </thingDefs>
+        </fuelFilter>
+        <fuelLabel>Gluttonium</fuelLabel>
+        <initialFuelPercent>0</initialFuelPercent>
+        <showAllowAutoRefuelToggle>true</showAllowAutoRefuelToggle>
+        <consumeFuelOnlyWhenUsed>true</consumeFuelOnlyWhenUsed>
+      </li>
+      <li Class="RimRound.Comps.CompProperties_RRGasDiffuser">
+        <gasPerPulse>90</gasPerPulse>
+        <pulseIntervalTicks>90</pulseIntervalTicks>
+        <triggerRadius>9.9</triggerRadius>
+        <fuelPerPulse>0.05</fuelPerPulse>
+      </li>
+    </comps>
+  </ThingDef>
+
+</Defs>

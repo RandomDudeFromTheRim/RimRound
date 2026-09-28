@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Hugged by the sweet slime: on top of the wet-smother moodlet, the memory of the slime itself -->
+  <ThoughtDef>
+    <defName>RR_SlimeHugged</defName>
+    <durationDays>1</durationDays>
+    <stackLimit>1</stackLimit>
+    <stages>
+      <li>
+        <label>slimed</label>
+        <description>Something invisible grabbed me and smothered me in warm pink goo. I can still feel it everywhere.</description>
+        <baseMoodEffect>-4</baseMoodEffect>
+      </li>
+      <li>
+        <label>slime-hugged</label>
+        <description>Something unseen wrapped me in a warm, sticky hug and kissed me. Strange. Not... unpleasant.</description>
+        <baseMoodEffect>2</baseMoodEffect>
+      </li>
+      <li>
+        <label>embraced by the sweet slime</label>
+        <description>It held me so close and so sweetly, and left me a little rounder. I hope it comes back.</description>
+        <baseMoodEffect>5</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- A wild gorge constrictor still holds enough to burst them, and they're nearly there -->
+  <ThoughtDef>
+    <defName>RR_ConstrictedNearBurst</defName>
+    <workerClass>RimRound.Thoughts.ThoughtWorker_RRConstrictedNearBurst</workerClass>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <stages>
+      <li>
+        <label>about to burst</label>
+        <description>I'm stretched as far as I can go and it's still pumping. Someone tear it off me. Now.</description>
+        <baseMoodEffect>-15</baseMoodEffect>
+      </li>
+      <li>
+        <label>at the very limit</label>
+        <description>Every inch of me is taut and it's still pumping. I know how this ends. I can't make myself want it to stop.</description>
+        <baseMoodEffect>6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>RR_SawConstrictorBurst</defName>
+    <durationDays>4</durationDays>
+    <stackLimit>2</stackLimit>
+    <stages>
+      <li>
+        <label>saw someone burst</label>
+        <description>The constrictor kept pumping until they just... burst. I keep hearing the sound.</description>
+        <baseMoodEffect>-10</baseMoodEffect>
+      </li>
+      <li>
+        <label>saw someone reach their limit</label>
+        <description>They swelled until there was nothing left to give, and then past it. I can't stop thinking about how big they got.</description>
+        <baseMoodEffect>4</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- A guest here on a fattening commission -->
+  <ThoughtDef>
+    <defName>RR_CommissionGuest</defName>
+    <workerClass>RimRound.Thoughts.ThoughtWorker_RRCommissionGuest</workerClass>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <stages>
+      <li>
+        <label>on a fattening commission</label>
+        <description>My people sent me here to come home bigger. I mean to deliver.</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+      <li>
+        <label>made weight</label>
+        <description>I've reached the size my people asked for. Everything from here on is a bonus.</description>
+        <baseMoodEffect>8</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+</Defs>

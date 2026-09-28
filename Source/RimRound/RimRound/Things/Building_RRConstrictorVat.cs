@@ -369,6 +369,8 @@ namespace RimRound.Things
         /// <summary>Why this mutation can't be grown on the vat's constrictor right now, or null.</summary>
         string CannotGrowReason(RRConstrictorMutationDef m, BoundConstrictorData data)
         {
+            if (!Utilities.GameComponent_RRStudyUnlocks.Has(m.requiredStudy))
+                return "Needs more study of captive gorge constrictors";
             if (data.Has(m))
                 return "Already grown";
             if (data.mutations.Count >= BoundConstrictorData.MaxMutations)
