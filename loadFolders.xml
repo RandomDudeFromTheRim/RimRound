@@ -82,5 +82,6 @@
 		<li IfModActive="shunter.uniqueweaponsunbound">1.6/ExternalMods/UniqueWeaponsUnbound</li>
 		<li IfModActive="Ludeon.RimWorld.Royalty">1.6/ExternalMods/PersonaWeapons</li>
 		<li IfModActive="VanillaExpanded.VWENL">1.6/ExternalMods/NonLethalWeapons</li>
+		<li IfModActive="sarg.alphagenes">1.6/ExternalMods/AlphaGenes</li>
 	</v1.6>	
 </loadFolders>
