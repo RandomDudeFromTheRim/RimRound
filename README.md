@@ -221,6 +221,8 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
   other custom bodies); ghouls and the void-touched can't be burst.
 - **Ghoulish lust** for fattened ghouls, and the **gorge gland** ghoul implant.
 - Fur (furskin, expies) is drawn on RimRound bodies instead of being hidden.
+- Gene tails (expies, Biotech) stick out of the rump on RimRound bodies instead of being
+  buried inside them, and grow more gently with the body.
 - **Sweet slime**: invisible non-lethal stalker, seed, spread, slime cocoons, slime spawn,
   pink slime coat, extraction surgery.
 - **Feedees** meme: worship ritual, seam-calling ritual, feedee role.

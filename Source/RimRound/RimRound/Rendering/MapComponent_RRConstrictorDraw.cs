@@ -26,6 +26,9 @@ namespace RimRound.Rendering
         public override void MapComponentUpdate()
         {
             base.MapComponentUpdate();
+            // body outlines for tails on RimRound bodies (main-thread readback)
+            if (map == Find.CurrentMap)
+                BodySilhouettes.Pump();
             if (map != Find.CurrentMap || Hediff_RRConstricted.Victims.Count == 0)
                 return;
 

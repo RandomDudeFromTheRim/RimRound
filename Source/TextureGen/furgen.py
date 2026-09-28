@@ -130,6 +130,101 @@ def furify(src, style, mesh, rng):
     return out
 
 
+def furify_sampled(src, mesh, ref, rng, outline=0.046):
+    """
+    A coat for any fur mod, built from its own texture: patches of the fur's vanilla
+    body sprite (ref) are scattered over the RimRound silhouette at the same world
+    scale, then RimRound's shading and folds go over them and the black outline
+    around. Works for scales, tumours, rock, plating... as well as plain fur.
+    """
+    im = src.convert("RGBA")
+    n = im.width
+    if n > MAX_RES:
+        im = im.resize((MAX_RES, MAX_RES), Image.LANCZOS)
+        n = MAX_RES
+    arr = np.asarray(im, np.float32) / 255.0
+    body = arr[..., 3] > 0.5
+    if body.sum() < 20:
+        return None
+    px = n / (1.5 * mesh)
+
+    # the reference: vanilla body canvas, 1.5 world units wide
+    r = np.asarray(ref.convert("RGBA"), np.float32) / 255.0
+    rpx = r.shape[0] / 1.5
+    rmask = Image.fromarray(((r[..., 3] > 0.5) * 255).astype(np.uint8), "L")
+    rin = np.asarray(grow(rmask, -max(2, outline * rpx * 1.2))) > 127
+    if rin.sum() < 50:
+        return None
+    base = np.median(r[..., :3][rin], axis=0)
+
+    # patches: a third of the reference torso across, resampled to our scale
+    ys, xs = np.nonzero(rin)
+    P = max(6, int(0.28 * (xs.max() - xs.min())))
+    ok = np.asarray(grow(Image.fromarray((rin * 255).astype(np.uint8), "L"), -P // 2)) > 127
+    cy, cx = np.nonzero(ok)
+    if len(cx) == 0:
+        cy, cx = ys, xs
+    # detail grows a little with the body, or the biggest ones read as static
+    scale = px / rpx * mesh ** 0.5
+    Pt = max(4, int(round(P * scale)))
+    yy, xx = np.mgrid[0:Pt, 0:Pt]
+    feather = np.clip(1.6 - np.hypot(yy - Pt / 2, xx - Pt / 2) / (Pt / 2) * 1.3, 0, 1)[..., None]
+
+    col = np.ones((n, n, 3), np.float32) * base
+    step = max(2, int(Pt * 0.55))
+    by, bx = np.nonzero(body)
+    for gy in range(by.min() - Pt // 2, by.max() + 1, step):
+        for gx in range(bx.min() - Pt // 2, bx.max() + 1, step):
+            ty = gy + int(rng.integers(-step // 3, step // 3 + 1))
+            tx = gx + int(rng.integers(-step // 3, step // 3 + 1))
+            y0, x0 = max(ty, 0), max(tx, 0)
+            y1, x1 = min(ty + Pt, n), min(tx + Pt, n)
+            if y1 <= y0 or x1 <= x0 or not body[y0:y1, x0:x1].any():
+                continue
+            k = int(rng.integers(len(cx)))
+            sy, sx = cy[k] - P // 2, cx[k] - P // 2
+            patch = Image.fromarray((r[sy:sy + P, sx:sx + P, :3] * 255).astype(np.uint8), "RGB")
+            if rng.random() < 0.5:
+                patch = patch.transpose(Image.FLIP_LEFT_RIGHT)
+            patch = np.asarray(patch.resize((Pt, Pt), Image.BICUBIC), np.float32) / 255
+            f = feather[y0 - ty:y1 - ty, x0 - tx:x1 - tx]
+            col[y0:y1, x0:x1] = col[y0:y1, x0:x1] * (1 - f) + patch[y0 - ty:y1 - ty, x0 - tx:x1 - tx] * f
+
+    # RimRound's light and folds over the pattern
+    lum = arr[..., 0] * 0.3 + arr[..., 1] * 0.59 + arr[..., 2] * 0.11
+    shade = np.clip(lum / max(np.percentile(lum[body], 95), 1e-3), 0, 1)
+    col *= (0.72 + 0.28 * shade)[..., None]
+    col = np.where((shade < 0.45)[..., None], col * (0.35 + 0.65 * shade)[..., None], col)
+
+    mask = Image.fromarray((body * 255).astype(np.uint8), "L")
+    half = max(1.0, outline * mesh ** 0.3 * px / 2)
+    inner = np.asarray(grow(mask, -half)) > 127
+    near = np.asarray(grow(mask, -half * 2.2)) > 127
+    col = np.where((body & ~near)[..., None], col * 0.85, col)
+    col = np.where(inner[..., None], col, 0.05)
+    a = np.asarray(grow(mask, half).filter(ImageFilter.GaussianBlur(0.6)), np.float32) / 255
+    return Image.fromarray((np.dstack([np.clip(col, 0, 1), a]) * 255).astype(np.uint8), "RGBA")
+
+
+def preview_sampled(fur_dir, furs, path):
+    """furs: [(label, reference texture base path without _rot.png)]"""
+    names = ["Naked_F_020_Corpulent", "Naked_F_050_MorbidlyObese", "Naked_F_070_Enormous", "Naked_F_100_Gelatinous"]
+    cell = 200
+    sheet = Image.new("RGBA", (cell * (len(names) + 1), cell * len(furs)), (86, 128, 86, 255))
+    d = ImageDraw.Draw(sheet)
+    for row, (label, refbase) in enumerate(furs):
+        ref = Image.open(os.path.join(fur_dir, refbase + "_south.png"))
+        sheet.alpha_composite(ref.convert("RGBA").resize((cell, cell), Image.LANCZOS), (len(names) * cell, row * cell))
+        for c, name in enumerate(names):
+            src = Image.open(os.path.join(BODIES, "BW", f"{name}_south.png"))
+            out = furify_sampled(src, mesh_for(name), ref, np.random.default_rng(c + 7 * row))
+            if out is not None:
+                sheet.alpha_composite(out.resize((cell, cell), Image.LANCZOS), (c * cell, row * cell))
+        d.text((6, row * cell + 4), label, fill=(255, 255, 255, 255))
+    sheet.save(path)
+    print("preview", path)
+
+
 def sources():
     for sub in ("", "BW"):
         folder = os.path.join(BODIES, sub)

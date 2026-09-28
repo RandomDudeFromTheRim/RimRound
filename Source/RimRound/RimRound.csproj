@@ -441,6 +441,8 @@
     <Compile Include="RimRound\Comps\Things\CompTargetable_RRBoundConstrictor.cs" />
     <Compile Include="RimRound\Rituals\PsychicRitualDef_RRBindConstrictor.cs" />
     <Compile Include="RimRound\Rituals\FeedeesRituals.cs" />
+    <Compile Include="RimRound\Patch\RimWorldPatches\GraphicalPatches\PawnRenderNodeWorker_TailFollowsRRBody.cs" />
+    <Compile Include="RimRound\Rendering\BodySilhouettes.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_RRGhoulishLust.cs" />
     <Compile Include="RimRound\Rendering\ConstrictorBodyMeasure.cs" />
     <Compile Include="RimRound\Things\RRGorgerGear.cs" />
