@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- The gorger horde: a raider faction of mostly obese Swellkin who believe everyone
+     should be as big as they are, and come to make it so. Feedees ideology (with
+     Ideology), bloatpop packs, slurry launchers and tenderizers.
+     Code: Things/RRGorgerGear.cs (gear, starting weights). -->
+<Defs>
+
+  <!-- ============================================================ faction -->
+
+  <FactionDef ParentName="PirateBandBase">
+    <defName>RR_Gorgers</defName>
+    <label>gorger horde</label>
+    <description>A roving horde of gluttons, most of them Swellkin, who believe the world is starving and they are the cure. They don't sow, they don't build and they barely trade - they feast, and when the larder runs dry they come for yours.\n\nGorgers raid to stuff their prisoners and anyone else within reach: their packs belch fattening gas, their launchers lob slurry, and their brutes tenderize whoever stands in the way. They are enormous, slow, and very hard to put down.</description>
+    <pawnSingular>gorger</pawnSingular>
+    <pawnsPlural>gorgers</pawnsPlural>
+    <listOrderPriority>9</listOrderPriority>
+    <settlementGenerationWeight>0.6</settlementGenerationWeight>
+    <requiredCountAtGameStart>1</requiredCountAtGameStart>
+    <leaderTitle>glutton-king</leaderTitle>
+    <factionNameMaker>RR_NamerFactionGorgers</factionNameMaker>
+    <colorSpectrum Inherit="False">
+      <li>(0.86, 0.42, 0.62)</li>
+      <li>(1, 0.78, 0.86)</li>
+    </colorSpectrum>
+    <requiredMemes Inherit="False">
+      <li MayRequire="Ludeon.RimWorld.Ideology">RR_FoodSupremacy</li>
+    </requiredMemes>
+    <allowedMemes Inherit="False">
+      <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
+    </allowedMemes>
+    <xenotypeSet Inherit="False">
+      <xenotypeChances>
+        <RR_Swellkin MayRequire="Ludeon.RimWorld.Biotech">0.8</RR_Swellkin>
+      </xenotypeChances>
+    </xenotypeSet>
+    <raidLootMaker>RR_GorgerRaidLootMaker</raidLootMaker>
+    <pawnGroupMakers Inherit="False">
+      <li>
+        <!-- the usual horde: gluttons with a few of everything -->
+        <kindDef>Combat</kindDef>
+        <commonality>100</commonality>
+        <options>
+          <RR_Gorger_Glutton>10</RR_Gorger_Glutton>
+          <RREE_Pirate_Fattening_Gunner>5</RREE_Pirate_Fattening_Gunner>
+          <RREE_Mercenary_Fattening_Gunner>4</RREE_Mercenary_Fattening_Gunner>
+          <RREE_Grenadier_Fattening>3</RREE_Grenadier_Fattening>
+          <RR_Gorger_Slinger>3</RR_Gorger_Slinger>
+          <RR_Gorger_Brute>4</RR_Gorger_Brute>
+          <RR_Gorger_King>2</RR_Gorger_King>
+        </options>
+      </li>
+      <li>
+        <!-- a stampede: brutes up front -->
+        <kindDef>Combat</kindDef>
+        <commonality>30</commonality>
+        <disallowedStrategies>
+          <li>Siege</li>
+        </disallowedStrategies>
+        <options>
+          <RR_Gorger_Brute>10</RR_Gorger_Brute>
+          <RR_Gorger_Glutton>4</RR_Gorger_Glutton>
+          <RR_Gorger_King>2</RR_Gorger_King>
+        </options>
+      </li>
+      <li>
+        <!-- a bombardment: slurry and flab from range -->
+        <kindDef>Combat</kindDef>
+        <commonality>20</commonality>
+        <options>
+          <RR_Gorger_Slinger>8</RR_Gorger_Slinger>
+          <RREE_Grenadier_Fattening>8</RREE_Grenadier_Fattening>
+          <RR_Gorger_Glutton>4</RR_Gorger_Glutton>
+        </options>
+      </li>
+      <li>
+        <kindDef>Settlement</kindDef>
+        <options>
+          <RR_Gorger_Glutton>10</RR_Gorger_Glutton>
+          <RREE_Pirate_Fattening_Gunner>5</RREE_Pirate_Fattening_Gunner>
+          <RR_Gorger_Slinger>4</RR_Gorger_Slinger>
+          <RR_Gorger_Brute>6</RR_Gorger_Brute>
+          <RR_Gorger_King>6</RR_Gorger_King>
+        </options>
+      </li>
+    </pawnGroupMakers>
+    <configurationListOrderPriority>61</configurationListOrderPriority>
+  </FactionDef>
+
+  <RulePackDef>
+    <defName>RR_NamerFactionGorgers</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name->The [feastAdj] [feastNoun]</li>
+        <li>r_name->The [feastNoun] of [NamePerson]</li>
+        <li>r_name->[NamePerson]'s [feastNoun]</li>
+        <li>r_name->The [feastPeople] of the [feastPlace]</li>
+        <li>r_name->The [feastAdj] [feastPeople]</li>
+        <li>feastAdj->Bottomless</li>
+        <li>feastAdj->Ravenous</li>
+        <li>feastAdj->Overflowing</li>
+        <li>feastAdj->Insatiable</li>
+        <li>feastAdj->Swollen</li>
+        <li>feastAdj->Groaning</li>
+        <li>feastAdj->Heaving</li>
+        <li>feastAdj->Well-Fed</li>
+        <li>feastNoun->Feast</li>
+        <li>feastNoun->Banquet</li>
+        <li>feastNoun->Trough</li>
+        <li>feastNoun->Larder</li>
+        <li>feastNoun->Belly</li>
+        <li>feastNoun->Horde</li>
+        <li>feastPeople->Gluttons</li>
+        <li>feastPeople->Gorgers</li>
+        <li>feastPeople->Feeders</li>
+        <li>feastPeople->Swellers</li>
+        <li>feastPeople->Guzzlers</li>
+        <li>feastPlace->Rim</li>
+        <li>feastPlace->Last Table</li>
+        <li>feastPlace->Full Moon</li>
+        <li>feastPlace->Endless Plate</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <ThingSetMakerDef>
+    <defName>RR_GorgerRaidLootMaker</defName>
+    <root Class="ThingSetMaker_MarketValue">
+      <fixedParams>
+        <filter>
+          <thingDefs>
+            <li>Silver</li>
+            <li>MealFine</li>
+            <li>MealLavish</li>
+            <li>RR_Gluttonium</li>
+            <li>MedicineIndustrial</li>
+          </thingDefs>
+        </filter>
+      </fixedParams>
+    </root>
+  </ThingSetMakerDef>
+
+  <!-- ============================================================ members -->
+
+  <PawnKindDef ParentName="PirateKindBase">
+    <defName>RR_Gorger_Glutton</defName>
+    <label>gorger glutton</label>
+    <defaultFactionDef>RR_Gorgers</defaultFactionDef>
+    <combatPower>60</combatPower>
+    <apparelTags>
+      <li>RR_GorgerPack</li>
+    </apparelTags>
+    <weaponTags Inherit="False">
+      <li>Gun</li>
+      <li>FatteningGun</li>
+    </weaponTags>
+    <modExtensions>
+      <li Class="RimRound.Things.RRPawnKindWeightExtension">
+        <kilos>160~280</kilos>
+        <minOpinion>Like</minOpinion>
+      </li>
+    </modExtensions>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="MercenaryHeavyBase">
+    <defName>RR_Gorger_Slinger</defName>
+    <label>slurry slinger</label>
+    <defaultFactionDef>RR_Gorgers</defaultFactionDef>
+    <combatPower>110</combatPower>
+    <apparelTags>
+      <li>RR_GorgerPack</li>
+    </apparelTags>
+    <weaponMoney>9999~9999</weaponMoney>
+    <weaponTags Inherit="False">
+      <li>RR_GorgerLauncher</li>
+    </weaponTags>
+    <modExtensions>
+      <li Class="RimRound.Things.RRPawnKindWeightExtension">
+        <kilos>200~290</kilos>
+        <minOpinion>Love</minOpinion>
+      </li>
+    </modExtensions>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="MercenarySlasherBase">
+    <defName>RR_Gorger_Brute</defName>
+    <label>gorger brute</label>
+    <defaultFactionDef>RR_Gorgers</defaultFactionDef>
+    <combatPower>130</combatPower>
+    <weaponMoney>9999~9999</weaponMoney>
+    <weaponTags Inherit="False">
+      <li>RR_GorgerMelee</li>
+    </weaponTags>
+    <modExtensions>
+      <li Class="RimRound.Things.RRPawnKindWeightExtension">
+        <kilos>290~430</kilos>
+        <minOpinion>Love</minOpinion>
+      </li>
+    </modExtensions>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="MercenaryEliteTierBase">
+    <defName>RR_Gorger_King</defName>
+    <label>glutton-king</label>
+    <labelPlural>glutton-kings</labelPlural>
+    <defaultFactionDef>RR_Gorgers</defaultFactionDef>
+    <factionLeader>true</factionLeader>
+    <combatPower>200</combatPower>
+    <apparelTags>
+      <li>RR_GorgerPack</li>
+    </apparelTags>
+    <apparelRequired>
+      <li>RR_Apparel_BloatpopPack</li>
+    </apparelRequired>
+    <weaponMoney>9999~9999</weaponMoney>
+    <weaponTags Inherit="False">
+      <li>RR_GorgerMelee</li>
+      <li>RR_GorgerLauncher</li>
+    </weaponTags>
+    <initialResistanceRange>20~30</initialResistanceRange>
+    <modExtensions>
+      <li Class="RimRound.Things.RRPawnKindWeightExtension">
+        <kilos>440~650</kilos>
+        <minOpinion>Fanatical</minOpinion>
+      </li>
+    </modExtensions>
+  </PawnKindDef>
+
+  <!-- ============================================================ gear -->
+
+  <!-- Harmless: the amount is kilos of sudden swelling, which mostly wears off.
+       Used by the tenderizer and the Odyssey gluttonium weapon traits. -->
+  <DamageDef>
+    <defName>RR_GluttoniumPuff</defName>
+    <label>gluttonium puff</label>
+    <workerClass>RimRound.Things.DamageWorker_RRGluttoniumPuff</workerClass>
+    <externalViolence>false</externalViolence>
+    <harmsHealth>false</harmsHealth>
+    <makesBlood>false</makesBlood>
+    <canInterruptJobs>false</canInterruptJobs>
+    <defaultDamage>6</defaultDamage>
+    <modExtensions>
+      <li Class="RimRound.Things.RRGluttoniumPuffExtension">
+        <durationTicks>30000</durationTicks>
+        <permanentFraction>0.1</permanentFraction>
+      </li>
+    </modExtensions>
+  </DamageDef>
+
+  <!-- bloatpop pack: a smokepop pack that pops fattening gas -->
+  <ThingDef ParentName="ApparelBase">
+    <defName>RR_Apparel_BloatpopPack</defName>
+    <label>bloatpop pack</label>
+    <description>A pressurized canister of fattening gas worn at the waist. When popped, it bursts into a sweet pink cloud that swells everyone standing in it - wearer included. Most of the swelling wears off within half a day. The gorger horde wears these into battle and pops them the moment anyone gets close.</description>
+    <techLevel>Industrial</techLevel>
+    <comps>
+      <li Class="CompProperties_ApparelReloadable">
+        <maxCharges>2</maxCharges>
+        <ammoDef>RR_Gluttonium</ammoDef>
+        <ammoCountToRefill>10</ammoCountToRefill>
+        <baseReloadTicks>60</baseReloadTicks>
+        <soundReload>Standard_Reload</soundReload>
+        <hotKey>Misc4</hotKey>
+        <chargeNoun>bloatpop</chargeNoun>
+        <displayGizmoWhileUndrafted>false</displayGizmoWhileUndrafted>
+      </li>
+      <li Class="CompProperties_AIUSablePack">
+        <compClass>RimRound.Things.CompRRBloatpopPack</compClass>
+        <checkInterval>60</checkInterval>
+      </li>
+    </comps>
+    <verbs>
+      <li>
+        <verbClass>RimRound.Things.Verb_RRBloatpop</verbClass>
+        <label>pop bloat</label>
+        <violent>false</violent>
+        <hasStandardCommand>true</hasStandardCommand>
+        <targetable>false</targetable>
+        <nonInterruptingSelfCast>true</nonInterruptingSelfCast>
+        <onlyManualCast>True</onlyManualCast>
+      </li>
+    </verbs>
+    <recipeMaker>
+      <unfinishedThingDef>UnfinishedPack</unfinishedThingDef>
+      <researchPrerequisite>RR_Research_ExperimentalGrenades</researchPrerequisite>
+      <recipeUsers>
+        <li>TableMachining</li>
+      </recipeUsers>
+      <useIngredientsForColor>false</useIngredientsForColor>
+      <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+      <workSkill>Crafting</workSkill>
+      <effectWorking>Smith</effectWorking>
+      <soundWorking>Recipe_Smith</soundWorking>
+      <skillRequirements>
+        <Crafting>3</Crafting>
+      </skillRequirements>
+    </recipeMaker>
+    <costList>
+      <ComponentIndustrial>1</ComponentIndustrial>
+      <Steel>20</Steel>
+      <RR_Gluttonium>20</RR_Gluttonium>
+    </costList>
+    <graphicData>
+      <texPath>Things/Pawn/Humanlike/Apparel/SmokepopPack/SmokepopPack</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>0.75</drawSize>
+      <color>(0.9, 0.5, 0.7)</color>
+    </graphicData>
+    <tickerType>Normal</tickerType>
+    <statBases>
+      <WorkToMake>3600</WorkToMake>
+      <Mass>3</Mass>
+      <Flammability>0.4</Flammability>
+      <EquipDelay>2</EquipDelay>
+    </statBases>
+    <thingCategories>
+      <li>ApparelUtility</li>
+    </thingCategories>
+    <generateAllowChance>0</generateAllowChance>
+    <apparel>
+      <wornGraphicPath>Things/Pawn/Humanlike/Apparel/SmokepopPack/SmokepopPack</wornGraphicPath>
+      <wornGraphicData>
+        <renderUtilityAsPack>true</renderUtilityAsPack>
+        <north>
+          <offset>(0,-0.15)</offset>
+        </north>
+        <east>
+          <offset>(-0.35,-0.05)</offset>
+        </east>
+        <west>
+          <offset>(0.35,-0.05)</offset>
+        </west>
+        <male>  <scale>(0.75,0.75)</scale></male>
+        <female><scale>(0.75,0.75)</scale></female>
+      </wornGraphicData>
+      <countsAsClothingForNudity>false</countsAsClothingForNudity>
+      <careIfWornByCorpse>false</careIfWornByCorpse>
+      <careIfDamaged>false</careIfDamaged>
+      <wearPerDay>0</wearPerDay>
+      <bodyPartGroups>
+        <li>Waist</li>
+      </bodyPartGroups>
+      <layers>
+        <li>Belt</li>
+      </layers>
+      <tags>
+        <li>RR_GorgerPack</li>
+      </tags>
+    </apparel>
+    <colorGenerator Class="ColorGenerator_Options">
+      <options>
+        <li>
+          <weight>10</weight>
+          <only>(0.9,0.5,0.7,1)</only>
+        </li>
+        <li>
+          <weight>5</weight>
+          <only>(0.7,0.35,0.5,1)</only>
+        </li>
+      </options>
+    </colorGenerator>
+  </ThingDef>
+
+  <!-- slurry launcher: lobs slime-foam globs (coat, slow and puff; harmless) -->
+  <ThingDef ParentName="BaseHumanMakeableGun">
+    <defName>RR_Gun_SlurryLauncher</defName>
+    <label>slurry launcher</label>
+    <description>A wide-barreled launcher that lobs globs of sweet, sticky slurry. Each glob bursts into a splash that coats everyone it hits in slime, slowing them down and puffing them up a little. It does no harm - it just makes a mess of whoever it lands on.</description>
+    <graphicData>
+      <texPath>Things/Item/Equipment/WeaponRanged/IncendiaryLauncher</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(1, 0.72, 0.85)</color>
+    </graphicData>
+    <soundInteract>Interact_Rifle</soundInteract>
+    <generateCommonality>0</generateCommonality>
+    <weaponClasses>
+      <li>RangedHeavy</li>
+    </weaponClasses>
+    <statBases>
+      <WorkToMake>20000</WorkToMake>
+      <Mass>3.6</Mass>
+      <RangedWeapon_Cooldown>3.2</RangedWeapon_Cooldown>
+    </statBases>
+    <costList>
+      <Steel>75</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+      <RR_Gluttonium>25</RR_Gluttonium>
+    </costList>
+    <recipeMaker>
+      <researchPrerequisite>RR_Research_ExperimentalWeapons</researchPrerequisite>
+      <skillRequirements>
+        <Crafting>4</Crafting>
+      </skillRequirements>
+    </recipeMaker>
+    <weaponTags Inherit="False">
+      <li>RR_GorgerLauncher</li>
+    </weaponTags>
+    <verbs>
+      <li>
+        <verbClass>Verb_Shoot</verbClass>
+        <hasStandardCommand>true</hasStandardCommand>
+        <defaultProjectile>RR_Proj_SlurryGlob</defaultProjectile>
+        <warmupTime>3</warmupTime>
+        <range>23.9</range>
+        <forcedMissRadius>1.9</forcedMissRadius>
+        <burstShotCount>1</burstShotCount>
+        <soundCast>Shot_IncendiaryLauncher</soundCast>
+        <soundCastTail>GunTail_Medium</soundCastTail>
+        <muzzleFlashScale>10</muzzleFlashScale>
+        <targetParams>
+          <canTargetLocations>true</canTargetLocations>
+        </targetParams>
+      </li>
+    </verbs>
+    <tools>
+      <li>
+        <label>stock</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>9</power>
+        <cooldownTime>2</cooldownTime>
+      </li>
+    </tools>
+  </ThingDef>
+
+  <ThingDef ParentName="BaseBullet">
+    <defName>RR_Proj_SlurryGlob</defName>
+    <label>slurry glob</label>
+    <thingClass>Projectile_Explosive</thingClass>
+    <graphicData>
+      <texPath>Things/Projectile/LauncherShot</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>TransparentPostLight</shaderType>
+      <color>(1, 0.6, 0.8)</color>
+    </graphicData>
+    <projectile>
+      <speed>35</speed>
+      <damageDef>RR_SlimeFoam</damageDef>
+      <explosionRadius>1.9</explosionRadius>
+      <arcHeightFactor>0.4</arcHeightFactor>
+      <shadowSize>0.6</shadowSize>
+      <postExplosionSpawnThingDef>RR_Filth_SweetSlime</postExplosionSpawnThingDef>
+      <postExplosionSpawnChance>0.7</postExplosionSpawnChance>
+      <postExplosionSpawnThingCount>1</postExplosionSpawnThingCount>
+    </projectile>
+  </ThingDef>
+
+  <!-- tenderizer: a mace whose blows puff their target up -->
+  <ThingDef ParentName="BaseMeleeWeapon_Blunt_Quality">
+    <defName>RR_MeleeWeapon_Tenderizer</defName>
+    <label>tenderizer</label>
+    <description>A heavy, flanged mallet with a gluttonium core packed into its head. Every solid blow bruises - and more often than not leaves its target a little puffier. The gorger horde's brutes swear by it.</description>
+    <possessionCount>1</possessionCount>
+    <graphicData>
+      <texPath>Things/Item/Equipment/WeaponMelee/Mace</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <uiIconScale>1.2</uiIconScale>
+    <techLevel>Medieval</techLevel>
+    <costStuffCount>60</costStuffCount>
+    <costList>
+      <RR_Gluttonium>10</RR_Gluttonium>
+    </costList>
+    <statBases>
+      <WorkToMake>8000</WorkToMake>
+      <Mass>2</Mass>
+    </statBases>
+    <equippedAngleOffset>-65</equippedAngleOffset>
+    <recipeMaker>
+      <researchPrerequisite>Smithing</researchPrerequisite>
+      <skillRequirements>
+        <Crafting>4</Crafting>
+      </skillRequirements>
+    </recipeMaker>
+    <stuffCategories>
+      <li>Metallic</li>
+      <li>Woody</li>
+    </stuffCategories>
+    <weaponTags>
+      <li>RR_GorgerMelee</li>
+    </weaponTags>
+    <weaponClasses>
+      <li>Melee</li>
+    </weaponClasses>
+    <tools>
+      <li>
+        <label>handle</label>
+        <capacities>
+          <li>Poke</li>
+        </capacities>
+        <power>9</power>
+        <cooldownTime>2</cooldownTime>
+      </li>
+      <li>
+        <label>head</label>
+        <labelUsedInLogging>false</labelUsedInLogging>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>16</power>
+        <cooldownTime>2.2</cooldownTime>
+        <extraMeleeDamages>
+          <li>
+            <def>RR_GluttoniumPuff</def>
+            <amount>6</amount>
+            <chance>0.5</chance>
+          </li>
+        </extraMeleeDamages>
+      </li>
+    </tools>
+  </ThingDef>
+
+</Defs>

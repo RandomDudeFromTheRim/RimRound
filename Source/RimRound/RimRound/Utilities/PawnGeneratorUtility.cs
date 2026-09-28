@@ -31,6 +31,20 @@ namespace RimRound.Utilities
 
 
 
+                // pawn kinds that set their own weight (the gorger horde)
+                var kindWeight = pawn.kindDef?.GetModExtension<Things.RRPawnKindWeightExtension>();
+                if (kindWeight != null)
+                {
+                    var att = pawn.TryGetComp<ThingComp_PawnAttitude>();
+                    if (att != null && kindWeight.minOpinion != WeightOpinion.None && att.weightOpinion < kindWeight.minOpinion)
+                        att.SetWeightOpinion((WeightOpinion)Rand.RangeInclusive((int)kindWeight.minOpinion, (int)WeightOpinion.Fanatical));
+                    Utilities.HediffUtility.SetHediffSeverity(
+                        Defs.HediffDefOf.RimRound_Weight,
+                        pawn,
+                        Utilities.HediffUtility.KilosToSeverityWithoutBaseWeight(kindWeight.kilos.RandomInRange * weightMultiplier));
+                    return;
+                }
+
                 Utilities.HediffUtility.SetHediffSeverity(
                     Defs.HediffDefOf.RimRound_Weight,
                     pawn,

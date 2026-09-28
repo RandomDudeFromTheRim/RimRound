@@ -8,23 +8,7 @@
     <randomlyPickable>false</randomlyPickable>
   </ColorDef>
 
-  <!-- Harmless: the amount is kilos of sudden swelling, which mostly wears off -->
-  <DamageDef>
-    <defName>RR_GluttoniumPuff</defName>
-    <label>gluttonium puff</label>
-    <workerClass>RimRound.Things.DamageWorker_RRGluttoniumPuff</workerClass>
-    <externalViolence>false</externalViolence>
-    <harmsHealth>false</harmsHealth>
-    <makesBlood>false</makesBlood>
-    <canInterruptJobs>false</canInterruptJobs>
-    <defaultDamage>6</defaultDamage>
-    <modExtensions>
-      <li Class="RimRound.Things.RRGluttoniumPuffExtension">
-        <durationTicks>30000</durationTicks>
-        <permanentFraction>0.1</permanentFraction>
-      </li>
-    </modExtensions>
-  </DamageDef>
+  <!-- RR_GluttoniumPuff (the extra damage these use) lives in 1.6/Defs/RimRound_GorgerHorde.xml -->
 
   <WeaponTraitDef>
     <defName>RR_GluttoniumRounds</defName>

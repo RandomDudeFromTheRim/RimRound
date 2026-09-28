@@ -109,6 +109,16 @@ A translucent pink stalker after Lobotomy Corporation's *Melting Love* — **nev
   hard. Guests too big to walk are collected by transport.
 - **Void surge** — RimRound's toxic fallout: a pink haze over the whole map, and anyone
   outdoors builds **void exposure** that fattens them gradually and fades under a roof.
+- **The gorger horde** — a hostile raider faction of mostly obese **Swellkin** (with
+  Biotech) who follow the **Feedees** meme (with Ideology) and come to make everyone as
+  big as they are. Gluttons (Obese–Morbidly Obese), enbiggunners and flab grenadiers,
+  slurry slingers, Lardy brutes and an Enormous **glutton-king**. Their gear, all
+  craftable:
+  - **Bloatpop pack** — a belt that pops a cloud of fattening gas (mostly wears off);
+    gorgers pop it when you get close.
+  - **Slurry launcher** — lobs slime-foam globs that coat, slow and puff; harmless.
+  - **Tenderizer** — a stuff-made mace whose blows often puff the target up.
+  New worlds only: existing saves won't gain the faction.
 
 ## Touch Interactions
 Pawns start weight-opinion-scaled touch interactions (each grants staged thoughts and
@@ -146,8 +156,8 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
   builds **mutagenic enbiggener buildup**, which now actually fattens (up to 2 kg/hour at
   full, fading over days) and can seed **fattening growths** that keep adding weight until
   a doctor excises them.
-- **Fattening pirates** — flab grenadiers and pirate/mercenary enbiggunners now turn up in
-  pirate raids.
+- **Fattening raiders** — flab grenadiers and pirate/mercenary enbiggunners now fight for
+  the **gorger horde** (see Events & Quests).
 - **Experimental appetite stimulant** — a drug (drug lab, after gluttonium drugs research)
   that stacks hunger, eating speed and digestion; enough doses and the user starts
   binging on anything edible.
@@ -206,7 +216,8 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
   persona trait, VWE Non-Lethal weapons.
 - **RREE made to work**: enbiggener gas and fattening growths now fatten, the IED uses
   enbiggener shells, the appetite stimulant is craftable (and keeps its bonus through
-  saves), fattening pirates join raids; the fallout event is retired in favour of void surge.
+  saves); the fallout event is retired in favour of void surge.
+- The **gorger horde** faction, with bloatpop packs, slurry launchers and tenderizers.
 - Tail groping only targets pawns that actually have a tail.
 - Fixes: auto-feeder disconnects and hose range, void-portal lifecycle, stale constrictor
   state through save/load, the pump animation freezing when zoomed out, character tabs

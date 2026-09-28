@@ -1,31 +1,54 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
+	<!-- These fight for RimRound's gorger horde (1.6/Defs/RimRound_GorgerHorde.xml):
+	     obese, and fond of it. -->
 
 	<PawnKindDef ParentName="GrenadierBase">
 		<defName>RREE_Grenadier_Fattening</defName>
 		<label>flab grenadier</label>
+		<defaultFactionDef>RR_Gorgers</defaultFactionDef>
 		<combatPower>70</combatPower>
 		<weaponTags>
 			<li>GrenadeFattening</li>
 		</weaponTags>
 		<initialResistanceRange>10~16</initialResistanceRange>
+		<modExtensions>
+			<li Class="RimRound.Things.RRPawnKindWeightExtension">
+				<kilos>160~260</kilos>
+				<minOpinion>Like</minOpinion>
+			</li>
+		</modExtensions>
 	</PawnKindDef>
 
 	<PawnKindDef ParentName="MercenaryGunnerBase">
 		<defName>RREE_Mercenary_Fattening_Gunner</defName>
 		<label>mercenary enbiggunner</label>
+		<defaultFactionDef>RR_Gorgers</defaultFactionDef>
 		<weaponTags Inherit="False">
 			<li>FatteningGun</li>
 		</weaponTags>
 		<initialResistanceRange>6~10</initialResistanceRange>
+		<modExtensions>
+			<li Class="RimRound.Things.RRPawnKindWeightExtension">
+				<kilos>160~280</kilos>
+				<minOpinion>Like</minOpinion>
+			</li>
+		</modExtensions>
 	</PawnKindDef>
 
 	<PawnKindDef ParentName="PirateKindBase">
 		<defName>RREE_Pirate_Fattening_Gunner</defName>
 		<label>pirate enbiggunner</label>
+		<defaultFactionDef>RR_Gorgers</defaultFactionDef>
 		<weaponTags Inherit="False">
 			<li>FatteningGun</li>
 		</weaponTags>
+		<modExtensions>
+			<li Class="RimRound.Things.RRPawnKindWeightExtension">
+				<kilos>160~260</kilos>
+				<minOpinion>Like</minOpinion>
+			</li>
+		</modExtensions>
 	</PawnKindDef>
 
 </Defs>
