@@ -30,13 +30,25 @@ namespace RimRound.Patch
                 return;
 
             string body = BodyTypeUtility.GetProperBodyGraphicPathFromPawn(pawn);
-            string fur = body != null && body.StartsWith(BodiesPath)
-                ? FurPath + StyleFor(__instance) + "/" + body.Substring(BodiesPath.Length)
-                : null;
-            __result = fur != null && HasTexture(fur + "_south") ? fur : "BlankTexture";
+            if (body == null || !body.StartsWith(BodiesPath))
+            {
+                __result = "BlankTexture";
+                return;
+            }
+            string rel = body.Substring(BodiesPath.Length);
+
+            // a coat made for this very fur (e.g. Alpha Genes' bodies, in their load folder)
+            string own = FurPath + __instance.defName + "/" + rel;
+            if (HasTexture(own + "_south"))
+            {
+                __result = own;
+                return;
+            }
+            string fur = FurPath + StyleFor(__instance) + "/" + rel;
+            __result = HasTexture(fur + "_south") ? fur : "BlankTexture";
         }
 
-        /// <summary>Which coat to draw: the expies' own look, or vanilla furskin for everything else.</summary>
+        /// <summary>The generic coat otherwise: the expies' own look, or vanilla furskin for everything else.</summary>
         static string StyleFor(FurDef def) => def.defName.StartsWith("ERN_Expie") ? "Expie" : "Furskin";
 
         // A plain lookup in RimRound's own textures: this can run off the main thread,

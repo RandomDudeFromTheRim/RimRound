@@ -15,6 +15,9 @@ The FurDef patch (FurDef_GetFurBodyGraphicPath_ReturnTransparentForRR.cs) swaps
 
     python furgen.py            generate everything
     python furgen.py preview    write a preview sheet only
+    python furgen.py alphagenes [FurDef...]
+                                coats for Alpha Genes' body furs, from its own sprites
+                                (1.6/ExternalMods/AlphaGenes, loaded only with that mod)
 """
 import os
 import re
@@ -130,80 +133,157 @@ def furify(src, style, mesh, rng):
     return out
 
 
-def furify_sampled(src, mesh, ref, rng, outline=0.046):
+def furify_sampled(src, mesh, ref, rng, outline=0.046, mode="scatter", res=MAX_RES):
     """
-    A coat for any fur mod, built from its own texture: patches of the fur's vanilla
-    body sprite (ref) are scattered over the RimRound silhouette at the same world
-    scale, then RimRound's shading and folds go over them and the black outline
-    around. Works for scales, tumours, rock, plating... as well as plain fur.
+    A coat for another mod's fur, built from its own texture (ref, the fur's sprite
+    for a vanilla body):
+      scatter  patches of it scattered over the RimRound silhouette at the same world
+               scale - for textures: scales, tumours, rock, spots, plain colour
+      stretch  the whole sprite stretched over the body, so placed features (ribs,
+               plating, markings, a metallic sheen) stay in one piece
+      marks    as stretch, but only its own opaque marks, for furs that are just a few
+               scars rather than a coat
+    then RimRound's shading and folds go over it and the black outline around.
     """
     im = src.convert("RGBA")
     n = im.width
-    if n > MAX_RES:
-        im = im.resize((MAX_RES, MAX_RES), Image.LANCZOS)
-        n = MAX_RES
+    if n > res:
+        im = im.resize((res, res), Image.LANCZOS)
+        n = res
     arr = np.asarray(im, np.float32) / 255.0
     body = arr[..., 3] > 0.5
     if body.sum() < 20:
         return None
     px = n / (1.5 * mesh)
+    mask = Image.fromarray((body * 255).astype(np.uint8), "L")
+    half = max(1.0, outline * mesh ** 0.3 * px / 2)
+    inner = np.asarray(grow(mask, -half)) > 127
+    if not inner.any():
+        inner = body
 
     # the reference: vanilla body canvas, 1.5 world units wide
     r = np.asarray(ref.convert("RGBA"), np.float32) / 255.0
     rpx = r.shape[0] / 1.5
-    rmask = Image.fromarray(((r[..., 3] > 0.5) * 255).astype(np.uint8), "L")
+    ropaque = r[..., 3] > 0.5
+    rmask = Image.fromarray((ropaque * 255).astype(np.uint8), "L")
     rin = np.asarray(grow(rmask, -max(2, outline * rpx * 1.2))) > 127
-    if rin.sum() < 50:
+    if mode != "marks" and rin.sum() < 50:
         return None
-    base = np.median(r[..., :3][rin], axis=0)
+    base = np.median(r[..., :3][rin], axis=0) if rin.any() else np.array([1.0, 1.0, 1.0])
 
-    # patches: a third of the reference torso across, resampled to our scale
-    ys, xs = np.nonzero(rin)
-    P = max(6, int(0.28 * (xs.max() - xs.min())))
-    ok = np.asarray(grow(Image.fromarray((rin * 255).astype(np.uint8), "L"), -P // 2)) > 127
-    cy, cx = np.nonzero(ok)
-    if len(cx) == 0:
-        cy, cx = ys, xs
-    # detail grows a little with the body, or the biggest ones read as static
-    scale = px / rpx * mesh ** 0.5
-    Pt = max(4, int(round(P * scale)))
-    yy, xx = np.mgrid[0:Pt, 0:Pt]
-    feather = np.clip(1.6 - np.hypot(yy - Pt / 2, xx - Pt / 2) / (Pt / 2) * 1.3, 0, 1)[..., None]
-
-    col = np.ones((n, n, 3), np.float32) * base
-    step = max(2, int(Pt * 0.55))
-    by, bx = np.nonzero(body)
-    for gy in range(by.min() - Pt // 2, by.max() + 1, step):
-        for gx in range(bx.min() - Pt // 2, bx.max() + 1, step):
-            ty = gy + int(rng.integers(-step // 3, step // 3 + 1))
-            tx = gx + int(rng.integers(-step // 3, step // 3 + 1))
-            y0, x0 = max(ty, 0), max(tx, 0)
-            y1, x1 = min(ty + Pt, n), min(tx + Pt, n)
-            if y1 <= y0 or x1 <= x0 or not body[y0:y1, x0:x1].any():
-                continue
-            k = int(rng.integers(len(cx)))
-            sy, sx = cy[k] - P // 2, cx[k] - P // 2
-            patch = Image.fromarray((r[sy:sy + P, sx:sx + P, :3] * 255).astype(np.uint8), "RGB")
-            if rng.random() < 0.5:
-                patch = patch.transpose(Image.FLIP_LEFT_RIGHT)
-            patch = np.asarray(patch.resize((Pt, Pt), Image.BICUBIC), np.float32) / 255
-            f = feather[y0 - ty:y1 - ty, x0 - tx:x1 - tx]
-            col[y0:y1, x0:x1] = col[y0:y1, x0:x1] * (1 - f) + patch[y0 - ty:y1 - ty, x0 - tx:x1 - tx] * f
-
-    # RimRound's light and folds over the pattern
     lum = arr[..., 0] * 0.3 + arr[..., 1] * 0.59 + arr[..., 2] * 0.11
     shade = np.clip(lum / max(np.percentile(lum[body], 95), 1e-3), 0, 1)
-    col *= (0.72 + 0.28 * shade)[..., None]
+
+    if mode in ("stretch", "marks"):
+        # the sprite's interior onto this body's interior, box to box
+        src_box = rin if (mode == "stretch" and rin.any()) else ropaque
+        ys, xs = np.nonzero(src_box)
+        if len(xs) == 0:
+            return None
+        by, bx = np.nonzero(inner)
+        crop = Image.fromarray((r[ys.min():ys.max() + 1, xs.min():xs.max() + 1] * 255).astype(np.uint8), "RGBA")
+        w, h = bx.max() - bx.min() + 1, by.max() - by.min() + 1
+        st = np.zeros((n, n, 4), np.float32)
+        st[by.min():by.min() + h, bx.min():bx.min() + w] = np.asarray(crop.resize((w, h), Image.BICUBIC), np.float32) / 255
+        if mode == "marks":
+            st[..., 3] *= body
+            st[..., :3] *= (0.8 + 0.2 * shade)[..., None]
+            return Image.fromarray((np.clip(st, 0, 1) * 255).astype(np.uint8), "RGBA")
+        col = np.where((st[..., 3] > 0.5)[..., None], st[..., :3], base)
+    else:
+        # patches: a third of the sprite torso across, resampled to our scale
+        ys, xs = np.nonzero(rin)
+        P = max(6, int(0.28 * (xs.max() - xs.min())))
+        ok = np.asarray(grow(Image.fromarray((rin * 255).astype(np.uint8), "L"), -P // 2)) > 127
+        cy, cx = np.nonzero(ok)
+        if len(cx) == 0:
+            cy, cx = ys, xs
+        # detail grows a little with the body, or the biggest ones read as static
+        scale = px / rpx * mesh ** 0.5
+        Pt = max(4, int(round(P * scale)))
+        yy, xx = np.mgrid[0:Pt, 0:Pt]
+        feather = np.clip(1.6 - np.hypot(yy - Pt / 2, xx - Pt / 2) / (Pt / 2) * 1.3, 0, 1)[..., None]
+
+        col = np.ones((n, n, 3), np.float32) * base
+        step = max(2, int(Pt * 0.55))
+        by, bx = np.nonzero(body)
+        for gy in range(by.min() - Pt // 2, by.max() + 1, step):
+            for gx in range(bx.min() - Pt // 2, bx.max() + 1, step):
+                ty = gy + int(rng.integers(-step // 3, step // 3 + 1))
+                tx = gx + int(rng.integers(-step // 3, step // 3 + 1))
+                y0, x0 = max(ty, 0), max(tx, 0)
+                y1, x1 = min(ty + Pt, n), min(tx + Pt, n)
+                if y1 <= y0 or x1 <= x0 or not body[y0:y1, x0:x1].any():
+                    continue
+                k = int(rng.integers(len(cx)))
+                sy, sx = cy[k] - P // 2, cx[k] - P // 2
+                patch = Image.fromarray((r[sy:sy + P, sx:sx + P, :3] * 255).astype(np.uint8), "RGB")
+                if rng.random() < 0.5:
+                    patch = patch.transpose(Image.FLIP_LEFT_RIGHT)
+                patch = np.asarray(patch.resize((Pt, Pt), Image.BICUBIC), np.float32) / 255
+                f = feather[y0 - ty:y1 - ty, x0 - tx:x1 - tx]
+                col[y0:y1, x0:x1] = col[y0:y1, x0:x1] * (1 - f) + patch[y0 - ty:y1 - ty, x0 - tx:x1 - tx] * f
+
+    # RimRound's light and folds over the pattern
+    col = col * (0.72 + 0.28 * shade)[..., None]
     col = np.where((shade < 0.45)[..., None], col * (0.35 + 0.65 * shade)[..., None], col)
 
-    mask = Image.fromarray((body * 255).astype(np.uint8), "L")
-    half = max(1.0, outline * mesh ** 0.3 * px / 2)
-    inner = np.asarray(grow(mask, -half)) > 127
     near = np.asarray(grow(mask, -half * 2.2)) > 127
     col = np.where((body & ~near)[..., None], col * 0.85, col)
     col = np.where(inner[..., None], col, 0.05)
     a = np.asarray(grow(mask, half).filter(ImageFilter.GaussianBlur(0.6)), np.float32) / 255
     return Image.fromarray((np.dstack([np.clip(col, 0, 1), a]) * 255).astype(np.uint8), "RGBA")
+
+
+# Alpha Genes (sarg.alphagenes): FurDef -> (its sprite, without _rot, and how to lay it on)
+ALPHA_GENES = {
+    "AG_SlugBody": ("AG_SlugBody/AG_SlugBody_Fat", "scatter"),
+    "AG_ScalyBody": ("AG_ScalyBody/AG_ScalyBody_Fat", "scatter"),
+    "AG_DrakonoriBody": ("AG_ScalyBody/AG_ScalyBody_Fat", "scatter"),
+    "AG_TrueBlackBody": ("AG_TrueBlack/AG_TrueBlackBody_Fat", "scatter"),
+    "AG_RockyBody": ("AG_RockyBody/AG_RockyBody_Fat", "scatter"),
+    # the thin sprite's pockmarks read far more tumorous than the fat one's
+    "AG_TeratoBody": ("AG_TeratoBody/AG_TeratoBody_Female", "scatter"),
+    "AG_SlimyBody": ("AG_SlimyBody/AG_Slimy_Fat", "scatter"),
+    "AG_SilverBody": ("AG_SilverBody/AG_SilverBody_Fat", "stretch"),
+    "AG_MimeBody": ("AG_MimeBody/AG_MimeBody_Fat", "stretch"),
+    "AG_GauntBody": ("AG_GauntBody/AG_GauntBody_Fat", "stretch"),
+    "AG_NereidBody": ("AG_NereidBody/Nereid_Fat", "stretch"),
+    "AG_RoboticBodyPlastic": ("AG_RoboticBodies/AG_Robotic1_Fat", "stretch"),
+    "AG_RoboticBodySkeletal": ("AG_RoboticBodies/AG_Robotic2_Fat", "stretch"),
+    "AG_ForsakenBody": ("AG_ForsakenBody/AG_ForsakenBody_Fat", "marks"),
+}
+ALPHA_GENES_TEXTURES = os.path.join(ROOT, "..", "..", "..", "..", "workshop", "content", "294100", "2891845502",
+                                    "Textures", "Things", "Pawn", "Humanlike", "Bodies")
+ALPHA_GENES_OUT = os.path.join(ROOT, "1.6", "ExternalMods", "AlphaGenes", "Textures", "Things", "Pawn", "Humanlike",
+                               "Bodies", "Fur")
+
+
+def generate_alpha_genes(only=None):
+    """Coats for Alpha Genes' body furs over every RimRound body (not the BW race variants)."""
+    total = 0
+    for fur, (refbase, mode) in ALPHA_GENES.items():
+        if only and fur not in only:
+            continue
+        refs = {}
+        for rot in ("south", "east", "north"):
+            path = os.path.join(ALPHA_GENES_TEXTURES, f"{refbase}_{rot}.png")
+            refs[rot] = Image.open(path) if os.path.exists(path) else None
+        dest = os.path.join(ALPHA_GENES_OUT, fur)
+        os.makedirs(dest, exist_ok=True)
+        for sub, f in sources():
+            if sub:
+                continue
+            rot = f.rsplit("_", 1)[1][:-4]
+            if refs.get(rot) is None:
+                continue
+            rng = np.random.default_rng(zlib.crc32(f"{fur}/{f}".encode()))
+            out = furify_sampled(Image.open(os.path.join(BODIES, f)), mesh_for(f), refs[rot], rng, mode=mode, res=256)
+            if out is not None:
+                # a palette keeps 14 furs x every body to a sane download size
+                out.quantize(colors=96, method=Image.Quantize.FASTOCTREE).save(os.path.join(dest, f), optimize=True)
+                total += 1
+    print("wrote", total)
 
 
 def preview_sampled(fur_dir, furs, path):
@@ -281,7 +361,9 @@ def preview(path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "preview":
+    if len(sys.argv) > 1 and sys.argv[1] == "alphagenes":
+        generate_alpha_genes(sys.argv[2:] or None)
+    elif len(sys.argv) > 1 and sys.argv[1] == "preview":
         preview(sys.argv[2] if len(sys.argv) > 2 else "fur_preview.png")
     else:
         generate()

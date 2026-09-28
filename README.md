@@ -192,6 +192,9 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
   fur coat now follows every RimRound body instead of vanishing: each body is redrawn as a
   coat (`Source/TextureGen/furgen.py`), in the expies' own style for expies and the
   vanilla furskin style for everything else.
+- **Alpha Genes** — its body genes (cancerous, scaly, rocky, slug, slimy, mime, gaunt,
+  silver, nereid, robotic, forsaken...) get their own coats on every RimRound body, built
+  from their own sprites (`furgen.py alphagenes`; loaded only with Alpha Genes).
 - **Vanilla Nutrient Paste Expanded** (required) and **Reimagined Progression** — food
   network bridge, research-tree compat.
 - **SwellGlow** (bundled) — adipose genes (hardy adipose, buoyant frame, gluttonium
