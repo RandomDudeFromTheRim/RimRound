@@ -188,6 +188,10 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
 - **Intimacy series** — gluttonium ↔ `SEX_Intimacy`, shared feeding.
 - **Lactation Expansion** — milk scales with weight, opinion moods, spiked milk.
 - **Biological Warfare** — meld aerosol as a chemical-weapon family.
+- **Fur genes** (Biotech furskin, **Erin's Experiments** expies and other fur mods) — the
+  fur coat now follows every RimRound body instead of vanishing: each body is redrawn as a
+  coat (`Source/TextureGen/furgen.py`), in the expies' own style for expies and the
+  vanilla furskin style for everything else.
 - **Vanilla Nutrient Paste Expanded** (required) and **Reimagined Progression** — food
   network bridge, research-tree compat.
 - **SwellGlow** (bundled) — adipose genes (hardy adipose, buoyant frame, gluttonium
@@ -216,6 +220,7 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
   look redone (rides behind its victim, sized by what it holds; coils fit ratkin and
   other custom bodies); ghouls and the void-touched can't be burst.
 - **Ghoulish lust** for fattened ghouls, and the **gorge gland** ghoul implant.
+- Fur (furskin, expies) is drawn on RimRound bodies instead of being hidden.
 - **Sweet slime**: invisible non-lethal stalker, seed, spread, slime cocoons, slime spawn,
   pink slime coat, extraction surgery.
 - **Feedees** meme: worship ritual, seam-calling ritual, feedee role.
