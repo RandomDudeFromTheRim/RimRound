@@ -218,7 +218,21 @@ Another pawn can tear it off, which is harder the fuller it still is. Alone, a v
           </defaultData>
         </drawData>
       </li>
-      <!-- the monitor face embedded in its flesh (toggle in RimRound's settings) -->
+      <!-- the leech itself, riding behind them: sized by the kilos it still holds -->
+      <li>
+        <debugLabel>Gorge constrictor body</debugLabel>
+        <workerClass>RimRound.Rendering.PawnRenderNodeWorker_RRConstrictorSac</workerClass>
+        <texPath>Things/Pawn/RR_GorgeConstrictor/RR_ConstrictorRiding</texPath>
+        <parentTagDef>Body</parentTagDef>
+        <overrideMeshSize>1.5</overrideMeshSize>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <drawData>
+          <defaultData>
+            <layer>-8</layer>
+          </defaultData>
+        </drawData>
+      </li>
+      <!-- the monitor face set in its brow (toggle in RimRound's settings) -->
       <li>
         <debugLabel>Gorge constrictor face</debugLabel>
         <nodeClass>RimRound.Rendering.PawnRenderNode_RRSingle</nodeClass>

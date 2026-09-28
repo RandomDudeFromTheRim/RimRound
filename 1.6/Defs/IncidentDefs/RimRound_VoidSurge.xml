@@ -1,22 +1,65 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-  <!-- Void surge: RimRound's toxic fallout. Fattening gas wells up everywhere out of
-       doors for a day or two. Code: Incidents/GameCondition_RRVoidSurge.cs -->
+  <!-- Void surge: RimRound's toxic fallout. A pink haze drifts over the map for a day
+       or two and anyone outdoors builds up void exposure, which fattens them gradually.
+       Code: Incidents/GameCondition_RRVoidSurge.cs -->
 
   <GameConditionDef>
     <defName>RR_VoidSurge</defName>
     <conditionClass>RimRound.Incidents.GameCondition_RRVoidSurge</conditionClass>
     <label>void surge</label>
-    <description>Something vast beneath the crust has overeaten and is belching it back up. Sweet, fattening gas wells out of the ground everywhere, and anyone caught outdoors keeps breathing it in. Roofs keep it out.</description>
-    <descriptionFuture>fattening gas will well up out of the ground around [map_definite] for [gameConditionDuration_duration]</descriptionFuture>
-    <endMessage>The void surge subsides. The ground stops breathing.</endMessage>
-    <letterText>Something vast beneath the crust has overeaten, and it is belching it back up.\n\nSweet, fattening gas is welling out of the ground all over the area. Anyone caught outdoors will keep breathing it in and swelling up - stay under a roof until it passes.\n\nIt should blow over in a day or two.</letterText>
+    <description>Something vast beneath the crust has overeaten and is belching it back up. A sweet pink haze hangs over everything, and anyone outdoors soaks it up - building void exposure that slowly fattens them. Roofs keep it out.</description>
+    <descriptionFuture>a sweet, fattening haze will hang over [map_definite] for [gameConditionDuration_duration]</descriptionFuture>
+    <endMessage>The void surge subsides. The pink haze thins and settles.</endMessage>
+    <letterText>Something vast beneath the crust has overeaten, and it is belching it back up.\n\nA sweet pink haze is settling over the whole area. Anyone who spends time outdoors will soak it up - their void exposure builds the longer they stay out, and the more exposed they are, the faster they fatten. It fades once they're back under a roof.\n\nIt should blow over in a day or two.</letterText>
     <letterDef>ThreatSmall</letterDef>
     <canBePermanent>false</canBePermanent>
     <allowUnderground>false</allowUnderground>
     <pennedAnimalsSeekShelter>true</pennedAnimalsSeekShelter>
   </GameConditionDef>
+
+  <!-- Built up by being outdoors in a void surge; fades indoors. Fattens by how saturated the pawn is. -->
+  <HediffDef>
+    <defName>RR_VoidExposure</defName>
+    <label>void exposure</label>
+    <description>A sweet, heavy haze soaked up from a void surge. The more of it someone has taken in, the faster it fattens them and the hungrier they get. It fades over a couple of days under a roof.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.95, 0.55, 0.75)</defaultLabelColor>
+    <isBad>true</isBad>
+    <makesSickThought>false</makesSickThought>
+    <initialSeverity>0.01</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-0.5</severityPerDay>
+      </li>
+      <li Class="RimRound.Incidents.HediffCompProperties_RRWeightPerHour">
+        <kilosPerHourAtFull>2.5</kilosPerHourAtFull>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>faint</label>
+      </li>
+      <li>
+        <minSeverity>0.3</minSeverity>
+        <label>sated</label>
+        <hungerRateFactor>1.25</hungerRateFactor>
+      </li>
+      <li>
+        <minSeverity>0.7</minSeverity>
+        <label>saturated</label>
+        <hungerRateFactor>1.5</hungerRateFactor>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>-0.08</offset>
+          </li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
 
   <IncidentDef>
     <defName>RR_VoidSurge</defName>

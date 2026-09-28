@@ -54,7 +54,29 @@ namespace RimRound.Incidents
         static IEnumerable<Faction> Candidates() =>
             Find.FactionManager.AllFactionsVisible.Where(f =>
                 !f.IsPlayer && !f.defeated && !f.temporary && f.def.humanlikeFaction &&
-                f.def.basicMemberKind != null && !f.HostileTo(Faction.OfPlayer));
+                !f.HostileTo(Faction.OfPlayer) && GuestKinds(f).Any());
+
+        /// <summary>
+        /// Who a faction might send: an ordinary member from its usual groups - no
+        /// leaders, no titled nobles. (basicMemberKind is only set on player and a few
+        /// special factions, so it can't be relied on.)
+        /// </summary>
+        static IEnumerable<PawnKindDef> GuestKinds(Faction f)
+        {
+            if (f.def.basicMemberKind != null)
+                return new[] { f.def.basicMemberKind };
+            if (f.def.pawnGroupMakers == null)
+                return Enumerable.Empty<PawnKindDef>();
+            return f.def.pawnGroupMakers
+                .SelectMany(g => g.options.Concat(g.traders ?? Enumerable.Empty<PawnGenOption>()))
+                .Select(o => o.kind)
+                .Where(k => k?.RaceProps != null && k.RaceProps.Humanlike && !k.factionLeader
+                    && k.titleRequired == null && k.titleSelectOne.NullOrEmpty())
+                .Distinct();
+        }
+
+        static PawnKindDef GuestKind(Faction f) =>
+            GuestKinds(f).RandomElementByWeight(k => 1f / Mathf.Max(20f, k.combatPower));
 
         protected override bool TestRunInt(Slate slate)
         {
@@ -72,7 +94,7 @@ namespace RimRound.Incidents
             Tier tier = Tiers.RandomElementByWeight(t => t.weight);
             int durationTicks = tier.days * GenDate.TicksPerDay;
 
-            Pawn guest = quest.GeneratePawn(faction.def.basicMemberKind, faction, allowAddictions: false, forceGenerateNewPawn: true);
+            Pawn guest = quest.GeneratePawn(GuestKind(faction), faction, allowAddictions: false, forceGenerateNewPawn: true);
             // they asked for this: make sure they love it
             guest.TryGetComp<ThingComp_PawnAttitude>()?.SetWeightOpinion(Rand.Bool ? WeightOpinion.Love : WeightOpinion.Like);
             var pawns = new List<Pawn> { guest };

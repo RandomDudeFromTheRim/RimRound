@@ -57,13 +57,51 @@ namespace RimRound.Rendering
         /// <summary>Where the coil's loops cross the belly, up from the pawn's centre.</summary>
         public static float BellyZ(Pawn pawn) => Fit(pawn).z * BodyCanvas(pawn);
 
-        /// <summary>The constrictor's head end, up over the victim's right shoulder, relative to the pawn's centre.</summary>
-        public static Vector3 HeadEnd(Pawn pawn, Hediff_RRConstricted h)
+        // --- the leech riding behind them: the same body as when it hunts, sized by what it still holds ---
+
+        // In the side-on riding sprite the body spans 74% of the canvas (as on the loose
+        // constrictor), the mouth sits at (0.37, 0.10) and the monitor at (0.06, -0.01)
+        // (canvas fractions, x right, y down).
+        const float SacBodySpan = 0.74f;
+        static readonly Vector2 MawInSprite = new Vector2(0.37f, 0.10f);
+        static readonly Vector2 FaceInSprite = new Vector2(0.06f, -0.01f);
+        /// <summary>Where its mouth hangs, from the victim's head: behind and below it, by the shoulder.</summary>
+        static readonly Vector2 MawFromHead = new Vector2(-0.5f, -0.3f);
+
+        /// <summary>World size of the riding sprite's canvas for the kilos it still holds.</summary>
+        public static float SacCanvas(Hediff_RRConstricted h) =>
+            Comps.Comp_RRConstrictorHunt.WidthByLoad.Evaluate(Mathf.Max(0f, h?.Load ?? 0f)) / SacBodySpan;
+
+        /// <summary>Behind them is to the left, unless they face west.</summary>
+        static float Side(Rot4 facing) => facing == Rot4.West ? -1f : 1f;
+
+        /// <summary>Its mouth, relative to the pawn's centre: where the proboscis starts.</summary>
+        public static Vector3 Maw(Pawn pawn, Rot4 facing)
         {
-            float c = CoilCanvas(pawn);
-            float s = h?.Stage ?? 0;
-            return new Vector3((0.235f + 0.008f * s) * c, 0f, CoilLift(pawn) + (0.1f + 0.008f * s) * c);
+            Vector3 head = pawn.Drawer.renderer.BaseHeadOffsetAt(facing);
+            return new Vector3(head.x + MawFromHead.x * Side(facing), 0f, head.z + MawFromHead.y);
         }
+
+        /// <summary>The riding sprite's centre, relative to the pawn's centre. From behind it lies on their back.</summary>
+        public static Vector3 SacCenter(Pawn pawn, Hediff_RRConstricted h, Rot4 facing)
+        {
+            float c = SacCanvas(h);
+            if (facing == Rot4.North)
+                return new Vector3(0f, 0f, BellyZ(pawn) + 0.12f * c);
+            Vector3 maw = Maw(pawn, facing);
+            return new Vector3(maw.x - MawInSprite.x * c * Side(facing), 0f, maw.z + MawInSprite.y * c);
+        }
+
+        /// <summary>The monitor set in its brow, relative to the pawn's centre.</summary>
+        public static Vector3 FaceCenter(Pawn pawn, Hediff_RRConstricted h, Rot4 facing)
+        {
+            float c = SacCanvas(h);
+            Vector3 sac = SacCenter(pawn, h, facing);
+            return new Vector3(sac.x + FaceInSprite.x * c * Side(facing), 0f, sac.z - FaceInSprite.y * c);
+        }
+
+        /// <summary>The proboscis's start, relative to the pawn's centre (for the world-space drawer).</summary>
+        public static Vector3 HeadEnd(Pawn pawn, Hediff_RRConstricted h) => Maw(pawn, pawn.Rotation);
 
         /// <summary>A sharp squeeze right on each pump, easing off until the next.</summary>
         public static float Squeeze(Hediff_RRConstricted h) => Mathf.Exp(-h.PumpPhase * 8f);
@@ -119,10 +157,53 @@ namespace RimRound.Rendering
     }
 
     /// <summary>
-    /// The bloodied monitor embedded in the constrictor's flesh, its neon-blue face
-    /// getting more flushed each stage. It is a fixed-size object: the same size on
-    /// every pawn and at every stage, so the flesh swelling round it buries it.
-    /// Shown facing the viewer only; can be turned off in RimRound's settings.
+    /// The leech itself, riding behind its victim: the same engorged body it hunts
+    /// in, at the same size for the kilos it still holds, so it looms over a small
+    /// victim and shrinks as it pumps itself into them. Side-on behind them (mouth
+    /// by their shoulder); from behind, it lies across their back, over them.
+    /// Squeezes in a little on every pump.
+    /// </summary>
+    [StaticConstructorOnStartup]
+    public class PawnRenderNodeWorker_RRConstrictorSac : PawnRenderNodeWorker
+    {
+        static readonly Graphic riding = GraphicDatabase.Get<Graphic_Multi>("Things/Pawn/RR_GorgeConstrictor/RR_ConstrictorRiding", ShaderDatabase.Cutout);
+
+        public override bool CanDrawNow(PawnRenderNode node, PawnDrawParms parms)
+        {
+            return base.CanDrawNow(node, parms) && ConstrictorRender.Hediff(node) != null;
+        }
+
+        protected override Graphic GetGraphic(PawnRenderNode node, PawnDrawParms parms) => riding;
+
+        public override Vector3 OffsetFor(PawnRenderNode node, PawnDrawParms parms, out Vector3 pivot)
+        {
+            Vector3 offset = base.OffsetFor(node, parms, out pivot);
+            Hediff_RRConstricted h = ConstrictorRender.Hediff(node);
+            if (h != null)
+                offset += ConstrictorRender.SacCenter(parms.pawn, h, parms.facing);
+            return offset;
+        }
+
+        public override Vector3 ScaleFor(PawnRenderNode node, PawnDrawParms parms)
+        {
+            Hediff_RRConstricted h = ConstrictorRender.Hediff(node);
+            Vector3 scale = base.ScaleFor(node, parms);
+            if (h == null)
+                return scale;
+            // the node's mesh is 1.5 across
+            float k = ConstrictorRender.SacCanvas(h) / 1.5f * (1f - 0.035f * ConstrictorRender.Squeeze(h));
+            return new Vector3(scale.x * k, scale.y, scale.z * k);
+        }
+
+        // behind the body, unless seen from behind: then it lies on top of them
+        public override float LayerFor(PawnRenderNode node, PawnDrawParms parms) =>
+            parms.facing == Rot4.North ? 75f : -8f;
+    }
+
+    /// <summary>
+    /// The bloodied monitor set in the leech's brow, its neon-blue face more content
+    /// the more it has pumped into them. Drawn on the riding leech, at its size; not
+    /// from behind. Can be turned off in RimRound's settings.
     /// </summary>
     [StaticConstructorOnStartup]
     public class PawnRenderNodeWorker_RRConstrictorFace : PawnRenderNodeWorker
@@ -137,7 +218,7 @@ namespace RimRound.Rendering
 
         public override bool CanDrawNow(PawnRenderNode node, PawnDrawParms parms)
         {
-            return GlobalSettings.constrictorScreenFace && parms.facing == Rot4.South
+            return GlobalSettings.constrictorScreenFace && parms.facing != Rot4.North
                 && base.CanDrawNow(node, parms) && ConstrictorRender.Hediff(node) != null;
         }
 
@@ -149,16 +230,23 @@ namespace RimRound.Rendering
         public override Vector3 OffsetFor(PawnRenderNode node, PawnDrawParms parms, out Vector3 pivot)
         {
             Vector3 offset = base.OffsetFor(node, parms, out pivot);
-            offset.z += ConstrictorRender.BellyZ(parms.pawn);
+            Hediff_RRConstricted h = ConstrictorRender.Hediff(node);
+            if (h != null)
+                offset += ConstrictorRender.FaceCenter(parms.pawn, h, parms.facing);
             return offset;
         }
 
-        // world size of the monitor, in cells: the node's mesh is 1 across
-        const float MonitorSize = 0.42f;
-
         public override Vector3 ScaleFor(PawnRenderNode node, PawnDrawParms parms)
         {
-            return base.ScaleFor(node, parms) * MonitorSize;
+            Vector3 scale = base.ScaleFor(node, parms);
+            Hediff_RRConstricted h = ConstrictorRender.Hediff(node);
+            if (h == null)
+                return scale;
+            // the node's mesh is 1 across; the monitor is about a fifth of the leech's canvas
+            float c = ConstrictorRender.SacCanvas(h);
+            return new Vector3(scale.x * 0.18f * c, scale.y, scale.z * 0.22f * c);
         }
+
+        public override float LayerFor(PawnRenderNode node, PawnDrawParms parms) => -7f;
     }
 }

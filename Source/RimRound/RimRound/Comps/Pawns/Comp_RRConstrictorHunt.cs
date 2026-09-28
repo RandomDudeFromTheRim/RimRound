@@ -53,7 +53,7 @@ namespace RimRound.Comps
         // Drawn width of the sac, in cells, by the kilos it carries: about as wide as a
         // human pawn carrying that much extra weight is drawn (Obese ~1.7 at 200 kg,
         // Gigantic/Titanic ~4 at 1000-1400 kg), capped so the biggest stay readable.
-        static readonly SimpleCurve WidthByLoad = new SimpleCurve
+        public static readonly SimpleCurve WidthByLoad = new SimpleCurve
         {
             new CurvePoint(0f, 0.9f),
             new CurvePoint(200f, 1.7f),

@@ -15,6 +15,9 @@
     <description>A translucent, gently glowing mass of pink slime that pools on the floor beneath it and gathers itself into something like a figure, with long drooping arms and bones floating in its body. It smells sweet.\n\nIt stalks unseen. When it finds someone alone - or asleep - it folds them into a smothering, sticky hug, kisses them, and bursts over them in a wave of slime, leaving a seed of itself inside. Afterwards it is spent for a few hours and can be seen, shot, or captured; then it slips out of sight again.\n\nA hidden sweet slime can be revealed with disruptor flares, like other psychically veiled entities.</description>
     <statBases>
       <MoveSpeed>2.6</MoveSpeed>
+      <!-- slime: fists and clubs sink in and do next to nothing; blades do a little better -->
+      <ArmorRating_Blunt>0.9</ArmorRating_Blunt>
+      <ArmorRating_Sharp>0.45</ArmorRating_Sharp>
       <MinimumContainmentStrength>60</MinimumContainmentStrength>
       <PsychicSensitivity>1.5</PsychicSensitivity>
       <ToxicResistance>1</ToxicResistance>
@@ -27,7 +30,7 @@
       <thinkTreeConstant>RR_SweetSlimeConstant</thinkTreeConstant>
       <body>Fingerspike</body>
       <baseBodySize>1</baseBodySize>
-      <baseHealthScale>2</baseHealthScale>
+      <baseHealthScale>4.5</baseHealthScale>
       <lifeExpectancy>1000</lifeExpectancy>
       <renderTree>Animal</renderTree>
       <bloodDef>RR_Filth_SweetSlime</bloodDef>
@@ -178,6 +181,7 @@
         <li Class="ThinkNode_Subtree">
           <treeDef>BurningResponse</treeDef>
         </li>
+        <li Class="RimRound.SweetSlime.JobGiver_RRSweetSlimeFlee" />
         <li Class="RimRound.SweetSlime.JobGiver_RRSweetSlimeGift" />
         <li Class="JobGiver_WanderAnywhere">
           <maxDanger>Deadly</maxDanger>
@@ -384,7 +388,7 @@
     <minRefireDays>40</minRefireDays>
     <letterLabel>A sweet smell</letterLabel>
     <letterText>A sweet, sticky smell has drifted over the colony, like warm syrup - but nobody can find where it's coming from.\n\nSomething may have arrived, unseen.</letterText>
-    <letterDef>ThreatSmall</letterDef>
+    <letterDef>ThreatBig</letterDef>
   </IncidentDef>
 
   <EntityCodexEntryDef MayRequire="Ludeon.RimWorld.Anomaly">

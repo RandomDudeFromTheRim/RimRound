@@ -23,6 +23,10 @@ namespace RimRound.SweetSlime
         public static HediffDef Veil => DefDatabase<HediffDef>.GetNamed("RR_SlimeVeil");
         public static ThingDef Filth => DefDatabase<ThingDef>.GetNamed("RR_Filth_SweetSlime");
 
+        /// <summary>Someone a puffkiss can swell.</summary>
+        public static bool CanPuff(Pawn p) =>
+            p != null && !p.Dead && p.RaceProps.Humanlike && Utilities.HediffUtility.WeightHediff(p) != null;
+
         public static bool CanInfest(Pawn p) =>
             p != null && !p.Dead && p.RaceProps.Humanlike && !p.health.hediffSet.HasHediff(Infestation)
             && p.TryGetComp<Comps.FullnessAndDietStats_ThingComp>() is Comps.FullnessAndDietStats_ThingComp fnd && !fnd.Disabled;
@@ -112,11 +116,46 @@ namespace RimRound.SweetSlime
     {
         int nextHuntTick = -1;
         int revealedUntil = -1;
+        int fleeUntil = -1;
+
+        /// <summary>Spent and seen: once hurt, it slips back out of sight this soon.</summary>
+        const int HurtRevealTicks = 900;
+        const int FleeTicks = 1200;
 
         public CompProperties_RRSweetSlime Props => (CompProperties_RRSweetSlime)props;
         Pawn Slime => (Pawn)parent;
 
         public bool ReadyToHunt => Find.TickManager.TicksGame >= nextHuntTick;
+        public bool Fleeing => Find.TickManager.TicksGame < fleeUntil;
+
+        /// <summary>
+        /// It never fights back - it gets away. Anyone who lays hands on it gets stuck
+        /// in it for a moment (hugged, slimed and puffed a little), it flees, and a
+        /// spent slime that gets hurt hides again far sooner.
+        /// </summary>
+        public override void PostPostApplyDamage(DamageInfo dinfo, float totalDamageDealt)
+        {
+            base.PostPostApplyDamage(dinfo, totalDamageDealt);
+            Pawn slime = Slime;
+            if (slime.Dead || !slime.Spawned)
+                return;
+            int now = Find.TickManager.TicksGame;
+            fleeUntil = now + FleeTicks;
+            if (!Props.isSpawn && revealedUntil > now + HurtRevealTicks)
+                revealedUntil = now + HurtRevealTicks;
+            if (dinfo.Instigator is Pawn attacker && !attacker.Dead && attacker.Spawned && !dinfo.Def.isRanged
+                && attacker.Position.AdjacentTo8Way(slime.Position) && Rand.Chance(0.6f))
+            {
+                attacker.stances?.stunner?.StunFor(Props.isSpawn ? 120 : 240, slime, addBattleLog: false);
+                SlimeCoatUtility.Coat(attacker, 15000);
+                if (SweetSlimeUtility.CanPuff(attacker))
+                    SweetSlimeUtility.Puffkiss(attacker);
+                FilthMaker.TryMakeFilth(attacker.Position, attacker.Map, SweetSlimeUtility.Filth);
+                MoteMaker.ThrowText(attacker.DrawPos, attacker.Map, "stuck in slime", new Color(1f, 0.6f, 0.8f));
+            }
+            if (slime.CurJobDef != JobDefOf.Flee)
+                slime.jobs?.EndCurrentJob(JobCondition.InterruptForced);
+        }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
@@ -131,6 +170,9 @@ namespace RimRound.SweetSlime
             if (Props.isSpawn || !Slime.Spawned || !Slime.IsHashIntervalTick(120))
                 return;
             bool veiled = Slime.health.hediffSet.HasHediff(SweetSlimeUtility.Veil);
+            // it knits itself back together while nothing can see it
+            if (veiled)
+                Slime.health.hediffSet.hediffs.OfType<Hediff_Injury>().FirstOrDefault()?.Heal(1.5f);
             bool shouldVeil = !Slime.Downed && Find.TickManager.TicksGame >= revealedUntil;
             if (shouldVeil && !veiled)
                 Slime.health.AddHediff(SweetSlimeUtility.Veil);
@@ -166,7 +208,7 @@ namespace RimRound.SweetSlime
                 Find.LetterStack.ReceiveLetter(
                     "Sweet slime",
                     $"Something slipped up on {target.LabelShort}, folded {target.ProObj()} into a smothering, sticky hug and planted a warm, puffy kiss on {target.Possessive()} lips - then burst over {target.ProObj()} in a wave of pink slime. {(took ? $"{target.ProSubj().CapitalizeFirst()} feels strangely calm." : "")}\n\nThe thing that did it is out in the open for now, spent and sluggish - a translucent pink mass with bones floating in it. It will slip out of sight again in a few hours.",
-                    LetterDefOf.ThreatSmall, new LookTargets(slime, target));
+                    LetterDefOf.ThreatBig, new LookTargets(slime, target));
             }
             else if (took)
             {
@@ -186,6 +228,30 @@ namespace RimRound.SweetSlime
             base.PostExposeData();
             Scribe_Values.Look(ref nextHuntTick, "nextHuntTick", -1);
             Scribe_Values.Look(ref revealedUntil, "revealedUntil", -1);
+            Scribe_Values.Look(ref fleeUntil, "fleeUntil", -1);
+        }
+    }
+
+    /// <summary>Runs from whoever is hurting it, well away, before anything else.</summary>
+    public class JobGiver_RRSweetSlimeFlee : ThinkNode_JobGiver
+    {
+        protected override Job TryGiveJob(Pawn pawn)
+        {
+            var comp = pawn.TryGetComp<Comp_RRSweetSlime>();
+            if (comp == null || !comp.Fleeing)
+                return null;
+            List<Thing> threats = pawn.Map.mapPawns.AllPawnsSpawned
+                .Where(p => p != pawn && !p.Downed && !p.Dead && p.RaceProps.Humanlike && p.Position.InHorDistOf(pawn.Position, 18f))
+                .Cast<Thing>().ToList();
+            if (threats.Count == 0)
+                return null;
+            IntVec3 dest = CellFinderLoose.GetFleeDest(pawn, threats, 24f);
+            if (!dest.IsValid || dest == pawn.Position)
+                return null;
+            Job job = JobMaker.MakeJob(JobDefOf.Flee, dest, threats[0]);
+            job.locomotionUrgency = LocomotionUrgency.Sprint;
+            job.expiryInterval = 300;
+            return job;
         }
     }
 
@@ -296,7 +362,7 @@ namespace RimRound.SweetSlime
             Find.LetterStack.ReceiveLetter(
                 $"{host.LabelShort} melted",
                 $"The slime inside {host.LabelShort} has swallowed {host.ProObj()} whole, and hardened into a glistening cocoon.\n\nBreak the cocoon open and {host.LabelShort} will come out heavier, but free. Leave it, and in two days {host.ProSubj()} will come out a great deal heavier - and the cocoon will bud slime spawn that go looking for new hosts.",
-                LetterDefOf.ThreatSmall, cocoon);
+                LetterDefOf.ThreatBig, cocoon);
         }
     }
 
@@ -313,6 +379,21 @@ namespace RimRound.SweetSlime
         ThingOwner<Pawn> inner;
         int enclosedTick = -1;
         bool released;
+        /// <summary>How big the one inside is drawn (RimRound's mesh size): the cocoon grows to hold them.</summary>
+        float hostScale = 1f;
+        Graphic scaledGraphic;
+
+        public override Graphic Graphic
+        {
+            get
+            {
+                if (hostScale <= 1.01f)
+                    return base.Graphic;
+                if (scaledGraphic == null)
+                    scaledGraphic = base.Graphic.GetCopy(def.graphicData.drawSize * hostScale, null);
+                return scaledGraphic;
+            }
+        }
 
         public Building_RRSlimeCocoon()
         {
@@ -326,9 +407,13 @@ namespace RimRound.SweetSlime
 
         public void Enclose(Pawn p)
         {
+            hostScale = Mathf.Max(1f, (Utilities.RacialBodyTypeInfoUtility.GetRacialBodyTypeInfo(p)?.meshSize ?? 1f) * 1.1f);
+            scaledGraphic = null;
             p.DeSpawnOrDeselect();
             inner.TryAddOrTransfer(p);
             enclosedTick = Find.TickManager.TicksGame;
+            if (Spawned)
+                Map.mapDrawer.MapMeshDirty(Position, MapMeshFlagDefOf.Things);
         }
 
         protected override void Tick()
@@ -355,7 +440,7 @@ namespace RimRound.SweetSlime
             Find.LetterStack.ReceiveLetter(
                 "Slime cocoon hatched",
                 $"The slime cocoon has split open. {host?.LabelShort ?? "Its host"} slides out, dazed and a great deal heavier - and {count} slime spawn ooze out after, already looking for someone new.",
-                LetterDefOf.ThreatSmall, new LookTargets(at, map));
+                LetterDefOf.ThreatBig, new LookTargets(at, map));
             Destroy(DestroyMode.Vanish);
         }
 
@@ -401,6 +486,7 @@ namespace RimRound.SweetSlime
             Scribe_Deep.Look(ref inner, "inner", this);
             Scribe_Values.Look(ref enclosedTick, "enclosedTick", -1);
             Scribe_Values.Look(ref released, "released");
+            Scribe_Values.Look(ref hostScale, "hostScale", 1f);
             if (Scribe.mode == LoadSaveMode.PostLoadInit && inner == null)
                 inner = new ThingOwner<Pawn>(this, oneStackOnly: true);
         }

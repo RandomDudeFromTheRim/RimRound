@@ -348,7 +348,9 @@ namespace RimRound.Hediffs
                     || !p.Position.InHorDistOf(victim.Position, 12f) || !GenSight.LineOfSight(p.Position, victim.Position, victim.Map))
                     continue;
                 WeightOpinion o = p.TryGetComp<Comps.ThingComp_PawnAttitude>()?.weightOpinion ?? WeightOpinion.Neutral;
-                p.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(def, o >= WeightOpinion.Love ? 1 : 0), victim);
+                // no otherPawn: the body is destroyed in the burst, and a memory pointing at a
+                // discarded pawn breaks the save
+                p.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(def, o >= WeightOpinion.Love ? 1 : 0));
             }
         }
 

@@ -661,7 +661,7 @@ def _tube(px, py, spine, radii, light):
     return best, t_of, lit
 
 
-def constrictor_engorged(size=256, facing='south'):
+def constrictor_engorged(size=256, facing='south', face=True):
     """The gorge constrictor loose, as it arrives: an engorged leech of a
     fleshbeast. A thick, segmented body stretched tight with its load, lumpy
     along the back, a round lamprey mouth ringed with hooked teeth, the monitor
@@ -669,7 +669,8 @@ def constrictor_engorged(size=256, facing='south'):
     manner of Anomaly's devourer - one heavy, softly lit mass, bold outline,
     light from the top left - in the muted fleshbeast palette.
     facing: 'south' (mouth toward the viewer), 'east' (side on) or 'north' (from
-    behind); west mirrors east."""
+    behind); west mirrors east. face=False leaves the monitor off (the latched
+    render draws its stage face over it instead)."""
     n = size * SS
     y, x = np.mgrid[0:n, 0:n].astype(np.float32)
     px, py = (x - n / 2) / n, (y - n / 2) / n
@@ -751,7 +752,8 @@ def constrictor_engorged(size=256, facing='south'):
             ty = my - 0.09 + 0.18 * k / 5
             tlist.append((_tapered(px, py, mx + 0.025, ty, mx - 0.02, ty + (my - ty) * 0.35, 0.013, 0.002), 0.2))
         teeth(tlist, fill(rim - 0.006))
-        monitor(0.06, -0.01, 0.24, 0.22, squash=0.75)
+        if face:
+            monitor(0.06, -0.01, 0.24, 0.22, squash=0.75)
         shard(-0.12, -0.16, 0.2)
         return to_image(rgb, alpha, size)
 
@@ -798,10 +800,57 @@ def constrictor_engorged(size=256, facing='south'):
             tx, ty = np.cos(a_ + 0.12) * 0.075, oy + np.sin(a_ + 0.12) * 0.068
             tlist.append((_tapered(px, py, bx, by, tx, ty, 0.017, 0.002), np.clip((py - oy) * 6 + 0.5, 0, 1)))
         teeth(tlist, fill((mr - 1) * 0.145 - 0.004))
-        monitor(0.0, -0.18, 0.26, 0.2)
+        if face:
+            monitor(0.0, -0.18, 0.26, 0.2)
         shard(0.14, -0.34, 0.2)
     else:
         shard(0.03, -0.1, 0.3)
+    return to_image(rgb, alpha, size)
+
+
+def constrictor_band(size=256, stage=4):
+    """The gorge constrictor's tail, latched: wrapped twice round the victim's
+    belly in the same smooth, segmented flesh as the loose leech. The loops span
+    about 62% of the canvas and sit 7% below its centre (the renderer fits that to
+    each body type); they sag at the front and tuck out of sight at the sides. As it
+    empties (stage 4 full, 0 nearly spent) the tail slims down."""
+    n = size * SS
+    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
+    px, py = (x - n / 2) / n, (y - n / 2) / n
+    wob = periodic_noise(n, 211, ((3, 1.0), (7, 0.5)))
+    L = (-0.45, -0.55, 0.7)
+    base, lit_c, dark = (150, 96, 98), (196, 138, 134), (86, 50, 54)
+    taut = (206, 156, 150)
+    fill = lambda sdf: np.clip(-sdf * n / 1.5, 0, 1)
+    line = 0.018
+    rgb = np.zeros((n, n, 3), np.float32)
+    rgb[:] = CON_OUTLINE
+    alpha = np.zeros((n, n), np.float32)
+    thick = 0.03 + 0.011 * stage
+
+    def wrap(y0, sag, r0, seed_shift):
+        nonlocal rgb, alpha
+        ts = np.linspace(0, 1, 60)
+        spine = [(-0.33 + 0.66 * t, y0 + sag * (1 - (2 * t - 1) ** 2)) for t in ts]
+        # full at the front, narrowing where it wraps round out of sight
+        prof = [r0 * (0.62 + 0.38 * np.sin(t * np.pi) ** 0.6) for t in ts]
+        d, t_of, lit = _tube(px, py, spine, prof, L)
+        d = d + 0.006 * (wob - 0.5)
+        col = lerp(base, lit_c, np.clip(lit, 0, 1))
+        col = lerp(col, dark, np.clip(-lit * 1.2 + 0.2, 0, 1))
+        # stretched pale over the swell, a little darker where it turns away
+        col = lerp(col, taut, np.clip(lit, 0, 1) * (stage / 4) * 0.3)
+        col = lerp(col, dark, np.clip(np.abs(t_of - 0.5) * 2 - 0.6, 0, 1) * 0.6)
+        seg = np.clip(1 - np.abs(np.sin((t_of + seed_shift) * np.pi * 11)) / 0.12, 0, 1) * fill(d + 0.012)
+        col = lerp(col, dark, seg * 0.6)
+        a_ = np.clip((line - d) * n / 1.5, 0, 1)
+        rgb = lerp(rgb, CON_OUTLINE, a_)
+        rgb = lerp(rgb, col, fill(d))
+        alpha = np.maximum(alpha, a_)
+
+    # the lower wrap first, the upper one over it
+    wrap(0.12, 0.05, thick * 0.9, 0.3)
+    wrap(0.02, 0.05, thick, 0.0)
     return to_image(rgb, alpha, size)
 
 
@@ -1229,8 +1278,13 @@ if __name__ == '__main__':
     # gorge constrictor (goes to Textures/Things/Pawn/RR_GorgeConstrictor; the body is
     # saved as _south, _east, _north and _MenuIcon - it is the same curled worm from any side)
     for stage in range(5):
-        constrictor_coil(256, stage).save(f'{out}/RR_ConstrictorCoil_{stage}.png')
+        # latched: the tail band round the belly (the old coil painter is constrictor_coil)
+        constrictor_band(256, stage).save(f'{out}/RR_ConstrictorCoil_{stage}.png')
         constrictor_face(128, stage).save(f'{out}/RR_ConstrictorFace_{stage}.png')
+    # latched: the leech riding behind its victim - side-on (south, east) and from behind (north)
+    constrictor_engorged(256, 'east', face=False).save(f'{out}/RR_ConstrictorRiding_south.png')
+    constrictor_engorged(256, 'east', face=False).save(f'{out}/RR_ConstrictorRiding_east.png')
+    constrictor_engorged(256, 'north').save(f'{out}/RR_ConstrictorRiding_north.png')
     constrictor_proboscis().save(f'{out}/RR_ConstrictorProboscis.png')
     constrictor_bolus().save(f'{out}/RR_ConstrictorBolus.png')
     # the loose constrictor, swollen with its load (drawn scaled by load in game)
