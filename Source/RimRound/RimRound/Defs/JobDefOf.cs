@@ -26,5 +26,6 @@ namespace RimRound.Defs
         public static JobDef RR_TearOffConstrictor;
         public static JobDef RR_ConstrictorLatchOn;
         public static JobDef RR_ApplyBoundConstrictor;
+        public static JobDef RR_GhoulSelfFondle;
     }
 }

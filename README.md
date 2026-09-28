@@ -63,6 +63,16 @@ hunts the map, latches onto someone and pumps its load into them.
   burst point...). Study levels gate the stronger mutations.
 - Its monitor face is **most content when it's nearly spent**, and can be turned off in
   the settings.
+- **Ghouls and void-touched pawns can't be burst by it** — they regenerate too fast, so it
+  just keeps pumping until it runs dry. The coils fit each race's own body sprite.
+
+## Ghoulish Lust (Anomaly)
+Fattened ghouls develop a **lust for their own size**, growing with their weight and
+peaking at Titanic: they **move faster** but **hit softer**, now and then lose
+themselves **groping at their own bulk** (only when no threat is about), and female ghouls
+**let down voidmilk** on their own. The **gorge gland** ghoul implant (Ghoul
+enhancements research; bioferrite and void gluttonium) pumps about 18 kg a day into a
+ghoul and makes the lust much stronger.
 
 ## Sweet Slime (Anomaly)
 A translucent pink stalker after Lobotomy Corporation's *Melting Love* — **never lethal**.
@@ -203,7 +213,9 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
 ## What's New
 - **Gorge constrictor**: load-based fight-off, bursting, tearing off, binding research and
   ritual, the **constrictor vat** with mutations, study payoffs, codex entries; latched
-  look redone (rides behind its victim, sized by what it holds).
+  look redone (rides behind its victim, sized by what it holds; coils fit ratkin and
+  other custom bodies); ghouls and the void-touched can't be burst.
+- **Ghoulish lust** for fattened ghouls, and the **gorge gland** ghoul implant.
 - **Sweet slime**: invisible non-lethal stalker, seed, spread, slime cocoons, slime spawn,
   pink slime coat, extraction surgery.
 - **Feedees** meme: worship ritual, seam-calling ritual, feedee role.

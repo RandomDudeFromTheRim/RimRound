@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Ghoulish lust (Hediffs/Hediff_RRGhoulishLust.cs): fattened ghouls crave more of themselves. -->
+
+  <JobDef>
+    <defName>RR_GhoulSelfFondle</defName>
+    <driverClass>RimRound.Hediffs.JobDriver_RRGhoulSelfFondle</driverClass>
+    <reportString>lost in ghoulish lust, groping at its own bulk.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
+  <HediffDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_GhoulishLust</defName>
+    <label>ghoulish lust</label>
+    <description>Something in this ghoul's twisted flesh has latched onto its own growing size. The bigger it gets, the more it wants to be: it moves with an eager, bouncing quickness, but its blows lose their edge as its mind wanders to its own bulk.\n\nNow and then it loses itself entirely, groping at its swollen body until the fit passes. A female ghoul this far gone will let down voidmilk on her own.\n\nThe lust grows with the ghoul's size, peaking at Titanic.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_RRGhoulishLust</hediffClass>
+    <defaultLabelColor>(0.78, 0.5, 0.86)</defaultLabelColor>
+    <isBad>false</isBad>
+    <everCurableByItem>false</everCurableByItem>
+    <initialSeverity>0.12</initialSeverity>
+    <minSeverity>0</minSeverity>
+    <maxSeverity>1</maxSeverity>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+      </li>
+      <li>
+        <minSeverity>0.12</minSeverity>
+        <label>stirring</label>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>0.08</offset>
+          </li>
+        </capMods>
+        <statFactors>
+          <MeleeDamageFactor>0.85</MeleeDamageFactor>
+        </statFactors>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>ravenous</label>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>0.16</offset>
+          </li>
+        </capMods>
+        <statFactors>
+          <MeleeDamageFactor>0.7</MeleeDamageFactor>
+        </statFactors>
+      </li>
+      <li>
+        <minSeverity>0.75</minSeverity>
+        <label>consuming</label>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>0.25</offset>
+          </li>
+        </capMods>
+        <statFactors>
+          <MeleeDamageFactor>0.55</MeleeDamageFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <!-- the gorge gland: a ghoul implant that keeps it stuffed -->
+  <HediffDef ParentName="ImplantHediffBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_GhoulGorgeGland</defName>
+    <label>gorge gland</label>
+    <description>A swollen, bioferrite-laced gland sewn into this ghoul's gut. It seethes with void gluttonium, steadily pumping slurry into the ghoul's flesh, and it feeds the ghoul's lust for its own size.</description>
+    <defaultLabelColor>(0.78, 0.5, 0.86)</defaultLabelColor>
+    <initialSeverity>1</initialSeverity>
+    <stages>
+      <li />
+    </stages>
+    <comps>
+      <li Class="RimRound.Incidents.HediffCompProperties_RRWeightPerHour">
+        <kilosPerHourAtFull>0.75</kilosPerHourAtFull>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <ThingDef ParentName="BodyPartGhoulBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_GhoulGorgeGland</defName>
+    <label>gorge gland</label>
+    <description>A fleshy sac of bioferrite and void gluttonium that can be sewn into a ghoul's gut. It steadily pumps slurry into the ghoul - about eighteen kilos a day - and makes its ghoulish lust for its own size far stronger.\n\nOnly a ghoul's twisted body can tolerate it.</description>
+    <descriptionHyperlinks><RecipeDef>RR_InstallGhoulGorgeGland</RecipeDef></descriptionHyperlinks>
+    <statBases>
+      <Mass>0.4</Mass>
+      <WorkToMake>6000</WorkToMake>
+    </statBases>
+    <techHediffsTags>
+      <li>Ghoul</li>
+    </techHediffsTags>
+    <costList>
+      <Bioferrite>30</Bioferrite>
+      <RR_VoidGluttonium>6</RR_VoidGluttonium>
+    </costList>
+    <recipeMaker>
+      <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+      <workSkill>Crafting</workSkill>
+      <effectWorking>Smith</effectWorking>
+      <soundWorking>Recipe_Smith</soundWorking>
+      <unfinishedThingDef>UnfinishedHealthItemGhoul</unfinishedThingDef>
+      <researchPrerequisite>GhoulEnhancements</researchPrerequisite>
+      <recipeUsers>
+        <li>CraftingSpot</li>
+        <li>BioferriteShaper</li>
+      </recipeUsers>
+      <displayPriority>145</displayPriority>
+    </recipeMaker>
+  </ThingDef>
+
+  <RecipeDef ParentName="SurgeryInstallImplantBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_InstallGhoulGorgeGland</defName>
+    <label>install gorge gland</label>
+    <description>Install a gorge gland.</description>
+    <descriptionHyperlinks>
+      <ThingDef>RR_GhoulGorgeGland</ThingDef>
+      <HediffDef>RR_GhoulGorgeGland</HediffDef>
+    </descriptionHyperlinks>
+    <jobString>Installing gorge gland.</jobString>
+    <skillRequirements Inherit="false" />
+    <anesthetize>false</anesthetize>
+    <surgeryOutcomeEffect IsNull="True" />
+    <mutantPrerequisite>
+      <li>Ghoul</li>
+    </mutantPrerequisite>
+    <ingredients Inherit="false">
+      <li>
+        <filter>
+          <thingDefs>
+            <li>RR_GhoulGorgeGland</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>RR_GhoulGorgeGland</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <appliedOnFixedBodyParts>
+      <li>Stomach</li>
+    </appliedOnFixedBodyParts>
+    <addsHediff>RR_GhoulGorgeGland</addsHediff>
+  </RecipeDef>
+</Defs>

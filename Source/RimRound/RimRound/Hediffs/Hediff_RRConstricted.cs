@@ -60,7 +60,7 @@ namespace RimRound.Hediffs
         public float Load => load;
 
         /// <summary>A wild one that still holds enough to take them past their burst point, and is close to it.</summary>
-        public bool WillBurstSoon => bound == null && !bursting && load >= KilosToBurst(pawn) && KilosToBurst(pawn) <= 300f;
+        public bool WillBurstSoon => bound == null && !bursting && !Unburstable(pawn) && load >= KilosToBurst(pawn) && KilosToBurst(pawn) <= 300f;
 
         /// <summary>How much of what it latched with is still in it: 1 when it latches, 0 when spent.</summary>
         public float LoadFraction => startLoad <= 0f ? 0f : Mathf.Clamp01(load / startLoad);
@@ -155,6 +155,14 @@ namespace RimRound.Hediffs
 
         public static bool PastBurstPoint(Pawn p, int extraTiers = 0) => BodyTypeUtility.PawnIsOverWeightThreshold(p, BurstBodyType(p, extraTiers));
 
+        /// <summary>
+        /// Ghouls and the void-touched knit back together faster than a constrictor can
+        /// split them: it never bursts them, it just keeps pumping until it runs dry.
+        /// </summary>
+        public static bool Unburstable(Pawn p) =>
+            ModsConfig.AnomalyActive && p != null
+            && (p.IsGhoul || (RimWorld.HediffDefOf.VoidTouched != null && p.health.hediffSet.HasHediff(RimWorld.HediffDefOf.VoidTouched)));
+
         // ------------------------------------------------------------ latching on
 
         /// <summary>The constrictor wraps itself around the victim. Called when its melee attack lands.</summary>
@@ -169,7 +177,8 @@ namespace RimRound.Hediffs
                 return;
 
             Map map = victim.Map;
-            if (PastBurstPoint(victim))
+            bool unburstable = Unburstable(victim);
+            if (!unburstable && PastBurstPoint(victim))
             {
                 // already too big for it: one surge of weight, then the beast overfills and bursts
                 Utilities.HediffUtility.QueueWeightGain(victim, OverloadKilos);
@@ -195,8 +204,16 @@ namespace RimRound.Hediffs
             victim.health.AddHediff(h);
             victim.jobs?.StopAll();
 
-            bool enough = h.load >= KilosToBurst(victim);
+            bool enough = !unburstable && h.load >= KilosToBurst(victim);
             SoundDef.Named("RR_StomachGurgles_Heavy").PlayOneShot(new TargetInfo(victim.Position, map));
+            if (unburstable)
+            {
+                Messages.Message(
+                    $"A gorge constrictor wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! {victim.LabelShort} mends faster than it could ever burst {victim.ProObj()} - it will simply empty everything it has into {victim.ProObj()}.",
+                    new LookTargets(victim),
+                    MessageTypeDefOf.NegativeEvent);
+                return;
+            }
             Messages.Message(
                 enough
                     ? $"A gorge constrictor wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! It is carrying more than enough to burst {victim.ProObj()} - tear it off!"
@@ -233,7 +250,7 @@ namespace RimRound.Hediffs
                 return "It only feeds on people.";
             if (victim.health.hediffSet.HasHediff(Defs.HediffDefOf.RR_Constricted))
                 return $"{victim.LabelShort} already has a constrictor on {victim.ProObj()}.";
-            if (PastBurstPoint(victim, data?.ExtraBurstTiers ?? 0))
+            if (!Unburstable(victim) && PastBurstPoint(victim, data?.ExtraBurstTiers ?? 0))
                 return $"{victim.LabelShort} is already as big as it can make anyone.";
             return null;
         }
@@ -269,7 +286,7 @@ namespace RimRound.Hediffs
 
         void Pump()
         {
-            if (PastBurstPoint(pawn, ExtraTiers))
+            if (!Unburstable(pawn) && PastBurstPoint(pawn, ExtraTiers))
             {
                 if (leashed)
                 {
@@ -469,6 +486,8 @@ namespace RimRound.Hediffs
             get
             {
                 string left = $"Load left in it: {load:0} kg";
+                if (Unburstable(pawn))
+                    return $"{left}\n{pawn.LabelShort} regenerates faster than it can burst {pawn.ProObj()}: it will pump until it runs dry.";
                 if (leashed)
                     return $"Bound: it will never burst anyone.\n{left}\nLets go on outgrowing: {BurstBodyType(pawn, ExtraTiers).defName.Substring(6).Replace('_', ' ')}";
                 string verdict = load >= KilosToBurst(pawn)

@@ -37,6 +37,8 @@ namespace RimRound.Rendering
             {
                 if (pawn == null || pawn.Dead || !pawn.Spawned || pawn.Map != map)
                     continue;
+                // fit the band to the sprite this pawn is actually drawn with (cached per texture)
+                ConstrictorBodyMeasure.Update(pawn);
                 // skip only if the body is really drawn tipped over: RimRound draws heavy
                 // downed pawns upright, so posture alone would hide the tube on them
                 if (pawn.Rotation == Rot4.North || Mathf.Abs(Mathf.DeltaAngle(pawn.Drawer.renderer.BodyAngle(PawnRenderFlags.None), 0f)) > 10f)

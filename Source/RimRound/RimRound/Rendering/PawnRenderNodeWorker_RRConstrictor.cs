@@ -46,7 +46,8 @@ namespace RimRound.Rendering
         /// <summary>World size of the pawn's body sprite canvas (humanlike bodies are drawn 1.5 cells across, times RimRound's mesh size).</summary>
         static float BodyCanvas(Pawn pawn) => 1.5f * MeshSize(pawn);
 
-        static ConstrictorBodyFit.Fit Fit(Pawn pawn) => ConstrictorBodyFit.For(pawn.story?.bodyType?.defName);
+        static ConstrictorBodyFit.Fit Fit(Pawn pawn) =>
+            ConstrictorBodyMeasure.TryGet(pawn, out var measured) ? measured : ConstrictorBodyFit.For(pawn.story?.bodyType?.defName);
 
         /// <summary>World size of the coil sprite's canvas, so its loops hug the torso.</summary>
         public static float CoilCanvas(Pawn pawn) => Fit(pawn).width * BodyCanvas(pawn) * Hug / CoilLoopSpan;
@@ -242,9 +243,9 @@ namespace RimRound.Rendering
             Hediff_RRConstricted h = ConstrictorRender.Hediff(node);
             if (h == null)
                 return scale;
-            // the node's mesh is 1 across; the monitor is about a fifth of the leech's canvas
-            float c = ConstrictorRender.SacCanvas(h);
-            return new Vector3(scale.x * 0.18f * c, scale.y, scale.z * 0.22f * c);
+            // the node's mesh is 1 across: a small, fixed-size monitor, however swollen
+            // the leech around it is
+            return new Vector3(scale.x * 0.34f, scale.y, scale.z * 0.42f);
         }
 
         public override float LayerFor(PawnRenderNode node, PawnDrawParms parms) => -7f;
