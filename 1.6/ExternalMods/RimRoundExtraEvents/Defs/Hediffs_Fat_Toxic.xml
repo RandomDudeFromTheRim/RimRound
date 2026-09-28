@@ -12,7 +12,9 @@
 		<gameCondition>FatToxicFallout</gameCondition>
 		<letterLabel>Mutagenic enbiggener fallout</letterLabel>
 		<letterDef>ThreatSmall</letterDef>
-		<baseChance>0.12</baseChance>
+		<!-- Retired: RimRound's void surge covers the "fattening fallout" role (and this
+		     condition's End() never removed it). Kept at 0 so old saves still load. -->
+		<baseChance>0</baseChance>
 		<earliestDay>60</earliestDay>
 		<minRefireDays>90</minRefireDays>
 		<disabledWhen>
@@ -75,6 +77,10 @@
 				<severityPerDay>-0.08</severityPerDay>
 				<showDaysToRecover>true</showDaysToRecover>
 				<showHoursToRecover>true</showHoursToRecover>
+			</li>
+			<!-- the actual fattening: enbiggener gas (shells, launcher, IED traps) builds this up -->
+			<li Class="RimRound.Incidents.HediffCompProperties_RRWeightPerHour">
+				<kilosPerHourAtFull>2</kilosPerHourAtFull>
 			</li>
 		</comps>
 		<stages>
@@ -170,6 +176,10 @@
     <comps>
 		<li Class="HediffCompProperties_SeverityPerDay">
 			<severityPerDay>0.16</severityPerDay>
+		</li>
+		<!-- a growth that keeps piling fat on until it's excised -->
+		<li Class="RimRound.Incidents.HediffCompProperties_RRWeightPerHour">
+			<kilosPerHourAtFull>1</kilosPerHourAtFull>
 		</li>
       <li Class="HediffCompProperties_TendDuration">
         <baseTendDurationHours>96</baseTendDurationHours>

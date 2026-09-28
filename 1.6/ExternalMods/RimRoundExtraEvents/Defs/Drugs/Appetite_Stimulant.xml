@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-	<!--ThingDef ParentName="MakeableDrugPillBase">
+	<ThingDef ParentName="MakeableDrugPillBase">
 		<defName>RREE_AppetitePill</defName>
-		<label>Experimental Appetite Stimulant</label>
-		<description>A drug for produced for increasing one's appetite, increasing both their physical and mental need for food. Each dose lengthens the effective duration by another day.\n\nThis, however, has quite the effect on the user's psyche, and repeated use may prove harmful to their mental state.</description>
+		<label>experimental appetite stimulant</label>
+		<description>A drug produced to increase one's appetite, raising both the physical and mental need for food and speeding digestion. Each dose lengthens the effect by another day, and stacked doses push the user from hungry to piggish, ravenous and finally insatiable - at which point they binge on anything edible.\n\nThis has quite the effect on the user's psyche, and repeated use may prove harmful to their mental state.</description>
 		<possessionCount>10</possessionCount>
 		<descriptionHyperlinks>
 			<HediffDef>RREE_AppetitePillHigh</HediffDef>
@@ -12,7 +12,18 @@
 		<graphicData>
 			<texPath>Things/Item/Drug/Penoxycyline</texPath>
 			<graphicClass>Graphic_StackCount</graphicClass>
+			<color>(1, 0.7, 0.8)</color>
 		</graphicData>
+		<recipeMaker>
+			<researchPrerequisite>RR_Research_GlutoniumDrugs</researchPrerequisite>
+		</recipeMaker>
+		<costList>
+			<Neutroamine>1</Neutroamine>
+			<RR_Gluttonium>1</RR_Gluttonium>
+		</costList>
+		<tradeTags>
+			<li>ExoticMisc</li>
+		</tradeTags>
 		<socialPropernessMatters>false</socialPropernessMatters>
 		<rotatable>false</rotatable>
 		<statBases>
@@ -38,6 +49,7 @@
 		</comps>
 	</ThingDef>
 
+	<!-- unfinished placeholder (copied penoxycyline text), left disabled
 	<ThingDef ParentName="MakeableDrugPillBase">
 		<defName>RREE_AppetitePillStrong</defName>
 		<label>Experimental Experimental Appetite Stimulant</label>
@@ -79,7 +91,7 @@
 		<defName>RREE_AppetitePillHigh</defName>
 		<hediffClass>RimRoundExtraEvents.Hediffs.Hediff_AppetiteStimulant</hediffClass>
 		<label>stimulated appetite</label>
-		<description>Penoxycyline-induced immunity to certain illnesses. This only blocks new infections; it does nothing for those who are already infected, even if their infection is dormant.</description>
+		<description>A state of elevated hunger induced by appetite stimulants. Each extra dose adds another day and pushes it further.</description>
 		<defaultLabelColor>(1,0,0.5)</defaultLabelColor>
 		<scenarioCanAdd>true</scenarioCanAdd>
 		<maxSeverity>600.0</maxSeverity>

@@ -7,6 +7,8 @@
 		<graphicData>
 			<texPath>Things/Item/Resource/Shell/Shell_Smoke</texPath>
 			<graphicClass>Graphic_StackCount</graphicClass>
+			<!-- tinted, so it can be told apart from a plain smoke shell -->
+			<color>(1, 0.72, 0.85)</color>
 		</graphicData>
 		<comps>
 			<li Class="RimRoundExtraEvents.ThingComps.CompProperties_ExplosiveAddRRGas">
@@ -59,7 +61,7 @@
 			<texPath>Things/Building/Security/IEDSmoke</texPath>
 		</graphicData>
 		<costList>
-			<Shell_Smoke>2</Shell_Smoke>
+			<Shell_Fat>2</Shell_Fat>
 		</costList>
 		<designationHotKey>Misc10</designationHotKey>
 		<comps>

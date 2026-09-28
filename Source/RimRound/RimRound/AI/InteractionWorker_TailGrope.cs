@@ -16,9 +16,7 @@ namespace RimRound.AI
             if (!CloseContactUtility.InTouchRange(initiator, recipient))
                 return 0;
 
-            // Check if recipient is from a modded race that might have a tail
-            // (HAR races with custom bodies)
-            if (recipient.def is AlienRace.ThingDef_AlienRace)
+            if (HasTail(recipient))
             {
                 if (initiator.relations.OpinionOf(recipient) < 25)
                     return 0;
@@ -44,6 +42,31 @@ namespace RimRound.AI
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// Whether there is actually a tail to grope: a tail body part, a tail gene
+        /// (Biotech's furry or smooth tails, and modded ones), or a HAR body addon drawn
+        /// as a tail (ratkin, foxbolds and the like).
+        /// </summary>
+        public static bool HasTail(Pawn p)
+        {
+            foreach (BodyPartRecord part in p.health.hediffSet.GetNotMissingParts())
+                if (part.def.defName.IndexOf("tail", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+            if (p.genes != null)
+                foreach (Gene gene in p.genes.GenesListForReading)
+                    if (gene.Active && gene.def.defName.IndexOf("tail", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        return true;
+            if (p.def is AlienRace.ThingDef_AlienRace alien)
+            {
+                var addons = alien.alienRace?.generalSettings?.alienPartGenerator?.bodyAddons;
+                if (addons != null)
+                    foreach (var addon in addons)
+                        if (addon?.path != null && addon.path.IndexOf("tail", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                            return true;
+            }
+            return false;
         }
 
         public override void Interacted(Pawn initiator, Pawn recipient, System.Collections.Generic.List<RulePackDef> extraSentencePacks,
