@@ -136,7 +136,8 @@ namespace RimRound.Comps
         {
             if (Disabled || (!this.parent.AsPawn().IsColonist && !this.parent.AsPawn().IsPrisonerOfColony && !Prefs.DevMode)) { yield break; }
 
-            if (GlobalSettings.showPawnDietManagementGizmo && ShouldShowWeightGizmo())
+            // only made for pawns that eat (InitBarsIfNull); a null gizmo breaks the whole gizmo grid
+            if (GlobalSettings.showPawnDietManagementGizmo && this.weightGizmo != null && ShouldShowWeightGizmo())
                 yield return this.weightGizmo;
         }
 

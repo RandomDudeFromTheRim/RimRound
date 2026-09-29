@@ -27,7 +27,11 @@ namespace RimRound.Patch
         public static void Postfix(FurDef __instance, ref string __result, Pawn pawn)
         {
             if (!BodyTypeUtility.HasCustomBody(pawn))
+            {
+                if (__result == null)
+                    __result = FallbackFor(__instance, pawn);
                 return;
+            }
 
             string body = BodyTypeUtility.GetProperBodyGraphicPathFromPawn(pawn);
             if (body == null || !body.StartsWith(BodiesPath))
@@ -46,6 +50,30 @@ namespace RimRound.Patch
             }
             string fur = FurPath + StyleFor(__instance) + "/" + rel;
             __result = HasTexture(fur + "_south") ? fur : "BlankTexture";
+        }
+
+        /// <summary>
+        /// A fur that doesn't list this vanilla body type (Erin's expies only list Female,
+        /// Male, Child and Baby, but RimRound puts its leanest pawns on Thin) would hand
+        /// back no path at all, and the renderer throws on it every frame. An adult gets
+        /// the fur's sprite for their gender instead; a child or baby gets none rather than
+        /// an adult's sprite on a child's mesh.
+        /// </summary>
+        static string FallbackFor(FurDef def, Pawn pawn)
+        {
+            BodyTypeDef body = pawn?.story?.bodyType;
+            if (def.bodyTypeGraphicPaths.NullOrEmpty() || body == null || body == RimWorld.BodyTypeDefOf.Child || body == RimWorld.BodyTypeDefOf.Baby)
+                return "BlankTexture";
+            BodyTypeDef wanted = pawn.gender == Gender.Female ? RimWorld.BodyTypeDefOf.Female : RimWorld.BodyTypeDefOf.Male;
+            string any = null;
+            foreach (BodyTypeGraphicData data in def.bodyTypeGraphicPaths)
+            {
+                if (data.bodyType == wanted && !data.texturePath.NullOrEmpty())
+                    return data.texturePath;
+                if (any == null && data.bodyType != RimWorld.BodyTypeDefOf.Child && data.bodyType != RimWorld.BodyTypeDefOf.Baby)
+                    any = data.texturePath;
+            }
+            return any.NullOrEmpty() ? "BlankTexture" : any;
         }
 
         /// <summary>The generic coat otherwise: the expies' own look, or vanilla furskin for everything else.</summary>
