@@ -11,6 +11,16 @@ namespace RimRound.Comps
     public class CompProperties_RRConstrictorHunt : CompProperties
     {
         public float huntRadius = 40f;
+        /// <summary>Kilos of slurry it arrives with.</summary>
+        public FloatRange arrivalLoad = new FloatRange(1100f, 1600f);
+        /// <summary>Latched on, the time between pumps is multiplied by this (broods are slower).</summary>
+        public float pumpIntervalFactor = 1f;
+        /// <summary>Drawn this much smaller or bigger than a gorge constrictor with the same load.</summary>
+        public float drawScale = 1f;
+        /// <summary>How many constrictors this is: a troika is three.</summary>
+        public int coils = 1;
+        /// <summary>Idle, three of these that find each other can coil together into a troika.</summary>
+        public bool canMerge = true;
 
         public CompProperties_RRConstrictorHunt()
         {
@@ -40,6 +50,8 @@ namespace RimRound.Comps
 
         public float load = -1f;
         float arrivalLoad = -1f;
+        /// <summary>Set by the troika merge: the three loads added up.</summary>
+        public float arrivalLoadSet { set => arrivalLoad = value; }
 
         public CompProperties_RRConstrictorHunt Props => (CompProperties_RRConstrictorHunt)props;
 
@@ -61,6 +73,9 @@ namespace RimRound.Comps
             new CurvePoint(1000f, 3.9f),
             new CurvePoint(1410f, 4.1f),
             new CurvePoint(1860f, 4.6f),
+            new CurvePoint(2600f, 5.6f),
+            new CurvePoint(3600f, 6.6f),
+            new CurvePoint(5000f, 7.6f),
         };
 
         public float DrawWidth => WidthByLoad.Evaluate(load < 0f ? FullLoad : load);
@@ -69,7 +84,7 @@ namespace RimRound.Comps
         {
             base.PostSpawnSetup(respawningAfterLoad);
             if (load < 0f)
-                load = arrivalLoad = ArrivalLoad.RandomInRange;
+                load = arrivalLoad = Props.arrivalLoad.RandomInRange;
             if (arrivalLoad < 0f)
                 arrivalLoad = Mathf.Max(load, FullLoad);
         }
@@ -89,7 +104,7 @@ namespace RimRound.Comps
             FilthMaker.TryMakeFilth(beast.Position, beast.Map, ThingDefOf.Filth_Vomit, spilt > 150f ? 2 : 1);
             beast.Map.GetComponent<MapComp_RRGasGrid>()?.AddGas(beast.Position, RRGasType.fatteningGas, Mathf.RoundToInt(Mathf.Clamp(spilt / 10f, 5f, 60f)));
             if (Spent)
-                Messages.Message("The gorge constrictor has spilt everything it was carrying. It shrivels and loses interest in feeding.", beast, MessageTypeDefOf.PositiveEvent, historical: false);
+                Messages.Message($"The {beast.def.label} has spilt everything it was carrying. It shrivels and loses interest in feeding.", beast, MessageTypeDefOf.PositiveEvent, historical: false);
         }
 
         public override void CompTick()
@@ -107,8 +122,17 @@ namespace RimRound.Comps
                 .Where(p => IsPrey(beast, p) && p.Position.InHorDistOf(beast.Position, Props.huntRadius))
                 .OrderBy(p => p.Position.DistanceToSquared(beast.Position))
                 .FirstOrDefault(p => beast.CanReach(p, PathEndMode.Touch, Danger.Deadly));
+            // nobody free: coil in with one already wrapped around someone, rather than fight over them
+            if (prey == null && Props.coils < 3)
+                prey = beast.Map.mapPawns.AllPawnsSpawned
+                    .Where(p => IsJoinable(beast, p) && p.Position.InHorDistOf(beast.Position, Props.huntRadius))
+                    .OrderBy(p => p.Position.DistanceToSquared(beast.Position))
+                    .FirstOrDefault(p => beast.CanReach(p, PathEndMode.Touch, Danger.Deadly));
             if (prey == null)
+            {
+                TryMerge(beast);
                 return;
+            }
 
             Job job = JobMaker.MakeJob(Defs.JobDefOf.RR_ConstrictorLatchOn, prey);
             job.expiryInterval = 600;
@@ -130,6 +154,60 @@ namespace RimRound.Comps
             base.PostExposeData();
             Scribe_Values.Look(ref load, "load", -1f);
             Scribe_Values.Look(ref arrivalLoad, "arrivalLoad", -1f);
+        }
+
+        /// <summary>Someone a wild constrictor already holds, with room for another coil.</summary>
+        public static bool IsJoinable(Pawn beast, Pawn p)
+        {
+            return p != beast && !p.Dead && p.RaceProps.Humanlike && p.HostileTo(beast)
+                && p.health.hediffSet.GetFirstHediff<Hediff_RRConstricted>() is Hediff_RRConstricted grip
+                && !grip.leashed && grip.Coils < 3;
+        }
+
+        // ------------------------------------------------------------ troikas
+
+        const float MergeChancePerCheck = 0.004f;
+        const int MaxTroikasPerMap = 2;
+        public const string TroikaDef = "RR_ConstrictorTroika";
+
+        /// <summary>
+        /// Left alone with nothing to hunt, three constrictors that find each other coil
+        /// together into one troika - bound for good, like voidworms, and hungry for a host.
+        /// </summary>
+        void TryMerge(Pawn beast)
+        {
+            if (!Props.canMerge || Spent || !Rand.Chance(MergeChancePerCheck) || beast.IsOnHoldingPlatform)
+                return;
+            ThingDef troikaDef = DefDatabase<ThingDef>.GetNamedSilentFail(TroikaDef);
+            PawnKindDef troikaKind = DefDatabase<PawnKindDef>.GetNamedSilentFail(TroikaDef);
+            if (troikaDef == null || troikaKind == null || beast.Map.listerThings.ThingsOfDef(troikaDef).Count >= MaxTroikasPerMap)
+                return;
+            var mates = beast.Map.mapPawns.AllPawnsSpawned
+                .Where(p => p != beast && p.Faction == beast.Faction && !p.Dead && !p.Downed && !p.IsOnHoldingPlatform
+                    && p.TryGetComp<Comp_RRConstrictorHunt>() is Comp_RRConstrictorHunt h && h.Props.canMerge && !h.Spent
+                    && p.Position.InHorDistOf(beast.Position, 3.9f))
+                .Take(2).ToList();
+            if (mates.Count < 2)
+                return;
+
+            Map map = beast.Map;
+            IntVec3 at = beast.Position;
+            float total = Mathf.Max(0f, load);
+            foreach (Pawn mate in mates)
+                total += Mathf.Max(0f, mate.TryGetComp<Comp_RRConstrictorHunt>().load);
+            Faction faction = beast.Faction;
+            foreach (Pawn p in mates.Append(beast).ToList())
+                p.Destroy();
+
+            Pawn troika = PawnGenerator.GeneratePawn(new PawnGenerationRequest(troikaKind, faction));
+            var th = troika.TryGetComp<Comp_RRConstrictorHunt>();
+            if (th != null)
+                th.load = th.arrivalLoadSet = total;
+            GenSpawn.Spawn(troika, at, map);
+            FleckMaker.ThrowDustPuffThick(at.ToVector3Shifted(), map, 2.5f, new Color(0.9f, 0.55f, 0.65f));
+            Find.LetterStack.ReceiveLetter("Constrictor troika",
+                $"Three constrictors have found each other and coiled together into one: a troika, bound for good and swollen with everything the three were carrying ({total:0} kg).\n\nIt moves slowly, but it doesn't have to chase anyone - its warm, heavy allure draws people to it. Whoever it wraps itself around can't struggle free, and if they burst, the troika's brood takes root where they stood.",
+                LetterDefOf.ThreatBig, new LookTargets(troika));
         }
 
         public static bool IsPrey(Pawn beast, Pawn p)

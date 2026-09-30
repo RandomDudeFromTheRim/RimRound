@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using RimRound.Comps;
 using RimRound.Things;
 using RimRound.Utilities;
@@ -35,10 +36,13 @@ namespace RimRound.Hediffs
         public const int Stages = 5;
         const float MinKilosPerPump = 4f;
         const float OverloadKilos = 40f;
-        const int StruggleIntervalTicks = 250;
-        const float StruggleChance = 0.03f;
 
         public Pawn constrictor;
+        /// <summary>
+        /// Constrictors that found her already taken and coiled in with the first one instead
+        /// of fighting over her (world pawns, like the first). Three coils make a troika.
+        /// </summary>
+        public List<Pawn> joined = new List<Pawn>();
         /// <summary>
         /// A bound constrictor (the player's, from the binding ritual) rather than a
         /// wild one: there is no beast pawn, it never bursts anyone - it lets go, sated,
@@ -74,8 +78,21 @@ namespace RimRound.Hediffs
         /// <summary>0 just after a pump, rising to 1 as the next one comes: drives the pumping animation.</summary>
         public float PumpPhase => latchTick < 0 ? 0f : (float)((Find.TickManager.TicksGame - latchTick) % Interval) / Interval;
 
-        /// <summary>Ticks between pumps: a bound constrictor's mutations can quicken it.</summary>
-        public int Interval => Mathf.Max(30, Mathf.RoundToInt(PumpIntervalTicks * (bound?.PumpIntervalFactor ?? 1f)));
+        /// <summary>Ticks between pumps: a bound constrictor's mutations can quicken it, and broods pump slower.</summary>
+        public int Interval => Mathf.Max(30, Mathf.RoundToInt(PumpIntervalTicks * (bound?.PumpIntervalFactor ?? WildPumpFactor) / (1f + 0.5f * (Coils - 1))));
+
+        /// <summary>How many constrictors are wrapped around her: a troika creature counts as three.</summary>
+        public int Coils => (bound != null ? 1 : CoilsOf(constrictor)) + joined.Sum(CoilsOf);
+
+        static int CoilsOf(Pawn beast) => beast?.TryGetComp<Comp_RRConstrictorHunt>()?.Props.coils ?? 1;
+
+        /// <summary>Three coils: bound to her for good, like a voidworm troika. She can't struggle free, and if she bursts, she seeds a nest.</summary>
+        public bool TroikaBound => bound == null && Coils >= 3;
+
+        float WildPumpFactor => constrictor?.TryGetComp<Comp_RRConstrictorHunt>()?.Props.pumpIntervalFactor ?? 1f;
+
+        /// <summary>What to call it: a gorge constrictor, a brood constrictor...</summary>
+        string BeastLabel => constrictor?.def.label ?? "gorge constrictor";
 
         /// <summary>Gelatinous tiers past the usual burst point a bound constrictor keeps pumping to.</summary>
         int ExtraTiers => bound?.ExtraBurstTiers ?? 0;
@@ -89,12 +106,16 @@ namespace RimRound.Hediffs
             Scribe_Values.Look(ref latchTick, "latchTick", -1);
             Scribe_Values.Look(ref pumps, "pumps");
             Scribe_Values.Look(ref bursting, "bursting");
+            Scribe_Collections.Look(ref joined, "joined", LookMode.Reference);
             Scribe_Values.Look(ref leashed, "leashed");
             Scribe_Deep.Look(ref bound, "bound");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (leashed && bound == null)
                     bound = new BoundConstrictorData();
+                if (joined == null)
+                    joined = new List<Pawn>();
+                joined.RemoveAll(p => p == null);
                 // latched before constrictors carried a load: give it a fresh one
                 if (startLoad <= 0f)
                     load = startLoad = Comp_RRConstrictorHunt.FullLoad;
@@ -123,7 +144,7 @@ namespace RimRound.Hediffs
         /// <summary>The body type a pawn bursts on outgrowing: Titanic, or later for a pawn whose perks let them take more.</summary>
         public static BodyTypeDef BurstBodyType(Pawn p, int extraTiers = 0)
         {
-            int tier = extraTiers;
+            int tier = extraTiers + Hediff_RROverfilled.StretchedLevel(p);
             var fnd = p.TryGetComp<FullnessAndDietStats_ThingComp>();
             if (fnd != null && !fnd.Disabled)
             {
@@ -183,7 +204,7 @@ namespace RimRound.Hediffs
                 // already too big for it: one surge of weight, then the beast overfills and bursts
                 Utilities.HediffUtility.QueueWeightGain(victim, OverloadKilos);
                 Messages.Message(
-                    $"The gorge constrictor wraps around {victim.LabelShort} and pumps - but {victim.LabelShort} is far too much for it. It swells, splits and bursts!",
+                    $"The {beast.def.label} wraps around {victim.LabelShort} and pumps - but {victim.LabelShort} is far too much for it. It swells, splits and bursts!",
                     new LookTargets(victim),
                     MessageTypeDefOf.PositiveEvent);
                 BurstBeast(beast, map, victim.Position);
@@ -209,15 +230,15 @@ namespace RimRound.Hediffs
             if (unburstable)
             {
                 Messages.Message(
-                    $"A gorge constrictor wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! {victim.LabelShort} mends faster than it could ever burst {victim.ProObj()} - it will simply empty everything it has into {victim.ProObj()}.",
+                    $"{Find.ActiveLanguageWorker.WithIndefiniteArticle(beast.def.label).CapitalizeFirst()} wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! {victim.LabelShort} mends faster than it could ever burst {victim.ProObj()} - it will simply empty everything it has into {victim.ProObj()}.",
                     new LookTargets(victim),
                     MessageTypeDefOf.NegativeEvent);
                 return;
             }
             Messages.Message(
                 enough
-                    ? $"A gorge constrictor wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! It is carrying more than enough to burst {victim.ProObj()} - tear it off!"
-                    : $"A gorge constrictor wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! It has lost too much to burst {victim.ProObj()}, but it will empty everything it has left into {victim.ProObj()}.",
+                    ? $"{Find.ActiveLanguageWorker.WithIndefiniteArticle(beast.def.label).CapitalizeFirst()} wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! It is carrying more than enough to burst {victim.ProObj()} - tear it off!"
+                    : $"{Find.ActiveLanguageWorker.WithIndefiniteArticle(beast.def.label).CapitalizeFirst()} wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! It has lost too much to burst {victim.ProObj()}, but it will empty everything it has left into {victim.ProObj()}.",
                 new LookTargets(victim),
                 enough ? MessageTypeDefOf.ThreatBig : MessageTypeDefOf.NegativeEvent);
         }
@@ -276,33 +297,39 @@ namespace RimRound.Hediffs
                     return;
             }
 
-            // a lone victim can still wrench free, rarely - less and less as they fill
-            if (pawn.IsHashIntervalTick(StruggleIntervalTicks) && Rand.Chance(StruggleChance * (1f - Severity)))
-            {
-                Messages.Message($"{pawn.LabelShort} wrenches free of the gorge constrictor!", new LookTargets(pawn), MessageTypeDefOf.PositiveEvent);
-                Release(null);
-            }
+            // no wrenching free alone: someone else has to tear it off
         }
 
         void Pump()
         {
-            if (!Unburstable(pawn) && PastBurstPoint(pawn, ExtraTiers))
+            bool past = !Unburstable(pawn) && PastBurstPoint(pawn, ExtraTiers);
+            if (past && leashed)
             {
-                if (leashed)
-                {
-                    Messages.Message($"The bound gorge constrictor has pumped {pawn.LabelShort} as full as {pawn.ProSubj()} can go. It lets go, sated.", new LookTargets(pawn), MessageTypeDefOf.PositiveEvent);
-                    Release(null, sated: true);
-                    return;
-                }
-                Burst();
+                Messages.Message($"The bound gorge constrictor has pumped {pawn.LabelShort} as full as {pawn.ProSubj()} can go. It lets go, sated.", new LookTargets(pawn), MessageTypeDefOf.PositiveEvent);
+                Release(null, sated: true);
                 return;
             }
 
             float kilos = Mathf.Min(load, Mathf.Max(MinKilosPerPump, startLoad / PumpsToEmpty));
             load -= kilos;
             if (kilos > 0f)
+            {
                 Utilities.HediffUtility.QueueWeightGain(pawn, kilos);
+                GushMilk(kilos);
+            }
             Severity = Mathf.Clamp(1f - LoadFraction, 0.01f, 1f);
+
+            // past her burst point she doesn't burst outright: every pump strains her, and
+            // each may be the one that does it - likelier and likelier as the strain builds
+            if (past && kilos > 0f)
+            {
+                float strain = Hediff_RROverfilled.Strain(pawn, kilos, TroikaBound);
+                if (strain >= 1f || Rand.Chance(Hediff_RROverfilled.BurstChancePerPump(strain, kilos)))
+                {
+                    Burst();
+                    return;
+                }
+            }
 
             if (load <= 0.01f)
             {
@@ -311,6 +338,44 @@ namespace RimRound.Hediffs
             }
             if (Rand.Chance(0.2f))
                 SoundDef.Named("RR_StomachGurgles_Heavy").PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
+        }
+
+        /// <summary>Kilos pumped into her per bottle of milk she gushes.</summary>
+        const float KilosPerBottle = 22f;
+
+        static ThingDef milkDef;
+        static bool milkLooked;
+
+        /// <summary>Lactation Expansion's breast milk (bottled), or plain milk without it.</summary>
+        static ThingDef MilkDef
+        {
+            get
+            {
+                if (!milkLooked)
+                {
+                    milkLooked = true;
+                    milkDef = DefDatabase<ThingDef>.GetNamedSilentFail("SEX_BreastMilk") ?? DefDatabase<ThingDef>.GetNamedSilentFail("Milk");
+                }
+                return milkDef;
+            }
+        }
+
+        /// <summary>
+        /// Pumped this full, a grown woman's breasts can't hold it: she gushes milk - more the
+        /// fuller she is - and it lands around her in bottles. Another reason to let it run.
+        /// </summary>
+        void GushMilk(float kilos)
+        {
+            if (pawn.gender != Gender.Female || !pawn.RaceProps.Humanlike || !pawn.DevelopmentalStage.Adult() || MilkDef == null || !pawn.Spawned)
+                return;
+            float bottles = kilos / KilosPerBottle * (0.6f + 0.8f * Severity);
+            int count = GenMath.RoundRandom(bottles);
+            if (count <= 0)
+                return;
+            Thing milk = ThingMaker.MakeThing(MilkDef);
+            milk.stackCount = count;
+            GenPlace.TryPlaceThing(milk, pawn.Position, pawn.Map, ThingPlaceMode.Near);
+            FleckMaker.ThrowDustPuffThick(pawn.DrawPos, pawn.Map, 0.8f, new Color(1f, 0.97f, 0.93f));
         }
 
         /// <summary>It has nothing left to give.</summary>
@@ -327,9 +392,12 @@ namespace RimRound.Hediffs
             constrictor = null;
             Map map = pawn.Map;
             IntVec3 at = pawn.Position;
+            List<Pawn> others = TakeJoined();
             if (pawn.health.hediffSet.hediffs.Contains(this))
                 pawn.health.RemoveHediff(this);
-            Messages.Message($"The gorge constrictor has emptied itself into {pawn.LabelShort}. It drops off, a spent husk, and dies.", new LookTargets(pawn), MessageTypeDefOf.PositiveEvent);
+            foreach (Pawn other in others)
+                KillSpent(other, at, map);
+            Messages.Message($"The {beast?.def.label ?? "gorge constrictor"} has emptied itself into {pawn.LabelShort}. It drops off, a spent husk, and dies.", new LookTargets(pawn), MessageTypeDefOf.PositiveEvent);
             FilthMaker.TryMakeFilth(at, map, ThingDefOf.Filth_Vomit, 2);
             if (beast == null)
                 return;
@@ -349,7 +417,7 @@ namespace RimRound.Hediffs
             bursting = true;
             WitnessBurst(pawn);
             MeldBurstUtility.BeginBurst(pawn,
-                $"{pawn.LabelShort} swells past bearing in the gorge constrictor's grip and bursts - taking the beast with {pawn.ProObj()}!",
+                $"{pawn.LabelShort} swells past bearing in the {BeastLabel}'s grip and bursts - taking the beast with {pawn.ProObj()}!",
                 bonusGluttonium: Rand.RangeInclusive(8, 14));
         }
 
@@ -374,6 +442,18 @@ namespace RimRound.Hediffs
         /// <summary>The constrictor dies with its victim: called at the moment of the burst.</summary>
         public void ConsumeBeast()
         {
+            bool troika = TroikaBound;
+            Map map = pawn.MapHeld;
+            IntVec3 at = pawn.PositionHeld;
+            foreach (Pawn other in TakeJoined())
+                if (!other.Destroyed)
+                {
+                    if (Find.WorldPawns.Contains(other))
+                        Find.WorldPawns.RemovePawn(other);
+                    other.Destroy();
+                }
+            if (troika && map != null)
+                SeedNest(at, map);
             Pawn beast = constrictor;
             constrictor = null;
             if (beast == null)
@@ -396,6 +476,10 @@ namespace RimRound.Hediffs
             constrictor = null;
             Map map = pawn.MapHeld;
             IntVec3 at = pawn.PositionHeld;
+            List<Pawn> others = TakeJoined();
+            float share = others.Count > 0 ? Mathf.Max(0f, load) / (others.Count + 1) : Mathf.Max(0f, load);
+            if (others.Count > 0)
+                load = share;
             bool wasLeashed = leashed;
             BoundConstrictorData data = bound;
             float left = Mathf.Max(0f, load);
@@ -424,6 +508,21 @@ namespace RimRound.Hediffs
             if (beast.Destroyed || beast.Dead)
                 return;
 
+            DropOff(beast, left, at, map, tornOffBy);
+            foreach (Pawn other in others)
+                DropOff(other, share, at, map, tornOffBy);
+            FilthMaker.TryMakeFilth(at, map, ThingDefOf.Filth_Vomit, 2);
+        }
+
+        /// <summary>A constrictor lets go of her and lands next to her, dazed, with the load it has left.</summary>
+        void DropOff(Pawn beast, float left, IntVec3 at, Map map, Pawn tornOffBy)
+        {
+            if (beast == null)
+                return;
+            if (Find.WorldPawns.Contains(beast))
+                Find.WorldPawns.RemovePawn(beast);
+            if (beast.Destroyed || beast.Dead)
+                return;
             var hunt = beast.TryGetComp<Comp_RRConstrictorHunt>();
             if (hunt != null)
                 hunt.load = left;
@@ -431,7 +530,71 @@ namespace RimRound.Hediffs
             beast.stances?.stunner?.StunFor(tornOffBy != null ? 300 : 180, tornOffBy ?? pawn, addBattleLog: false, showMote: true);
             if (tornOffBy != null)
                 beast.TakeDamage(new DamageInfo(DamageDefOf.Cut, 6f, instigator: tornOffBy));
-            FilthMaker.TryMakeFilth(at, map, ThingDefOf.Filth_Vomit, 2);
+        }
+
+        List<Pawn> TakeJoined()
+        {
+            List<Pawn> list = joined.Where(p => p != null).ToList();
+            joined.Clear();
+            return list;
+        }
+
+        static void KillSpent(Pawn beast, IntVec3 at, Map map)
+        {
+            if (Find.WorldPawns.Contains(beast))
+                Find.WorldPawns.RemovePawn(beast);
+            if (beast.Destroyed || beast.Dead || map == null)
+                return;
+            GenSpawn.Spawn(beast, CellFinder.RandomClosewalkCellNear(at, map, 1), map);
+            beast.Kill(null);
+        }
+
+        /// <summary>
+        /// Another constrictor reaches her while one is already wrapped around her: instead
+        /// of fighting over her, it coils in with the first and empties itself into her too.
+        /// Three make a troika.
+        /// </summary>
+        public bool TryJoin(Pawn beast)
+        {
+            if (leashed || bursting || beast == null || beast == constrictor || joined.Contains(beast) || !beast.Spawned || Coils >= 3)
+                return false;
+            var hunt = beast.TryGetComp<Comp_RRConstrictorHunt>();
+            if (hunt == null || hunt.Spent)
+                return false;
+            float add = Mathf.Max(0f, hunt.load < 0f ? Comp_RRConstrictorHunt.FullLoad : hunt.load);
+            beast.GetLord()?.Notify_PawnLost(beast, PawnLostCondition.Vanished, null);
+            beast.jobs?.StopAll();
+            beast.DeSpawn();
+            Find.WorldPawns.PassToWorld(beast, PawnDiscardDecideMode.KeepForever);
+            joined.Add(beast);
+            load += add;
+            startLoad += add;
+            SoundDef.Named("RR_StomachGurgles_Heavy").PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
+            if (TroikaBound)
+                Find.LetterStack.ReceiveLetter("Constrictor troika",
+                    $"A third constrictor has coiled around {pawn.LabelShort}. The three are bound to {pawn.ProObj()} now, like a mating troika: {pawn.ProSubj()} can't struggle free, and they pump faster together.\n\nIf {pawn.ProSubj()} bursts, the troika's brood will take root where {pawn.ProSubj()} stood. Tear them off - it will take a while.",
+                    LetterDefOf.ThreatBig, new LookTargets(pawn));
+            else
+                Messages.Message($"Another {beast.def.label} coils in around {pawn.LabelShort} and forces its own proboscis in beside the first. Now there are {Coils} of them, pumping faster.",
+                    new LookTargets(pawn), MessageTypeDefOf.ThreatBig);
+            return true;
+        }
+
+        /// <summary>A troika's host burst: its brood takes root where she stood.</summary>
+        static void SeedNest(IntVec3 at, Map map)
+        {
+            ThingDef nestDef = DefDatabase<ThingDef>.GetNamedSilentFail("RR_ConstrictorBroodNest");
+            if (nestDef == null || !ModsConfig.AnomalyActive)
+                return;
+            IntVec3 cell = CellFinder.StandableCellNear(at, map, 3, c => GenAdj.OccupiedRect(c, Rot4.North, nestDef.size).All(x => x.InBounds(map) && x.Standable(map) && x.GetEdifice(map) == null));
+            if (!cell.IsValid)
+                return;
+            Thing nest = ThingMaker.MakeThing(nestDef);
+            nest.SetFaction(Faction.OfEntities);
+            GenSpawn.Spawn(nest, cell, map);
+            nest.TryGetComp<CompSpawnerPawn>()?.SpawnPawnsUntilPoints(70f);
+            Find.LetterStack.ReceiveLetter("Troika brood", "Where the troika's host burst, its brood has already taken root: a nest of constrictor eggs, warm and pulsing. It will keep hatching until it is destroyed.",
+                LetterDefOf.ThreatBig, new LookTargets(nest));
         }
 
         /// <summary>What a bound constrictor's mutations leave behind once it lets go.</summary>
@@ -485,15 +648,17 @@ namespace RimRound.Hediffs
         {
             get
             {
-                string left = $"Load left in it: {load:0} kg";
+                string left = (Coils > 1 ? $"{Coils} coils{(TroikaBound ? " - a troika, bound to her" : "")}. " : "") + $"Load left in it: {load:0} kg";
                 if (Unburstable(pawn))
                     return $"{left}\n{pawn.LabelShort} regenerates faster than it can burst {pawn.ProObj()}: it will pump until it runs dry.";
                 if (leashed)
                     return $"Bound: it will never burst anyone.\n{left}\nLets go on outgrowing: {BurstBodyType(pawn, ExtraTiers).defName.Substring(6).Replace('_', ' ')}";
-                string verdict = load >= KilosToBurst(pawn)
-                    ? "It has enough left to burst them."
-                    : "It will run dry before they burst.";
-                return $"{left} ({KilosToBurst(pawn):0} kg to their burst point). {verdict}\nBursts on outgrowing: {BurstBodyType(pawn).defName.Substring(6).Replace('_', ' ')}\nTear it off before then - harder the fuller it still is.";
+                string verdict = PastBurstPoint(pawn)
+                    ? $"Past their burst point: every pump strains them, and any one may burst them (strain {(pawn.health.hediffSet.GetFirstHediffOfDef(Defs.HediffDefOf.RR_Overfilled)?.Severity ?? 0f):P0})."
+                    : load >= KilosToBurst(pawn)
+                        ? "It has enough left to push them past their burst point."
+                        : "It will run dry before they reach their burst point.";
+                return $"{left} ({KilosToBurst(pawn):0} kg to their burst point). {verdict}\nBurst point: outgrowing {BurstBodyType(pawn).defName.Substring(6).Replace('_', ' ')}\nTear it off - harder the fuller it still is.";
             }
         }
     }

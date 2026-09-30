@@ -168,13 +168,20 @@ namespace RimRound.Rendering
     public class PawnRenderNodeWorker_RRConstrictorSac : PawnRenderNodeWorker
     {
         static readonly Graphic riding = GraphicDatabase.Get<Graphic_Multi>("Things/Pawn/RR_GorgeConstrictor/RR_ConstrictorRiding", ShaderDatabase.Cutout);
+        // two or three coiled in together: the braid of them riding her instead
+        static readonly Graphic ridingPair = GraphicDatabase.Get<Graphic_Multi>("Things/Pawn/RR_GorgeConstrictor/RR_ConstrictorRidingPair", ShaderDatabase.Cutout);
+        static readonly Graphic ridingTroika = GraphicDatabase.Get<Graphic_Multi>("Things/Pawn/RR_GorgeConstrictor/RR_ConstrictorRidingTroika", ShaderDatabase.Cutout);
 
         public override bool CanDrawNow(PawnRenderNode node, PawnDrawParms parms)
         {
             return base.CanDrawNow(node, parms) && ConstrictorRender.Hediff(node) != null;
         }
 
-        protected override Graphic GetGraphic(PawnRenderNode node, PawnDrawParms parms) => riding;
+        protected override Graphic GetGraphic(PawnRenderNode node, PawnDrawParms parms)
+        {
+            int coils = ConstrictorRender.Hediff(node)?.Coils ?? 1;
+            return coils >= 3 ? ridingTroika : coils == 2 ? ridingPair : riding;
+        }
 
         public override Vector3 OffsetFor(PawnRenderNode node, PawnDrawParms parms, out Vector3 pivot)
         {
@@ -219,8 +226,9 @@ namespace RimRound.Rendering
 
         public override bool CanDrawNow(PawnRenderNode node, PawnDrawParms parms)
         {
+            // only on a lone leech: a braid of them has no single brow to set it in
             return GlobalSettings.constrictorScreenFace && parms.facing != Rot4.North
-                && base.CanDrawNow(node, parms) && ConstrictorRender.Hediff(node) != null;
+                && base.CanDrawNow(node, parms) && ConstrictorRender.Hediff(node) is Hediff_RRConstricted h && h.Coils < 2;
         }
 
         protected override Graphic GetGraphic(PawnRenderNode node, PawnDrawParms parms)

@@ -36,6 +36,8 @@ namespace RimRound.Defs
         public static HediffDef RimRound_SuddenWeightGainTemporary;
         public static HediffDef RR_Constricted;
         public static HediffDef RR_Bursting;
+        public static HediffDef RR_Overfilled;
+        public static HediffDef RR_StretchedBeyond;
         public static HediffDef RR_VoidEchoVigor;
         [MayRequireAnomaly] public static HediffDef RR_GhoulishLust;
         [MayRequireAnomaly] public static HediffDef RR_GhoulGorgeGland;

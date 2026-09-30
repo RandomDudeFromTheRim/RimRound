@@ -9,9 +9,9 @@
     <label>gorge constrictor</label>
     <description>A flesh worm swollen tight with slurry, a sliver of dark archotechnology driven into its back. It doesn't need to fight: once it reaches someone it wraps itself around them, holds them still, forces a proboscis into their mouth - and empties itself into them.
 
-It arrives carrying enough to burst an ordinary person. If its victim reaches Gelatinous I before it runs dry, they burst - and the constrictor bursts with them, leaving blob walls and void gluttonium behind. If it runs dry first, it drops off, a spent husk. Every wound it takes before it latches spills some of its load: shoot it enough and it can no longer burst anyone. Someone who is already that big is too much for it: it gives them one surge of weight and bursts on its own.
+It arrives carrying enough to burst an ordinary person. Pumped past their burst point, its victim doesn't burst outright: every pump strains them and may be the one that bursts them - and the constrictor with them, leaving their flesh and void gluttonium behind. If it runs dry or is torn off first, they survive, stretched for good. If it runs dry first, it drops off, a spent husk. Every wound it takes before it latches spills some of its load: shoot it enough and it can no longer burst anyone. Someone who is already that big is too much for it: it gives them one surge of weight and bursts on its own.
 
-Another pawn can tear it off, which is harder the fuller it still is. Alone, a victim is very unlikely to wrench free.</description>
+Another pawn can tear it off, which is harder the fuller it still is. Alone, a victim can't wrench free.</description>
     <statBases>
       <MoveSpeed>4.8</MoveSpeed>
       <MinimumContainmentStrength>20</MinimumContainmentStrength>
@@ -158,7 +158,7 @@ Another pawn can tear it off, which is harder the fuller it still is. Alone, a v
     <defName>RR_Constricted</defName>
     <label>gorge constrictor</label>
     <labelNoun>a gorge constrictor</labelNoun>
-    <description>A gorge constrictor is wrapped around this pawn, holding them still and pumping them full through a proboscis in their mouth. When they outgrow their burst point - Gelatinous I, or later for a pawn whose stomach perks let them take more - they will burst.\n\nAnother pawn can tear it off - harder the bigger it has swollen.</description>
+    <description>A gorge constrictor is wrapped around this pawn, holding them still and pumping them full through a proboscis in their mouth. Past their burst point - Gelatinous I, or later for a pawn whose stomach perks let them take more - every pump strains them, and any one may burst them.\n\nThey can't wrench free alone: another pawn has to tear it off - harder the bigger it has swollen.</description>
     <hediffClass>RimRound.Hediffs.Hediff_RRConstricted</hediffClass>
     <defaultLabelColor>(0.85, 0.45, 0.55)</defaultLabelColor>
     <isBad>true</isBad>
@@ -274,6 +274,79 @@ Another pawn can tear it off, which is harder the fuller it still is. Alone, a v
     </stages>
   </ThoughtDef>
 
+  <!-- pumped past the burst point without bursting yet: Hediff_RROverfilled -->
+  <HediffDef>
+    <defName>RR_Overfilled</defName>
+    <label>overfilled</label>
+    <description>Pumped past the point where this pawn should have burst. Every further pump strains them more, and any one of them may be the one that bursts them - likelier and likelier as the strain builds. If the pumping stops first, the strain eases over a few days, and their body stays stretched to hold it.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_RROverfilled</hediffClass>
+    <defaultLabelColor>(1, 0.45, 0.55)</defaultLabelColor>
+    <isBad>true</isBad>
+    <everCurableByItem>false</everCurableByItem>
+    <initialSeverity>0.001</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-0.35</severityPerDay>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>strained</label>
+        <painOffset>0.15</painOffset>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.15</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>straining</label>
+        <painOffset>0.3</painOffset>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.3</offset></li>
+          <li><capacity>Consciousness</capacity><offset>-0.1</offset></li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>0.75</minSeverity>
+        <label>tearing at the seams</label>
+        <lifeThreatening>true</lifeThreatening>
+        <painOffset>0.45</painOffset>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>-0.5</offset></li>
+          <li><capacity>Consciousness</capacity><offset>-0.2</offset></li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <!-- survived being pumped past the burst point: the burst point moves on a tier per level -->
+  <HediffDef>
+    <defName>RR_StretchedBeyond</defName>
+    <label>stretched beyond</label>
+    <description>Pumped past the point that should have burst them - and they held. Their body has stretched to hold it for good: they can take a whole Gelatinous stage more before bursting, for each time they have survived it (up to three).</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.95, 0.6, 0.75)</defaultLabelColor>
+    <isBad>false</isBad>
+    <everCurableByItem>false</everCurableByItem>
+    <initialSeverity>1</initialSeverity>
+    <minSeverity>1</minSeverity>
+    <maxSeverity>3</maxSeverity>
+    <stages>
+      <li>
+        <label>once</label>
+      </li>
+      <li>
+        <minSeverity>2</minSeverity>
+        <label>twice</label>
+      </li>
+      <li>
+        <minSeverity>3</minSeverity>
+        <label>thrice</label>
+      </li>
+    </stages>
+  </HediffDef>
+
   <!-- the last few seconds before bursting (meld aerosol, gorge constrictor) -->
   <HediffDef>
     <defName>RR_Bursting</defName>
@@ -349,6 +422,8 @@ Another pawn can tear it off, which is harder the fuller it still is. Alone, a v
     <category>Advanced</category>
     <linkedThings>
       <li>RR_GorgeConstrictor</li>
+      <li>RR_BroodConstrictor</li>
+      <li>RR_ConstrictorTroika</li>
     </linkedThings>
     <discoveredResearchProjects>
       <li>RR_ConstrictorBinding</li>

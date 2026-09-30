@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  The derelict feedee facility: an Odyssey gravcore signal (needs Odyssey and Anomaly; loaded
+  from loadFolders with IfModActiveAll). An ancient feeding facility whose bound gorge
+  constrictors got loose, bred, and overran it. Code: Source/.../Facility/FeedeeFacility.cs.
+-->
+<Defs>
+
+  <!-- ============================================================ the feeding reactor -->
+
+  <!-- Holds the gravcore. Hack it or burst it; it leaks a void surge over the site until then. -->
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_FeedingReactor</defName>
+    <label>feeding reactor</label>
+    <description>The heart of an ancient feedee facility: a gravcore-driven reactor that turned anything it was given into slurry, and pumped it to every bed in the building. It still runs - and its seals have long since failed, so a void surge hangs over the whole region.\n\nHack or destroy the reactor to obtain its gravcore and end the surge. Be warned: damaged, it bursts in a flood of slurry and fattening gas.</description>
+    <graphicData>
+      <texPath>Things/Building/RR_ConstrictorVat/RR_ConstrictorVat</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(4.2, 4.2)</drawSize>
+    </graphicData>
+    <size>(3, 3)</size>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <fillPercent>0.8</fillPercent>
+    <tickerType>Normal</tickerType>
+    <canOverlapZones>false</canOverlapZones>
+    <hasInteractionCell>true</hasInteractionCell>
+    <interactionCellOffset>(0,0,-2)</interactionCellOffset>
+    <statBases>
+      <MaxHitPoints>500</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <building>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+      <repairable>false</repairable>
+    </building>
+    <killedLeavings>
+      <ChunkSlagSteel>2</ChunkSlagSteel>
+      <RR_VoidGluttonium>12</RR_VoidGluttonium>
+    </killedLeavings>
+    <comps>
+      <li Class="CompProperties_CausesGameCondition">
+        <compClass>CompCauseGameCondition_AncientReactor</compClass>
+        <conditionDef>RR_VoidSurge</conditionDef>
+        <worldRange>0</worldRange>
+        <hideSource>true</hideSource>
+      </li>
+      <li Class="CompProperties_Hackable">
+        <defence>7000</defence>
+        <effectHacking>HackingTerminal</effectHacking>
+        <lockoutDurationHoursRange>12~18</lockoutDurationHoursRange>
+        <showProgressAfterHackCompletion>false</showProgressAfterHackCompletion>
+        <notHackedInspectString>Hack to obtain gravcore.</notHackedInspectString>
+        <hackedMessage>{HACKER_labelShort} has finished hacking {SUBJECT_definite}.</hackedMessage>
+        <hackedLetterLabel>Gravcore obtained</hackedLetterLabel>
+        <hackedLetterText>You've obtained a gravcore from the feeding reactor.\n\nThe reactor is winding down, and the void surge is already beginning to thin.</hackedLetterText>
+        <hackedLetterDef>PositiveEvent</hackedLetterDef>
+        <destroyedLetterLabel>Gravcore obtained</destroyedLetterLabel>
+        <destroyedLetterText>The feeding reactor has burst, and its gravcore rolls free of the slurry.\n\nThe void surge is already beginning to thin.</destroyedLetterText>
+        <destroyedLetterDef>PositiveEvent</destroyedLetterDef>
+        <dropOnHacked>
+          <Gravcore />
+        </dropOnHacked>
+        <dropOnDestroyed>
+          <Gravcore />
+        </dropOnDestroyed>
+        <intellectualSkillPrerequisite>5</intellectualSkillPrerequisite>
+      </li>
+      <li Class="CompProperties_Explosive">
+        <explosiveRadius>7.9</explosiveRadius>
+        <explosiveDamageType>RR_SlurryBurst</explosiveDamageType>
+        <startWickHitPointsPercent>0.5</startWickHitPointsPercent>
+        <wickTicks>200~240</wickTicks>
+      </li>
+      <li Class="CompProperties_LetterOnRevealed">
+        <label>Feeding reactor</label>
+        <text>You've found the facility's feeding reactor. Hack it or destroy it to obtain the gravcore and end the void surge.\n\nBe warned: damaged, it bursts in a flood of slurry and fattening gas.</text>
+        <letterDef>NeutralEvent</letterDef>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- the reactor bursting: slurry everywhere, and fattening gas in every cell it reaches -->
+  <DamageDef>
+    <defName>RR_SlurryBurst</defName>
+    <label>slurry burst</label>
+    <workerClass>RimRound.Hediffs.DamageWorker_RRSlurryBurst</workerClass>
+    <externalViolence>false</externalViolence>
+    <harmsHealth>false</harmsHealth>
+    <makesBlood>false</makesBlood>
+    <isExplosive>true</isExplosive>
+    <defaultDamage>0</defaultDamage>
+    <explosionColorCenter>(1, 0.8, 0.85)</explosionColorCenter>
+    <explosionColorEdge>(0.95, 0.6, 0.72, 0.1)</explosionColorEdge>
+    <soundExplosion>Explosion_Smoke</soundExplosion>
+    <combatLogRules>Damage_Smoke</combatLogRules>
+  </DamageDef>
+
+  <!-- ============================================================ meld hunter drones -->
+
+  <!-- A hunter drone whose charge is meld aerosol instead of explosive. -->
+  <ThingDef ParentName="BaseDrone">
+    <defName>RR_Drone_MeldHunter</defName>
+    <label>meld hunter drone</label>
+    <description>An automated hunter drone refitted to carry meld aerosol. It pursues its target and bursts close by, flooding the area with meld.</description>
+    <statBases>
+      <MoveSpeed>3.4</MoveSpeed>
+    </statBases>
+    <race>
+      <thinkTreeConstant>HunterDroneConstant</thinkTreeConstant>
+      <baseHealthScale>0.35</baseHealthScale>
+      <baseBodySize>0.7</baseBodySize>
+      <hasCorpse>true</hasCorpse>
+      <body>DroneWithThreeLegs</body>
+      <lifeStageAges>
+        <li>
+          <def>MechanoidFullyFormed</def>
+          <minAge>0</minAge>
+          <soundWounded>Pawn_Hunter_Wounded</soundWounded>
+          <soundDeath>Pawn_Hunter_Death</soundDeath>
+          <soundCall>Pawn_Hunter_Call</soundCall>
+        </li>
+      </lifeStageAges>
+    </race>
+    <comps>
+      <li Class="CompProperties_MechPowerCell">
+        <totalPowerTicks>12500</totalPowerTicks>
+        <labelOverride>Battery power</labelOverride>
+        <tooltipOverride>Drones have limited battery life. When the battery runs dry, the drone dies.</tooltipOverride>
+        <showGizmoOnNonPlayerControlled>true</showGizmoOnNonPlayerControlled>
+      </li>
+      <li Class="CompProperties_HunterDrone">
+        <explosionRadius>3.9</explosionRadius>
+        <explosionDamageType>RR_MeldAerosolDamage</explosionDamageType>
+        <explosionDamageAmount>0</explosionDamageAmount>
+      </li>
+    </comps>
+    <butcherProducts>
+      <Steel>15</Steel>
+    </butcherProducts>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseDroneKind">
+    <defName>RR_Drone_MeldHunter</defName>
+    <label>meld hunter drone</label>
+    <labelPlural>meld hunter drones</labelPlural>
+    <race>RR_Drone_MeldHunter</race>
+    <combatPower>60</combatPower>
+    <canOpenDoors>true</canOpenDoors>
+    <canOpenAnyDoor>true</canOpenAnyDoor>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Pawn/Drone/Hunter/HunterDrone</texPath>
+          <drawSize>1.2</drawSize>
+          <color>(1, 0.62, 0.8)</color>
+        </bodyGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_MeldHunterTrap</defName>
+    <label>meld hunter trap</label>
+    <description>A dormant meld hunter drone that activates when it detects a threat. The drone closes with the target and bursts in a cloud of meld aerosol. Since it is hidden in the surrounding terrain, it cannot be placed adjacent to other traps.</description>
+    <descriptionHyperlinks>
+      <ThingDef>RR_Drone_MeldHunter</ThingDef>
+    </descriptionHyperlinks>
+    <thingClass>RimRound.Facility.Building_RRTrapReleaseMeldHunter</thingClass>
+    <drawHighlight>true</drawHighlight>
+    <drawHighlightOnlyForHostile>true</drawHighlightOnlyForHostile>
+    <drawerType>RealtimeOnly</drawerType>
+    <graphicData>
+      <texPath>Things/Building/HunterTrap</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(1, 0.62, 0.8)</color>
+      <damageData>
+        <rect>(0,0,1,0.15)</rect>
+      </damageData>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <rotatable>false</rotatable>
+    <tickerType>Normal</tickerType>
+    <stealable>false</stealable>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <uiOrder>31</uiOrder>
+    <thingCategories>
+      <li>BuildingsSecurity</li>
+    </thingCategories>
+    <costList>
+      <Steel>40</Steel>
+      <RR_VoidGluttonium>6</RR_VoidGluttonium>
+    </costList>
+    <statBases>
+      <Mass>10</Mass>
+      <MaxHitPoints>50</MaxHitPoints>
+      <WorkToBuild>4000</WorkToBuild>
+      <Flammability>1</Flammability>
+      <Beauty>-15</Beauty>
+      <TrapSpringChance>1.0</TrapSpringChance>
+    </statBases>
+    <designationCategory>Security</designationCategory>
+    <building>
+      <isTrap>true</isTrap>
+      <trapDestroyOnSpring>true</trapDestroyOnSpring>
+      <expandHomeArea>false</expandHomeArea>
+      <ai_chillDestination>false</ai_chillDestination>
+      <claimable>false</claimable>
+    </building>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+    <researchPrerequisites>
+      <li>RR_MeldHunterDrones</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>PlaceWorker_NeverAdjacentTrap</li>
+    </placeWorkers>
+    <comps>
+      <li Class="CompProperties_Stunnable">
+        <affectedDamageDefs>
+          <li>Stun</li>
+          <li>EMP</li>
+        </affectedDamageDefs>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ResearchProjectDef>
+    <defName>RR_MeldHunterDrones</defName>
+    <label>meld hunter drones</label>
+    <description>Refit hunter drones to carry meld aerosol instead of explosives, and build traps that release them.</description>
+    <baseCost>1200</baseCost>
+    <techLevel>Spacer</techLevel>
+    <tab>RimRoundTech</tab>
+    <prerequisites>
+      <li>HunterDrones</li>
+      <li>RR_Research_MeldAerosol</li>
+    </prerequisites>
+  </ResearchProjectDef>
+
+  <RoomPart_ThingDef>
+    <defName>RR_MeldHunterDrone</defName>
+    <workerClass>RoomPart_CornerThing</workerClass>
+    <thingDef>RR_MeldHunterTrap</thingDef>
+  </RoomPart_ThingDef>
+
+  <!-- ============================================================ rooms -->
+
+  <LayoutRoomDef>
+    <defName>RR_FacilityReactorRoom</defName>
+    <roomContentsWorkerType>RimRound.Facility.RoomContents_RRFeedingReactor</roomContentsWorkerType>
+    <dontPlaceRandomly>true</dontPlaceRandomly>
+    <isValidPlayerSpawnRoom>false</isValidPlayerSpawnRoom>
+    <minSingleRectWidth>7</minSingleRectWidth>
+    <minSingleRectHeight>7</minSingleRectHeight>
+    <floorTypes>
+      <li>SterileTile</li>
+    </floorTypes>
+    <edgeTerrain>MetalTile</edgeTerrain>
+    <parts>
+      <RR_MeldHunterDrone>
+        <countRange>2~3</countRange>
+      </RR_MeldHunterDrone>
+    </parts>
+  </LayoutRoomDef>
+
+  <LayoutRoomDef>
+    <defName>RR_FacilityCorridor</defName>
+    <roomContentsWorkerType>RoomContents_ShelfedCorridor</roomContentsWorkerType>
+    <parts>
+      <RR_MeldHunterDrone>0.7</RR_MeldHunterDrone>
+      <HunterDrone>0.2</HunterDrone>
+    </parts>
+  </LayoutRoomDef>
+
+  <!-- the brood's rooms: nests, slurry, and flesh creeping over the floor -->
+  <LayoutRoomDef>
+    <defName>RR_FacilityBroodRoom</defName>
+    <roomContentsWorkerType>RimRound.Facility.RoomContents_RRBroodNest</roomContentsWorkerType>
+    <isValidPlayerSpawnRoom>false</isValidPlayerSpawnRoom>
+    <minSingleRectWidth>5</minSingleRectWidth>
+    <minSingleRectHeight>5</minSingleRectHeight>
+    <spawnJunk>false</spawnJunk>
+    <scatterTerrain>
+      <RR_FleshFloor>
+        <groupsPerHundredCells>2~3</groupsPerHundredCells>
+        <itemsPerGroup>6~10</itemsPerGroup>
+        <groupDistRange>2~3</groupDistRange>
+      </RR_FleshFloor>
+    </scatterTerrain>
+  </LayoutRoomDef>
+
+  <!-- the residents: sealed pods, still asleep, still enormous -->
+  <LayoutRoomDef>
+    <defName>RR_FacilityFeedeePods</defName>
+    <roomContentsWorkerType>RimRound.Facility.RoomContents_RRFeedeePods</roomContentsWorkerType>
+    <minSingleRectWidth>5</minSingleRectWidth>
+    <minSingleRectHeight>5</minSingleRectHeight>
+    <floorTypes>
+      <li>SterileTile</li>
+    </floorTypes>
+    <edgeTerrain>AncientTile</edgeTerrain>
+  </LayoutRoomDef>
+
+  <!-- where the residents were fed: long tables, long gone -->
+  <LayoutRoomDef>
+    <defName>RR_FacilityFeedingHall</defName>
+    <roomContentsWorkerType>RoomContents_DiningHall</roomContentsWorkerType>
+    <itemsPer100CellsRange>2~4</itemsPer100CellsRange>
+    <floorTypes>
+      <li>AncientTile</li>
+    </floorTypes>
+    <scatter>
+      <Filth_Vomit>
+        <groupsPerHundredCells>2~4</groupsPerHundredCells>
+        <itemsPerGroup>2~5</itemsPerGroup>
+        <groupDistRange>2~4</groupDistRange>
+      </Filth_Vomit>
+    </scatter>
+  </LayoutRoomDef>
+
+  <!-- the facility's stores: what it fed them on -->
+  <LayoutRoomDef>
+    <defName>RR_FacilityStores</defName>
+    <roomContentsWorkerType>RoomContents_Stockpile</roomContentsWorkerType>
+    <thingSetMakerDef>RR_FeedeeFacilityLoot</thingSetMakerDef>
+    <parts>
+      <RR_MeldHunterDrone>0.5</RR_MeldHunterDrone>
+    </parts>
+  </LayoutRoomDef>
+
+  <ThingSetMakerDef>
+    <defName>RR_FeedeeFacilityLoot</defName>
+    <root Class="ThingSetMaker_Sum">
+      <options>
+        <li>
+          <chance>1</chance>
+          <thingSetMaker Class="ThingSetMaker_StackCount">
+            <fixedParams>
+              <filter><thingDefs><li>RR_VoidGluttonium</li></thingDefs></filter>
+              <countRange>15~40</countRange>
+            </fixedParams>
+          </thingSetMaker>
+        </li>
+        <li>
+          <chance>1</chance>
+          <thingSetMaker Class="ThingSetMaker_StackCount">
+            <fixedParams>
+              <filter><thingDefs><li>RR_GlutBrick</li></thingDefs></filter>
+              <countRange>40~90</countRange>
+            </fixedParams>
+          </thingSetMaker>
+        </li>
+        <li>
+          <chance>0.8</chance>
+          <thingSetMaker Class="ThingSetMaker_StackCount">
+            <fixedParams>
+              <filter><thingDefs><li>RR_StretchSerum</li></thingDefs></filter>
+              <countRange>1~3</countRange>
+            </fixedParams>
+          </thingSetMaker>
+        </li>
+        <li>
+          <chance>0.8</chance>
+          <thingSetMaker Class="ThingSetMaker_StackCount">
+            <fixedParams>
+              <filter><thingDefs><li>RR_GluttoniumMealLarge</li></thingDefs></filter>
+              <countRange>4~10</countRange>
+            </fixedParams>
+          </thingSetMaker>
+        </li>
+        <li>
+          <chance>0.25</chance>
+          <thingSetMaker Class="ThingSetMaker_StackCount">
+            <fixedParams>
+              <filter><thingDefs><li>RR_ConstrictorLure</li></thingDefs></filter>
+              <countRange>1~1</countRange>
+            </fixedParams>
+          </thingSetMaker>
+        </li>
+      </options>
+    </root>
+  </ThingSetMakerDef>
+
+  <!-- ============================================================ layouts -->
+
+  <!-- the main complex: holds the feeding reactor -->
+  <StructureLayoutDef>
+    <defName>RR_FeedeeFacility_Main</defName>
+    <workerClass>LayoutWorker_AncientRuins_Reactor</workerClass>
+    <canHaveMultipleLayoutsInRoom>true</canHaveMultipleLayoutsInRoom>
+    <clearRoomsEntirely>true</clearRoomsEntirely>
+    <minRoomWidth>7</minRoomWidth>
+    <minRoomHeight>7</minRoomHeight>
+    <importantRoomDef>RR_FacilityReactorRoom</importantRoomDef>
+    <corridorDef>RR_FacilityCorridor</corridorDef>
+    <corridorShapes>Cross, T</corridorShapes>
+    <exteriorDoorDef>AncientBlastDoor</exteriorDoorDef>
+    <wallLampDef>AncientEmergencyLight_Red</wallLampDef>
+    <wallDef>AncientFortifiedWall</wallDef>
+    <doorStuffDef>Steel</doorStuffDef>
+    <roomDefs>
+      <RR_FacilityBroodRoom>
+        <countRange>1~2</countRange>
+      </RR_FacilityBroodRoom>
+      <RR_FacilityFeedeePods>
+        <countRange>1~1</countRange>
+      </RR_FacilityFeedeePods>
+      <RR_FacilityFeedingHall>
+        <countRange>1~1</countRange>
+      </RR_FacilityFeedingHall>
+      <RR_FacilityStores>
+        <countRange>1~1</countRange>
+      </RR_FacilityStores>
+      <AncientRuinsOperatingRoom>1</AncientRuinsOperatingRoom>
+      <AncientRuinsKitchen>1</AncientRuinsKitchen>
+      <AncientRuinsLockerRoom>1</AncientRuinsLockerRoom>
+    </roomDefs>
+    <junkScaterrers>
+      <Filth_Vomit>
+        <groupsPerHundredCells>1~3</groupsPerHundredCells>
+        <itemsPerGroup>2~4</itemsPerGroup>
+        <groupDistRange>3~5</groupDistRange>
+      </Filth_Vomit>
+      <Filth_Trash>
+        <groupsPerHundredCells>0~2</groupsPerHundredCells>
+        <itemsPerGroup>2~4</itemsPerGroup>
+        <groupDistRange>3~5</groupDistRange>
+      </Filth_Trash>
+      <RubblePile>
+        <groupsPerHundredCells>1~2</groupsPerHundredCells>
+        <itemsPerGroup>2~4</itemsPerGroup>
+        <groupDistRange>3~5</groupDistRange>
+      </RubblePile>
+    </junkScaterrers>
+  </StructureLayoutDef>
+
+  <!-- the ruined outbuildings around it: the brood spread out here too -->
+  <StructureLayoutDef>
+    <defName>RR_FeedeeFacility_Outbuildings</defName>
+    <workerClass>LayoutWorker_AncientRuins</workerClass>
+    <shouldDamage>true</shouldDamage>
+    <canHaveMultipleLayoutsInRoom>true</canHaveMultipleLayoutsInRoom>
+    <roomDefs>
+      <AncientRuinsEmpty>3</AncientRuinsEmpty>
+      <AncientRuinsRubble>2</AncientRuinsRubble>
+      <AncientRuinsStorage>1</AncientRuinsStorage>
+      <AncientRuinsBarracks>1</AncientRuinsBarracks>
+      <RR_FacilityBroodRoom>0.35</RR_FacilityBroodRoom>
+      <RR_FacilityFeedeePods>0.12</RR_FacilityFeedeePods>
+    </roomDefs>
+    <junkScaterrers>
+      <Filth_Vomit>
+        <groupsPerHundredCells>0~2</groupsPerHundredCells>
+        <itemsPerGroup>2~4</itemsPerGroup>
+        <groupDistRange>3~5</groupDistRange>
+      </Filth_Vomit>
+      <RubblePile>
+        <groupsPerHundredCells>2~4</groupsPerHundredCells>
+        <itemsPerGroup>2~4</itemsPerGroup>
+        <groupDistRange>3~5</groupDistRange>
+        <minGroups>1</minGroups>
+      </RubblePile>
+      <Filth_RubbleRock>
+        <groupsPerHundredCells>2~4</groupsPerHundredCells>
+        <itemsPerGroup>3~8</itemsPerGroup>
+        <groupDistRange>3~5</groupDistRange>
+        <minGroups>1</minGroups>
+      </Filth_RubbleRock>
+    </junkScaterrers>
+  </StructureLayoutDef>
+
+  <!-- ============================================================ the site and the signal -->
+
+  <SitePartDef ParentName="GravcoreLocationBase">
+    <defName>RR_DerelictFeedeeFacility</defName>
+    <label>derelict feedee facility</label>
+    <description>The gravcore energy signature is coming from an ancient feedee facility. Its feeding reactor runs on the gravcore and leaks a void surge over the region, and the gorge constrictors it once kept have bred and overrun it.</description>
+    <tags>
+      <li>RR_DerelictFeedeeFacility</li>
+    </tags>
+  </SitePartDef>
+
+  <GenStepDef>
+    <defName>RR_DerelictFeedeeFacility</defName>
+    <linkWithSite>RR_DerelictFeedeeFacility</linkWithSite>
+    <order>740</order>
+    <genStep Class="RimRound.Facility.GenStep_RRFeedeeFacility" />
+    <preventsGenSteps>
+      <li>AncientRuins_Scarlands</li>
+      <li>FrozenRuins</li>
+    </preventsGenSteps>
+  </GenStepDef>
+
+  <QuestScriptDef>
+    <defName>RR_Gravcore_DerelictFeedeeFacility</defName>
+    <autoAccept>true</autoAccept>
+    <questNameRules>
+      <rulesStrings>
+        <li>questName->derelict feedee facility</li>
+      </rulesStrings>
+    </questNameRules>
+    <questDescriptionRules>
+      <rulesStrings>
+        <li>questDescription->You have detected the energy signature of a gravcore. It powers the feeding reactor of an ancient feedee facility - a place where people were kept asleep and fed, and fed, and fed. The location is marked on the world map.\n\nThe facility went dark long ago. The gorge constrictors it kept got loose and bred: the whole building is infested with their broods. The reactor still leaks a void surge over the region.\n\nObtain gravcores and gravlite panels to increase the size of your gravship.</li>
+      </rulesStrings>
+    </questDescriptionRules>
+    <questAvailableLetterLabel>Gravcore detected: Derelict feedee facility</questAvailableLetterLabel>
+    <questAvailableLetterTextIsDescription>true</questAvailableLetterTextIsDescription>
+    <root Class="RimRound.Facility.QuestNode_Root_Gravcore_RRFeedeeFacility">
+      <distanceFromColonyRange>10~60</distanceFromColonyRange>
+      <selectLandmarkChance>0</selectLandmarkChance>
+      <layer>Surface</layer>
+    </root>
+  </QuestScriptDef>
+
+</Defs>

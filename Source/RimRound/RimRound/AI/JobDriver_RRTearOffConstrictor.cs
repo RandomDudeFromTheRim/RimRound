@@ -29,7 +29,10 @@ namespace RimRound.AI
         {
             float melee = rescuer.skills?.GetSkill(SkillDefOf.Melee)?.Level ?? 5;
             float skill = Mathf.Lerp(1.4f, 0.6f, melee / 20f);
-            return Mathf.RoundToInt(BaseTicks * (1f + 2.5f * (grip?.LoadFraction ?? 0f)) * skill);
+            // every coil past the first makes it harder; a troika much harder
+            int coils = grip?.Coils ?? 1;
+            float tangle = 1f + 0.6f * (coils - 1) + (grip?.TroikaBound == true ? 0.8f : 0f);
+            return Mathf.RoundToInt(BaseTicks * (1f + 2.5f * (grip?.LoadFraction ?? 0f)) * skill * tangle);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
@@ -56,7 +59,7 @@ namespace RimRound.AI
                 initAction = delegate
                 {
                     Grip?.Release(pawn);
-                    Messages.Message($"{pawn.LabelShort} tears the gorge constrictor off {Victim.LabelShort}!", new LookTargets(Victim), MessageTypeDefOf.PositiveEvent);
+                    Messages.Message($"{pawn.LabelShort} tears the constrictors off {Victim.LabelShort}!", new LookTargets(Victim), MessageTypeDefOf.PositiveEvent);
                     pawn.skills?.Learn(SkillDefOf.Melee, 200f);
                 }
             };

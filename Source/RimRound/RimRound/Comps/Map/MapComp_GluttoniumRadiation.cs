@@ -144,6 +144,7 @@ namespace RimRound.Comps
                         sources.Add(new RadSource { thing = t, radius = 5f, exposure = 0.015f, tickInterval = 200 });
                         break;
                     case "RR_BlobWall":
+                    case "RR_BurstFlesh":
                         sources.Add(new RadSource { thing = t, radius = 1.5f, exposure = 0.002f, tickInterval = 500 });
                         break;
                     case "RR_BlobWallMineable":

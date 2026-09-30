@@ -83,5 +83,6 @@
 		<li IfModActive="Ludeon.RimWorld.Royalty">1.6/ExternalMods/PersonaWeapons</li>
 		<li IfModActive="VanillaExpanded.VWENL">1.6/ExternalMods/NonLethalWeapons</li>
 		<li IfModActive="sarg.alphagenes">1.6/ExternalMods/AlphaGenes</li>
+		<li IfModActiveAll="Ludeon.RimWorld.Odyssey, Ludeon.RimWorld.Anomaly">1.6/ExternalMods/FeedeeFacility</li>
 	</v1.6>	
 </loadFolders>

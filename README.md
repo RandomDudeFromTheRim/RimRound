@@ -66,6 +66,34 @@ hunts the map, latches onto someone and pumps its load into them.
 - **Ghouls and void-touched pawns can't be burst by it** — they regenerate too fast, so it
   just keeps pumping until it runs dry. The coils fit each race's own body sprite.
 
+## Derelict Feedee Facility (Odyssey + Anomaly)
+A new **gravcore signal**: an ancient feedee facility whose feeding reactor runs on a
+gravcore. Its bound gorge constrictors got loose and bred, and the whole place is infested.
+
+- **Feeding reactor** — the gravcore is in it: hack it, or burst it (it floods the room with
+  slurry and fattening gas). Until then it leaks a **void surge** over the site.
+- **Brood constrictors** — the constrictors' feral offspring: smaller, slower on their feet,
+  and they pump about 40% slower than a gorge constrictor, which gives others time to tear
+  them off. They carry less (700–1300 kg), but a heavy victim - or one latched onto again
+  and again - can still be pumped until they burst. They stay near their nests until someone
+  comes close. **Brood nests** keep hatching more; destroy them to stop the spread.
+- **Coiling in, and troikas** — a constrictor that reaches someone another one already holds
+  doesn't fight over them: it coils in beside the first and pumps too (more coils pump
+  faster). Three coils make a **troika**, bound to its host like Stellaris' voidworms: the
+  host can't struggle free, tearing it off takes much longer, and if the host bursts, a
+  brood nest takes root where they stood. Three idle constrictors that find each other can
+  also coil together into a free **constrictor troika** - a slow, braided mass carrying all
+  three loads, whose allure draws people to walk up to it (the psychically sensitive and
+  size-lovers most; drafting snaps them out of it). Broods, nests and troikas need only
+  Anomaly.
+- **Milk** — any constrictor (gorge, brood or bound) pumping a grown woman makes her gush
+  milk as it fills her, more the fuller she gets: Lactation Expansion's bottled breast milk,
+  or plain milk without it.
+- **Meld hunter drones** guard the halls: Odyssey hunter drones that burst in meld aerosol
+  instead of exploding. Researchable (hunter drones + meld aerosol) as a buildable trap.
+- **Sealed pods** hold the facility's residents, still asleep and very heavy; stores hold
+  void gluttonium, glut bricks, stretch serum, gluttonium meals and the odd constrictor lure.
+
 ## Ghoulish Lust (Anomaly)
 Fattened ghouls develop a **lust for their own size**, growing with their weight and
 peaking at Titanic: they **move faster** but **hit softer**, now and then lose

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <!-- the grav engine's scanner can pick up the derelict feedee facility's gravcore -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>/Defs/QuestScriptDef[defName="GravEngine"]/root/subquestDefs</xpath>
+    <value>
+      <li>RR_Gravcore_DerelictFeedeeFacility</li>
+    </value>
+  </Operation>
+
+</Patch>

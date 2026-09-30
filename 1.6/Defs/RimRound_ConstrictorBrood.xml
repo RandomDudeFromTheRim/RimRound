@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Constrictor broods, their nests, and troikas (Anomaly). The broods infest the derelict
+     feedee facility (ExternalMods/FeedeeFacility, Odyssey); a troika can form wherever three
+     constrictors meet, and a troika's host who bursts seeds a nest. -->
+<Defs>
+
+  <!-- ============================================================ constrictor broods -->
+
+  <!-- A gorge constrictor's brood: smaller, slower, pumps slower - but a whole infestation. -->
+  <ThingDef ParentName="BaseFleshbeast" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BroodConstrictor</defName>
+    <label>brood constrictor</label>
+    <description>A gorge constrictor bred in captivity and gone feral: smaller than the wild ones, slower, and never alone. A brood nests wherever it finds warmth and food, and every one of them is swollen with slurry.
+
+It hunts like its parents: it crawls onto someone, wraps itself around them and empties itself into them through a proboscis in their mouth - more slowly than a gorge constrictor, which gives others time to tear it off. It carries less, but a victim who is already heavy, or who is latched onto by one after another, can still be pumped until they burst. A woman being filled gushes milk, more the fuller she gets.
+
+Every wound it takes before it latches spills some of its load.</description>
+    <statBases>
+      <MoveSpeed>2.6</MoveSpeed>
+      <MinimumContainmentStrength>12</MinimumContainmentStrength>
+      <ToxicResistance>0.5</ToxicResistance>
+    </statBases>
+    <uiIconPath>Things/Pawn/RR_GorgeConstrictor/RR_GorgeConstrictor_MenuIcon</uiIconPath>
+    <race>
+      <body>Fingerspike</body>
+      <baseBodySize>0.35</baseBodySize>
+      <baseHealthScale>0.8</baseHealthScale>
+      <lifeExpectancy>10</lifeExpectancy>
+      <renderTree>Animal</renderTree>
+      <deathAction Class="DeathActionProperties_Vanish">
+        <workerClass>DeathActionWorker_Vanish</workerClass>
+        <filth>Filth_TwistedFlesh</filth>
+        <filthCountRange>1~2</filthCountRange>
+        <meatExplosionSize>Small</meatExplosionSize>
+      </deathAction>
+      <lifeStageAges>
+        <li>
+          <def>EntityFullyFormed</def>
+          <soundWounded>Pawn_Fleshbeast_Fingerspike_Wounded</soundWounded>
+          <soundDeath>Pawn_Fleshbeast_Fingerspike_Death</soundDeath>
+          <soundCall>Pawn_Fleshbeast_Fingerspike_Call</soundCall>
+        </li>
+      </lifeStageAges>
+    </race>
+    <comps>
+      <li Class="CompProperties_AttachPoints">
+        <points>
+          <li><offset>(-.18, 0, .18)</offset><type>PlatformRestraint0</type></li>
+          <li><offset>(.18, 0, .18)</offset><type>PlatformRestraint1</type></li>
+          <li><offset>(.18, 0, -.18)</offset><type>PlatformRestraint2</type></li>
+          <li><offset>(-.18, 0, -.18)</offset><type>PlatformRestraint3</type></li>
+        </points>
+      </li>
+      <li Class="CompProperties_Studiable">
+        <frequencyTicks>120000</frequencyTicks>
+        <knowledgeCategory>Basic</knowledgeCategory>
+        <minMonolithLevelForStudy>1</minMonolithLevelForStudy>
+        <anomalyKnowledge>1</anomalyKnowledge>
+        <requiresHoldingPlatform>true</requiresHoldingPlatform>
+      </li>
+      <li Class="CompProperties_ProducesBioferrite">
+        <bioferriteDensity>1</bioferriteDensity>
+      </li>
+      <!-- stays near its nest until someone comes close; slower pumping, smaller loads -->
+      <li Class="RimRound.Comps.CompProperties_RRConstrictorHunt">
+        <huntRadius>16</huntRadius>
+        <arrivalLoad>700~1300</arrivalLoad>
+        <pumpIntervalFactor>1.6</pumpIntervalFactor>
+        <drawScale>0.7</drawScale>
+      </li>
+    </comps>
+    <tools>
+      <li>
+        <label>grasping coils</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>2</power>
+        <cooldownTime>2.6</cooldownTime>
+        <linkedBodyPartsGroup>MiddleSpike</linkedBodyPartsGroup>
+        <alwaysTreatAsWeapon>true</alwaysTreatAsWeapon>
+        <extraMeleeDamages>
+          <li>
+            <def>RR_ConstrictorLatch</def>
+            <amount>1</amount>
+          </li>
+        </extraMeleeDamages>
+        <soundMeleeHit>Pawn_Fleshbeast_Attack_Blunt</soundMeleeHit>
+      </li>
+    </tools>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseFleshbeastKind" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BroodConstrictor</defName>
+    <label>brood constrictor</label>
+    <race>RR_BroodConstrictor</race>
+    <combatPower>35</combatPower>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Pawn/RR_GorgeConstrictor/RR_GorgeConstrictor</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.5</drawSize>
+        </bodyGraphicData>
+        <silhouetteGraphicData>
+          <texPath>Things/Pawn/RR_GorgeConstrictor/RR_GorgeConstrictor_MenuIcon</texPath>
+          <graphicClass>Graphic_Single</graphicClass>
+          <drawSize>1.1</drawSize>
+        </silhouetteGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- A brood nest: a mound of flesh studded with egg sacs. It keeps hatching broods. -->
+  <ThingDef ParentName="BuildingBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_ConstrictorBroodNest</defName>
+    <label>constrictor brood nest</label>
+    <description>A warm mound of flesh studded with translucent egg sacs, each curled around a growing brood constrictor. It hatches more every day or two, and the brood around it defends it. Destroy it to stop the infestation spreading.</description>
+    <graphicData>
+      <texPath>Things/Building/RR_ConstrictorBroodNest/RR_ConstrictorBroodNest</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2.4, 2.4)</drawSize>
+      <shadowData>
+        <volume>(1.6, 0.4, 1.4)</volume>
+      </shadowData>
+    </graphicData>
+    <size>(2, 2)</size>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <pathCost>100</pathCost>
+    <fillPercent>0.5</fillPercent>
+    <rotatable>false</rotatable>
+    <tickerType>Normal</tickerType>
+    <useHitPoints>true</useHitPoints>
+    <statBases>
+      <MaxHitPoints>260</MaxHitPoints>
+      <Flammability>0.6</Flammability>
+      <Beauty>-30</Beauty>
+    </statBases>
+    <building>
+      <isInert>true</isInert>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+      <repairable>false</repairable>
+      <expandHomeArea>false</expandHomeArea>
+    </building>
+    <killedLeavings>
+      <RR_VoidGluttonium>3</RR_VoidGluttonium>
+    </killedLeavings>
+    <filthLeaving>Filth_TwistedFlesh</filthLeaving>
+    <comps>
+      <li Class="CompProperties_SpawnerPawn">
+        <spawnablePawnKinds>
+          <li>RR_BroodConstrictor</li>
+        </spawnablePawnKinds>
+        <lordJob>LordJob_MechanoidsDefend</lordJob>
+        <defendRadius>10</defendRadius>
+        <shouldJoinParentLord>true</shouldJoinParentLord>
+        <!-- the first brood hatches once the site map exists (GenStep_RRFeedeeFacility), or when a troika host bursts -->
+        <initialPawnsCount>0</initialPawnsCount>
+        <maxSpawnedPawnsPoints>140</maxSpawnedPawnsPoints>
+        <pawnSpawnIntervalDays>1.5~2.5</pawnSpawnIntervalDays>
+        <showNextSpawnInInspect>true</showNextSpawnInInspect>
+      </li>
+    </comps>
+  </ThingDef>
+
+
+  <!-- ============================================================ the troika -->
+
+  <!-- Three constrictors coiled into one, bound for good (Comp_RRConstrictorHunt.TryMerge).
+       Slow, but its allure draws people to it; its host can't struggle free, and a host who
+       bursts seeds a brood nest. -->
+  <ThingDef ParentName="BaseFleshbeast" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_ConstrictorTroika</defName>
+    <label>constrictor troika</label>
+    <description>Three constrictors that found each other and coiled together into one creature, bound for good - like the voidworms that mate in threes, and need a host to breed. It is swollen with everything the three were carrying.
+
+It barely crawls, but it doesn't have to: it gives off a warm, heavy allure, and people who see it - more so the psychically sensitive, and those who love size - walk right up to it. It pumps whoever it wraps itself around much faster than one constrictor alone. If its host bursts, the troika's brood takes root where they stood.
+
+Every wound it takes before it latches spills some of its load. Tearing it off someone takes a long time.</description>
+    <statBases>
+      <MoveSpeed>1.6</MoveSpeed>
+      <MinimumContainmentStrength>40</MinimumContainmentStrength>
+      <ToxicResistance>0.6</ToxicResistance>
+      <PsychicSensitivity>1.5</PsychicSensitivity>
+    </statBases>
+    <uiIconPath>Things/Pawn/RR_ConstrictorTroika/RR_ConstrictorTroika_MenuIcon</uiIconPath>
+    <race>
+      <body>Fingerspike</body>
+      <baseBodySize>1.2</baseBodySize>
+      <baseHealthScale>2.4</baseHealthScale>
+      <lifeExpectancy>10</lifeExpectancy>
+      <renderTree>Animal</renderTree>
+      <deathAction Class="DeathActionProperties_Vanish">
+        <workerClass>DeathActionWorker_Vanish</workerClass>
+        <filth>Filth_TwistedFlesh</filth>
+        <filthCountRange>3~6</filthCountRange>
+        <meatExplosionSize>Normal</meatExplosionSize>
+      </deathAction>
+      <lifeStageAges>
+        <li>
+          <def>EntityFullyFormed</def>
+          <soundWounded>Pawn_Fleshbeast_Fingerspike_Wounded</soundWounded>
+          <soundDeath>Pawn_Fleshbeast_Fingerspike_Death</soundDeath>
+          <soundCall>Pawn_Fleshbeast_Fingerspike_Call</soundCall>
+        </li>
+      </lifeStageAges>
+    </race>
+    <comps>
+      <li Class="CompProperties_AttachPoints">
+        <points>
+          <li><offset>(-.3, 0, .3)</offset><type>PlatformRestraint0</type></li>
+          <li><offset>(.3, 0, .3)</offset><type>PlatformRestraint1</type></li>
+          <li><offset>(.3, 0, -.3)</offset><type>PlatformRestraint2</type></li>
+          <li><offset>(-.3, 0, -.3)</offset><type>PlatformRestraint3</type></li>
+        </points>
+      </li>
+      <li Class="CompProperties_Studiable">
+        <frequencyTicks>120000</frequencyTicks>
+        <knowledgeCategory>Advanced</knowledgeCategory>
+        <minMonolithLevelForStudy>1</minMonolithLevelForStudy>
+        <anomalyKnowledge>3</anomalyKnowledge>
+        <requiresHoldingPlatform>true</requiresHoldingPlatform>
+      </li>
+      <li Class="CompProperties_ProducesBioferrite">
+        <bioferriteDensity>4</bioferriteDensity>
+      </li>
+      <!-- its load is the three loads added up at the merge; three coils at once -->
+      <li Class="RimRound.Comps.CompProperties_RRConstrictorHunt">
+        <huntRadius>6</huntRadius>
+        <arrivalLoad>2400~3600</arrivalLoad>
+        <pumpIntervalFactor>0.9</pumpIntervalFactor>
+        <drawScale>1.35</drawScale>
+        <coils>3</coils>
+        <canMerge>false</canMerge>
+      </li>
+      <li Class="RimRound.Comps.CompProperties_RRTroikaAllure" />
+    </comps>
+    <tools>
+      <li>
+        <label>grasping coils</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>4</power>
+        <cooldownTime>2.4</cooldownTime>
+        <linkedBodyPartsGroup>MiddleSpike</linkedBodyPartsGroup>
+        <alwaysTreatAsWeapon>true</alwaysTreatAsWeapon>
+        <extraMeleeDamages>
+          <li>
+            <def>RR_ConstrictorLatch</def>
+            <amount>1</amount>
+          </li>
+        </extraMeleeDamages>
+        <soundMeleeHit>Pawn_Fleshbeast_Attack_Blunt</soundMeleeHit>
+      </li>
+    </tools>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseFleshbeastKind" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_ConstrictorTroika</defName>
+    <label>constrictor troika</label>
+    <race>RR_ConstrictorTroika</race>
+    <combatPower>150</combatPower>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Pawn/RR_ConstrictorTroika/RR_ConstrictorTroika</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.5</drawSize>
+        </bodyGraphicData>
+        <silhouetteGraphicData>
+          <texPath>Things/Pawn/RR_ConstrictorTroika/RR_ConstrictorTroika_MenuIcon</texPath>
+          <graphicClass>Graphic_Single</graphicClass>
+          <drawSize>2.2</drawSize>
+        </silhouetteGraphicData>
+      </li>
+    </lifeStages>
+  </PawnKindDef>
+
+  <!-- drawn in by a troika's allure (Comp_RRTroikaAllure) -->
+  <JobDef>
+    <defName>RR_DrawnToTroika</defName>
+    <driverClass>RimRound.AI.JobDriver_RRDrawnToTroika</driverClass>
+    <reportString>drawn toward TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
+</Defs>

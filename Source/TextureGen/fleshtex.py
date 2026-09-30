@@ -1177,6 +1177,171 @@ def slime_cocoon(size=128):
     return to_image(rgb, outline, size)
 
 
+# ------------------------------------------------------------------ constrictor brood nest
+def brood_nest(size=256):
+    """A constrictor brood's nest: a low mound of merged flesh studded with glossy,
+    translucent egg sacs, each with the dark curl of a brood constrictor inside."""
+    n = size * SS
+    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
+    px, py = (x - n / 2) / n, (y - n / 2) / n
+    wob = periodic_noise(n, 311, ((4, 1.0), (7, 0.5)))
+    rng = np.random.default_rng(5)
+    lumps = [(0.0, 0.04, 0.13, 1.25, 0.0)]
+    for i in range(11):
+        ang = i / 11 * TAU + rng.uniform(-0.2, 0.2)
+        rad = rng.uniform(0.16, 0.24)
+        lumps.append((np.cos(ang) * rad, np.sin(ang) * rad * 0.8 + 0.05,
+                      rng.uniform(0.07, 0.1), rng.uniform(1.0, 1.4), ang))
+    rgb, alpha = _flesh_mass(px, py, n, lumps, wob)
+    # egg sacs, back to front so the nearer ones overlap
+    sacs = [(-0.16, -0.12, 0.085), (0.13, -0.14, 0.08), (0.0, -0.02, 0.1),
+            (-0.22, 0.08, 0.075), (0.2, 0.06, 0.08), (0.04, 0.16, 0.085)]
+    for sx, sy, sr in sorted(sacs, key=lambda s: s[1]):
+        d = np.sqrt(((px - sx) / sr) ** 2 + ((py - sy) / (sr * 0.92)) ** 2)
+        edge = np.clip((1.12 - d) * sr * n / 1.5, 0, 1)
+        fill = np.clip((1 - d) * sr * n / 1.5, 0, 1)
+        lit = np.clip(0.8 - ((px - sx + sr * 0.35) ** 2 + (py - sy + sr * 0.4) ** 2) / (sr * sr) * 0.9, 0, 1)
+        sac = lerp((196, 132, 150), (246, 206, 214), lit)
+        # the brood curled inside: a dark comma shape, seen through the membrane
+        ang = np.arctan2(py - sy, px - sx)
+        rr = np.sqrt((px - sx) ** 2 + (py - sy) ** 2) / sr
+        curl = np.clip(1 - np.abs(rr - (0.35 + 0.18 * (ang + np.pi) / TAU)) / 0.14, 0, 1) * ((ang + np.pi) / TAU > 0.15)
+        sac = lerp(sac, (112, 58, 72), curl * 0.7)
+        # wet highlight
+        hl = np.sqrt((px - sx + sr * 0.38) ** 2 + (py - sy + sr * 0.42) ** 2) / (sr * 0.22)
+        sac = lerp(sac, (255, 244, 248), np.clip((1 - hl) * 3, 0, 1))
+        rgb = lerp(rgb, CON_OUTLINE, edge)
+        rgb = lerp(rgb, sac, fill)
+        alpha = np.maximum(alpha, edge)
+    return to_image(rgb, alpha, size)
+
+
+# ------------------------------------------------------------------ constrictor troika
+def constrictor_troika(size=256, facing='south', strands_n=3):
+    """Three gorge constrictors wound round each other into one thick braided rope, heads
+    together at the front: a real three-strand twist in 3D, so each body passes over and
+    under the others (every pixel shows whichever body is nearest). Each body is lumpy and
+    swollen with its load; near the front the three splay a little apart so their lamprey
+    mouths sit side by side, and the tails taper together at the back.
+    south: head-on, the rope receding up the screen; east: side on, heads at the right;
+    north: from behind (west mirrors east)."""
+    n = size * SS
+    y, x = np.mgrid[0:n, 0:n].astype(np.float32)
+    px, py = (x - n / 2) / n, (y - n / 2) / n
+    wob = periodic_noise(n, 419, ((3, 1.0), (7, 0.5)))
+    L = (-0.45, -0.55, 0.7)
+    base, lit_c, dark = (150, 96, 98), (196, 138, 134), (86, 50, 54)
+    taut = (212, 162, 156)
+    line = 0.018
+    fill = lambda sdf: np.clip(-sdf * n / 1.5, 0, 1)
+
+    # the rope in its own frame: a runs along it (0 tail .. 1 heads), the strands wind round it
+    # in the cross-section plane (p across, h up)
+    if facing == 'east':
+        length, a0 = 0.78, -0.4
+    else:
+        length, a0 = 0.58, -0.33
+
+    def project(a, pc, h):
+        """rope frame -> screen x, screen y, depth (bigger = nearer the camera)."""
+        if facing == 'east':
+            gx, gs = a, pc                                      # rope along screen x; across = toward the camera
+        elif facing == 'north':
+            gx, gs = -pc, -a                                    # rope going away from the camera, heads far
+        else:
+            gx, gs = pc, a                                      # rope coming toward the camera, heads near
+        return gx, gs * 0.72 - h * 0.62 + 0.04, h * 0.85 + gs * 0.55
+
+    strands = []
+    twists = 1.6
+    for i in range(strands_n):
+        ss = np.linspace(0, 1, 110)
+        phase = TAU * i / strands_n
+        pts = []
+        radii = []
+        for s_ in ss:
+            # the three splay apart toward the heads, and pinch together at the tail
+            spread = 0.072 + 0.035 * np.clip((s_ - 0.72) / 0.28, 0, 1) - 0.04 * np.clip((0.2 - s_) / 0.2, 0, 1)
+            ph = phase + TAU * twists * min(s_, 0.86)            # the heads stop winding and sit side by side
+            a = a0 + length * s_
+            pc, h = np.cos(ph) * spread, np.sin(ph) * spread + 0.04
+            pts.append(project(a, pc, h))
+            # lumpy and swollen along the body, tapered to the tail, a short neck to the mouth
+            lump = 0.68 + 0.55 * max(0.0, np.sin(TAU * 3.2 * s_ + i * 2.3)) ** 0.8
+            r = 0.082 * lump * np.clip(s_ / 0.18, 0.25, 1)
+            if s_ > 0.9:
+                r *= 1 - (s_ - 0.9) * 1.6
+            radii.append(r)
+        spine = [(p[0], p[1]) for p in pts]
+        zs = np.array([p[2] for p in pts], np.float32)
+        u = ss.astype(np.float32)
+        d, t_of, lit = _tube(px, py, spine, radii, L)
+        d = d + 0.007 * (wob - 0.5)
+        z = np.interp(t_of, u, zs)
+        rad = np.interp(t_of, u, np.array(radii, np.float32))
+        swell = np.clip((rad - 0.065) / 0.035, 0, 1)
+        col = lerp(base, lit_c, np.clip(lit, 0, 1))
+        col = lerp(col, dark, np.clip(-lit * 1.2 + 0.2, 0, 1))
+        col = lerp(col, taut, np.clip(lit, 0, 1) * swell * 0.45)  # stretched shiny over the load
+        seg = np.clip(1 - np.abs(np.sin(t_of * np.pi * 18 + i)) / 0.12, 0, 1) * fill(d + 0.018)
+        col = lerp(col, dark, seg * 0.55)
+        shine = np.clip((lit - 0.78) * 6, 0, 1) * swell
+        col = lerp(col, (236, 196, 190), shine * 0.7)
+        strands.append((d, z, col, spine, zs, radii))
+
+    # composite back to front by depth, pixel by pixel
+    ds = np.stack([s_[0] for s_ in strands])
+    zz = np.stack([np.where(s_[0] < line, s_[1], -99) for s_ in strands])
+    cols = np.stack([s_[2] for s_ in strands])
+    order = np.argsort(zz, axis=0)
+    rgb = np.zeros((n, n, 3), np.float32)
+    rgb[:] = CON_OUTLINE
+    alpha = np.zeros((n, n), np.float32)
+    top = np.full((n, n), -1)
+    for r in range(strands_n):
+        sel = order[r]
+        d = np.take_along_axis(ds, sel[None], 0)[0]
+        col = np.take_along_axis(cols, sel[None, ..., None].repeat(3, -1), 0)[0]
+        a_ = np.clip((line - d) * n / 1.5, 0, 1)
+        rgb = lerp(rgb, CON_OUTLINE, a_)
+        rgb = lerp(rgb, col, fill(d))
+        alpha = np.maximum(alpha, a_)
+        top = np.where(d < 0, sel, top)
+
+    # the three mouths at the front: round head-on, narrow ellipses side on, hidden from behind
+    if facing != 'north':
+        for i, (d, z, col, spine, zs, radii) in enumerate(strands):
+            hx, hy = spine[-3]
+            R = radii[-12] * 0.92
+            if facing == 'east':
+                hx += R * 0.3
+                mr = np.sqrt(((px - hx) / (R * 0.42)) ** 2 + ((py - hy) / R) ** 2)
+            else:
+                mr = np.sqrt(((px - hx) / R) ** 2 + ((py - hy) / (R * 0.9)) ** 2)
+            mine = (top == i)
+            throat = lerp((140, 46, 58), (22, 5, 10), np.clip(1 - mr, 0, 1) ** 0.6)
+            rgb = lerp(rgb, CON_OUTLINE, np.clip((1.16 - mr) * R * n / 1.5, 0, 1) * mine)
+            rgb = lerp(rgb, throat, np.clip((1 - mr) * R * n / 1.5, 0, 1) * mine)
+            sq = 0.42 if facing == 'east' else 1.0
+            for k in range(9):
+                ang = TAU * k / 9
+                ex, ey = np.cos(ang), np.sin(ang)
+                tooth = _tapered(px, py, hx + ex * R * sq * 0.95, hy + ey * R * 0.95,
+                                 hx + ex * R * sq * 0.4, hy + ey * R * 0.4, 0.008, 0.001)
+                rgb = lerp(rgb, (238, 228, 212), fill(tooth) * (mr < 1) * mine)
+
+    # a shard in the backs that show on top
+    for i, (d, z, col, spine, zs, radii) in enumerate(strands):
+        k = int(len(spine) * (0.35 + 0.12 * i))
+        if (top[int((spine[k][1] + 0.5) * n) % n, int((spine[k][0] + 0.5) * n) % n] != i):
+            continue
+        sfill, sedge, scol = _shard(px, py, spine[k][0], spine[k][1] - radii[k] * 0.7, 0.1, n)
+        rgb = lerp(rgb, CON_OUTLINE, sedge)
+        rgb = lerp(rgb, scol, sfill)
+        alpha = np.maximum(alpha, np.maximum(sfill, sedge))
+    return to_image(rgb, alpha, size)
+
+
 # ------------------------------------------------------------------ feedees meme icon
 def feedees_icon(size=256):
     """Ideology meme icon for Feedees: a plump, heart-shaped belly with a soft
@@ -1316,5 +1481,17 @@ if __name__ == '__main__':
         sweet_slime(256, facing).save(f'{out}/RR_SweetSlime_{facing}.png')
     sweet_slime(256, 'south').save(f'{out}/RR_SweetSlime_MenuIcon.png')
     slime_cocoon().save(f'{out}/RR_SlimeCocoon.png')
+    # constrictor brood nest (goes to Textures/Things/Building/RR_ConstrictorBroodNest)
+    brood_nest().save(f'{out}/RR_ConstrictorBroodNest.png')
+    # constrictor troika (goes to Textures/Things/Pawn/RR_ConstrictorTroika; the menu icon is the south view)
+    for facing in ('south', 'east', 'north'):
+        constrictor_troika(256, facing).save(f'{out}/RR_ConstrictorTroika_{facing}.png')
+    constrictor_troika(256, 'south').save(f'{out}/RR_ConstrictorTroika_MenuIcon.png')
+    # latched with two or three coiled in: the braid riding behind the victim, side on
+    # (south and east) or across their back (north); goes to Textures/Things/Pawn/RR_GorgeConstrictor
+    for k, name in ((2, 'Pair'), (3, 'Troika')):
+        constrictor_troika(256, 'east', k).save(f'{out}/RR_ConstrictorRiding{name}_south.png')
+        constrictor_troika(256, 'east', k).save(f'{out}/RR_ConstrictorRiding{name}_east.png')
+        constrictor_troika(256, 'north', k).save(f'{out}/RR_ConstrictorRiding{name}_north.png')
     sweet_slime(128).save(f'{out}/RR_SweetSlime_Codex.png')
     silhouette(sweet_slime(128)).save(f'{out}/RR_SweetSlime_Silhouette.png')

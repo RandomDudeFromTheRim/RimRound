@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <ThingDef ParentName="BuildingBase">
+  <ThingDef ParentName="BuildingBase" Name="RR_BlobWallBase">
     <defName>RR_BlobWall</defName>
     <thingClass>Building</thingClass>
     <category>Building</category>
@@ -260,6 +260,23 @@ Pawns caught right on top of an eruption take the blast head-on: it soaks them i
       <li Class="CompProperties_Glower">
         <glowRadius>3.5</glowRadius>
         <glowColor>(230,90,170,0)</glowColor>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- What is left of someone who burst: their own flesh, coloured by their skin
+       (MeldBurstUtility sets the colour; the atlas is a greyscale copy of the blob wall's). -->
+  <ThingDef ParentName="RR_BlobWallBase">
+    <defName>RR_BurstFlesh</defName>
+    <label>burst flesh</label>
+    <description>What was left of someone who burst: a warm, heavy mound of their own flesh, still the colour of their skin. It throbs gently, as if it hasn't noticed.</description>
+    <graphicData>
+      <texPath>Things/Building/RR_BurstFlesh/RR_BurstFlesh_Atlas</texPath>
+      <shaderType>Cutout</shaderType>
+    </graphicData>
+    <comps>
+      <li>
+        <compClass>CompColorable</compClass>
       </li>
     </comps>
   </ThingDef>

@@ -35,6 +35,9 @@ namespace RimRound.Utilities
 
             Map map = pawn.Map;
             IntVec3 pos = pawn.Position;
+            // what bursts out of them is their own flesh, in their own skin
+            Color? skin = pawn.story != null ? pawn.story.SkinColor : (Color?)null;
+            ThingDef fleshDef = (skin.HasValue ? DefDatabase<ThingDef>.GetNamedSilentFail("RR_BurstFlesh") : null) ?? ThingDef.Named("RR_BlobWall");
 
             float weightSev = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight)?.Severity ?? 0.035f;
             float meldSev = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_MeldGrowth)?.Severity ?? 0f;
@@ -81,7 +84,9 @@ namespace RimRound.Utilities
                 if (!Rand.Chance(0.65f))
                     continue;
 
-                Thing wall = ThingMaker.MakeThing(ThingDef.Named("RR_BlobWall"));
+                Thing wall = ThingMaker.MakeThing(fleshDef);
+                if (skin.HasValue)
+                    wall.TryGetComp<CompColorable>()?.SetColor(skin.Value);
                 GenSpawn.Spawn(wall, cell, map, Rot4.North, WipeMode.Vanish);
                 spawned++;
             }
