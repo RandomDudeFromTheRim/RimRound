@@ -192,7 +192,7 @@ namespace RimRound.Comps
                 StomachGrowthTick();
 
                 if (GlobalSettings.burstingEnabled)
-                    RuptureStomachCheckTick();
+                    StomachStrainCheckTick();
             }
 
             if (parent.IsHashIntervalTick(60))
@@ -540,25 +540,34 @@ namespace RimRound.Comps
             return;
         }
 
-        public void RuptureStomachCheckTick()
+        /// <summary>
+        /// Past the hard limit the stomach doesn't rupture outright: it strains
+        /// (Hediff_RROverfilled), faster the further past it is, and every check may be the
+        /// one that ruptures it - likelier as the strain builds, certain at full strain.
+        /// Digest back under the limit first and the strain eases off.
+        /// </summary>
+        public void StomachStrainCheckTick()
         {
-            float severity = (CurrentFullness > 0 ? CurrentFullness / HardLimit : 0.01f);
+            float over = (CurrentFullness > 0 ? CurrentFullness / HardLimit : 0f) - 1f;
+            if (over <= 0f)
+                return;
 
-            if (severity > Defs.HediffDefOf.RimRound_Fullness.stages.Last().minSeverity)
-            {
-                float vomitChance = Values.RandomFloat(0, 1);
-                if (vomitChance >= 0.50)
-                    ((Pawn)parent).jobs.StartJob(
-                        JobMaker.MakeJob(RimWorld.JobDefOf.Vomit),
-                        JobCondition.InterruptForced,
-                        null, true, true, null, null, false, false);
+            Pawn pawn = (Pawn)parent;
+            int ticks = GlobalSettings.ticksPerHungerCheck.threshold;
+            float strain = Hediffs.Hediff_RROverfilled.StrainStomach(pawn, over, ticks);
+            if (strain < 1f && !Rand.Chance(Hediffs.Hediff_RROverfilled.RuptureChancePerCheck(strain, ticks)))
+                return;
 
-                RuptureStomach();
+            if (Rand.Chance(0.5f))
+                pawn.jobs.StartJob(
+                    JobMaker.MakeJob(RimWorld.JobDefOf.Vomit),
+                    JobCondition.InterruptForced,
+                    null, true, true, null, null, false, false);
 
-                CurrentFullness = SoftLimit * (1 - Values.RandomFloat(0.1f, 0.4f));
-            }
+            Hediffs.Hediff_RROverfilled.Release(pawn);
+            RuptureStomach();
 
-            return;
+            CurrentFullness = SoftLimit * (1 - Values.RandomFloat(0.1f, 0.4f));
         }
 
         public void StomachGrowthTick()

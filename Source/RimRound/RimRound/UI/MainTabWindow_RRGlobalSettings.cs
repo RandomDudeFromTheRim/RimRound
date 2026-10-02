@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimRound.Comps;
 using RimRound.Utilities;
 using RimWorld;
@@ -758,7 +758,6 @@ namespace RimRound.UI
             NumberFieldLabeledWithRect(globalMultipliersSettingsFieldRect, ref GlobalSettings.digestionRateMultiplier, numericFieldCount++, "RR_Mtw_GlobalDigestionRateMultiplierTitle", GameFont.Small, null, "RR_ToolTip_NumericPreferences_DigestionRateMultiplier");
             NumberFieldLabeledWithRect(globalMultipliersSettingsFieldRect, ref GlobalSettings.stomachElasticityMultiplier, numericFieldCount++, "RR_Mtw_GlobalStomachElasticityMultiplierTitle", GameFont.Small, null, "RR_ToolTip_NumericPreferences_StomachElasticityMultiplier");
             NumberFieldLabeledWithRect(globalMultipliersSettingsFieldRect, ref GlobalSettings.ticksPerHungerCheck, numericFieldCount++, "RR_Mtw_TicksPerHungerCheckTitle", GameFont.Small, null, "RR_ToolTip_NumericPreferences_TicksPerHungerCheck");
-            NumberFieldLabeledWithRect(globalMultipliersSettingsFieldRect, ref GlobalSettings.ticksPerBodyChangeCheck, numericFieldCount++, "RR_Mtw_TicksPerBodyChangeCheckTitle", GameFont.Small, null, "RR_ToolTip_NumericPreferences_TicksPerBodyChangeCheck");
             NumberFieldLabeledWithRect(globalMultipliersSettingsFieldRect, ref GlobalSettings.softLimitMuliplier, numericFieldCount++, "RR_Mtw_GlobalSoftLimitMultiplier", GameFont.Small, null, "RR_ToolTip_NumericPreferences_SoftLimitMultiplier");
             NumberFieldLabeledWithRect(globalMultipliersSettingsFieldRect, ref GlobalSettings.hardLimitMuliplier, numericFieldCount++, "RR_Mtw_GlobalHardLimitMultiplier", GameFont.Small, null, "RR_ToolTip_NumericPreferences_HardLimitMultiplier");
             NumberFieldLabeledWithRect(globalMultipliersSettingsFieldRect, ref GlobalSettings.minWeight, numericFieldCount++, "RR_Mtw_MinWeight", GameFont.Small, () => { CheckMaxMinThresholds(); }, "RR_ToolTip_NumericPreferences_MinWeight");

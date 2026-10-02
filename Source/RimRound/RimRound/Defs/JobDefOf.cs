@@ -11,7 +11,6 @@ namespace RimRound.Defs
     [DefOf]
     public static class JobDefOf
     {
-        public static JobDef RR_JD_StuffPrisoner;
         public static JobDef RR_PrisonerAttemptReduceReluctance;
         public static JobDef RR_CloseEncounter;
         public static JobDef RR_FondleAct;

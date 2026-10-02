@@ -92,7 +92,6 @@
 	<RR_Mtw_GlobalFullnessMultiplierTitle>Fullness gained multiplier</RR_Mtw_GlobalFullnessMultiplierTitle>
 	<RR_Mtw_GlobalStomachElasticityMultiplierTitle>Stomach elasticity multiplier</RR_Mtw_GlobalStomachElasticityMultiplierTitle>
 	<RR_Mtw_TicksPerHungerCheckTitle>Ticks per digestion calculation</RR_Mtw_TicksPerHungerCheckTitle>
-	<RR_Mtw_TicksPerBodyChangeCheckTitle>Ticks per body update check</RR_Mtw_TicksPerBodyChangeCheckTitle>
 	<RR_Mtw_GlobalHardLimitMultiplier>Hard limit multiplier</RR_Mtw_GlobalHardLimitMultiplier>
 	<RR_Mtw_GlobalSoftLimitMultiplier>Soft limit multiplier</RR_Mtw_GlobalSoftLimitMultiplier>
 	<RR_Mtw_GlobalBlobIntoBedThreshold>Min weight for blob bed</RR_Mtw_GlobalBlobIntoBedThreshold>
@@ -191,7 +190,7 @@
 
 	<RR_ToolTip_Preferences_ShowSpecialDebugSettings>Show debug settings used for debugging and racial support. Not recommended for most users.</RR_ToolTip_Preferences_ShowSpecialDebugSettings>
 	<RR_ToolTip_Preferences_ShowTattoosOnRRBodies>Use tattoos with RimRound sprites. The RimWorld's tattoos do not scale nicely and in general can look bad on RimRound body sprites. Recommended: Off</RR_ToolTip_Preferences_ShowTattoosOnRRBodies>
-	<RR_ToolTip_Preferences_BurstingEnabled>Allow pawns that eat over their hard limit to become severely injured. This can happen unintentionally and randomly. Recommended: Off</RR_ToolTip_Preferences_BurstingEnabled>
+	<RR_ToolTip_Preferences_BurstingEnabled>Allow pawns to burst. On: a stomach stuffed past its hard limit strains, and may rupture the longer it stays there; gorge constrictors pumping someone past their burst point may burst them; meld aerosol detonates. Off: nothing ruptures or bursts - a constrictor bursts itself at its victim's limit and lets go, and meld aerosol settles harmlessly.</RR_ToolTip_Preferences_BurstingEnabled>
 	<RR_ToolTip_Preferences_PreferDefaultClothingOverNaked>Use a fallback clothing sprite if no suitable match is found. RimRound does not have direct support for most vanilla clothing items and any modded ones. If disabled, pawns will be naked anytime they are wearing unsupported clothing. Recommended: On</RR_ToolTip_Preferences_PreferDefaultClothingOverNaked>
 	<RR_ToolTip_Preferences_AlternateHeadPlacement>Place pawn's heads in front of the body portion of their sprite if they are facing north. Sometimes can be buggy but may look more realistic for larger body sizes. Purely preference.</RR_ToolTip_Preferences_AlternateHeadPlacement>
 	<RR_ToolTip_Preferences_WeightOpinionsGiveMoodlets>Give mood buffs and debuffs for what a pawn's weight opinion is and how closely they are to their ideal body.</RR_ToolTip_Preferences_WeightOpinionsGiveMoodlets>
@@ -219,7 +218,6 @@
 	<RR_ToolTip_NumericPreferences_DigestionRateMultiplier>The rate at which pawns digest food is multiplied by this value. If you would like them to stay full for longer, you can lower this value.</RR_ToolTip_NumericPreferences_DigestionRateMultiplier>
 	<RR_ToolTip_NumericPreferences_StomachElasticityMultiplier>The rate at which a pawn's stomach expands when above the soft limit is multiplied by this value.</RR_ToolTip_NumericPreferences_StomachElasticityMultiplier>
 	<RR_ToolTip_NumericPreferences_TicksPerHungerCheck>The tick interval between digestion checks. A lower value will result in 'smoother' digestion but also potentially reduce performance.</RR_ToolTip_NumericPreferences_TicksPerHungerCheck>
-	<RR_ToolTip_NumericPreferences_TicksPerBodyChangeCheck>The tick interval between body update checks. If pawn sprites are not updating quick enough you can decrease this value. However, this may reduce performance.</RR_ToolTip_NumericPreferences_TicksPerBodyChangeCheck>
 	<RR_ToolTip_NumericPreferences_SoftLimitMultiplier>Global multiplier for pawn stomach capacity.</RR_ToolTip_NumericPreferences_SoftLimitMultiplier>
 	<RR_ToolTip_NumericPreferences_HardLimitMultiplier>Global multiplier for pawn extra stomach capacity. If you want to increase stomach capacity in general, change the soft limit multiplier instead.</RR_ToolTip_NumericPreferences_HardLimitMultiplier>
 	<RR_ToolTip_NumericPreferences_MinWeight>Pawns cannot lose weight below this value. This is in kilograms.</RR_ToolTip_NumericPreferences_MinWeight>

@@ -304,7 +304,8 @@ namespace RimRound.FeedOther
             AbilityDef siblingDef = Props.increase
                 ? FeedOtherDefOf.RR_DecreaseWeightOpinion
                 : FeedOtherDefOf.RR_IncreaseWeightOpinion;
-            Ability sibling = parent.pawn?.abilities?.GetAbility(siblingDef, false);
+            // role abilities aren't in the permanent list: look through the temporary ones too
+            Ability sibling = parent.pawn?.abilities?.GetAbility(siblingDef, true);
             if (sibling != null && sibling.CooldownTicksRemaining < SharedCooldownTicks)
             {
                 sibling.StartCooldown(SharedCooldownTicks);
@@ -410,27 +411,31 @@ namespace RimRound.FeedOther
         }
     }
 
+    /// <summary>
+    /// The persuasion abilities come with the Feedee ideoligion role now (its grantedAbilities),
+    /// not to every pawn. Pawns from older saves still carry them as permanent abilities:
+    /// strip those on spawn, so only whoever holds the role has them.
+    /// </summary>
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.SpawnSetup))]
-    public static class Pawn_SpawnSetup_GrantWeightOpinionShiftAbilities
+    public static class Pawn_SpawnSetup_StripLegacyWeightOpinionShiftAbilities
     {
         [HarmonyPostfix]
         public static void Postfix(Pawn __instance)
         {
-            if (__instance?.abilities == null ||
-                !__instance.RaceProps.Humanlike ||
-                __instance.TryGetComp<ThingComp_PawnAttitude>() == null)
+            Pawn_AbilityTracker tracker = __instance?.abilities;
+            if (tracker == null)
             {
                 return;
             }
 
-            if (FeedOtherDefOf.RR_IncreaseWeightOpinion != null)
+            if (FeedOtherDefOf.RR_IncreaseWeightOpinion != null && tracker.GetAbility(FeedOtherDefOf.RR_IncreaseWeightOpinion) != null)
             {
-                __instance.abilities.GainAbility(FeedOtherDefOf.RR_IncreaseWeightOpinion);
+                tracker.RemoveAbility(FeedOtherDefOf.RR_IncreaseWeightOpinion);
             }
 
-            if (FeedOtherDefOf.RR_DecreaseWeightOpinion != null)
+            if (FeedOtherDefOf.RR_DecreaseWeightOpinion != null && tracker.GetAbility(FeedOtherDefOf.RR_DecreaseWeightOpinion) != null)
             {
-                __instance.abilities.GainAbility(FeedOtherDefOf.RR_DecreaseWeightOpinion);
+                tracker.RemoveAbility(FeedOtherDefOf.RR_DecreaseWeightOpinion);
             }
         }
     }

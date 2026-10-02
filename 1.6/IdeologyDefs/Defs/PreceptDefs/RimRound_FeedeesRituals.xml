@@ -23,7 +23,7 @@
   <PreceptDef ParentName="PreceptRoleSingleBase">
     <defName>RR_IdeoRole_Feedee</defName>
     <label>feedee</label>
-    <description>The ideoligion's most cherished vessel: a believer who loves to grow, pampered, fed and worshipped by the faithful. The Feedee eats faster, is spared hauling, cleaning and mining, and can be worshipped at their bed once they are big enough.</description>
+    <description>The ideoligion's most cherished vessel: a believer who loves to grow, pampered, fed and worshipped by the faithful. The Feedee eats faster, is spared hauling, cleaning and mining, can sway how others feel about weight, and can be worshipped at their bed once they are big enough.</description>
     <iconPath>UI/Memes/RR_Feedees</iconPath>
     <nameMaker>NamerRoleRRFeedee</nameMaker>
     <displayOrderInImpact>90</displayOrderInImpact>
@@ -49,6 +49,11 @@
       <li>Cleaning</li>
       <li>Mining</li>
     </roleDisabledWorkTags>
+    <!-- the persuasion abilities belong to the Feedee alone -->
+    <grantedAbilities>
+      <li>RR_IncreaseWeightOpinion</li>
+      <li>RR_DecreaseWeightOpinion</li>
+    </grantedAbilities>
   </PreceptDef>
 
   <!-- ============================================================ feedee worship -->

@@ -7,7 +7,9 @@ using Verse;
 namespace RimRound.Hediffs
 {
     /// <summary>
-    /// Pumped past the burst point: the strain of it (severity 0..1). A constrictor that
+    /// Stretched past what the body can hold: the strain of it (severity 0..1). Two things
+    /// raise it. A stomach stuffed past its hard limit strains until it may rupture (see
+    /// FullnessAndDietStats_ThingComp.StomachStrainCheckTick). And a constrictor that
     /// keeps pumping someone past their burst point doesn't burst them outright - each pump
     /// adds strain and may be the one that does it, likelier and likelier as the strain
     /// builds (certain at full strain, about one Gelatinous tier past the point). If it stops
@@ -22,9 +24,12 @@ namespace RimRound.Hediffs
         public const int MaxStretched = 3;
 
         float peak;
+        /// <summary>Strained by a constrictor's pumping (not just a stuffed stomach): only that stretches the burst point.</summary>
+        bool pumped;
+        /// <summary>Ended by a rupture or a burst rather than easing off: no stretching for that.</summary>
+        bool gaveWay;
 
-        /// <summary>Adds a pump's worth of strain; returns the strain after it.</summary>
-        public static float Strain(Pawn p, float kilos, bool troika)
+        static Hediff_RROverfilled GetOrAdd(Pawn p)
         {
             var h = p.health.hediffSet.GetFirstHediffOfDef(Defs.HediffDefOf.RR_Overfilled) as Hediff_RROverfilled;
             if (h == null)
@@ -33,9 +38,46 @@ namespace RimRound.Hediffs
                 h.Severity = 0.001f;
                 p.health.AddHediff(h);
             }
+            return h;
+        }
+
+        /// <summary>Adds a pump's worth of strain; returns the strain after it.</summary>
+        public static float Strain(Pawn p, float kilos, bool troika)
+        {
+            var h = GetOrAdd(p);
+            h.pumped = true;
             h.Severity = Mathf.Min(1f, h.Severity + kilos / (KilosToFullStrain * Resilience(p, troika)));
             h.peak = Mathf.Max(h.peak, h.Severity);
             return h.Severity;
+        }
+
+        /// <summary>
+        /// Ticks a stomach this far past its hard limit (as a fraction of it) takes to reach
+        /// full strain, for a pawn of ordinary resilience: ten percent over takes about four
+        /// hours, thirty percent over a little more than one.
+        /// </summary>
+        const float StomachTicksToFullStrainAtTenPercent = 10000f;
+
+        /// <summary>Strain for a stomach <paramref name="over"/> past its hard limit, for <paramref name="ticks"/> ticks; returns the strain after it.</summary>
+        public static float StrainStomach(Pawn p, float over, int ticks)
+        {
+            var h = GetOrAdd(p);
+            h.Severity = Mathf.Min(1f, h.Severity + over * 10f * ticks / (StomachTicksToFullStrainAtTenPercent * Resilience(p, false)));
+            h.peak = Mathf.Max(h.peak, h.Severity);
+            return h.Severity;
+        }
+
+        /// <summary>Chance a straining stomach ruptures in a check covering <paramref name="ticks"/> ticks: rare at first, steeply likelier with strain.</summary>
+        public static float RuptureChancePerCheck(float strain, int ticks) => Mathf.Clamp01(0.03f * strain * strain * strain * ticks / 150f);
+
+        /// <summary>It gave way (a rupture, a burst): the strain is spent, with nothing stretched for it.</summary>
+        public static void Release(Pawn p)
+        {
+            if (p?.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RR_Overfilled) is Hediff_RROverfilled h)
+            {
+                h.gaveWay = true;
+                p.health.RemoveHediff(h);
+            }
         }
 
         /// <summary>
@@ -94,7 +136,7 @@ namespace RimRound.Hediffs
         {
             base.PostRemoved();
             // eased off without bursting: the body stays stretched for good
-            if (pawn == null || pawn.Dead || peak < 0.2f)
+            if (pawn == null || pawn.Dead || !pumped || gaveWay || peak < 0.2f)
                 return;
             Hediff s = pawn.health.hediffSet.GetFirstHediffOfDef(Defs.HediffDefOf.RR_StretchedBeyond);
             if (s == null)
@@ -116,6 +158,7 @@ namespace RimRound.Hediffs
         {
             base.ExposeData();
             Scribe_Values.Look(ref peak, "peak");
+            Scribe_Values.Look(ref pumped, "pumped");
         }
     }
 }

@@ -64,8 +64,8 @@
 		<li>1.6/ExternalMods/RimRoundExtraEvents</li>
 		
 		
+		<li IfModActive="Ludeon.RimWorld.Ideology">1.6/IdeologyDefs</li>
 		<!-- This is intentionally the 1.5 paths. Individual race support should be deprecated eventually in 1.6-->
-		<li IfModActive="Ludeon.RimWorld.Ideology">1.5/IdeologyDefs</li>
 		<li IfModActive="ArmoredAmpharos.Dogbolds">1.5/ExternalMods/DogboldRaceSupport</li>	
 		<li IfModActive="ArmoredAmpharos.Foxbolds">1.5/ExternalMods/FoxboldRaceSupport</li>	
 		<li IfModActive="Hauvega.EquiumsSeries.Equiums">1.5/ExternalMods/HorseRaceSupport</li>		

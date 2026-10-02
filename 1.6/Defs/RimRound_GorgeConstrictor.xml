@@ -278,7 +278,7 @@ Another pawn can tear it off, which is harder the fuller it still is. Alone, a v
   <HediffDef>
     <defName>RR_Overfilled</defName>
     <label>overfilled</label>
-    <description>Pumped past the point where this pawn should have burst. Every further pump strains them more, and any one of them may be the one that bursts them - likelier and likelier as the strain builds. If the pumping stops first, the strain eases over a few days, and their body stays stretched to hold it.</description>
+    <description>Stretched past what this body can hold. A stomach stuffed past its hard limit strains until it ruptures, unless it is digested back down in time. Pumped past their burst point by a constrictor, every further pump strains them more and any one may burst them. Either way it grows likelier as the strain builds, and the strain eases over a few days once it stops - and a body that held through a constrictor's pumping stays stretched to hold it.</description>
     <hediffClass>RimRound.Hediffs.Hediff_RROverfilled</hediffClass>
     <defaultLabelColor>(1, 0.45, 0.55)</defaultLabelColor>
     <isBad>true</isBad>

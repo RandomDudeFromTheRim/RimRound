@@ -79,6 +79,13 @@ namespace RimRound.Hediffs
 
         void TriggerMeldDetonation()
         {
+            if (!GlobalSettings.burstingEnabled)
+            {
+                // bursting is off: the meld runs out of room and settles into them instead
+                Messages.Message($"The meld in {pawn.LabelShort} has swollen as far as it can go. It settles, spent, into {pawn.Possessive()} body.", new LookTargets(pawn), MessageTypeDefOf.NeutralEvent);
+                pawn.health.RemoveHediff(this);
+                return;
+            }
             Utilities.MeldBurstUtility.BeginBurst(pawn);
         }
 

@@ -744,7 +744,7 @@ namespace RimRound.FeedOther
                 nutritionResult = 0f;
             }
 
-            Thing_Ingested_StomachBurstCheck.Postfix(fullness);
+            // past the hard limit the stomach strains on its own hunger-check tick
             return false;
         }
     }

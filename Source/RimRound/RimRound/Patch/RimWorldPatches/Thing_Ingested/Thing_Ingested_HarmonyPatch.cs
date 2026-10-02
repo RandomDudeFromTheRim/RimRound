@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimRound.Comps;
 using RimRound.Utilities;
 using RimWorld;
@@ -23,7 +23,6 @@ namespace RimRound.Patch
             {
                 PlaySloshIfBeer(__instance, comp);
                 Thing_Ingested_AddFullness.Postfix(__instance, __0, ref __result, comp);
-                Thing_Ingested_StomachBurstCheck.Postfix(comp);
             }
 
         }

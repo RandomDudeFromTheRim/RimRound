@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimRound.Comps;
 using RimRound.Utilities;
 using RimWorld;
@@ -16,13 +16,6 @@ namespace RimRound.Patch
     [HarmonyPatch(nameof(PawnCapacityUtility.CalculateCapacityLevel))]
     public class PawnCapacityUtility_CalculateCapacityLevel_AlterForPerksAndSooter
     {
-        public static bool Prefix(ref float __result, HediffSet diffSet, PawnCapacityDef capacity, List<PawnCapacityUtility.CapacityImpactor> impactors)
-        {
-            bool shouldSkipParentFunc = AlterMovementIfWearingScooter(ref __result, diffSet, capacity, impactors);
-            
-            return shouldSkipParentFunc;
-        }
-
         static void Postfix(ref float __result, HediffSet diffSet, PawnCapacityDef capacity, List<PawnCapacityUtility.CapacityImpactor> impactors) 
         {
             AlterConciousnessForPerks(ref __result, diffSet, capacity, impactors);
@@ -160,47 +153,6 @@ namespace RimRound.Patch
             }
 
             return;
-        }
-
-        private static bool AlterMovementIfWearingScooter(ref float __result, HediffSet diffSet, PawnCapacityDef capacity, List<PawnCapacityUtility.CapacityImpactor> impactors)
-        {
-
-            if (capacity == PawnCapacityDefOf.Moving)
-            {
-                Pawn pawn = diffSet?.pawn;
-
-                if (pawn is null)
-                    return true;
-
-                float scooterSpeed = 0.5f + 0.25f * pawn.TryGetComp<FullnessAndDietStats_ThingComp>()?.perkLevels.PerkToLevels?["RR_PracticalProblems_Title"] ?? 1;
-
-                if (!pawn.RaceProps.Humanlike || !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, PawnCapacityDefOf.Manipulation))
-                    return true;
-
-                if (PawnCapacityUtility.CalculateCapacityLevel(diffSet, PawnCapacityDefOf.Manipulation, impactors) < .10)
-                {
-                    __result = 0;
-                    return false;
-                }
-
-                if (capacity.zeroIfCannotBeAwake && !diffSet.pawn.health.capacities.CanBeAwake)
-                {
-                    return true;
-                }
-
-                if (IsAHumanlikePawn(pawn) && MobilityChairUtility.IsWearingAMobilityScooter(pawn))
-                {
-                    __result = scooterSpeed;
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        static bool IsAHumanlikePawn(Pawn p) 
-        {
-            return p != null && p.RaceProps.Humanlike;
         }
     }
 }

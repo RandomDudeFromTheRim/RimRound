@@ -21,9 +21,11 @@ namespace RimRound.Hediffs
     /// the victim still and pumps that load into them every few seconds, shrinking
     /// as it empties (drawn in five stages, biggest first). If the victim reaches
     /// their burst point - Gelatinous I, or a later Gelatinous tier for a pawn whose
-    /// stomach perks let them take more - before the load runs out, they swell for
-    /// a few seconds and burst, and the constrictor with them. If it runs dry first,
-    /// it drops off, a spent husk. Wounding it before it latches spills its load.
+    /// stomach perks let them take more - every further pump strains them
+    /// (Hediff_RROverfilled) and may burst them, and the constrictor with them. If it
+    /// runs dry first, it drops off, a spent husk. Wounding it before it latches spills
+    /// its load. With bursting turned off (GlobalSettings.burstingEnabled) nobody bursts:
+    /// at the burst point it's the constrictor that gives, and bursts on its own.
     ///
     /// A bound constrictor (leashed) works the same, but never bursts anyone: it lets
     /// go, sated, at the burst point, and its load is the feed it got in a vat.
@@ -64,7 +66,7 @@ namespace RimRound.Hediffs
         public float Load => load;
 
         /// <summary>A wild one that still holds enough to take them past their burst point, and is close to it.</summary>
-        public bool WillBurstSoon => bound == null && !bursting && !Unburstable(pawn) && load >= KilosToBurst(pawn) && KilosToBurst(pawn) <= 300f;
+        public bool WillBurstSoon => bound == null && !bursting && GlobalSettings.burstingEnabled && !Unburstable(pawn) && load >= KilosToBurst(pawn) && KilosToBurst(pawn) <= 300f;
 
         /// <summary>How much of what it latched with is still in it: 1 when it latches, 0 when spent.</summary>
         public float LoadFraction => startLoad <= 0f ? 0f : Mathf.Clamp01(load / startLoad);
@@ -225,7 +227,7 @@ namespace RimRound.Hediffs
             victim.health.AddHediff(h);
             victim.jobs?.StopAll();
 
-            bool enough = !unburstable && h.load >= KilosToBurst(victim);
+            bool enough = !unburstable && GlobalSettings.burstingEnabled && h.load >= KilosToBurst(victim);
             SoundDef.Named("RR_StomachGurgles_Heavy").PlayOneShot(new TargetInfo(victim.Position, map));
             if (unburstable)
             {
@@ -238,7 +240,7 @@ namespace RimRound.Hediffs
             Messages.Message(
                 enough
                     ? $"{Find.ActiveLanguageWorker.WithIndefiniteArticle(beast.def.label).CapitalizeFirst()} wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! It is carrying more than enough to burst {victim.ProObj()} - tear it off!"
-                    : $"{Find.ActiveLanguageWorker.WithIndefiniteArticle(beast.def.label).CapitalizeFirst()} wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! It has lost too much to burst {victim.ProObj()}, but it will empty everything it has left into {victim.ProObj()}.",
+                    : $"{Find.ActiveLanguageWorker.WithIndefiniteArticle(beast.def.label).CapitalizeFirst()} wraps itself around {victim.LabelShort} and forces its proboscis into {victim.Possessive()} mouth! It can't burst {victim.ProObj()}, but it will empty everything it has left into {victim.ProObj()}.",
                 new LookTargets(victim),
                 enough ? MessageTypeDefOf.ThreatBig : MessageTypeDefOf.NegativeEvent);
         }
@@ -309,13 +311,20 @@ namespace RimRound.Hediffs
                 Release(null, sated: true);
                 return;
             }
+            if (past && !GlobalSettings.burstingEnabled)
+            {
+                // bursting is off: she can't take any more, so it's the beast that gives
+                Messages.Message($"{pawn.LabelShort} can't hold any more - the {BeastLabel} swells past bearing instead, splits and bursts, letting {pawn.ProObj()} go!", new LookTargets(pawn), MessageTypeDefOf.PositiveEvent);
+                BurstFree();
+                return;
+            }
 
             float kilos = Mathf.Min(load, Mathf.Max(MinKilosPerPump, startLoad / PumpsToEmpty));
             load -= kilos;
             if (kilos > 0f)
             {
                 Utilities.HediffUtility.QueueWeightGain(pawn, kilos);
-                GushMilk(kilos);
+                FillMilk(kilos);
             }
             Severity = Mathf.Clamp(1f - LoadFraction, 0.01f, 1f);
 
@@ -340,42 +349,23 @@ namespace RimRound.Hediffs
                 SoundDef.Named("RR_StomachGurgles_Heavy").PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
         }
 
-        /// <summary>Kilos pumped into her per bottle of milk she gushes.</summary>
-        const float KilosPerBottle = 22f;
-
-        static ThingDef milkDef;
-        static bool milkLooked;
-
-        /// <summary>Lactation Expansion's breast milk (bottled), or plain milk without it.</summary>
-        static ThingDef MilkDef
-        {
-            get
-            {
-                if (!milkLooked)
-                {
-                    milkLooked = true;
-                    milkDef = DefDatabase<ThingDef>.GetNamedSilentFail("SEX_BreastMilk") ?? DefDatabase<ThingDef>.GetNamedSilentFail("Milk");
-                }
-                return milkDef;
-            }
-        }
+        /// <summary>Milk (nutrition) each kilo pumped into her turns into, at the start; up to twice that as she fills.</summary>
+        const float MilkPerKilo = 0.004f;
 
         /// <summary>
-        /// Pumped this full, a grown woman's breasts can't hold it: she gushes milk - more the
-        /// fuller she is - and it lands around her in bottles. Another reason to let it run.
+        /// Pumped this full, a grown woman's breasts swell with it: she starts lactating (or
+        /// keeps on), and part of every pump goes straight into her milk - more the fuller
+        /// she is, up to what her breasts can hold (Lactation Expansion's milk store, which
+        /// grows with her weight). Another reason to let it run.
         /// </summary>
-        void GushMilk(float kilos)
+        void FillMilk(float kilos)
         {
-            if (pawn.gender != Gender.Female || !pawn.RaceProps.Humanlike || !pawn.DevelopmentalStage.Adult() || MilkDef == null || !pawn.Spawned)
+            if (!pawn.Spawned || !RRLactationUtility.CanLactate(pawn))
                 return;
-            float bottles = kilos / KilosPerBottle * (0.6f + 0.8f * Severity);
-            int count = GenMath.RoundRandom(bottles);
-            if (count <= 0)
-                return;
-            Thing milk = ThingMaker.MakeThing(MilkDef);
-            milk.stackCount = count;
-            GenPlace.TryPlaceThing(milk, pawn.Position, pawn.Map, ThingPlaceMode.Near);
-            FleckMaker.ThrowDustPuffThick(pawn.DrawPos, pawn.Map, 0.8f, new Color(1f, 0.97f, 0.93f));
+            float spilled = RRLactationUtility.InduceAndFill(pawn, kilos * MilkPerKilo * (1f + Severity));
+            // what doesn't fit leaks out of her
+            if (spilled > 0f)
+                FleckMaker.ThrowDustPuffThick(pawn.DrawPos, pawn.Map, 0.8f, new Color(1f, 0.97f, 0.93f));
         }
 
         /// <summary>It has nothing left to give.</summary>
@@ -539,6 +529,31 @@ namespace RimRound.Hediffs
             return list;
         }
 
+        /// <summary>Bursting is off and she is full: the constrictor (and anything coiled in with it) bursts instead, and lets her go.</summary>
+        void BurstFree()
+        {
+            Map map = pawn.MapHeld;
+            IntVec3 at = pawn.PositionHeld;
+            List<Pawn> beasts = TakeJoined();
+            beasts.Add(constrictor);
+            constrictor = null;
+            if (pawn.health.hediffSet.hediffs.Contains(this))
+                pawn.health.RemoveHediff(this);
+            if (map == null)
+                return;
+            foreach (Pawn beast in beasts)
+            {
+                if (beast == null)
+                    continue;
+                if (Find.WorldPawns.Contains(beast))
+                    Find.WorldPawns.RemovePawn(beast);
+                if (beast.Destroyed || beast.Dead)
+                    continue;
+                GenSpawn.Spawn(beast, CellFinder.RandomClosewalkCellNear(at, map, 1), map);
+                BurstBeast(beast, map, at);
+            }
+        }
+
         static void KillSpent(Pawn beast, IntVec3 at, Map map)
         {
             if (Find.WorldPawns.Contains(beast))
@@ -653,6 +668,8 @@ namespace RimRound.Hediffs
                     return $"{left}\n{pawn.LabelShort} regenerates faster than it can burst {pawn.ProObj()}: it will pump until it runs dry.";
                 if (leashed)
                     return $"Bound: it will never burst anyone.\n{left}\nLets go on outgrowing: {BurstBodyType(pawn, ExtraTiers).defName.Substring(6).Replace('_', ' ')}";
+                if (!GlobalSettings.burstingEnabled)
+                    return $"{left} ({KilosToBurst(pawn):0} kg until {pawn.ProSubj()} can't hold any more).\nBursting is off: at that point the constrictor bursts instead, and lets go.\nTear it off - harder the fuller it still is.";
                 string verdict = PastBurstPoint(pawn)
                     ? $"Past their burst point: every pump strains them, and any one may burst them (strain {(pawn.health.hediffSet.GetFirstHediffOfDef(Defs.HediffDefOf.RR_Overfilled)?.Severity ?? 0f):P0})."
                     : load >= KilosToBurst(pawn)

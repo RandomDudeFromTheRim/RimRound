@@ -15,30 +15,8 @@ namespace RimRound.Comps
     {
         public static void PatchAll(HarmonyLib.Harmony harmony)
         {
-            // #1: Milk yield scales with weight stage
-            ModCompatibilityUtility.TryPatch(
-                harmony,
-                new ModPatchInfo("Lactation Expansion", "EuterpeMilkyTitfuck.WorkGiver_MilkSelf", "JobOnThing", MethodType.Normal),
-                new PatchCollection
-                {
-                    postfix = typeof(Comp_LactationIntegration).GetMethod("Postfix_MilkJob", BindingFlags.Static | BindingFlags.NonPublic)
-                });
-
-            ModCompatibilityUtility.TryPatch(
-                harmony,
-                new ModPatchInfo("Lactation Expansion", "EuterpeMilkyTitfuck.WorkGiver_WardenMilkPrisoner", "JobOnThing", MethodType.Normal),
-                new PatchCollection
-                {
-                    postfix = typeof(Comp_LactationIntegration).GetMethod("Postfix_MilkJob", BindingFlags.Static | BindingFlags.NonPublic)
-                });
-
-            ModCompatibilityUtility.TryPatch(
-                harmony,
-                new ModPatchInfo("Lactation Expansion", "EuterpeMilkyTitfuck.WorkGiver_DoctorMilkColonist", "JobOnThing", MethodType.Normal),
-                new PatchCollection
-                {
-                    postfix = typeof(Comp_LactationIntegration).GetMethod("Postfix_MilkJob", BindingFlags.Static | BindingFlags.NonPublic)
-                });
+            // #1 (milk yield by weight) is a stat part on SEX_LactationCapacity now:
+            // StatPart_LactationCapacityByWeight, patched in by RimRound_LactationCapacity.xml
 
             // #2: Weight opinion affects milking mood
             ModCompatibilityUtility.TryPatch(
@@ -74,39 +52,6 @@ namespace RimRound.Comps
                 {
                     postfix = typeof(Comp_LactationIntegration).GetMethod("Postfix_LactationRate", BindingFlags.Static | BindingFlags.NonPublic)
                 });
-        }
-
-        // #1: Multiply milk yield by weight stage
-        static void Postfix_MilkJob(ref Job __result, Pawn pawn)
-        {
-            if (__result is null || pawn is null)
-                return;
-
-            float mult = GetMilkYieldMultiplier(pawn);
-            if (mult <= 1f)
-                return;
-
-            FieldInfo countFI = typeof(Job).GetField("count", BindingFlags.Instance | BindingFlags.Public);
-            if (countFI is null)
-                return;
-
-            int originalCount = (int)countFI.GetValue(__result);
-            countFI.SetValue(__result, (int)(originalCount * mult));
-        }
-
-        static float GetMilkYieldMultiplier(Pawn pawn)
-        {
-            var weight = pawn.health?.hediffSet?.GetFirstHediffOfDef(Defs.HediffDefOf.RimRound_Weight);
-            if (weight is null || weight.Severity < 0.035f)
-                return 1;
-
-            if (weight.Severity < 0.09f) return 1.5f;
-            if (weight.Severity < 0.2f) return 2f;
-            if (weight.Severity < 0.43f) return 3f;
-            if (weight.Severity < 1f) return 5f;
-            if (weight.Severity < 3f) return 8f;
-            if (weight.Severity < 10f) return 12f;
-            return 15f;
         }
 
         // #2: Weight opinion affects milking mood + WeirdMilk (warden milking prisoner)

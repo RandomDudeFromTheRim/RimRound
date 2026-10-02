@@ -65,6 +65,12 @@ hunts the map, latches onto someone and pumps its load into them.
   the settings.
 - **Ghouls and void-touched pawns can't be burst by it** — they regenerate too fast, so it
   just keeps pumping until it runs dry. The coils fit each race's own body sprite.
+- **Past the burst point** a victim doesn't burst outright: every pump **strains** them,
+  and any one may burst them, likelier as the strain builds. Survive it (torn off or run
+  dry) and their body stays stretched, pushing the burst point further out.
+- **Bursting enabled** (RimRound settings) governs all of it. Off, nobody bursts: at its
+  victim's limit the constrictor bursts itself and lets go, and meld aerosol settles
+  harmlessly instead of detonating.
 
 ## Derelict Feedee Facility (Odyssey + Anomaly)
 A new **gravcore signal**: an ancient feedee facility whose feeding reactor runs on a
@@ -86,9 +92,9 @@ gravcore. Its bound gorge constrictors got loose and bred, and the whole place i
   three loads, whose allure draws people to walk up to it (the psychically sensitive and
   size-lovers most; drafting snaps them out of it). Broods, nests and troikas need only
   Anomaly.
-- **Milk** — any constrictor (gorge, brood or bound) pumping a grown woman makes her gush
-  milk as it fills her, more the fuller she gets: Lactation Expansion's bottled breast milk,
-  or plain milk without it.
+- **Milk** — any constrictor (gorge, brood or bound) pumping a grown woman **starts her
+  lactating** (Biotech) and pumps milk straight into her breasts as it fills her, more the
+  fuller she gets — with Lactation Expansion, into its milk store, ready to be milked.
 - **Meld hunter drones** guard the halls: Odyssey hunter drones that burst in meld aerosol
   instead of exploding. Researchable (hunter drones + meld aerosol) as a buildable trap.
 - **Sealed pods** hold the facility's residents, still asleep and very heavy; stores hold
@@ -121,6 +127,8 @@ A translucent pink stalker after Lobotomy Corporation's *Melting Love* — **nev
 - **Feedee** role (Obese or heavier) and a **worship** ritual at the feedee's bed: only
   weight-likers take part, offerings are fed to the feedee, quality scales with size.
   Weight-haters are set against the meme.
+- Only the Feedee can **sway how others feel about weight** (increase / decrease weight
+  opinion): the role grants the two persuasion abilities.
 - **Calling the seam** — a Feedees-only ritual that tears open a void seam instead of
   waiting for one.
 
@@ -132,6 +140,12 @@ A translucent pink stalker after Lobotomy Corporation's *Melting Love* — **nev
   on, or **ambush** mode when hostiles come into view.
 - **Stretch serum** (drug lab) — raises the soft fullness limit and stomach elasticity,
   stacking up to five doses.
+
+## Overfilling
+With **Bursting enabled**, a stomach stuffed past its hard limit no longer ruptures on the
+spot: it **strains** (the same strain a constrictor's pumping causes), faster the further
+past the limit it is, and may rupture the longer it stays there - certain at full strain.
+Digest back under the limit in time and the strain eases off over a few days.
 
 ## Meld, Bloat & Void Bioweapons (Anomaly)
 - **Meld disease**, **meld aerosol** shells and grenades (a pawn at full progression
@@ -214,7 +228,8 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
   seeing someone burst and commission guests.
 - **RimVore-2** — weight ↔ vore chance/capacity, digested-prey weight gain, AI.
 - **Intimacy series** — gluttonium ↔ `SEX_Intimacy`, shared feeding.
-- **Lactation Expansion** — milk scales with weight, opinion moods, spiked milk.
+- **Lactation Expansion** — milk capacity grows with weight (the same milk-by-weight
+  settings vanilla lactation and RJW milking use), opinion moods, spiked milk.
 - **Biological Warfare** — meld aerosol as a chemical-weapon family.
 - **Fur genes** (Biotech furskin, **Erin's Experiments** expies and other fur mods) — the
   fur coat now follows every RimRound body instead of vanishing: each body is redrawn as a
@@ -246,6 +261,10 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
 ---
 
 ## What's New
+- **The DeBloat update**: one strain mechanic for overfilling (stomach and constrictor),
+  one bursting switch for every burst, constrictor milk through lactation, the Feedee's
+  persuasion abilities, and dead code, non-functional settings and the core patches
+  FeedOther used to strip out at startup all removed.
 - **Gorge constrictor**: load-based fight-off, bursting, tearing off, binding research and
   ritual, the **constrictor vat** with mutations, study payoffs, codex entries; latched
   look redone (rides behind its victim, sized by what it holds; coils fit ratkin and

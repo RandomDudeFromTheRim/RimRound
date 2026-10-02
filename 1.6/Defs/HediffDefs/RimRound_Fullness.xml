@@ -122,7 +122,7 @@
 			<!--Stage 7-->
 			<li>
 				<minSeverity>1.00</minSeverity>
-				<label>Stomach Ruptured</label>
+				<label>Past bursting</label>
 				<lifeThreatening>true</lifeThreatening>
 				
 

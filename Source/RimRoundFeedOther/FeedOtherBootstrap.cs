@@ -19,16 +19,9 @@ namespace RimRound.FeedOther
         {
             Harmony harmony = new Harmony("RimRound.FeedOther");
 
-            RemoveFaultyBaseHoverchairPatches(harmony);
-            RemoveFaultyBaseNotRegalBedPatches(harmony);
             RemoveLegacyFoodNetworkPatches(harmony);
-            // Static-constructor ordering inside a multi-assembly mod is not a
-            // reliable contract. Repeat the targeted unpatch after startup so
-            // RRHarmony cannot re-install the old versions after this assembly.
             LongEventHandler.ExecuteWhenFinished(delegate
             {
-                RemoveFaultyBaseHoverchairPatches(harmony);
-                RemoveFaultyBaseNotRegalBedPatches(harmony);
                 ApplyFoodNetworkPatchMode(
                     FeedOtherMod.Settings.foodNetworkV2Enabled);
             });
@@ -57,26 +50,6 @@ namespace RimRound.FeedOther
                 JobDefOf.FeedPatient.driverClass =
                     typeof(JobDriver_FoodFeedPatientEatingSpeed);
             }
-        }
-
-        private static void RemoveFaultyBaseHoverchairPatches(Harmony harmony)
-        {
-            MethodInfo capacityMethod = AccessTools.Method(typeof(PawnCapacityUtility),
-                nameof(PawnCapacityUtility.CalculateCapacityLevel));
-            MethodInfo downedMethod = AccessTools.Method(typeof(Pawn_HealthTracker),
-                "MakeDowned");
-            MethodInfo postureMethod = AccessTools.Method(typeof(PawnUtility),
-                nameof(PawnUtility.GetPosture));
-
-            // Only the hoverchair parts: RimRound's perk capacity postfix and the
-            // heavy-pawn downed pose postfix live on the same methods and stay.
-            UnpatchRimRound(harmony, capacityMethod,
-                "PawnCapacityUtility_CalculateCapacityLevel_AlterForPerksAndSooter",
-                HarmonyPatchType.Prefix);
-            UnpatchRimRound(harmony, downedMethod,
-                "Pawn_HealthTracker_MakeDowned_DropHoverChair");
-            UnpatchRimRound(harmony, postureMethod,
-                "PawnUtility_GetPosture_AlterPostureIfWearingScooter");
         }
 
         /// <summary>
@@ -118,32 +91,6 @@ namespace RimRound.FeedOther
 
             foreach (HarmonyLib.Patch patch in matching)
                 harmony.Unpatch(original, patch.PatchMethod);
-        }
-
-        private static void RemoveFaultyBaseNotRegalBedPatches(Harmony harmony)
-        {
-            // RimRound's original 3x3-bed patches force one slot correctly,
-            // but both position postfixes always move the result east. Remove
-            // those three partial fixes before installing the complete,
-            // rotation-aware implementation from this assembly.
-            MethodInfo slotCount = AccessTools.PropertyGetter(
-                typeof(Building_Bed),
-                nameof(Building_Bed.SleepingSlotsCount));
-            MethodInfo sleepingSlot = AccessTools.Method(
-                typeof(Building_Bed),
-                nameof(Building_Bed.GetSleepingSlotPos),
-                new Type[] { typeof(int) });
-            MethodInfo footSlot = AccessTools.Method(
-                typeof(Building_Bed),
-                nameof(Building_Bed.GetFootSlotPos),
-                new Type[] { typeof(int) });
-
-            UnpatchRimRound(harmony, slotCount,
-                "Building_Bed_SleepingSlotsCount_AdjustForRRBed");
-            UnpatchRimRound(harmony, sleepingSlot,
-                "Building_Bed_GetSleepingSlotPos_AdjustForRRBed");
-            UnpatchRimRound(harmony, footSlot,
-                "Building_Bed_GetFootSlotPos_AdjustForRRBed");
         }
 
         private static void InstallHoverchairRenderPatch(Harmony harmony)

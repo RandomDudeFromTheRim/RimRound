@@ -137,7 +137,6 @@
     <Compile Include="FeedingTube\Utilities\FeedingTubeUtility.cs" />
     <Compile Include="FeedingTube\AI\AdvancedAutoFeeder\JobDriver_ListenToRadio.cs" />
     <Compile Include="FeedingTube\AI\AdvancedAutoFeeder\JoyGiver_ListenToRadio.cs" />
-    <Compile Include="RimRound\AI\HistoryAutoRecorderWorker_WeightPawns.cs" />
     <Compile Include="RimRound\AI\IngredientValueGetter_Gluttonium.cs" />
     <Compile Include="RimRound\AI\PlayWithBlob\JobDriver_PlayWithBlob.cs" />
     <Compile Include="RimRound\AI\PlayWithBlob\JoyGiver_PlayWithBlob.cs" />
@@ -175,8 +174,6 @@
     <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_WeightOpinion_Neutral.cs" />
     <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_WeightOpinion_NeutralMinus.cs" />
     <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_WeightOpinion_NeutralPlus.cs" />
-    <Compile Include="RimRound\Comps\Abilities\CompAbilityEffect_ConvertWeightOpinion.cs" />
-    <Compile Include="RimRound\Comps\Abilities\CompProperties_ConvertWeightOpinion.cs" />
     <Compile Include="RimRound\Comps\Buildings\CompProperties_AssignableToPawnModified.cs" />
     <Compile Include="RimRound\Comps\Buildings\CompProperties_RestingWeightGainMod.cs" />
     <Compile Include="RimRound\Comps\Buildings\Comp_AssignableToPawnModified.cs" />
@@ -206,10 +203,7 @@
     <Compile Include="RimRound\AI\HistoryAutoRecorderWorker_PawnWeight.cs" />
     <Compile Include="RimRound\IWeightStageChangedListener.cs" />
     <Compile Include="RimRound\Patch\HumanoidAlienRacesPatches\AlienRenderTreePatches_BodyGraphicForPrefix_ChangeSpritePath.cs" />
-    <Compile Include="RimRound\Patch\RimWorldPatches\BedFixPatches\Building-Bed_GetFootSlotPos_AdjustForRRBed.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\SaveCompat_ConvertRetiredFoodPipes.cs" />
-    <Compile Include="RimRound\Patch\RimWorldPatches\BedFixPatches\Building-Bed_GetSleepingSlotPos_AdjustForRRBed.cs" />
-    <Compile Include="RimRound\Patch\RimWorldPatches\BedFixPatches\Building-Bed_SleepingSlotsCount_AdjustForRRBed.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\GraphicalPatches\PawnRenderNodeWorker-Body_CanDrawNow_AdjustForShowBlanketSetting.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\HediffComp-Lactating_AddedNutritionPerDay_ChangeByBodyWeight.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\HistoryAutoRecorderGroup\HistoryAutoRecorderGroup_DrawGraph_CallChildMethod.cs" />
@@ -233,7 +227,6 @@
     <Compile Include="RimRound\Patch\RimWorldPatches\MenuPatches\ModSummaryWindow_DrawContents_RemoveRRFromTheOfficialContentList.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Page-ConfigureStartingPawns_PostOpen_WarnForCertainMods.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Pawn-MechanitorTracker_CanControlMechs_AllowMechControlForDownedPawnsInBed.cs" />
-    <None Include="RimRound\Patch\RimWorldPatches\DisabledPatches\PawnRenderer_DrawBodyApparel_AlterShellClothingIfNoRRSprite.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\PawnRenderer\PawnRenderer_RenderAsPack_DontRenderAsPackForCustomBodies.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\BodyPartDef_GetMaxHealth_AdjustMaxHPByWeight.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Clothing\PawnCapacityWorker-Eating_CalculateCapacityLevel_AlterForClothingBonuses.cs" />
@@ -245,9 +238,7 @@
     <Compile Include="RimRound\Patch\RimWorldPatches\GasPatches\Pawn_Tick_AddSupportForGas.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Pawn-ApparelTracker_Notify-ApparelRemoved_AddSupportForRRClothing.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Pawn-ApparelTracker_Notify-ApparelAdded_AddSupportForRRClothing.cs" />
-    <None Include="RimRound\Patch\RimWorldPatches\DisabledPatches\PawnRenderer_ShellFullyCoversHead_AlterShellClothingForRRBodies.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Perks\GenTemperature_PushHeat_AdjustForPerks.cs" />
-    <None Include="RimRound\Patch\RimWorldPatches\DisabledPatches\PawnRenderTree_ProcessApparel_DontIncludeHoverChairIfLayingDown.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\HediffSet_GetHungerRateFactor_AlterAccordingToSettings.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\HediffSet_GetRestFallFactor_AlterAccordingToSettings.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Perks\Hediff_CapMods_DisableCapModsForRRHediffsOptionally.cs" />
@@ -297,13 +288,11 @@
     <Compile Include="RimRound\Patch\RimWorldPatches\MenuPatches\Dialog-Options_DoUIOptions_ShowDropdownToChangeBGAlways.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\DietAIPatches\Need-Food_MalnutritionSeverityPerInterval_AdjustByPawnWeight.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\GraphicalPatches\Page-ConfigureStartingPawns_DoWindowContents_UpdateSprite.cs" />
-    <Compile Include="RimRound\Patch\RimWorldPatches\Pawn-HealthTracker_MakeDowned_DropHoverChair.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Perks\PawnCapacityUtility_CalculateCapacityLevel_AlterForPerksAndSooter.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\PawnGenerator\PawnGenerator_GenerateInitialHediffs_AddWeightHediffAndSetBodyType.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\PawnGenerator\PawnGenerator_GenerateBodyType_SetDefaultBodyType.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\PawnGenerator\PawnGenerator_GenerateTraits_AddWeightOpinions.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\PawnRenderer\PawnRenderer_BaseHeadOffsetAt_AdjustForOptionalNorthCustomSprites.cs" />
-    <Compile Include="RimRound\Patch\RimWorldPatches\GraphicalPatches\PawnUtility_GetPosture_AlterPostureIfWearingScooter.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\MenuPatches\Pawn_GetGizmos_AddRRGizmosForPrisoners.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\DietAIPatches\WorkGiver-Warden-DeliverFood_JobOnThing_AddExceptionForFattenInteraction.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Toils-LayDown_LayDown_AddRefreshToClothingWhenLayDownToil.cs" />
@@ -328,7 +317,6 @@
     <Compile Include="RimRound\Utilities\PatchOperationFindModPlusUltra.cs" />
     <Compile Include="RimRound\Utilities\PawnGeneratorUtility.cs" />
     <Compile Include="RimRound\Utilities\Perks.cs" />
-    <Compile Include="RimRound\Utilities\PrisonerUtility.cs" />
     <Compile Include="RimRound\Utilities\Resources.cs" />
     <Compile Include="RimRound\Utilities\RRGasType.cs" />
     <Compile Include="RimRound\Utilities\SoundUtility.cs" />
@@ -337,11 +325,9 @@
     <Compile Include="RimRound\Utilities\VoidMazeUtility.cs" />
     <Compile Include="RimRound\Incidents\IncidentWorker_VoidPortalOpens.cs" />
     <None Include="app.config" />
-    <Compile Include="RimRound\AI\PrisonerStuff\WorkGivers\WorkGiver_ForceFeedPrisoner.cs" />
     <Compile Include="RimRound\Comps\Food\CompProperties_FoodItems_NutritionDensity.cs" />
     <Compile Include="RimRound\Comps\Pawns\Debug_ThingComp.cs" />
     <Compile Include="RimRound\Comps\Food\ThingComp_FoodItems_NutritionDensity.cs" />
-    <Compile Include="RimRound\Comps\Pawns\ThingComp_GeneticDispositions.cs" />
     <Compile Include="RimRound\Comps\Pawns\ThingComp_PawnAttitude.cs" />
     <Compile Include="RimRound\Comps\WorldComp_SaveValues.cs" />
     <Compile Include="RimRound\Defs\ExpansionDefOf.cs" />
@@ -359,7 +345,6 @@
     <Compile Include="RimRound\Defs\JobDefOf.cs" />
     <Compile Include="RimRound\Defs\ThingDefOf.cs" />
     <Compile Include="RimRound\Hediffs\Fullness\Hediff_Fullness.cs" />
-    <Compile Include="RimRound\AI\PrisonerStuff\JobDrivers\JobDriver_StuffPrisoner.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\DietAIPatches\FeedPatientUtility_IsHungry_CheckForFullness.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\FoodUtility\FoodUtility_BestFoodSourceOnMap_AlterValidatorToCheckForFullness.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\GraphicalPatches\ApparelGraphicRecordGetter_TryGetGraphicApparel_UseTransparentImagesForBadTex.cs" />
@@ -384,7 +369,6 @@
     <Compile Include="RimRound\Patch\RimWorldPatches\DietAIPatches\JobGiver-GetFood_GetPriority_AdjustAIForDietMode.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\DietAIPatches\Need-Food_NutritionWanted_AdjustAIForDietMode.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Thing_Ingested\Thing_Ingested_HarmonyPatch.cs" />
-    <Compile Include="RimRound\Patch\RimWorldPatches\Thing_Ingested\Thing_Ingested_StomachBurstCheck.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\GraphicalPatches\JobDriver-LayDown_LayDownToil_UpdatePawnPortrait.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\PipeSystem_VEF_Fix.cs" />
     <Compile Include="RimRound\UI\Gizmos\HideCoversGizmo.cs" />
@@ -407,7 +391,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimRound\UI\Gizmos\WeightGizmo\WeightGizmo.cs" />
     <None Include=".editorconfig" />
-    <Compile Include="RimRound\AI\PrisonerStuff\WorkGivers\WorkGiver_StuffPrisoner.cs" />
     <Compile Include="RimRound\AI\InteractionWorker_Fondle.cs" />
     <Compile Include="RimRound\AI\InteractionWorker_Smother.cs" />
     <Compile Include="RimRound\AI\InteractionWorker_TailGrope.cs" />
@@ -441,6 +424,8 @@
     <Compile Include="RimRound\Comps\Things\CompTargetable_RRBoundConstrictor.cs" />
     <Compile Include="RimRound\Rituals\PsychicRitualDef_RRBindConstrictor.cs" />
     <Compile Include="RimRound\Rituals\FeedeesRituals.cs" />
+    <Compile Include="RimRound\AI\StatParts\StatPart_LactationCapacityByWeight.cs" />
+    <Compile Include="RimRound\Utilities\RRLactationUtility.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_RROverfilled.cs" />
     <Compile Include="RimRound\Comps\Pawns\Comp_RRTroikaAllure.cs" />
     <Compile Include="RimRound\Hediffs\DamageWorker_RRSlurryBurst.cs" />
