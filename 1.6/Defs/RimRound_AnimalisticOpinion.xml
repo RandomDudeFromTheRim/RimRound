@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- WeightOpinion.Extreme: above Fanatical. Nothing rolls it; it's what a mime
+       (RimRound.Mime) truly feels about its size, shown once it stops hiding. -->
+  <TraitDef>
+    <defName>RR_WeightOpinion_Animalistic_Trait</defName>
+    <commonality>0</commonality>
+    <degreeDatas>
+      <li>
+        <label>Weight Opinion: Animalistic</label>
+        <description>{PAWN_nameDef} doesn't think about weight - {PAWN_pronoun} feels it: an endless, animal hunger to fill and grow, with nothing human left to argue against it.</description>
+      </li>
+    </degreeDatas>
+    <exclusionTags>
+      <li>RR_Trait_WeightOpinion</li>
+    </exclusionTags>
+  </TraitDef>
+
+  <ThoughtDef>
+    <defName>RR_WeightOpinion_Animalistic</defName>
+    <workerClass>RimRound.AI.ThoughtWorker_WeightOpinion_Animalistic</workerClass>
+    <stages>
+      <li>
+        <label>Lithe</label>
+        <description>Not enough. Never enough.</description>
+        <baseMoodEffect>-60</baseMoodEffect>
+      </li>
+      <li>
+        <label>Lithe</label>
+        <description>Hungry. So hungry. Feed.</description>
+        <baseMoodEffect>-52.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Skinny</label>
+        <description>Too small. The hunger won't stop.</description>
+        <baseMoodEffect>-37.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Skinny</label>
+        <description>Too small. The hunger won't stop.</description>
+        <baseMoodEffect>-30</baseMoodEffect>
+      </li>
+      <li>
+        <label>Average Weight</label>
+        <description>Too small. The hunger won't stop.</description>
+        <baseMoodEffect>-22.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Average Weight</label>
+        <description>Small. Empty. Must eat.</description>
+        <baseMoodEffect>-15</baseMoodEffect>
+      </li>
+      <li>
+        <label>Chubby</label>
+        <description>Small. Empty. Must eat.</description>
+        <baseMoodEffect>-7.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Overweight</label>
+        <description>Small. Empty. Must eat.</description>
+        <baseMoodEffect>-7.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Fat</label>
+        <description>Small. Empty. Must eat.</description>
+        <baseMoodEffect>-7.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Obese</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>0</baseMoodEffect>
+      </li>
+      <li>
+        <label>Obese</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>6.25</baseMoodEffect>
+      </li>
+      <li>
+        <label>Barely mobile</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>12.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Barely mobile</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>12.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Immobile</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>18.75</baseMoodEffect>
+      </li>
+      <li>
+        <label>Immobile</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>18.75</baseMoodEffect>
+      </li>
+      <li>
+        <label>Massive</label>
+        <description>Fuller. Better. More.</description>
+        <baseMoodEffect>25</baseMoodEffect>
+      </li>
+      <li>
+        <label>Massive</label>
+        <description>Fuller. Better. More.</description>
+        <baseMoodEffect>25</baseMoodEffect>
+      </li>
+      <li>
+        <label>Blob</label>
+        <description>Fuller. Better. More.</description>
+        <baseMoodEffect>37.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Blob</label>
+        <description>Fuller. Better. More.</description>
+        <baseMoodEffect>37.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Gigantic</label>
+        <description>Heavy and warm. Good. More.</description>
+        <baseMoodEffect>50</baseMoodEffect>
+      </li>
+      <li>
+        <label>Colossal</label>
+        <description>Heavy and warm. Good. More.</description>
+        <baseMoodEffect>56.25</baseMoodEffect>
+      </li>
+      <li>
+        <label>Monstrous</label>
+        <description>So full. So big. Good.</description>
+        <baseMoodEffect>62.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Mountainous</label>
+        <description>So full. So big. Good.</description>
+        <baseMoodEffect>75</baseMoodEffect>
+      </li>
+      <li>
+        <label>Astronomical</label>
+        <description>Vast. Sated. ...More.</description>
+        <baseMoodEffect>81.25</baseMoodEffect>
+      </li>
+      <li>
+        <label>Transcendent</label>
+        <description>Vast. Sated. ...More.</description>
+        <baseMoodEffect>87.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Mythical</label>
+        <description>Vast. Sated. ...More.</description>
+        <baseMoodEffect>93.75</baseMoodEffect>
+      </li>
+      <li>
+        <label>Omnipresent</label>
+        <description>Vast. Sated. ...More.</description>
+        <baseMoodEffect>100</baseMoodEffect>
+      </li>
+      <li>
+        <label>Inconceivable</label>
+        <description>Vast. Sated. ...More.</description>
+        <baseMoodEffect>112.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Fat landscape</label>
+        <description>Vast. Sated. ...More.</description>
+        <baseMoodEffect>87.5</baseMoodEffect>
+      </li>
+      <li>
+        <label>Country-sized</label>
+        <description>Vast. Sated. ...More.</description>
+        <baseMoodEffect>93.75</baseMoodEffect>
+      </li>
+      <li>
+        <label>Deific</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>0</baseMoodEffect>
+      </li>
+      <li>
+        <label>Continental</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>0</baseMoodEffect>
+      </li>
+      <li>
+        <label>Hemispheric</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>0</baseMoodEffect>
+      </li>
+      <li>
+        <label>Planetary</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>0</baseMoodEffect>
+      </li>
+      <li>
+        <label>Catalysmic</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>0</baseMoodEffect>
+      </li>
+      <li>
+        <label>Apocalyptic</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>0</baseMoodEffect>
+      </li>
+      <li>
+        <label>Stellar</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>0</baseMoodEffect>
+      </li>
+      <li>
+        <label>Cosmic</label>
+        <description>More. Must have more.</description>
+        <baseMoodEffect>0</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+</Defs>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Alpha Animals' mime, the RimRound way (RimRound.Mime.HediffComp_RRMime): no more
+     turning into the mime creature - a mime that stops hiding becomes the RR_Mime
+     xenotype instead, happy if it was fed to Gelatinous I, feral if it was starved. -->
+<Patch>
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/HediffDef[defName="AA_MimeHediff"]/comps/li[@Class="AlphaBehavioursAndEvents.HediffCompProperties_Mime"]</xpath>
+    <value>
+      <li Class="RimRound.Mime.HediffCompProperties_RRMime">
+        <malnutritionTrigger>30</malnutritionTrigger>
+        <minToGetHungry>60000</minToGetHungry>
+        <maxToGetHungry>1800000</maxToGetHungry>
+      </li>
+    </value>
+  </Operation>
+</Patch>

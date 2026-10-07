@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A mime's true skin and face. Alpha Genes ships the art (AG_MimeBody fur, the AG_Mime
+     heads) but cut the gene that used it; RimRound's AG_MimeBody coats fit it to every
+     RimRound body. -->
+<Defs>
+
+  <GeneDef>
+    <defName>RR_MimeSkin</defName>
+    <label>mime skin</label>
+    <labelShortAdj>mime-skinned</labelShortAdj>
+    <description>Carriers of this gene have a mime's true body: dark, slick hide stretched over bone, a ribcage that shows through, and a bare skull of a face with burning red eyes.</description>
+    <iconPath>Things/Pawn/Humanlike/Heads/AG_Mime/AG_Male_Mime_Average_Normal_south</iconPath>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>401</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <selectionWeight>0</selectionWeight>
+    <fur>AG_MimeBody</fur>
+    <skinIsHairColor>false</skinIsHairColor>
+    <skinColorOverride>(225, 225, 225)</skinColorOverride>
+    <tattoosVisible>false</tattoosVisible>
+    <forcedHeadTypes>
+      <li>RR_Mime_Normal</li>
+      <li>RR_Mime_Pointy</li>
+      <li>RR_Mime_Narrow</li>
+    </forcedHeadTypes>
+    <hairTagFilter>
+      <whitelist>true</whitelist>
+      <tags>
+        <li>Bald</li>
+      </tags>
+    </hairTagFilter>
+    <beardTagFilter>
+      <whitelist>true</whitelist>
+      <tags>
+        <li>NoBeard</li>
+      </tags>
+    </beardTagFilter>
+    <exclusionTags>
+      <li>AG_Bodies</li>
+      <li>Bodies</li>
+      <li>Body</li>
+      <li>Fur</li>
+      <li>HairStyle</li>
+      <li>BeardStyle</li>
+    </exclusionTags>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_Fur</nodeClass>
+        <workerClass>PawnRenderNodeWorker_Fur</workerClass>
+        <baseLayer>5</baseLayer>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <colorType>Skin</colorType>
+        <parentTagDef>Body</parentTagDef>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
+
+  <HeadTypeDef ParentName="AverageBase">
+    <defName>RR_Mime_Normal</defName>
+    <graphicPath>Things/Pawn/Humanlike/Heads/AG_Mime/AG_Male_Mime_Average_Normal</graphicPath>
+    <randomChosen>false</randomChosen>
+    <gender>None</gender>
+    <requiredGenes>
+      <li>RR_MimeSkin</li>
+    </requiredGenes>
+    <selectionWeight>1</selectionWeight>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="AverageBase">
+    <defName>RR_Mime_Pointy</defName>
+    <graphicPath>Things/Pawn/Humanlike/Heads/AG_Mime/AG_Male_Mime_Average_Pointy</graphicPath>
+    <randomChosen>false</randomChosen>
+    <gender>None</gender>
+    <requiredGenes>
+      <li>RR_MimeSkin</li>
+    </requiredGenes>
+    <selectionWeight>1</selectionWeight>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="AverageBase">
+    <defName>RR_Mime_Narrow</defName>
+    <graphicPath>Things/Pawn/Humanlike/Heads/AG_Mime/AG_Male_Mime_Narrow_Normal</graphicPath>
+    <randomChosen>false</randomChosen>
+    <gender>None</gender>
+    <requiredGenes>
+      <li>RR_MimeSkin</li>
+    </requiredGenes>
+    <selectionWeight>1</selectionWeight>
+  </HeadTypeDef>
+
+</Defs>

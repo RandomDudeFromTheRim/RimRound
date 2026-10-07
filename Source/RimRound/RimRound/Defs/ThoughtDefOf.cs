@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,7 @@ namespace RimRound.Defs
         public static ThoughtDef RR_WeightOpinion_Like;
         public static ThoughtDef RR_WeightOpinion_Love;
         public static ThoughtDef RR_WeightOpinion_Fanatical;
+        public static ThoughtDef RR_WeightOpinion_Animalistic;
         public static ThoughtDef RR_FondledHate;
         public static ThoughtDef RR_FondledDislike;
         public static ThoughtDef RR_FondledNeutral;

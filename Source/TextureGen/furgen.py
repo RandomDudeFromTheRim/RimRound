@@ -53,6 +53,27 @@ def mesh_for(name):
     return MESH.get(m.group(1), 1.0) if m else 1.0
 
 
+_HEAD_Z = None
+
+
+def head_z_for(name):
+    """The body type's head height (headOffset z, world units), from its BodyTypeDef."""
+    global _HEAD_Z
+    if _HEAD_Z is None:
+        _HEAD_Z = {}
+        folder = os.path.join(ROOT, "1.6", "Defs", "BodyTypeDefs", "Base")
+        for f in os.listdir(folder):
+            s = open(os.path.join(folder, f), encoding="utf-8").read()
+            for d, z in re.findall(r"<defName>([^<]+)</defName>\s*<headOffset>\([^,]+,\s*([^)]+)\)", s):
+                _HEAD_Z[d] = float(z)
+    m = re.match(r"Naked_([FM]_\d{3})a?_([A-Za-z]+?)(?:Alt|New|Old)?_(?:south|east|north)\.png$", name)
+    return _HEAD_Z.get(f"{m.group(1)}_{m.group(2)}") if m else None
+
+
+# vanilla Fat (the body other mods' fur sprites are drawn for): head 0.34 above centre
+VANILLA_HEAD_Z = 0.34
+
+
 def grow(mask_img, px):
     """Dilate (px > 0) or erode (px < 0) an L-mode mask by about |px| pixels."""
     f = ImageFilter.MaxFilter if px > 0 else ImageFilter.MinFilter
@@ -133,7 +154,7 @@ def furify(src, style, mesh, rng):
     return out
 
 
-def furify_sampled(src, mesh, ref, rng, outline=0.046, mode="scatter", res=MAX_RES):
+def furify_sampled(src, mesh, ref, rng, outline=0.046, mode="scatter", res=MAX_RES, head_z=None):
     """
     A coat for another mod's fur, built from its own texture (ref, the fur's sprite
     for a vanilla body):
@@ -180,16 +201,34 @@ def furify_sampled(src, mesh, ref, rng, outline=0.046, mode="scatter", res=MAX_R
         ys, xs = np.nonzero(src_box)
         if len(xs) == 0:
             return None
-        by, bx = np.nonzero(inner)
+        region = inner
+        if head_z is not None:
+            # the sprite starts at the shoulders, a set drop below the head; on big
+            # RimRound bodies flesh rises well above that (behind the head), and
+            # stretching the sprite up into it put the chest above the head. Lay it
+            # from this body's shoulders down instead, and leave the rest plain.
+            drop = VANILLA_HEAD_Z - (r.shape[0] / 2 - ys.min()) / rpx
+            neck = int(round(n / 2 - (head_z - drop) * px))
+            below = np.zeros_like(inner)
+            below[max(neck, 0):] = True
+            if (inner & below).sum() > 20:
+                region = inner & below
+        by, bx = np.nonzero(region)
         crop = Image.fromarray((r[ys.min():ys.max() + 1, xs.min():xs.max() + 1] * 255).astype(np.uint8), "RGBA")
         w, h = bx.max() - bx.min() + 1, by.max() - by.min() + 1
         st = np.zeros((n, n, 4), np.float32)
         st[by.min():by.min() + h, bx.min():bx.min() + w] = np.asarray(crop.resize((w, h), Image.BICUBIC), np.float32) / 255
+        if region is not inner:
+            # fade the sprite's top edge (its shoulder line) into the plain flesh above
+            ramp = max(3, int(h * 0.12))
+            fade = np.clip((np.arange(n) - by.min()) / ramp, 0, 1)
+            st[..., 3] *= fade[:, None]
         if mode == "marks":
             st[..., 3] *= body
             st[..., :3] *= (0.8 + 0.2 * shade)[..., None]
             return Image.fromarray((np.clip(st, 0, 1) * 255).astype(np.uint8), "RGBA")
-        col = np.where((st[..., 3] > 0.5)[..., None], st[..., :3], base)
+        a = np.clip(st[..., 3], 0, 1)[..., None]
+        col = st[..., :3] * a + base * (1 - a)
     else:
         # patches: a third of the sprite torso across, resampled to our scale
         ys, xs = np.nonzero(rin)
@@ -278,7 +317,8 @@ def generate_alpha_genes(only=None):
             if refs.get(rot) is None:
                 continue
             rng = np.random.default_rng(zlib.crc32(f"{fur}/{f}".encode()))
-            out = furify_sampled(Image.open(os.path.join(BODIES, f)), mesh_for(f), refs[rot], rng, mode=mode, res=256)
+            out = furify_sampled(Image.open(os.path.join(BODIES, f)), mesh_for(f), refs[rot], rng, mode=mode, res=256,
+                                 head_z=head_z_for(f))
             if out is not None:
                 # a palette keeps 14 furs x every body to a sane download size
                 out.quantize(colors=96, method=Image.Quantize.FASTOCTREE).save(os.path.join(dest, f), optimize=True)

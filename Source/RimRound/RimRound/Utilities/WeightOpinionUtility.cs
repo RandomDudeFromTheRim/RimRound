@@ -1,4 +1,4 @@
-﻿using RimRound.Comps;
+using RimRound.Comps;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -13,14 +13,26 @@ namespace RimRound.Utilities
     {
         public static bool HasAnyWeightOpinionTrait(Pawn pawn)
         {
-            foreach (var x in traitAndCommonalityPair)
+            foreach (Trait t in pawn.story.traits.allTraits)
             {
-                if (pawn.story.traits.HasTrait(x.Key))
+                if (t.def.exclusionTags.Contains("RR_Trait_WeightOpinion"))
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// The opinion others see, and the one its mood follows: the pawn's own, except a
+        /// concealed mime, which is Animalistic (Extreme) underneath but passes for Fanatical.
+        /// </summary>
+        public static WeightOpinion DisplayedOpinion(Pawn pawn)
+        {
+            WeightOpinion o = pawn?.TryGetComp<ThingComp_PawnAttitude>()?.weightOpinion ?? WeightOpinion.None;
+            if (o == WeightOpinion.Extreme && Mime.RRMimeUtility.IsConcealed(pawn))
+                return WeightOpinion.Fanatical;
+            return o;
         }
 
         public static bool IsPawnBelowWeightOpinion(Pawn pawn, WeightOpinion wo) 
@@ -88,6 +100,8 @@ namespace RimRound.Utilities
                 return WeightOpinion.Love;
             else if (t == RimRound.Defs.TraitDefOf.RR_WeightOpinion_Fanatical_Trait)
                 return WeightOpinion.Fanatical;
+            else if (t == RimRound.Defs.TraitDefOf.RR_WeightOpinion_Animalistic_Trait)
+                return WeightOpinion.Extreme;
             else
                 return WeightOpinion.None;
         }
@@ -96,7 +110,7 @@ namespace RimRound.Utilities
         {
             if (weightOpinionToTraitDef.TryGetValue(w, out TraitDef trait))
                 return trait;
-            // None and Extreme deliberately have no trait def
+            // None deliberately has no trait def
             return null;
         }
 
@@ -126,7 +140,7 @@ namespace RimRound.Utilities
                 return false;
             }
 
-            if ((p.TryGetComp<ThingComp_PawnAttitude>()?.weightOpinion ?? WeightOpinion.None) != opinion)
+            if (DisplayedOpinion(p) != opinion)
                 return false;
             else
                 thoughtWorker.def = WeightOpinionUtility.weightOpinionToThoughtDef[opinion];
@@ -231,7 +245,8 @@ namespace RimRound.Utilities
             {WeightOpinion.NeutralPlus ,  Defs.TraitDefOf.RR_WeightOpinion_NeutralPlus_Trait  },
             {WeightOpinion.Like ,         Defs.TraitDefOf.RR_WeightOpinion_Like_Trait         },
             {WeightOpinion.Love ,         Defs.TraitDefOf.RR_WeightOpinion_Love_Trait         },
-            {WeightOpinion.Fanatical ,    Defs.TraitDefOf.RR_WeightOpinion_Fanatical_Trait    }
+            {WeightOpinion.Fanatical ,    Defs.TraitDefOf.RR_WeightOpinion_Fanatical_Trait    },
+            {WeightOpinion.Extreme ,      Defs.TraitDefOf.RR_WeightOpinion_Animalistic_Trait  }
         };
 
         public static Dictionary<WeightOpinion, ThoughtDef> weightOpinionToThoughtDef = new Dictionary<WeightOpinion, ThoughtDef>()
@@ -244,7 +259,8 @@ namespace RimRound.Utilities
             { WeightOpinion.NeutralPlus,  Defs.ThoughtDefOf.RR_WeightOpinion_NeutralPlus  },
             { WeightOpinion.Like,         Defs.ThoughtDefOf.RR_WeightOpinion_Like         },
             { WeightOpinion.Love,         Defs.ThoughtDefOf.RR_WeightOpinion_Love         },
-            { WeightOpinion.Fanatical,    Defs.ThoughtDefOf.RR_WeightOpinion_Fanatical    }
+            { WeightOpinion.Fanatical,    Defs.ThoughtDefOf.RR_WeightOpinion_Fanatical    },
+            { WeightOpinion.Extreme,      Defs.ThoughtDefOf.RR_WeightOpinion_Animalistic  }
 
         };
 

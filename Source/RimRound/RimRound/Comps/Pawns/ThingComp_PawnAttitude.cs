@@ -1,4 +1,4 @@
-﻿using RimRound.Utilities;
+using RimRound.Utilities;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -137,12 +137,13 @@ namespace RimRound.Comps
 
         /// <summary>
         /// Gives the pawn the trait for their current opinion, replacing any other
-        /// weight-opinion trait. Opinions without a trait (None, Extreme) leave traits as they are.
+        /// weight-opinion trait (a concealed mime's disguise, not its true one). None leaves
+        /// traits as they are.
         /// </summary>
         private void SwapToOpinionTraitIfMissing()
         {
             Pawn pawn = (Pawn)parent;
-            TraitDef opinionTrait = WeightOpinionUtility.GetTraitByWeightOpinion(this.weightOpinion);
+            TraitDef opinionTrait = WeightOpinionUtility.GetTraitByWeightOpinion(WeightOpinionUtility.DisplayedOpinion(pawn));
             if (opinionTrait == null || pawn.story.traits.HasTrait(opinionTrait))
                 return;
 

@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,7 @@ namespace RimRound.Defs
         public static TraitDef RR_WeightOpinion_Like_Trait;
         public static TraitDef RR_WeightOpinion_Love_Trait;
         public static TraitDef RR_WeightOpinion_Fanatical_Trait;
+        public static TraitDef RR_WeightOpinion_Animalistic_Trait;
 
     }
 }

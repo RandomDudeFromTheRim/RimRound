@@ -235,6 +235,15 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
   fur coat now follows every RimRound body instead of vanishing: each body is redrawn as a
   coat (`Source/TextureGen/furgen.py`), in the expies' own style for expies and the
   vanilla furskin style for everything else.
+- **Alpha Animals** (with Biotech) — the **mime** is reworked. The wanderer who's secretly
+  a mime passes for a Fanatical weight-lover (it's really **Animalistic**, a new opinion tier
+  above Fanatical) and soon eats like three people.
+  - **Fed to Gelatinous I**, it stops hiding: it becomes the **mime xenotype** (tough, fast,
+    pain-resistant, psychically gifted) and stays a happy colonist.
+  - **Starved while hiding, or shrunk back below Gelatinous I** after showing itself, it turns
+    **feral**: a superpowered, permanently hostile mime instead of Alpha Animals' creature.
+  - With **Alpha Genes**, the mime gets its cut skin and skull face back, fitted to every
+    RimRound body.
 - **Alpha Genes** — its body genes (cancerous, scaly, rocky, slug, slimy, mime, gaunt,
   silver, nereid, robotic, forsaken...) get their own coats on every RimRound body, built
   from their own sprites (`furgen.py alphagenes`; loaded only with Alpha Genes).

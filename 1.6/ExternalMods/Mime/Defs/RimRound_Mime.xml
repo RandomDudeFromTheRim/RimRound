@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- What a mime really is, once it stops hiding (RimRound.Mime.RRMimeUtility.ApplyXenotype).
+       Its skin and face come with Alpha Genes (../AlphaGenes); without it, it keeps the
+       face it wore. -->
+  <XenotypeDef>
+    <defName>RR_Mime</defName>
+    <label>mime</label>
+    <description>Mimes are psionic parasites engineered out of humans: they pass for ordinary people, settle into a colony and live off its food, sometimes for years. Underneath the borrowed face is a dark, bony, ravenous thing - fast, tough, hard to hurt and impossible to reason with once it's hungry.\n\nA mime that is kept fed beyond all reason is content to stay among the people who feed it. One that goes hungry turns on them for good.</description>
+    <descriptionShort>A ravenous psionic parasite that passes for human - superhumanly tough, and only safe while it's kept enormous.</descriptionShort>
+    <iconPath>Things/Pawn/Animal/AA_Mime/AA_Mime_south</iconPath>
+    <inheritable>true</inheritable>
+    <genes>
+      <li MayRequire="sarg.alphagenes">RR_MimeSkin</li>
+      <li>Robust</li>
+      <li>MoveSpeed_VeryQuick</li>
+      <li>Pain_Reduced</li>
+      <li>WoundHealing_SuperFast</li>
+      <li>MeleeDamage_Strong</li>
+      <li>DarkVision</li>
+      <li>Immunity_Strong</li>
+      <li>PsychicAbility_Enhanced</li>
+    </genes>
+  </XenotypeDef>
+
+  <!-- the hunger: hidden while it hides (severity 0.5), plain to see once it doesn't (1) -->
+  <HediffDef>
+    <defName>RR_MimeHunger</defName>
+    <label>ravenous hunger</label>
+    <description>An endless, animal hunger. This creature eats three times as much as a person, and grows on all of it.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.75, 0.55, 0.6)</defaultLabelColor>
+    <isBad>false</isBad>
+    <everCurableByItem>false</everCurableByItem>
+    <scenarioCanAdd>false</scenarioCanAdd>
+    <initialSeverity>0.5</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+        <hungerRateFactorOffset>2</hungerRateFactorOffset>
+      </li>
+      <li>
+        <minSeverity>1</minSeverity>
+        <hungerRateFactorOffset>2</hungerRateFactorOffset>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <!-- a mime that went hungry, for good -->
+  <HediffDef>
+    <defName>RR_MimeFeral</defName>
+    <label>feral</label>
+    <description>The mask is gone and the hunger has won. This mime will never be one of us again: it hits harder, moves faster and barely feels pain.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.9, 0.2, 0.25)</defaultLabelColor>
+    <isBad>false</isBad>
+    <everCurableByItem>false</everCurableByItem>
+    <scenarioCanAdd>false</scenarioCanAdd>
+    <stages>
+      <li>
+        <painFactor>0.3</painFactor>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>0.4</offset></li>
+          <li><capacity>Manipulation</capacity><offset>0.2</offset></li>
+        </capMods>
+        <statOffsets>
+          <MeleeHitChance>8</MeleeHitChance>
+          <MeleeDodgeChance>12</MeleeDodgeChance>
+        </statOffsets>
+        <statFactors>
+          <MeleeDamageFactor>1.5</MeleeDamageFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+</Defs>

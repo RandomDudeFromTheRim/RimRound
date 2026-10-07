@@ -109,6 +109,12 @@ namespace RimRound.FeedOther
                 return Reject(targetPawn, "RR_WeightOpinionShiftTargetUnsupported", throwMessages);
             }
 
+            // Animalistic (a mime) isn't an opinion anyone can talk it out of
+            if (attitude.weightOpinion == WeightOpinion.Extreme)
+            {
+                return Reject(targetPawn, "RR_WeightOpinionShiftTargetUnsupported", throwMessages);
+            }
+
             WeightOpinion current = Normalize(attitude.weightOpinion);
             if (Props.increase && current >= WeightOpinion.Fanatical)
             {
