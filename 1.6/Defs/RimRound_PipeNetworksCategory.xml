@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<!--
+		The liquid-food network (and RimRoundNephila's milk siphon) builds from the shared
+		Vanilla Expanded "Pipe networks" Architect tab. Each VE pipe mod (Nutrient Paste,
+		Chemfuel, Helixien Gas) ships an identical copy of this def and RimWorld silently keeps
+		the last-loaded one, so carrying our own copy keeps the tab defined whichever of them
+		are active. Keep it identical to theirs.
+	-->
+	<DesignationCategoryDef>
+		<defName>VCHE_PipeNetworks</defName>
+		<label>pipe networks</label>
+		<order>350</order>
+		<specialDesignatorClasses>
+			<li>Designator_Cancel</li>
+			<li>Designator_Deconstruct</li>
+		</specialDesignatorClasses>
+	</DesignationCategoryDef>
+</Defs>
