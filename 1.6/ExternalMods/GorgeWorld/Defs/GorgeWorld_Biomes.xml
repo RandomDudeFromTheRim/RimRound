@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- The Gorge World's flesh biomes. They only ever generate on the Gorge World
+     (RimRound.GorgeWorld.BiomeWorker_Gorge). There is no stone, soil or sand: the ground is
+     flesh, the rock is gristle, the water is blood, molten tallow or bile.
+     Wildlife is Vanilla Genetics Expanded's failed experiments where that mod is on
+     (they don't wither in the wild here - GorgeWorldVGECompat), caloyaks, and Nephila
+     where RimRound Nephila is on. -->
+<Defs>
+
+  <BiomeDef Name="RR_GorgeBiomeBase" Abstract="True">
+    <settlementSelectionWeight>0.6</settlementSelectionWeight>
+    <wildPlantRegrowDays>14</wildPlantRegrowDays>
+    <foragedFood>RR_TallowLump</foragedFood>
+    <diseaseMtbDays>45</diseaseMtbDays>
+    <forceRockTypes>
+      <li>RR_Gristle</li>
+    </forceRockTypes>
+    <extraRockTypes>
+      <li>RR_Gristle</li>
+    </extraRockTypes>
+    <coastalBeachTerrain>RR_ScarTissue</coastalBeachTerrain>
+    <lakeBeachTerrain>RR_ScarTissue</lakeBeachTerrain>
+    <riverbankTerrain>RR_ScarTissue</riverbankTerrain>
+    <gravelTerrain>RR_ScarTissue</gravelTerrain>
+    <oceanShallowTerrain>RR_BloodShallow</oceanShallowTerrain>
+    <oceanDeepTerrain>RR_BloodDeep</oceanDeepTerrain>
+    <soundsAmbient>
+      <li>Ambient_NightInsects_Jungle</li>
+    </soundsAmbient>
+    <diseases>
+      <li>
+        <diseaseInc>Disease_Flu</diseaseInc>
+        <commonality>60</commonality>
+      </li>
+      <li>
+        <diseaseInc>Disease_GutWorms</diseaseInc>
+        <commonality>90</commonality>
+      </li>
+      <li>
+        <diseaseInc>Disease_MuscleParasites</diseaseInc>
+        <commonality>90</commonality>
+      </li>
+      <li>
+        <diseaseInc>Disease_FibrousMechanites</diseaseInc>
+        <commonality>30</commonality>
+      </li>
+      <li>
+        <diseaseInc>Disease_SensoryMechanites</diseaseInc>
+        <commonality>30</commonality>
+      </li>
+      <li>
+        <diseaseInc>Disease_AnimalFlu</diseaseInc>
+        <commonality>60</commonality>
+      </li>
+    </diseases>
+  </BiomeDef>
+
+  <!-- ================================================================ fleshwood -->
+
+  <BiomeDef ParentName="RR_GorgeBiomeBase">
+    <defName>RR_Fleshwood</defName>
+    <label>fleshwood</label>
+    <description>A forest grown out of living flesh. Sinew trees hold up lumpy crowns that watch you pass, tendrils writhe underfoot, and the streams and pools run with warm blood welling up from the veins below.\n\n&lt;color=#33d733&gt;NOTES: Rivers and lakes are blood. The only rock is gristle, which yields nothing. Found only on the Gorge World.&lt;/color&gt;</description>
+    <workerClass>RimRound.GorgeWorld.BiomeWorker_Fleshwood</workerClass>
+    <texture>World/Biomes/RR_Fleshwood</texture>
+    <animalDensity>2.4</animalDensity>
+    <plantDensity>0.7</plantDensity>
+    <movementDifficulty>1.5</movementDifficulty>
+    <forageability>0.5</forageability>
+    <waterShallowTerrain>RR_BloodShallow</waterShallowTerrain>
+    <waterDeepTerrain>RR_BloodDeep</waterDeepTerrain>
+    <waterMovingShallowTerrain>RR_BloodMovingShallow</waterMovingShallowTerrain>
+    <waterMovingChestDeepTerrain>RR_BloodMovingChestDeep</waterMovingChestDeepTerrain>
+    <terrainsByFertility>
+      <li>
+        <terrain>RR_GorgeFlesh</terrain>
+        <min>-999</min>
+        <max>0.75</max>
+      </li>
+      <li>
+        <terrain>RR_FleshVeined</terrain>
+        <min>0.75</min>
+        <max>999</max>
+      </li>
+    </terrainsByFertility>
+    <terrainPatchMakers>
+      <li>
+        <perlinFrequency>0.02</perlinFrequency>
+        <thresholds>
+          <li>
+            <terrain>RR_BloodShallow</terrain>
+            <min>0.78</min>
+            <max>0.92</max>
+          </li>
+          <li>
+            <terrain>RR_BloodDeep</terrain>
+            <min>0.92</min>
+            <max>999</max>
+          </li>
+        </thresholds>
+      </li>
+    </terrainPatchMakers>
+    <baseWeatherCommonalities>
+      <Clear>10</Clear>
+      <Fog>4</Fog>
+      <Rain>4</Rain>
+      <FoggyRain>2</FoggyRain>
+      <RainyThunderstorm>1</RainyThunderstorm>
+      <SnowGentle>2</SnowGentle>
+    </baseWeatherCommonalities>
+    <wildPlants>
+      <RR_TendrilGrass>5</RR_TendrilGrass>
+      <RR_SinewTree>1.6</RR_SinewTree>
+      <RR_Eyestalk>1.0</RR_Eyestalk>
+      <RR_TallowBulb>0.25</RR_TallowBulb>
+      <RR_GristleShrub>0.4</RR_GristleShrub>
+    </wildPlants>
+    <wildAnimals>
+      <GR_Fleshling MayRequire="vanillaexpanded.vgeneticse">2.0</GR_Fleshling>
+      <GR_AberrantFleshbeast MayRequire="vanillaexpanded.vgeneticse">0.6</GR_AberrantFleshbeast>
+      <SG_Caloyak>0.8</SG_Caloyak>
+      <NephilaCherubim MayRequire="randomdudefromtherim.rimround.nephila">0.5</NephilaCherubim>
+    </wildAnimals>
+    <modExtensions>
+      <li Class="RimRound.GorgeWorld.GorgeBiomeExtension">
+        <geysersPer10k>0.3</geysersPer10k>
+        <mawsPer10k>0.2</mawsPer10k>
+      </li>
+    </modExtensions>
+  </BiomeDef>
+
+  <!-- ================================================================ tallow marsh -->
+
+  <BiomeDef ParentName="RR_GorgeBiomeBase">
+    <defName>RR_TallowMarsh</defName>
+    <label>tallow marsh</label>
+    <description>A sagging lowland where the flesh has rendered down into fat. The ground is soft, waxy tallow, broken by wobbling gelatin mires and pools of fat kept molten by the warmth underneath. Tallow bulbs swell everywhere; going anywhere is slow.\n\n&lt;color=#33d733&gt;NOTES: Rivers and lakes are molten tallow. The only rock is gristle, which yields nothing. Found only on the Gorge World.&lt;/color&gt;</description>
+    <workerClass>RimRound.GorgeWorld.BiomeWorker_TallowMarsh</workerClass>
+    <texture>World/Biomes/RR_TallowMarsh</texture>
+    <animalDensity>2.0</animalDensity>
+    <plantDensity>0.55</plantDensity>
+    <movementDifficulty>2.5</movementDifficulty>
+    <forageability>0.9</forageability>
+    <waterShallowTerrain>RR_TallowShallow</waterShallowTerrain>
+    <waterDeepTerrain>RR_TallowDeep</waterDeepTerrain>
+    <waterMovingShallowTerrain>RR_TallowMovingShallow</waterMovingShallowTerrain>
+    <waterMovingChestDeepTerrain>RR_TallowMovingChestDeep</waterMovingChestDeepTerrain>
+    <terrainsByFertility>
+      <li>
+        <terrain>RR_Tallow</terrain>
+        <min>-999</min>
+        <max>999</max>
+      </li>
+    </terrainsByFertility>
+    <terrainPatchMakers>
+      <li>
+        <perlinFrequency>0.028</perlinFrequency>
+        <thresholds>
+          <li>
+            <terrain>RR_GelatinMire</terrain>
+            <min>0.38</min>
+            <max>0.6</max>
+          </li>
+          <li>
+            <terrain>RR_TallowShallow</terrain>
+            <min>0.6</min>
+            <max>0.82</max>
+          </li>
+          <li>
+            <terrain>RR_TallowDeep</terrain>
+            <min>0.82</min>
+            <max>999</max>
+          </li>
+        </thresholds>
+      </li>
+    </terrainPatchMakers>
+    <baseWeatherCommonalities>
+      <Clear>6</Clear>
+      <Fog>8</Fog>
+      <Rain>4</Rain>
+      <FoggyRain>4</FoggyRain>
+      <RainyThunderstorm>1</RainyThunderstorm>
+      <SnowGentle>2</SnowGentle>
+    </baseWeatherCommonalities>
+    <wildPlants>
+      <RR_GelatinReed>4</RR_GelatinReed>
+      <RR_TallowBulb>1.4</RR_TallowBulb>
+      <RR_TendrilGrass>1.2</RR_TendrilGrass>
+      <RR_SinewTree>0.25</RR_SinewTree>
+    </wildPlants>
+    <wildAnimals>
+      <GR_AberrantFleshbeast MayRequire="vanillaexpanded.vgeneticse">1.4</GR_AberrantFleshbeast>
+      <GR_Fleshling MayRequire="vanillaexpanded.vgeneticse">1.0</GR_Fleshling>
+      <SG_Caloyak>1.2</SG_Caloyak>
+      <TickleMeSlugmo MayRequire="randomdudefromtherim.rimround.nephila">1.0</TickleMeSlugmo>
+    </wildAnimals>
+    <modExtensions>
+      <li Class="RimRound.GorgeWorld.GorgeBiomeExtension">
+        <geysersPer10k>0.8</geysersPer10k>
+      </li>
+    </modExtensions>
+  </BiomeDef>
+
+  <!-- ================================================================ maw wastes -->
+
+  <BiomeDef ParentName="RR_GorgeBiomeBase">
+    <defName>RR_MawWastes</defName>
+    <label>gorge maw wastes</label>
+    <description>Open, dry plains of scarred flesh where little grows. The ground is riddled with gorge maws waiting under the skin to swallow whoever steps on them, bloat spitters lob bile at anything that moves, and sour bile seeps up into the low ground. What lives here is mean.\n\n&lt;color=#33d733&gt;NOTES: Rivers and lakes are bile. Gorge maws, bloat spitters and bloatgas vents are common. The only rock is gristle, which yields nothing. Found only on the Gorge World.&lt;/color&gt;</description>
+    <workerClass>RimRound.GorgeWorld.BiomeWorker_MawWastes</workerClass>
+    <texture>World/Biomes/RR_MawWastes</texture>
+    <settlementSelectionWeight>0.3</settlementSelectionWeight>
+    <animalDensity>1.0</animalDensity>
+    <plantDensity>0.2</plantDensity>
+    <movementDifficulty>1.2</movementDifficulty>
+    <forageability>0.2</forageability>
+    <waterShallowTerrain>RR_BileShallow</waterShallowTerrain>
+    <waterDeepTerrain>RR_BileDeep</waterDeepTerrain>
+    <waterMovingShallowTerrain>RR_BileMovingShallow</waterMovingShallowTerrain>
+    <waterMovingChestDeepTerrain>RR_BileMovingChestDeep</waterMovingChestDeepTerrain>
+    <terrainsByFertility>
+      <li>
+        <terrain>RR_ScarTissue</terrain>
+        <min>-999</min>
+        <max>0.6</max>
+      </li>
+      <li>
+        <terrain>RR_GorgeFlesh</terrain>
+        <min>0.6</min>
+        <max>999</max>
+      </li>
+    </terrainsByFertility>
+    <terrainPatchMakers>
+      <li>
+        <perlinFrequency>0.018</perlinFrequency>
+        <thresholds>
+          <li>
+            <terrain>RR_BileShallow</terrain>
+            <min>0.86</min>
+            <max>0.95</max>
+          </li>
+          <li>
+            <terrain>RR_BileDeep</terrain>
+            <min>0.95</min>
+            <max>999</max>
+          </li>
+        </thresholds>
+      </li>
+    </terrainPatchMakers>
+    <baseWeatherCommonalities>
+      <Clear>16</Clear>
+      <DryThunderstorm>2</DryThunderstorm>
+      <Rain>1</Rain>
+      <SnowGentle>1</SnowGentle>
+    </baseWeatherCommonalities>
+    <wildPlants>
+      <RR_GristleShrub>1.0</RR_GristleShrub>
+      <RR_TendrilGrass>1.0</RR_TendrilGrass>
+      <RR_Eyestalk>0.5</RR_Eyestalk>
+    </wildPlants>
+    <wildAnimals>
+      <GR_AberrantFleshbeast MayRequire="vanillaexpanded.vgeneticse">0.6</GR_AberrantFleshbeast>
+      <GR_FleshMonstrosity MayRequire="vanillaexpanded.vgeneticse">0.25</GR_FleshMonstrosity>
+      <GR_FleshGrowth MayRequire="vanillaexpanded.vgeneticse">0.1</GR_FleshGrowth>
+      <SG_Caloyak>0.3</SG_Caloyak>
+      <NephilaSeraphim MayRequire="randomdudefromtherim.rimround.nephila">0.3</NephilaSeraphim>
+    </wildAnimals>
+    <modExtensions>
+      <li Class="RimRound.GorgeWorld.GorgeBiomeExtension">
+        <mawsPer10k>2.5</mawsPer10k>
+        <spittersPer10k>0.8</spittersPer10k>
+        <geysersPer10k>0.6</geysersPer10k>
+      </li>
+    </modExtensions>
+  </BiomeDef>
+
+  <!-- ================================================================ seas of blood -->
+
+  <BiomeDef>
+    <defName>RR_BloodSea</defName>
+    <label>sea of blood</label>
+    <description>An open sea of blood, warm and slow and dark. Nothing on the Gorge World was ever water.</description>
+    <workerClass>RimRound.GorgeWorld.BiomeWorker_GorgeSea</workerClass>
+    <isWaterBiome>true</isWaterBiome>
+    <canBuildBase>false</canBuildBase>
+    <allowRoads>false</allowRoads>
+    <allowRivers>false</allowRivers>
+    <hasVirtualPlants>false</hasVirtualPlants>
+    <texture>World/Biomes/RR_BloodSea</texture>
+    <impassable>true</impassable>
+    <isBackgroundBiome>true</isBackgroundBiome>
+  </BiomeDef>
+
+  <BiomeDef>
+    <defName>RR_BloodLake</defName>
+    <label>blood lake</label>
+    <description>A great lake of warm, dark blood, pooled in a hollow of the flesh.</description>
+    <workerClass>RimRound.GorgeWorld.BiomeWorker_GorgeSea</workerClass>
+    <isWaterBiome>true</isWaterBiome>
+    <canBuildBase>false</canBuildBase>
+    <allowRoads>false</allowRoads>
+    <allowRivers>false</allowRivers>
+    <hasVirtualPlants>false</hasVirtualPlants>
+    <texture>World/Biomes/RR_BloodSea</texture>
+    <impassable>true</impassable>
+    <isBackgroundBiome>true</isBackgroundBiome>
+  </BiomeDef>
+
+  <!-- the flesh dimension's growths, scattered over every flesh biome's maps (as thick as the
+       biome's GorgeBiomeExtension says) -->
+  <TileMutatorDef>
+    <defName>RR_GorgeGrowths</defName>
+    <label>flesh growths</label>
+    <description>The flesh here grows gorge maws, bloat spitters and bloatgas vents.</description>
+    <workerClass>RimRound.GorgeWorld.TileMutatorWorker_GorgeGrowths</workerClass>
+    <chanceOnNonLandmarkTile>1</chanceOnNonLandmarkTile>
+    <biomeWhitelist>
+      <li>RR_Fleshwood</li>
+      <li>RR_TallowMarsh</li>
+      <li>RR_MawWastes</li>
+    </biomeWhitelist>
+  </TileMutatorDef>
+
+</Defs>

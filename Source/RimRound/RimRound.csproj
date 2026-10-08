@@ -424,6 +424,7 @@
     <Compile Include="RimRound\Comps\Things\CompTargetable_RRBoundConstrictor.cs" />
     <Compile Include="RimRound\Rituals\PsychicRitualDef_RRBindConstrictor.cs" />
     <Compile Include="RimRound\Rituals\FeedeesRituals.cs" />
+    <Compile Include="RimRound\GorgeWorld\GorgeWorld.cs" />
     <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_WeightOpinion_Animalistic.cs" />
     <Compile Include="RimRound\Mime\RRMime.cs" />
     <Compile Include="RimRound\AI\StatParts\StatPart_LactationCapacityByWeight.cs" />

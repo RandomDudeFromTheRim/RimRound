@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- The Gorge World, as an Alien Worlds planet type (pick it in Alien Worlds' settings or
+     Worldbuilder before making a world). Its land is flesh biomes, with RimRound Nephila's
+     overgrown broodmothers where that mod is on; its seas and lakes are blood. -->
+<Defs>
+
+  <AlienWorlds.PlanetTypeDef>
+    <defName>RR_GorgeWorld</defName>
+    <label>gorge world</label>
+    <description>A world made of meat. Every continent is living flesh - fleshwoods, rendered tallow marshes, scarred wastes riddled with gorge maws - with gristle for bones, seas of blood, and blood, fat and bile for rivers. Nothing here was ever stone or water. Whatever is eating it hasn't finished.</description>
+    <difficulty>4</difficulty>
+    <biomes>
+      <li>RR_Fleshwood</li>
+      <li>RR_TallowMarsh</li>
+      <li>RR_MawWastes</li>
+      <li>Neph_OvergrownBroodmother</li>
+      <li>RR_BloodSea</li>
+      <li>RR_BloodLake</li>
+    </biomes>
+    <oceanBiome>RR_BloodSea</oceanBiome>
+    <lakeBiome>RR_BloodLake</lakeBiome>
+    <worldOceanTexture>World/Biomes/RR_BloodSea</worldOceanTexture>
+    <ungeneratedPlanetPartsTexture>World/Biomes/RR_BloodSea</ungeneratedPlanetPartsTexture>
+    <biomeConfigs>
+      <li>
+        <!-- her coasts run into the blood sea too (her own rivers and pools stay milk) -->
+        <key>Neph_OvergrownBroodmother</key>
+        <value>
+          <defFields>
+            <oceanShallowTerrain>RR_BloodShallow</oceanShallowTerrain>
+            <oceanDeepTerrain>RR_BloodDeep</oceanDeepTerrain>
+          </defFields>
+        </value>
+      </li>
+    </biomeConfigs>
+  </AlienWorlds.PlanetTypeDef>
+
+</Defs>

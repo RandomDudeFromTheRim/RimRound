@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- The Gorge World's ground: flesh, scar tissue, tallow and gelatin, with blood, molten
+     tallow and bile where other worlds have water. No soil, no sand. Art: Source/TextureGen/gorgetex.py
+     (living flesh reuses the flesh dimension's floor). -->
+<Defs>
+
+  <TerrainDef ParentName="NaturalTerrainBase">
+    <defName>RR_GorgeFlesh</defName>
+    <label>living flesh</label>
+    <description>Warm, living flesh, the ground of the Gorge World. It dimples underfoot and slowly springs back, and things take root in it readily.</description>
+    <texturePath>Terrain/RR_FleshFloor</texturePath>
+    <edgeType>FadeRough</edgeType>
+    <categoryType>Soil</categoryType>
+    <renderPrecedence>345</renderPrecedence>
+    <pathCost>2</pathCost>
+    <fertility>1.0</fertility>
+    <takeFootprints>true</takeFootprints>
+    <statBases>
+      <Beauty>-2</Beauty>
+      <BeautyOutdoors>0</BeautyOutdoors>
+      <Cleanliness>-1</Cleanliness>
+    </statBases>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+      <li>GrowSoil</li>
+      <li>Diggable</li>
+    </affordances>
+    <tags>
+      <li>RR_GorgeFlesh</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="NaturalTerrainBase">
+    <defName>RR_FleshVeined</defName>
+    <label>veined flesh</label>
+    <description>Living flesh thick with veins just under the skin. It's richer than the flesh around it, and things grow fat on it.</description>
+    <texturePath>Terrain/RR_FleshVeined</texturePath>
+    <edgeType>FadeRough</edgeType>
+    <categoryType>Soil</categoryType>
+    <renderPrecedence>346</renderPrecedence>
+    <pathCost>2</pathCost>
+    <fertility>1.3</fertility>
+    <takeFootprints>true</takeFootprints>
+    <statBases>
+      <Beauty>-2</Beauty>
+      <BeautyOutdoors>0</BeautyOutdoors>
+      <Cleanliness>-1</Cleanliness>
+    </statBases>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+      <li>GrowSoil</li>
+      <li>Diggable</li>
+    </affordances>
+    <tags>
+      <li>RR_GorgeFlesh</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="NaturalTerrainBase">
+    <defName>RR_ScarTissue</defName>
+    <label>scar tissue</label>
+    <description>Pale, tight, dry flesh that has healed over and over again. Little grows in it.</description>
+    <texturePath>Terrain/RR_ScarTissue</texturePath>
+    <edgeType>FadeRough</edgeType>
+    <categoryType>Soil</categoryType>
+    <renderPrecedence>335</renderPrecedence>
+    <pathCost>1</pathCost>
+    <fertility>0.3</fertility>
+    <takeFootprints>true</takeFootprints>
+    <statBases>
+      <Beauty>-1</Beauty>
+      <BeautyOutdoors>0</BeautyOutdoors>
+      <Cleanliness>-1</Cleanliness>
+    </statBases>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+      <li>GrowSoil</li>
+      <li>Diggable</li>
+    </affordances>
+    <tags>
+      <li>RR_GorgeFlesh</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="NaturalTerrainBase">
+    <defName>RR_Tallow</defName>
+    <label>tallow</label>
+    <description>Rendered fat, set soft and waxy in the warmth. It gives a little underfoot and leaves a greasy sheen on everything.</description>
+    <texturePath>Terrain/RR_Tallow</texturePath>
+    <edgeType>FadeRough</edgeType>
+    <categoryType>Soil</categoryType>
+    <renderPrecedence>340</renderPrecedence>
+    <pathCost>3</pathCost>
+    <fertility>0.8</fertility>
+    <takeFootprints>true</takeFootprints>
+    <statBases>
+      <Beauty>-2</Beauty>
+      <BeautyOutdoors>0</BeautyOutdoors>
+      <Cleanliness>-1</Cleanliness>
+    </statBases>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+      <li>GrowSoil</li>
+      <li>Diggable</li>
+    </affordances>
+    <tags>
+      <li>RR_GorgeFlesh</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="NaturalTerrainBase">
+    <defName>RR_GelatinMire</defName>
+    <label>gelatin mire</label>
+    <description>Wet, wobbling gelatin, half set. Walking through it is slow, sucking work.</description>
+    <texturePath>Terrain/RR_GelatinMire</texturePath>
+    <edgeType>FadeRough</edgeType>
+    <categoryType>Soil</categoryType>
+    <renderPrecedence>330</renderPrecedence>
+    <pathCost>14</pathCost>
+    <fertility>0.5</fertility>
+    <takeFootprints>true</takeFootprints>
+    <avoidWander>true</avoidWander>
+    <driesTo>RR_Tallow</driesTo>
+    <statBases>
+      <Beauty>-3</Beauty>
+      <BeautyOutdoors>0</BeautyOutdoors>
+      <Cleanliness>-1</Cleanliness>
+    </statBases>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+      <li>GrowSoil</li>
+      <li>Diggable</li>
+    </affordances>
+    <tags>
+      <li>RR_GorgeFlesh</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterShallowBase">
+    <defName>RR_BloodMovingShallow</defName>
+    <label>shallow blood stream</label>
+    <description>A slow stream of warm blood, running through the flesh in an open vein. Ankle-deep.</description>
+    <texturePath>Terrain/RR_BloodRamp</texturePath>
+    <pollutedTexturePath>Terrain/RR_BloodRamp</pollutedTexturePath>
+    <waterDepthShader>Map/WaterDepth</waterDepthShader>
+    <renderPrecedence>383</renderPrecedence>
+    <canFreeze>false</canFreeze>
+    <affordances>
+      <li>MovingFluid</li>
+    </affordances>
+    <tags>
+      <li>River</li>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+    <waterDepthShaderParameters>
+      <_UseWaterOffset>1</_UseWaterOffset>
+    </waterDepthShaderParameters>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterChestDeepBase">
+    <defName>RR_BloodMovingChestDeep</defName>
+    <label>chest-deep blood river</label>
+    <description>A slow stream of warm blood, running through the flesh in an open vein. Chest-deep and slow going.</description>
+    <texturePath>Terrain/RR_BloodDeepRamp</texturePath>
+    <pollutedTexturePath>Terrain/RR_BloodDeepRamp</pollutedTexturePath>
+    <renderPrecedence>384</renderPrecedence>
+    <canFreeze>false</canFreeze>
+    <affordances>
+      <li>MovingFluid</li>
+    </affordances>
+    <tags>
+      <li>River</li>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+    <waterDepthShaderParameters>
+      <_UseWaterOffset>1</_UseWaterOffset>
+    </waterDepthShaderParameters>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterShallowBase">
+    <defName>RR_BloodShallow</defName>
+    <label>shallow blood</label>
+    <description>A pool of warm, thick blood, welling up out of the flesh around it. Ankle-deep.</description>
+    <texturePath>Terrain/RR_BloodRamp</texturePath>
+    <pollutedTexturePath>Terrain/RR_BloodRamp</pollutedTexturePath>
+    <waterDepthShader>Map/WaterDepth</waterDepthShader>
+    <renderPrecedence>380</renderPrecedence>
+    <canFreeze>false</canFreeze>
+    <driesTo>RR_ScarTissue</driesTo>
+    <tags>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterDeepBase">
+    <defName>RR_BloodDeep</defName>
+    <label>deep blood</label>
+    <description>A pool of warm, thick blood, welling up out of the flesh around it. Deep enough to drown in.</description>
+    <texturePath>Terrain/RR_BloodDeepRamp</texturePath>
+    <renderPrecedence>381</renderPrecedence>
+    <forcePassableByFlyingPawns>true</forcePassableByFlyingPawns>
+    <gravshipReplacementTerrain>RR_BloodShallow</gravshipReplacementTerrain>
+    <tags>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterShallowBase">
+    <defName>RR_TallowMovingShallow</defName>
+    <label>shallow liquid tallow stream</label>
+    <description>A slow, greasy stream of molten fat. Ankle-deep.</description>
+    <texturePath>Terrain/RR_TallowRamp</texturePath>
+    <pollutedTexturePath>Terrain/RR_TallowRamp</pollutedTexturePath>
+    <waterDepthShader>Map/WaterDepth</waterDepthShader>
+    <renderPrecedence>389</renderPrecedence>
+    <canFreeze>false</canFreeze>
+    <affordances>
+      <li>MovingFluid</li>
+    </affordances>
+    <tags>
+      <li>River</li>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+    <waterDepthShaderParameters>
+      <_UseWaterOffset>1</_UseWaterOffset>
+    </waterDepthShaderParameters>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterChestDeepBase">
+    <defName>RR_TallowMovingChestDeep</defName>
+    <label>chest-deep liquid tallow river</label>
+    <description>A slow, greasy stream of molten fat. Chest-deep and slow going.</description>
+    <texturePath>Terrain/RR_TallowDeepRamp</texturePath>
+    <pollutedTexturePath>Terrain/RR_TallowDeepRamp</pollutedTexturePath>
+    <renderPrecedence>390</renderPrecedence>
+    <canFreeze>false</canFreeze>
+    <affordances>
+      <li>MovingFluid</li>
+    </affordances>
+    <tags>
+      <li>River</li>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+    <waterDepthShaderParameters>
+      <_UseWaterOffset>1</_UseWaterOffset>
+    </waterDepthShaderParameters>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterShallowBase">
+    <defName>RR_TallowShallow</defName>
+    <label>shallow liquid tallow</label>
+    <description>A pool of rendered fat, kept molten by the warmth of the ground beneath it. Ankle-deep.</description>
+    <texturePath>Terrain/RR_TallowRamp</texturePath>
+    <pollutedTexturePath>Terrain/RR_TallowRamp</pollutedTexturePath>
+    <waterDepthShader>Map/WaterDepth</waterDepthShader>
+    <renderPrecedence>386</renderPrecedence>
+    <canFreeze>false</canFreeze>
+    <driesTo>RR_ScarTissue</driesTo>
+    <tags>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterDeepBase">
+    <defName>RR_TallowDeep</defName>
+    <label>deep liquid tallow</label>
+    <description>A pool of rendered fat, kept molten by the warmth of the ground beneath it. Deep enough to drown in.</description>
+    <texturePath>Terrain/RR_TallowDeepRamp</texturePath>
+    <renderPrecedence>387</renderPrecedence>
+    <forcePassableByFlyingPawns>true</forcePassableByFlyingPawns>
+    <gravshipReplacementTerrain>RR_TallowShallow</gravshipReplacementTerrain>
+    <tags>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterShallowBase">
+    <defName>RR_BileMovingShallow</defName>
+    <label>shallow bile stream</label>
+    <description>A sluggish stream of sour bile. Ankle-deep.</description>
+    <texturePath>Terrain/RR_BileRamp</texturePath>
+    <pollutedTexturePath>Terrain/RR_BileRamp</pollutedTexturePath>
+    <waterDepthShader>Map/WaterDepth</waterDepthShader>
+    <renderPrecedence>395</renderPrecedence>
+    <canFreeze>false</canFreeze>
+    <affordances>
+      <li>MovingFluid</li>
+    </affordances>
+    <tags>
+      <li>River</li>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+    <waterDepthShaderParameters>
+      <_UseWaterOffset>1</_UseWaterOffset>
+    </waterDepthShaderParameters>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterChestDeepBase">
+    <defName>RR_BileMovingChestDeep</defName>
+    <label>chest-deep bile river</label>
+    <description>A sluggish stream of sour bile. Chest-deep and slow going.</description>
+    <texturePath>Terrain/RR_BileDeepRamp</texturePath>
+    <pollutedTexturePath>Terrain/RR_BileDeepRamp</pollutedTexturePath>
+    <renderPrecedence>396</renderPrecedence>
+    <canFreeze>false</canFreeze>
+    <affordances>
+      <li>MovingFluid</li>
+    </affordances>
+    <tags>
+      <li>River</li>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+    <waterDepthShaderParameters>
+      <_UseWaterOffset>1</_UseWaterOffset>
+    </waterDepthShaderParameters>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterShallowBase">
+    <defName>RR_BileShallow</defName>
+    <label>shallow bile</label>
+    <description>A pool of sour yellow-green bile, seeped up out of the scarred flesh. Ankle-deep.</description>
+    <texturePath>Terrain/RR_BileRamp</texturePath>
+    <pollutedTexturePath>Terrain/RR_BileRamp</pollutedTexturePath>
+    <waterDepthShader>Map/WaterDepth</waterDepthShader>
+    <renderPrecedence>392</renderPrecedence>
+    <canFreeze>false</canFreeze>
+    <driesTo>RR_ScarTissue</driesTo>
+    <tags>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+  </TerrainDef>
+
+  <TerrainDef ParentName="WaterDeepBase">
+    <defName>RR_BileDeep</defName>
+    <label>deep bile</label>
+    <description>A pool of sour yellow-green bile, seeped up out of the scarred flesh. Deep enough to drown in.</description>
+    <texturePath>Terrain/RR_BileDeepRamp</texturePath>
+    <renderPrecedence>393</renderPrecedence>
+    <forcePassableByFlyingPawns>true</forcePassableByFlyingPawns>
+    <gravshipReplacementTerrain>RR_BileShallow</gravshipReplacementTerrain>
+    <tags>
+      <li>RR_GorgeLiquid</li>
+    </tags>
+  </TerrainDef>
+
+</Defs>

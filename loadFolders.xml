@@ -86,5 +86,6 @@
 		<li IfModActiveAll="Ludeon.RimWorld.Odyssey, Ludeon.RimWorld.Anomaly">1.6/ExternalMods/FeedeeFacility</li>
 		<li IfModActiveAll="sarg.alphaanimals, Ludeon.RimWorld.Biotech">1.6/ExternalMods/Mime</li>
 		<li IfModActiveAll="sarg.alphaanimals, Ludeon.RimWorld.Biotech, sarg.alphagenes">1.6/ExternalMods/Mime/AlphaGenes</li>
+		<li IfModActive="7f.alienworlds">1.6/ExternalMods/GorgeWorld</li>
 	</v1.6>	
 </loadFolders>

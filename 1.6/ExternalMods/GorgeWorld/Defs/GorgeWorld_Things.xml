@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- What grows out of the Gorge World's flesh, the gristle under it, and the tallow it renders.
+     Art: Source/TextureGen/gorgetex.py -->
+<Defs>
+
+  <!-- ================================================================ rock: there is no stone -->
+
+  <ThingDef ParentName="UglyRockBase">
+    <defName>RR_Gristle</defName>
+    <label>gristle</label>
+    <description>Dense, rubbery gristle - the Gorge World's bones, as near to stone as it has. It takes a long time to cut through and yields nothing worth keeping. Dug out, it leaves raw scar tissue behind.</description>
+    <graphicData>
+      <texPath>Things/Building/GorgeWorld/RR_Gristle_Atlas</texPath>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>700</MaxHitPoints>
+    </statBases>
+    <building>
+      <mineableThing />
+      <smoothedThing />
+      <!-- only where a flesh biome asks for it -->
+      <biomeSpecific>true</biomeSpecific>
+      <naturalTerrain>RR_ScarTissue</naturalTerrain>
+      <leaveTerrain>RR_ScarTissue</leaveTerrain>
+    </building>
+  </ThingDef>
+
+  <!-- ================================================================ tallow -->
+
+  <ThingDef ParentName="OrganicProductBase">
+    <defName>RR_TallowLump</defName>
+    <label>tallow</label>
+    <description>Soft lumps of rendered fat from a tallow bulb. Edible raw, if not pleasant, and very rich - and it burns.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/RR_TallowLump</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <socialPropernessMatters>true</socialPropernessMatters>
+    <statBases>
+      <MarketValue>1.2</MarketValue>
+      <Mass>0.03</Mass>
+      <Nutrition>0.06</Nutrition>
+      <Flammability>1.5</Flammability>
+      <FoodPoisonChanceFixedHuman>0.02</FoodPoisonChanceFixedHuman>
+    </statBases>
+    <comps>
+      <li Class="CompProperties_Rottable">
+        <daysToRotStart>30</daysToRotStart>
+        <rotDestroys>true</rotDestroys>
+      </li>
+    </comps>
+    <ingestible>
+      <foodType>AnimalProduct</foodType>
+      <preferability>RawBad</preferability>
+      <ingestEffect>EatMeat</ingestEffect>
+      <ingestSound>RawMeat_Eat</ingestSound>
+    </ingestible>
+    <thingCategories>
+      <li>AnimalProductRaw</li>
+    </thingCategories>
+  </ThingDef>
+
+  <!-- ================================================================ plants -->
+
+  <ThingDef ParentName="TreeBase">
+    <defName>RR_SinewTree</defName>
+    <label>sinew tree</label>
+    <description>A tree of twisted red sinew holding up a lumpy crown of flesh. A few eyes open in the crown and follow whatever moves beneath it. Its sinew cuts and works like hard wood.</description>
+    <graphicData>
+      <texPath>Things/Plant/GorgeWorld/RR_SinewTree</texPath>
+      <graphicClass>Graphic_Random</graphicClass>
+      <drawSize>1.6</drawSize>
+      <shadowData>
+        <volume>(0.2, 0.35, 0.13)</volume>
+        <offset>(0,0,-0.44)</offset>
+      </shadowData>
+    </graphicData>
+    <statBases>
+      <Beauty>-2</Beauty>
+      <BeautyOutdoors>-2</BeautyOutdoors>
+      <Flammability>0.5</Flammability>
+    </statBases>
+    <plant>
+      <growDays>22</growDays>
+      <harvestWork>1100</harvestWork>
+      <harvestYield>36</harvestYield>
+      <treeLoversCareIfChopped>false</treeLoversCareIfChopped>
+      <visualSizeRange>1.6~2.1</visualSizeRange>
+      <dieIfLeafless>false</dieIfLeafless>
+    </plant>
+  </ThingDef>
+
+  <ThingDef ParentName="PlantBase">
+    <defName>RR_Eyestalk</defName>
+    <label>eyestalk</label>
+    <description>A fleshy stalk with an eye on the end. It turns to watch anyone who passes and blinks slowly when it's touched. Unsettling to have around.</description>
+    <statBases>
+      <MaxHitPoints>60</MaxHitPoints>
+      <Nutrition>0.3</Nutrition>
+      <Beauty>-4</Beauty>
+      <BeautyOutdoors>-4</BeautyOutdoors>
+    </statBases>
+    <graphicData>
+      <texPath>Things/Plant/GorgeWorld/RR_Eyestalk</texPath>
+      <graphicClass>Graphic_Random</graphicClass>
+    </graphicData>
+    <ingestible />
+    <plant>
+      <fertilitySensitivity>0.5</fertilitySensitivity>
+      <growDays>4</growDays>
+      <harvestWork>60</harvestWork>
+      <maxMeshCount>4</maxMeshCount>
+      <visualSizeRange>0.6~0.9</visualSizeRange>
+      <topWindExposure>0.2</topWindExposure>
+      <wildClusterRadius>3</wildClusterRadius>
+      <wildClusterWeight>40</wildClusterWeight>
+      <wildOrder>2</wildOrder>
+    </plant>
+  </ThingDef>
+
+  <ThingDef ParentName="PlantBase">
+    <defName>RR_TendrilGrass</defName>
+    <label>tendril grass</label>
+    <description>Thin, red, gently writhing tendrils growing in clumps out of the flesh - the Gorge World's grass. Grazing animals love it.</description>
+    <statBases>
+      <MaxHitPoints>85</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+      <Nutrition>0.5</Nutrition>
+    </statBases>
+    <graphicData>
+      <texPath>Things/Plant/GorgeWorld/RR_TendrilGrass</texPath>
+      <graphicClass>Graphic_Random</graphicClass>
+    </graphicData>
+    <ingestible />
+    <plant>
+      <fertilityMin>0.05</fertilityMin>
+      <fertilitySensitivity>0.3</fertilitySensitivity>
+      <growDays>2.5</growDays>
+      <harvestWork>40</harvestWork>
+      <maxMeshCount>9</maxMeshCount>
+      <visualSizeRange>0.4~0.6</visualSizeRange>
+      <topWindExposure>0.4</topWindExposure>
+      <wildOrder>1</wildOrder>
+    </plant>
+  </ThingDef>
+
+  <ThingDef ParentName="PlantBase">
+    <defName>RR_TallowBulb</defName>
+    <label>tallow bulb</label>
+    <description>Pale, waxy sacs of fat swelling on a short stalk. When they're ripe they can be cut open for their tallow.</description>
+    <statBases>
+      <MaxHitPoints>90</MaxHitPoints>
+      <Nutrition>0.8</Nutrition>
+      <Flammability>1.4</Flammability>
+    </statBases>
+    <graphicData>
+      <texPath>Things/Plant/GorgeWorld/RR_TallowBulb</texPath>
+      <graphicClass>Graphic_Random</graphicClass>
+      <drawSize>1.3</drawSize>
+    </graphicData>
+    <pathCost>14</pathCost>
+    <ingestible />
+    <plant>
+      <fertilitySensitivity>0.6</fertilitySensitivity>
+      <growDays>9</growDays>
+      <harvestWork>220</harvestWork>
+      <harvestTag>Standard</harvestTag>
+      <harvestedThingDef>RR_TallowLump</harvestedThingDef>
+      <harvestYield>12</harvestYield>
+      <harvestMinGrowth>0.7</harvestMinGrowth>
+      <maxMeshCount>1</maxMeshCount>
+      <visualSizeRange>0.9~1.3</visualSizeRange>
+      <topWindExposure>0.1</topWindExposure>
+      <wildClusterRadius>4</wildClusterRadius>
+      <wildClusterWeight>60</wildClusterWeight>
+      <wildOrder>2</wildOrder>
+    </plant>
+  </ThingDef>
+
+  <ThingDef ParentName="PlantBase">
+    <defName>RR_GelatinReed</defName>
+    <label>gelatin reeds</label>
+    <description>Stiff amber reeds of set gelatin, each tipped with a glossy bead. They sway in the warm air and wobble when brushed.</description>
+    <statBases>
+      <MaxHitPoints>70</MaxHitPoints>
+      <Nutrition>0.4</Nutrition>
+    </statBases>
+    <graphicData>
+      <texPath>Things/Plant/GorgeWorld/RR_GelatinReed</texPath>
+      <graphicClass>Graphic_Random</graphicClass>
+    </graphicData>
+    <ingestible />
+    <plant>
+      <fertilityMin>0.05</fertilityMin>
+      <fertilitySensitivity>0.3</fertilitySensitivity>
+      <growDays>3</growDays>
+      <harvestWork>40</harvestWork>
+      <maxMeshCount>4</maxMeshCount>
+      <visualSizeRange>0.6~0.9</visualSizeRange>
+      <topWindExposure>0.5</topWindExposure>
+      <wildOrder>1</wildOrder>
+    </plant>
+  </ThingDef>
+
+  <ThingDef ParentName="PlantBase">
+    <defName>RR_GristleShrub</defName>
+    <label>gristle shrub</label>
+    <description>A low knot of grey cartilage, spurred with hooked spines. It tangles legs and slows anyone pushing through it.</description>
+    <statBases>
+      <MaxHitPoints>120</MaxHitPoints>
+      <Nutrition>0.3</Nutrition>
+      <Flammability>0.4</Flammability>
+    </statBases>
+    <pathCost>14</pathCost>
+    <graphicData>
+      <texPath>Things/Plant/GorgeWorld/RR_GristleShrub</texPath>
+      <graphicClass>Graphic_Random</graphicClass>
+      <drawSize>1.3</drawSize>
+    </graphicData>
+    <ingestible />
+    <plant>
+      <fertilitySensitivity>0.2</fertilitySensitivity>
+      <growDays>6</growDays>
+      <harvestWork>90</harvestWork>
+      <maxMeshCount>4</maxMeshCount>
+      <visualSizeRange>0.7~0.9</visualSizeRange>
+      <topWindExposure>0.1</topWindExposure>
+      <wildClusterRadius>4</wildClusterRadius>
+      <wildClusterWeight>80</wildClusterWeight>
+      <wildOrder>1</wildOrder>
+    </plant>
+  </ThingDef>
+
+</Defs>

@@ -21,10 +21,18 @@
       <li>DarkVision</li>
       <li>Immunity_Strong</li>
       <li>PsychicAbility_Enhanced</li>
+      <li>Beauty_VeryUgly</li>
+      <!-- SwellGlow: built to eat, and to stay deadly however big it gets -->
+      <li>SG_GeneEatSpeedUpPlus</li>
+      <li>SG_GeneDigestUpPlus</li>
+      <li>SG_GeneElasticUpPlus</li>
+      <li>SG_GeneWeightUpPlus</li>
+      <li>SG_GeneHardyAdipose</li>
+      <li>SG_GeneBuoyantFrame</li>
     </genes>
   </XenotypeDef>
 
-  <!-- the hunger: hidden while it hides (severity 0.5), plain to see once it doesn't (1) -->
+  <!-- the hunger: never shown on the health tab - the mime's appetite is what gives it away -->
   <HediffDef>
     <defName>RR_MimeHunger</defName>
     <label>ravenous hunger</label>
@@ -43,6 +51,7 @@
       </li>
       <li>
         <minSeverity>1</minSeverity>
+        <becomeVisible>false</becomeVisible>
         <hungerRateFactorOffset>2</hungerRateFactorOffset>
       </li>
     </stages>
