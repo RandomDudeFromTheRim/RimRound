@@ -74,7 +74,8 @@ namespace RimRound.Comps
                 ticksToFill = Props.ticksToEruption.RandomInRange;
 
             preyNearby = AnyPawnWithin(Props.preyRadius);
-            pressure += (float)CheckIntervalTicks / ticksToFill * (preyNearby ? Props.preyPressureFactor : 1f);
+            pressure += (float)CheckIntervalTicks / ticksToFill * (preyNearby ? Props.preyPressureFactor : 1f)
+                * GorgeWorld.GameCondition_FeedingSeason.PressureFactor(parent.Map);
 
             if (pressure >= 1f)
             {

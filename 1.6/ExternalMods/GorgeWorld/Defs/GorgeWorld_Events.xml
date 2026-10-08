@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- The Gorge World's weather: its red air (always), and the body rhythms that come and go -
+     fever, chills, feeding season and peristalsis. None of it is about you: the planet just
+     lives. Code: Source/RimRound/RimRound/GorgeWorld/GorgeAir.cs and GorgeEvents.cs -->
+<Defs>
+
+  <!-- ================================================================ red air -->
+
+  <!-- kept over every flesh-biome map by MapComponent_GorgeWorld; not underground -->
+  <GameConditionDef>
+    <defName>RR_GorgeAir</defName>
+    <conditionClass>RimRound.GorgeWorld.GameCondition_GorgeAir</conditionClass>
+    <label>red air</label>
+    <description>The Gorge World's air: warm, wet, faintly sweet and tinted red, under a sky the colour of the inside of a mouth. It's like living inside something. Roofs help a little.</description>
+    <canBePermanent>true</canBePermanent>
+    <allowUnderground>false</allowUnderground>
+  </GameConditionDef>
+
+  <ThoughtDef>
+    <defName>RR_GorgeAir</defName>
+    <workerClass>RimRound.GorgeWorld.ThoughtWorker_GorgeAir</workerClass>
+    <nullifyingHediffs>
+      <li MayRequire="Ludeon.RimWorld.Anomaly">Inhumanized</li>
+    </nullifyingHediffs>
+    <stages>
+      <li>
+        <label>breathing the gorge</label>
+        <description>Even under a roof the air is warm and wet and smells of meat. I can feel the ground breathing.</description>
+        <baseMoodEffect>-1</baseMoodEffect>
+      </li>
+      <li>
+        <label>under the red sky</label>
+        <description>Out here the sky is red as the inside of a mouth and the air is thick and sweet. It's like walking around inside something.</description>
+        <baseMoodEffect>-3</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- ================================================================ fever and chills -->
+
+  <GameConditionDef>
+    <defName>RR_GorgeFever</defName>
+    <conditionClass>GameCondition_HeatWave</conditionClass>
+    <label>fever</label>
+    <description>The planet is running a fever. The flesh is hot to the touch and the air is stifling.</description>
+    <descriptionFuture>the flesh around [map_definite] will burn with fever for [gameConditionDuration_duration], hot enough to kill people and animals in uncooled areas</descriptionFuture>
+    <endMessage>The fever has broken.</endMessage>
+    <letterText>The planet is running a fever. The ground is hot and slick with sweat, and the air is getting dangerously hot.\n\nFevers can cause deadly heatstroke. Stay cool: build passive or electric coolers, and keep people indoors.</letterText>
+    <letterDef>NegativeEvent</letterDef>
+    <exclusiveConditions>
+      <li>RR_GorgeChills</li>
+      <li>HeatWave</li>
+      <li>ColdSnap</li>
+    </exclusiveConditions>
+    <letterHyperlinks>
+      <li>PassiveCooler</li>
+      <li>Cooler</li>
+    </letterHyperlinks>
+    <allowUnderground>false</allowUnderground>
+  </GameConditionDef>
+
+  <GameConditionDef>
+    <defName>RR_GorgeChills</defName>
+    <conditionClass>GameCondition_ColdSnap</conditionClass>
+    <label>chills</label>
+    <description>The planet has the chills. The flesh is clammy and cool, and it shivers now and then.</description>
+    <descriptionFuture>the flesh around [map_definite] will go cold and clammy for [gameConditionDuration_duration]</descriptionFuture>
+    <endMessage>The chills have passed.</endMessage>
+    <letterText>The planet has the chills. The flesh has gone cold and clammy, and the air has cooled right down - not to freezing, but far below the usual warmth.</letterText>
+    <letterDef>NeutralEvent</letterDef>
+    <exclusiveConditions>
+      <li>RR_GorgeFever</li>
+      <li>HeatWave</li>
+      <li>ColdSnap</li>
+    </exclusiveConditions>
+    <allowUnderground>false</allowUnderground>
+  </GameConditionDef>
+
+  <!-- ================================================================ feeding season -->
+
+  <GameConditionDef>
+    <defName>RR_FeedingSeason</defName>
+    <conditionClass>RimRound.GorgeWorld.GameCondition_FeedingSeason</conditionClass>
+    <label>feeding season</label>
+    <description>The Gorge World is being fed, and everything on it gorges. Plants grow three times as fast, bloatgas geysers fill three times as fast, and the air is so thick with nourishment that anyone out under the sky barely gets hungry - and slowly fills out.</description>
+    <descriptionFuture>[map_definite] will be in feeding season for [gameConditionDuration_duration]</descriptionFuture>
+    <endMessage>Feeding season is over.</endMessage>
+    <letterText>It's feeding season. Something is feeding the planet, and everything on it is gorging: the flesh is flushed and swollen, plants are shooting up, bloatgas geysers are filling fast, and animals are wandering in for the glut.\n\nThe air is thick, sweet and nourishing. Anyone out under the sky will barely get hungry, and will slowly put on weight.</letterText>
+    <letterDef>PositiveEvent</letterDef>
+    <allowUnderground>false</allowUnderground>
+  </GameConditionDef>
+
+  <!-- ================================================================ peristalsis -->
+
+  <GameConditionDef>
+    <defName>RR_Peristalsis</defName>
+    <conditionClass>RimRound.GorgeWorld.GameCondition_Peristalsis</conditionClass>
+    <label>peristalsis</label>
+    <description>Slow waves of muscle are rolling through the ground. Every so often it heaves, and anyone on their feet staggers.</description>
+    <descriptionFuture>the ground around [map_definite] will heave with peristalsis for [gameConditionDuration_duration]</descriptionFuture>
+    <endMessage>The ground has settled.</endMessage>
+    <letterText>The ground has started to heave. Slow waves of muscle are rolling through the flesh beneath you - the planet is swallowing.\n\nEvery so often the ground will lurch, and anyone on their feet will stagger. It won't break anything.</letterText>
+    <letterDef>NeutralEvent</letterDef>
+    <allowUnderground>false</allowUnderground>
+  </GameConditionDef>
+
+  <!-- ================================================================ incidents -->
+
+  <IncidentDef Name="RR_GorgeConditionIncidentBase" Abstract="True">
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>IncidentWorker_MakeGameCondition</workerClass>
+    <allowedBiomes>
+      <li>RR_Fleshwood</li>
+      <li>RR_TallowMarsh</li>
+      <li>RR_MawWastes</li>
+    </allowedBiomes>
+  </IncidentDef>
+
+  <IncidentDef ParentName="RR_GorgeConditionIncidentBase">
+    <defName>RR_GorgeFever</defName>
+    <label>fever</label>
+    <gameCondition>RR_GorgeFever</gameCondition>
+    <letterLabel>Fever</letterLabel>
+    <letterDef>ThreatSmall</letterDef>
+    <baseChance>1.0</baseChance>
+    <minRefireDays>30</minRefireDays>
+    <durationDays>1.5~3.5</durationDays>
+    <disabledWhen>
+      <extremeWeatherIncidentsDisabled>true</extremeWeatherIncidentsDisabled>
+    </disabledWhen>
+  </IncidentDef>
+
+  <IncidentDef ParentName="RR_GorgeConditionIncidentBase">
+    <defName>RR_GorgeChills</defName>
+    <label>chills</label>
+    <gameCondition>RR_GorgeChills</gameCondition>
+    <letterLabel>Chills</letterLabel>
+    <letterDef>NeutralEvent</letterDef>
+    <baseChance>0.6</baseChance>
+    <minRefireDays>30</minRefireDays>
+    <durationDays>1~3</durationDays>
+  </IncidentDef>
+
+  <IncidentDef ParentName="RR_GorgeConditionIncidentBase">
+    <defName>RR_FeedingSeason</defName>
+    <label>feeding season</label>
+    <gameCondition>RR_FeedingSeason</gameCondition>
+    <letterLabel>Feeding season</letterLabel>
+    <letterDef>PositiveEvent</letterDef>
+    <baseChance>1.2</baseChance>
+    <minRefireDays>20</minRefireDays>
+    <durationDays>2~4</durationDays>
+  </IncidentDef>
+
+  <IncidentDef ParentName="RR_GorgeConditionIncidentBase">
+    <defName>RR_Peristalsis</defName>
+    <label>peristalsis</label>
+    <gameCondition>RR_Peristalsis</gameCondition>
+    <letterLabel>Peristalsis</letterLabel>
+    <letterDef>NeutralEvent</letterDef>
+    <baseChance>0.8</baseChance>
+    <minRefireDays>15</minRefireDays>
+    <durationDays>0.25~0.6</durationDays>
+  </IncidentDef>
+
+</Defs>

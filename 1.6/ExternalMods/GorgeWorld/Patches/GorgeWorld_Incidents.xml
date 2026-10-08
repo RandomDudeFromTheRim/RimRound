@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- The Gorge World has fevers and chills instead of heat waves and cold snaps
+     (GorgeWorld_Events.xml). -->
+<Patch>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/IncidentDef[defName="HeatWave"]/disallowedBiomes</xpath>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/IncidentDef[defName="HeatWave"]</xpath>
+      <value>
+        <disallowedBiomes />
+      </value>
+    </nomatch>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/IncidentDef[defName="HeatWave"]/disallowedBiomes</xpath>
+    <value>
+      <li>RR_Fleshwood</li>
+      <li>RR_TallowMarsh</li>
+      <li>RR_MawWastes</li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/IncidentDef[defName="ColdSnap"]/disallowedBiomes</xpath>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/IncidentDef[defName="ColdSnap"]</xpath>
+      <value>
+        <disallowedBiomes />
+      </value>
+    </nomatch>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/IncidentDef[defName="ColdSnap"]/disallowedBiomes</xpath>
+    <value>
+      <li>RR_Fleshwood</li>
+      <li>RR_TallowMarsh</li>
+      <li>RR_MawWastes</li>
+    </value>
+  </Operation>
+
+</Patch>

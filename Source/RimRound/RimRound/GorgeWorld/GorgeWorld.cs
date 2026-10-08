@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using RimWorld;
@@ -99,12 +101,14 @@ namespace RimRound.GorgeWorld
 
     /// <summary>
     /// Scatters the flesh dimension's growths over a flesh biome's map: gorge maws hidden in
-    /// the floor, bloat spitters and bloatgas vents, as thick as its GorgeBiomeExtension says.
+    /// the floor, bloat spitters and bloatgas vents, as thick as its GorgeBiomeExtension says,
+    /// and one to three gullets down into its guts (Building_Gullet), well apart.
     /// Kept away from the map edge and the middle, where a colony usually starts.
     /// </summary>
     public class TileMutatorWorker_GorgeGrowths : TileMutatorWorker
     {
         const float KeepClearOfCentre = 22f;
+        const float GulletSpacing = 30f;
 
         public TileMutatorWorker_GorgeGrowths(TileMutatorDef def) : base(def) { }
 
@@ -112,22 +116,24 @@ namespace RimRound.GorgeWorld
         {
             if (map.Biome.GetModExtension<GorgeBiomeExtension>() is not GorgeBiomeExtension ext)
                 return;
-            Scatter(map, "RR_GorgeMaw", ext.mawsPer10k);
-            Scatter(map, "RR_BloatSpitter", ext.spittersPer10k);
-            Scatter(map, "RR_BloatGeyser", ext.geysersPer10k);
+            Scatter(map, "RR_Gullet", Rand.RangeInclusive(1, 3), GulletSpacing);
+            Scatter(map, "RR_GorgeMaw", GenMath.RoundRandom(ext.mawsPer10k * map.Area / 10000f));
+            Scatter(map, "RR_BloatSpitter", GenMath.RoundRandom(ext.spittersPer10k * map.Area / 10000f));
+            Scatter(map, "RR_BloatGeyser", GenMath.RoundRandom(ext.geysersPer10k * map.Area / 10000f));
         }
 
-        static void Scatter(Map map, string defName, float per10k)
+        static void Scatter(Map map, string defName, int count, float spacing = 0f)
         {
             ThingDef def = DefDatabase<ThingDef>.GetNamedSilentFail(defName);
-            if (def == null || per10k <= 0f)
+            if (def == null)
                 return;
-            int count = GenMath.RoundRandom(per10k * map.Area / 10000f);
+            var placed = new List<IntVec3>();
             for (int i = 0; i < count; i++)
             {
-                if (!CellFinder.TryFindRandomCell(map, c => Fits(def, c, map), out IntVec3 cell))
+                if (!CellFinder.TryFindRandomCell(map, c => Fits(def, c, map) && placed.All(p => p.DistanceTo(c) >= spacing), out IntVec3 cell))
                     return;
                 GenSpawn.Spawn(ThingMaker.MakeThing(def), cell, map);
+                placed.Add(cell);
             }
         }
 

@@ -60,7 +60,7 @@
   <BiomeDef ParentName="RR_GorgeBiomeBase">
     <defName>RR_Fleshwood</defName>
     <label>fleshwood</label>
-    <description>A forest grown out of living flesh. Sinew trees hold up lumpy crowns that watch you pass, tendrils writhe underfoot, and the streams and pools run with warm blood welling up from the veins below.\n\n&lt;color=#33d733&gt;NOTES: Rivers and lakes are blood. The only rock is gristle, which yields nothing. Found only on the Gorge World.&lt;/color&gt;</description>
+    <description>A forest grown out of living flesh. Sinew trees hold up lumpy crowns that watch you pass, tendrils writhe underfoot, and the streams and pools run with warm blood welling up from the veins below.\n\n&lt;color=#33d733&gt;NOTES: Rivers and lakes are blood. The only rock is gristle, which sometimes leaves chunks that cut into gristle blocks. Gullets lead down into the planet's guts. Found only on the Gorge World.&lt;/color&gt;</description>
     <workerClass>RimRound.GorgeWorld.BiomeWorker_Fleshwood</workerClass>
     <texture>World/Biomes/RR_Fleshwood</texture>
     <animalDensity>2.4</animalDensity>
@@ -134,7 +134,7 @@
   <BiomeDef ParentName="RR_GorgeBiomeBase">
     <defName>RR_TallowMarsh</defName>
     <label>tallow marsh</label>
-    <description>A sagging lowland where the flesh has rendered down into fat. The ground is soft, waxy tallow, broken by wobbling gelatin mires and pools of fat kept molten by the warmth underneath. Tallow bulbs swell everywhere; going anywhere is slow.\n\n&lt;color=#33d733&gt;NOTES: Rivers and lakes are molten tallow. The only rock is gristle, which yields nothing. Found only on the Gorge World.&lt;/color&gt;</description>
+    <description>A sagging lowland where the flesh has rendered down into fat. The ground is soft, waxy tallow, broken by wobbling gelatin mires and pools of fat kept molten by the warmth underneath. Tallow bulbs swell everywhere; going anywhere is slow.\n\n&lt;color=#33d733&gt;NOTES: Rivers and lakes are molten tallow. The only rock is gristle, which sometimes leaves chunks that cut into gristle blocks. Gullets lead down into the planet's guts. Found only on the Gorge World.&lt;/color&gt;</description>
     <workerClass>RimRound.GorgeWorld.BiomeWorker_TallowMarsh</workerClass>
     <texture>World/Biomes/RR_TallowMarsh</texture>
     <animalDensity>2.0</animalDensity>
@@ -206,7 +206,7 @@
   <BiomeDef ParentName="RR_GorgeBiomeBase">
     <defName>RR_MawWastes</defName>
     <label>gorge maw wastes</label>
-    <description>Open, dry plains of scarred flesh where little grows. The ground is riddled with gorge maws waiting under the skin to swallow whoever steps on them, bloat spitters lob bile at anything that moves, and sour bile seeps up into the low ground. What lives here is mean.\n\n&lt;color=#33d733&gt;NOTES: Rivers and lakes are bile. Gorge maws, bloat spitters and bloatgas vents are common. The only rock is gristle, which yields nothing. Found only on the Gorge World.&lt;/color&gt;</description>
+    <description>Open, dry plains of scarred flesh where little grows. The ground is riddled with gorge maws waiting under the skin to swallow whoever steps on them, bloat spitters lob bile at anything that moves, and sour bile seeps up into the low ground. What lives here is mean.\n\n&lt;color=#33d733&gt;NOTES: Rivers and lakes are bile. Gorge maws, bloat spitters and bloatgas vents are common. The only rock is gristle, which sometimes leaves chunks that cut into gristle blocks. Gullets lead down into the planet's guts. Found only on the Gorge World.&lt;/color&gt;</description>
     <workerClass>RimRound.GorgeWorld.BiomeWorker_MawWastes</workerClass>
     <texture>World/Biomes/RR_MawWastes</texture>
     <settlementSelectionWeight>0.3</settlementSelectionWeight>

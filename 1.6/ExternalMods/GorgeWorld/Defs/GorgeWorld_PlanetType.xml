@@ -7,7 +7,7 @@
   <AlienWorlds.PlanetTypeDef>
     <defName>RR_GorgeWorld</defName>
     <label>gorge world</label>
-    <description>A world made of meat. Every continent is living flesh - fleshwoods, rendered tallow marshes, scarred wastes riddled with gorge maws - with gristle for bones, seas of blood, and blood, fat and bile for rivers. Nothing here was ever stone or water. Whatever is eating it hasn't finished.</description>
+    <description>A world made of meat. Every continent is living flesh - fleshwoods, rendered tallow marshes, scarred wastes riddled with gorge maws - with gristle for bones, seas of blood, and blood, fat and bile for rivers. Nothing here was ever stone or water. Whatever is eating it hasn't finished.\n\nIt's warm-blooded: around 30-37°C almost everywhere, with barely any seasons, but it runs fevers and gets the chills. The air is red, the ground sometimes heaves, and gullets lead down into its guts.</description>
     <difficulty>4</difficulty>
     <biomes>
       <li>RR_Fleshwood</li>
@@ -21,6 +21,22 @@
     <lakeBiome>RR_BloodLake</lakeBiome>
     <worldOceanTexture>World/Biomes/RR_BloodSea</worldOceanTexture>
     <ungeneratedPlanetPartsTexture>World/Biomes/RR_BloodSea</ungeneratedPlanetPartsTexture>
+    <!-- warm-blooded: body temperature almost everywhere, a little cooler at the poles (and on
+         high ground), with barely any seasons. Fevers and chills come and go instead
+         (GorgeWorld_Events.xml). -->
+    <avgTempByLatitudeCurve>
+      <points>
+        <li>0.0, 37</li>
+        <li>0.6, 34</li>
+        <li>1.0, 29</li>
+      </points>
+    </avgTempByLatitudeCurve>
+    <seasonalTempVariationCurve>
+      <points>
+        <li>0.0, 1</li>
+        <li>1.0, 4</li>
+      </points>
+    </seasonalTempVariationCurve>
     <biomeConfigs>
       <li>
         <!-- her coasts run into the blood sea too (her own rivers and pools stay milk) -->

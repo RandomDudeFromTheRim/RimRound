@@ -8,7 +8,7 @@
   <ThingDef ParentName="UglyRockBase">
     <defName>RR_Gristle</defName>
     <label>gristle</label>
-    <description>Dense, rubbery gristle - the Gorge World's bones, as near to stone as it has. It takes a long time to cut through and yields nothing worth keeping. Dug out, it leaves raw scar tissue behind.</description>
+    <description>Dense, rubbery gristle - the Gorge World's bones, as near to stone as it has. It takes a long time to cut through, and now and then leaves a chunk that can be cut into blocks. Dug out, it leaves raw scar tissue behind.</description>
     <graphicData>
       <texPath>Things/Building/GorgeWorld/RR_Gristle_Atlas</texPath>
     </graphicData>
@@ -16,13 +16,59 @@
       <MaxHitPoints>700</MaxHitPoints>
     </statBases>
     <building>
-      <mineableThing />
+      <mineableThing>RR_ChunkGristle</mineableThing>
+      <mineableDropChance>0.25</mineableDropChance>
       <smoothedThing />
       <!-- only where a flesh biome asks for it -->
       <biomeSpecific>true</biomeSpecific>
       <naturalTerrain>RR_ScarTissue</naturalTerrain>
       <leaveTerrain>RR_ScarTissue</leaveTerrain>
     </building>
+  </ThingDef>
+
+  <!-- chunks and blocks: the Gorge World's only stone-like building material. Rubbery, so a
+       bit weaker than real stone, but it doesn't burn. -->
+  <ThingDef ParentName="ChunkRockBase">
+    <defName>RR_ChunkGristle</defName>
+    <label>gristle chunk</label>
+    <description>A heavy, rubbery lump of gristle. It can be cut into blocks at a stonecutter's table - the closest thing to stone the Gorge World has.</description>
+    <graphicData>
+      <color>(196,168,160)</color>
+    </graphicData>
+    <statBases>
+      <Mass>20</Mass>
+    </statBases>
+    <soundDrop>ChunkRock_Drop</soundDrop>
+    <butcherProducts>
+      <RR_BlocksGristle>20</RR_BlocksGristle>
+    </butcherProducts>
+  </ThingDef>
+
+  <ThingDef ParentName="StoneBlocksBase">
+    <defName>RR_BlocksGristle</defName>
+    <label>gristle blocks</label>
+    <description>Blocks of gristle, cut square and pressed dry. They're rubbery rather than hard, so they don't hold up quite as well as real stone - but they don't burn, and on the Gorge World there's nothing else like them.</description>
+    <graphicData>
+      <color>(196,168,160)</color>
+    </graphicData>
+    <statBases>
+      <Mass>1</Mass>
+      <SharpDamageMultiplier>0.5</SharpDamageMultiplier>
+    </statBases>
+    <stuffProps>
+      <color>(196,168,160)</color>
+      <commonality>0.02</commonality>
+      <soundImpactBullet>BulletImpact_Ground</soundImpactBullet>
+      <soundMeleeHitSharp>MeleeHit_Stone</soundMeleeHitSharp>
+      <soundMeleeHitBlunt>MeleeHit_Stone</soundMeleeHitBlunt>
+      <soundImpactMelee>Pawn_Melee_Punch_HitBuilding_Stone</soundImpactMelee>
+      <stuffAdjective>gristle</stuffAdjective>
+      <statFactors>
+        <MaxHitPoints>1.3</MaxHitPoints>
+        <Beauty>0.8</Beauty>
+      </statFactors>
+      <canSuggestUseDefaultStuff>true</canSuggestUseDefaultStuff>
+    </stuffProps>
   </ThingDef>
 
   <!-- ================================================================ tallow -->

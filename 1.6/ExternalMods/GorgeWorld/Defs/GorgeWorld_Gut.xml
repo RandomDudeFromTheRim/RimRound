@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- The Gorge World's guts: gullets in the flesh (one to three a map) lead down into them.
+     Staying down there gets you digested. Code: Source/RimRound/RimRound/GorgeWorld/GorgeGut.cs
+     Art: Source/TextureGen/guttex.py -->
+<Defs>
+
+  <ThingDef ParentName="BuildingBase">
+    <defName>RR_Gullet</defName>
+    <label>gullet</label>
+    <description>A throat in the flesh: a ringed, wet opening that swallows down into one of the planet's guts. Whatever it has swallowed and not yet finished digesting is down there - and so is its stomach acid.\n\nAnyone who stays down there is slowly digested. Once nobody has been inside for a couple of days, the gut churns over everything left in it, and the gullet clenches shut while it digests.</description>
+    <thingClass>RimRound.GorgeWorld.Building_Gullet</thingClass>
+    <size>(3,3)</size>
+    <useHitPoints>false</useHitPoints>
+    <tickerType>Normal</tickerType>
+    <rotatable>false</rotatable>
+    <canOverlapZones>false</canOverlapZones>
+    <graphicData>
+      <texPath>Things/Building/GorgeWorld/RR_Gullet</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3.4,3.4)</drawSize>
+    </graphicData>
+    <altitudeLayer>FloorEmplacement</altitudeLayer>
+    <passability>Impassable</passability>
+    <destroyable>false</destroyable>
+    <building>
+      <isEdifice>true</isEdifice>
+      <deconstructible>false</deconstructible>
+      <isTargetable>false</isTargetable>
+      <isInert>true</isInert>
+      <claimable>false</claimable>
+      <expandHomeArea>false</expandHomeArea>
+    </building>
+    <portal>
+      <pocketMapGenerator>RR_GorgeGut</pocketMapGenerator>
+      <exitDef>CaveExit</exitDef>
+      <pocketMapSize>90</pocketMapSize>
+      <enteredLetterLabel>Into the gut</enteredLetterLabel>
+      <enteredLetterText>{PAWN_nameDef} has climbed down the gullet into one of the planet's guts. The walls are ribbed muscle, the air is hot and acrid, and a great stomach of bile churns somewhere ahead. In the pouches off it lies whatever the planet swallowed and hasn't finished with yet.\n\nThe gut is digesting anyone inside it: the longer someone stays, the worse the acid burns. Get what you came for and get out. The slurry also seeps into them - nobody gets very hungry down here, but everybody fills out.</enteredLetterText>
+      <enteredLetterDef>ThreatSmall</enteredLetterDef>
+    </portal>
+    <statBases>
+      <Flammability>0</Flammability>
+    </statBases>
+    <inspectorTabs>
+      <li>ITab_ContentsMapPortal</li>
+    </inspectorTabs>
+  </ThingDef>
+
+  <!-- ================================================================ in the gut -->
+
+  <BiomeDef ParentName="Biome_Underground">
+    <defName>RR_GorgeGut</defName>
+    <label>gorge gut</label>
+    <description>Inside one of the Gorge World's guts: ribbed muscle walls, a stomach of churning bile, and pouches full of what it swallowed. It digests whoever stays.</description>
+    <animalDensity>0</animalDensity>
+    <plantDensity>0</plantDensity>
+    <diseaseMtbDays>200</diseaseMtbDays>
+  </BiomeDef>
+
+  <MapGeneratorDef>
+    <defName>RR_GorgeGut</defName>
+    <label>gorge gut</label>
+    <isUnderground>true</isUnderground>
+    <ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
+    <disableCallAid>true</disableCallAid>
+    <pocketMapProperties>
+      <biome>RR_GorgeGut</biome>
+      <temperature>38</temperature>
+    </pocketMapProperties>
+    <genSteps>
+      <li>RR_GorgeGut</li>
+      <li>Fog</li>
+    </genSteps>
+  </MapGeneratorDef>
+
+  <GenStepDef>
+    <defName>RR_GorgeGut</defName>
+    <order>100</order>
+    <genStep Class="RimRound.GorgeWorld.GenStep_GorgeGut" />
+  </GenStepDef>
+
+  <ThingDef ParentName="UglyRockBase">
+    <defName>RR_GutWall</defName>
+    <label>gut wall</label>
+    <description>Thick, ribbed muscle - the wall of one of the planet's guts. It clenches faintly under a blade and yields nothing worth keeping.</description>
+    <graphicData>
+      <color>(132,44,54)</color>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>600</MaxHitPoints>
+    </statBases>
+    <building>
+      <mineableThing />
+      <smoothedThing />
+      <!-- only ever placed in a gut (GenStep_GorgeGut) -->
+      <biomeSpecific>true</biomeSpecific>
+      <naturalTerrain>RR_GorgeFlesh</naturalTerrain>
+      <leaveTerrain>RR_GorgeFlesh</leaveTerrain>
+    </building>
+  </ThingDef>
+
+  <!-- ================================================================ being digested -->
+
+  <HediffDef>
+    <defName>RR_GutDigestion</defName>
+    <label>being digested</label>
+    <description>This person has been down in one of the Gorge World's guts, and it has been digesting them. The longer they stay, the further it goes and the more often the acid burns them. It wears off quickly once they're out.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.85, 0.75, 0.3)</defaultLabelColor>
+    <isBad>true</isBad>
+    <initialSeverity>0.01</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-3</severityPerDay>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>slick</label>
+      </li>
+      <li>
+        <minSeverity>0.2</minSeverity>
+        <label>stinging</label>
+        <painOffset>0.05</painOffset>
+      </li>
+      <li>
+        <minSeverity>0.45</minSeverity>
+        <label>burning</label>
+        <painOffset>0.15</painOffset>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <offset>-0.05</offset>
+          </li>
+        </capMods>
+      </li>
+      <li>
+        <minSeverity>0.7</minSeverity>
+        <label>dissolving</label>
+        <painOffset>0.3</painOffset>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <offset>-0.15</offset>
+          </li>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>-0.1</offset>
+          </li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+</Defs>
