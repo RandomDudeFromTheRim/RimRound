@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Lactation Expansion: a heavier pawn makes and holds more milk (StatPart_LactationByWeight) -->
+<Patch>
+	<Operation Class="PatchOperationConditional">
+		<xpath>/Defs/StatDef[defName="SEX_LactationCapacity"]/parts</xpath>
+		<match Class="PatchOperationAdd">
+			<xpath>/Defs/StatDef[defName="SEX_LactationCapacity"]/parts</xpath>
+			<value>
+				<li Class="RimRound.AI.StatPart_LactationByWeight"/>
+			</value>
+		</match>
+	</Operation>
+	<Operation Class="PatchOperationConditional">
+		<xpath>/Defs/StatDef[defName="SEX_LactationPerDay"]/parts</xpath>
+		<match Class="PatchOperationAdd">
+			<xpath>/Defs/StatDef[defName="SEX_LactationPerDay"]/parts</xpath>
+			<value>
+				<li Class="RimRound.AI.StatPart_LactationByWeight"/>
+			</value>
+		</match>
+	</Operation>
+</Patch>

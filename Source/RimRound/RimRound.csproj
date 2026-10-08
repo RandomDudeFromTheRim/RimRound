@@ -427,7 +427,7 @@
     <Compile Include="RimRound\GorgeWorld\GorgeWorld.cs" />
     <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_WeightOpinion_Animalistic.cs" />
     <Compile Include="RimRound\Mime\RRMime.cs" />
-    <Compile Include="RimRound\AI\StatParts\StatPart_LactationCapacityByWeight.cs" />
+    <Compile Include="RimRound\AI\StatParts\StatPart_LactationByWeight.cs" />
     <Compile Include="RimRound\Utilities\RRLactationUtility.cs" />
     <Compile Include="RimRound\Hediffs\Hediff_RROverfilled.cs" />
     <Compile Include="RimRound\Comps\Pawns\Comp_RRTroikaAllure.cs" />

@@ -1,4 +1,4 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimRound.Hediffs;
 using RimRound.Utilities;
 using RimWorld;
@@ -15,8 +15,8 @@ namespace RimRound.Comps
     {
         public static void PatchAll(HarmonyLib.Harmony harmony)
         {
-            // #1 (milk yield by weight) is a stat part on SEX_LactationCapacity now:
-            // StatPart_LactationCapacityByWeight, patched in by RimRound_LactationCapacity.xml
+            // #1 (milk by weight) is a stat part on SEX_LactationCapacity and SEX_LactationPerDay:
+            // StatPart_LactationByWeight, patched in by RimRound_LactationByWeight.xml
 
             // #2: Weight opinion affects milking mood
             ModCompatibilityUtility.TryPatch(

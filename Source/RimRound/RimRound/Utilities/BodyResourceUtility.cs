@@ -11,33 +11,28 @@ namespace RimRound.Utilities
 {
     public static class BodyResourceUtility
     {
-        public static float GetMilkMultiplierByWeight(Pawn p) 
+        /// <summary>
+        /// How much more milk a body this heavy makes and holds: a step per weight stage,
+        /// growing a little slower than her mass (about mass^0.38) all the way up to
+        /// Gelatinous Ω, scaled by the milk-by-weight setting and capped by the max setting.
+        /// A pawn without RimRound weight (a Nephila caste, with a mass of its own) is x1.
+        /// </summary>
+        public static float GetMilkMultiplierByWeight(Pawn p)
         {
-            if (!p.RaceProps.Humanlike) 
-            {
+            if (p?.RaceProps == null || !p.RaceProps.Humanlike || Utilities.HediffUtility.WeightHediff(p) == null)
                 return 1f;
-            }
 
             float weightSeverity = Utilities.HediffUtility.KilosToSeverityWithBaseWeight(p.Weight());
-            float multiplier = 1;
-            if (weightSeverity > milkMultiplier.Last().First)
+            float stage = milkMultiplier[0].Second;
+            foreach (Pair<float, float> step in milkMultiplier)
             {
-                multiplier = 1 + ((milkMultiplier.Last().Second - 1) * GlobalSettings.milkMultiplierForWeight.threshold);
-                multiplier = Mathf.Clamp(multiplier, 0, GlobalSettings.maxMilkMultiplier.threshold);
-                return multiplier;
-            }
-
-            for (int i = 1; i < milkMultiplier.Count - 1; ++i)
-            {
-                if (weightSeverity < milkMultiplier[i].First)
-                {
-                    multiplier = 1 + ((milkMultiplier[i - 1].Second - 1) * GlobalSettings.milkMultiplierForWeight.threshold);
+                if (weightSeverity < step.First)
                     break;
-                }
+                stage = step.Second;
             }
 
-            multiplier = Mathf.Clamp(multiplier, 0, GlobalSettings.maxMilkMultiplier.threshold);
-            return multiplier;
+            float multiplier = 1 + (stage - 1) * GlobalSettings.milkMultiplierForWeight.threshold;
+            return Mathf.Clamp(multiplier, 0, GlobalSettings.maxMilkMultiplier.threshold);
         }
 
         static List<Pair<float, float>> milkMultiplier = new List<Pair<float, float>>()
@@ -72,6 +67,17 @@ namespace RimRound.Utilities
             new Pair<float, float>( 7.960f, 7.50f  ),
             new Pair<float, float>( 9.960f, 8.50f  ),
             new Pair<float, float>( 14.46f, 10.0f  ),
-        }; // Perhaps add more after GEL I
+            // past Gelatinous IX, still about mass^0.38
+            new Pair<float, float>( 21.85f, 11.7f  ),
+            new Pair<float, float>( 42.40f, 15.0f  ),
+            new Pair<float, float>( 70.50f, 18.25f ),
+            new Pair<float, float>( 116.6f, 22.1f  ),
+            new Pair<float, float>( 164.5f, 25.2f  ),
+            new Pair<float, float>( 286.2f, 31.1f  ),
+            new Pair<float, float>( 411.0f, 35.7f  ),
+            new Pair<float, float>( 576.7f, 40.5f  ),
+            new Pair<float, float>( 773.2f, 45.3f  ),
+            new Pair<float, float>( 999.999f, 50.0f ),
+        };
     }
 }

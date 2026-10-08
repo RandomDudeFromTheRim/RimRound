@@ -5,11 +5,12 @@ using Verse;
 namespace RimRound.AI
 {
     /// <summary>
-    /// Lactation Expansion's milk capacity (SEX_LactationCapacity) grows with weight: every
-    /// way of getting milk out of her - milking, suckling, a constrictor's pumping - draws on
-    /// the one store, so a heavier pawn simply holds and yields more.
+    /// Lactation Expansion's milk grows with weight: how much she holds (SEX_LactationCapacity)
+    /// and how much she makes a day (SEX_LactationPerDay), by the same factor - so she still
+    /// fills up in about a day, and every milking yields more the bigger she is. (Lactation
+    /// Expansion replaces vanilla lactation, so RimRound's vanilla milk patch never reaches it.)
     /// </summary>
-    public class StatPart_LactationCapacityByWeight : StatPart
+    public class StatPart_LactationByWeight : StatPart
     {
         public override void TransformValue(StatRequest req, ref float val)
         {
