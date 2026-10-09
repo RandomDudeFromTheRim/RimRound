@@ -428,6 +428,9 @@
     <Compile Include="RimRound\GorgeWorld\GorgeAir.cs" />
     <Compile Include="RimRound\GorgeWorld\GorgeEvents.cs" />
     <Compile Include="RimRound\GorgeWorld\GorgeGut.cs" />
+    <Compile Include="RimRound\Gluttony\BottomlessBowl.cs" />
+    <Compile Include="RimRound\Gluttony\WellFedStranger.cs" />
+    <Compile Include="RimRound\Rituals\PsychicRitualDef_RRLipophagy.cs" />
     <Compile Include="RimRound\AI\WeightOpinions\ThoughtWorker_WeightOpinion_Animalistic.cs" />
     <Compile Include="RimRound\Mime\RRMime.cs" />
     <Compile Include="RimRound\AI\StatParts\StatPart_LactationByWeight.cs" />

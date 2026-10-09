@@ -123,6 +123,25 @@ A translucent pink stalker after Lobotomy Corporation's *Melting Love* — **nev
 - Victims are **coated in pink slime** — drawn over the pawn like firefoam, sticky and
   fireproof.
 
+## Bottomless Bowl, Well-Fed Stranger & Lipophagy (Anomaly)
+- **Bottomless bowl** — a golden-cube-style artifact: a battered bowl of void-gluttonium
+  slop that is never empty. It **pulls only on people who don't mind getting bigger**
+  (Neutral weight opinion and up; harder the more they like it). The drawn-in **crave** it
+  (mood and consciousness penalties, and they break off to go to it; left too long the
+  craving snaps into a food binge), and the obsessed now and then **drop everything to
+  gorge on it**. Anyone can be told to eat from it: it stuffs them to their soft limit
+  (past it for the obsessed, never to the hard limit) and soaks them in gluttonium.
+  Studied, it can be **shattered with a shard** - everyone it held falls into a food
+  binge, and it leaves a heap of void gluttonium. It turns up on its own now and then.
+- **Well-fed stranger** — a creepjoiner: enormous, beaming, a hearth cook (cooking 14–18,
+  gourmand) who loves weight. They always bring something: the **bottomless bowl**, a
+  **sweet slime seed**, a **gluttonium seep** (anyone close to them picks up gluttonium
+  exposure), or a **gorge constrictor** nesting in their gut that wriggles free. Their
+  benefit and downsides never turn up on other creepjoiners.
+- **Lipophagy** — philophagy's gluttonous cousin (unlocked with philophagy, a shard to
+  cast): the invoker draws a share of the target's fat into their own body, up to 85% at
+  the best quality. The target is left starving, in dark psychic shock, and hates them for it.
+
 ## Feedees Meme & Rituals (Ideology)
 - **Feedee** role (Obese or heavier) and a **worship** ritual at the feedee's bed: only
   weight-likers take part, offerings are fed to the feedee, quality scales with size.

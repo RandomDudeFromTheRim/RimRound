@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- The well-fed stranger (Anomaly creepjoiner): enormous, beaming, a wonderful cook - and always
+     bringing something. Their benefit and downsides never turn up on other creepjoiners
+     (canOccurRandomly false); WellFedStrangerPatches hands them to this form only.
+     Code: Source/RimRound/RimRound/Gluttony/WellFedStranger.cs -->
+<Defs>
+
+  <CreepJoinerFormKindDef ParentName="BaseCreepJoinerKind" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_WellFedStranger</defName>
+    <label>well-fed stranger</label>
+    <!-- a plain human rather than Anomaly's CreepJoiner race, so RimRound draws them at their
+         size (the CreepJoiner race doesn't get Humanoid Alien Races' body types) -->
+    <race>Human</race>
+    <weight>1</weight>
+    <letterLabel>An enormous, beaming stranger is waddling toward your colony.</letterLabel>
+    <letterPrompt>The stranger is huge - soft, round and flushed, and smiling as if {PAWN_pronoun} has just come home. {PAWN_pronoun} says {PAWN_pronoun} smelled your cooking from miles away and couldn't keep away.\n\n{PAWN_pronoun} won't hear of leaving, but promises that nobody under your roof will ever go hungry again.</letterPrompt>
+    <minGenerationAge>25</minGenerationAge>
+    <maxGenerationAge>60</maxGenerationAge>
+    <apparelMoney>200~500</apparelMoney>
+    <apparelTags>
+      <li>IndustrialBasic</li>
+    </apparelTags>
+    <apparelRequired>
+      <li>Apparel_BasicShirt</li>
+      <li>Apparel_Pants</li>
+    </apparelRequired>
+    <modExtensions>
+      <li Class="RimRound.Things.RRPawnKindWeightExtension">
+        <kilos>200~380</kilos>
+        <minOpinion>Love</minOpinion>
+      </li>
+    </modExtensions>
+  </CreepJoinerFormKindDef>
+
+  <CreepJoinerBenefitDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_StrangerHearthCook</defName>
+    <label>hearth cook</label>
+    <canOccurRandomly>false</canOccurRandomly>
+    <letterExtra>{PAWN_pronoun} is a wonderful cook, and swears that nobody under {PAWN_possessive} roof ever goes hungry.</letterExtra>
+    <skills>
+      <Cooking>14~18</Cooking>
+    </skills>
+    <traits>
+      <Gourmand />
+    </traits>
+  </CreepJoinerBenefitDef>
+
+  <!-- ================================================================ what they bring -->
+
+  <CreepJoinerDownsideDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_StrangerBowl</defName>
+    <label>bottomless bowl</label>
+    <weight>3</weight>
+    <canOccurRandomly>false</canOccurRandomly>
+    <workerType>RimRound.Gluttony.CreepJoinerWorker_RRBowl</workerType>
+    <triggersAfterDays>2~6</triggersAfterDays>
+    <hasLetter>true</hasLetter>
+    <letterLabel>{PAWN_nameDef}'s bowl</letterLabel>
+    <letterDesc>{PAWN_nameDef} has unpacked a battered old bowl {PAWN_pronoun} has carried all this way, and set it down for everyone to share. It is full of thick, dark, steaming slop. It is still full. It is always full.\n\nThe bottomless bowl pulls on anyone who doesn't mind getting bigger. Those it draws in will crave it, and the obsessed will drop everything to gorge on it. It can be studied.</letterDesc>
+    <letterDef>ThreatSmall</letterDef>
+    <surgicalInspectionLetterExtra>{SURGEON_nameDef} found {PAWN_nameDef}'s stomach stretched far beyond what any amount of ordinary food could do, as if something has been feeding {PAWN_objective} from somewhere else.</surgicalInspectionLetterExtra>
+    <modExtensions>
+      <li Class="RimRound.Gluttony.StrangerDownsideExtension" />
+    </modExtensions>
+  </CreepJoinerDownsideDef>
+
+  <CreepJoinerDownsideDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_StrangerSlimeSeed</defName>
+    <label>sweet slime seed</label>
+    <weight>1</weight>
+    <canOccurRandomly>false</canOccurRandomly>
+    <workerType>RimRound.Gluttony.CreepJoinerWorker_RRSlimeSeed</workerType>
+    <triggersAfterDays>3~8</triggersAfterDays>
+    <canOccurWhenImprisoned>true</canOccurWhenImprisoned>
+    <surgicalInspectionLetterExtra>{SURGEON_nameDef} noticed a faint, sweet, sugary smell inside {PAWN_nameDef}, and a warmth that didn't belong to {PAWN_objective}, but couldn't find where it came from.</surgicalInspectionLetterExtra>
+    <modExtensions>
+      <li Class="RimRound.Gluttony.StrangerDownsideExtension" />
+    </modExtensions>
+  </CreepJoinerDownsideDef>
+
+  <CreepJoinerDownsideDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_StrangerGluttoniumSeep</defName>
+    <label>gluttonium seep</label>
+    <weight>1.5</weight>
+    <canOccurRandomly>false</canOccurRandomly>
+    <workerType>RimRound.Gluttony.CreepJoinerWorker_RRGluttoniumSeep</workerType>
+    <triggersAfterDays>1~4</triggersAfterDays>
+    <canOccurWhenImprisoned>true</canOccurWhenImprisoned>
+    <hasLetter>true</hasLetter>
+    <letterLabel>{PAWN_nameDef} is leaking gluttonium</letterLabel>
+    <letterDesc>{PAWN_nameDef} admits {PAWN_pronoun} has been eating raw gluttonium for years - and now it has started seeping out of {PAWN_objective}. {PAWN_possessive} skin has a faint blue sheen and the air around {PAWN_objective} is warm and heavy.\n\nAnyone who spends time close to {PAWN_nameDef} will pick up gluttonium exposure.</letterDesc>
+    <letterDef>NegativeEvent</letterDef>
+    <surgicalInspectionLetterExtra>{SURGEON_nameDef} found {PAWN_nameDef}'s gut lined with faintly glowing blue specks - gluttonium, worked deep into the tissue.</surgicalInspectionLetterExtra>
+    <modExtensions>
+      <li Class="RimRound.Gluttony.StrangerDownsideExtension" />
+    </modExtensions>
+  </CreepJoinerDownsideDef>
+
+  <CreepJoinerDownsideDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_StrangerConstrictor</defName>
+    <label>constrictor nest</label>
+    <weight>1</weight>
+    <canOccurRandomly>false</canOccurRandomly>
+    <workerType>RimRound.Gluttony.CreepJoinerWorker_RRConstrictor</workerType>
+    <triggersAfterDays>5~12</triggersAfterDays>
+    <hasLetter>true</hasLetter>
+    <letterLabel>Constrictor in {PAWN_nameDef}</letterLabel>
+    <letterDesc>{PAWN_nameDef} doubled over, retching - and a gorge constrictor has wriggled free of {PAWN_possessive} gut! It had been nesting inside {PAWN_objective} all along, eating everything {PAWN_pronoun} ate.\n\nIt is wild and hungry, and still carrying most of it. Kill it, or tear it off whoever it catches before it pumps them until they burst.</letterDesc>
+    <letterDef>ThreatBig</letterDef>
+    <surgicalInspectionLetterExtra>{SURGEON_nameDef} felt something move inside {PAWN_nameDef}'s belly - something long, coiled and very full - before it went still.</surgicalInspectionLetterExtra>
+    <modExtensions>
+      <li Class="RimRound.Gluttony.StrangerDownsideExtension" />
+    </modExtensions>
+  </CreepJoinerDownsideDef>
+
+  <HediffDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_GluttoniumSeep</defName>
+    <hediffClass>RimRound.Gluttony.Hediff_GluttoniumSeep</hediffClass>
+    <label>gluttonium seep</label>
+    <description>Years of eating raw gluttonium have worked it deep into this person's body, and now it seeps back out. Anyone who spends time close to them picks up gluttonium exposure.</description>
+    <defaultLabelColor>(0.45, 0.7, 1)</defaultLabelColor>
+    <isBad>true</isBad>
+    <everCurableByItem>false</everCurableByItem>
+  </HediffDef>
+
+</Defs>

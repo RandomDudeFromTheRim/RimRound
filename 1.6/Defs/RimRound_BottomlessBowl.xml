@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- The bottomless bowl (Anomaly): a golden-cube-style artifact for gluttons. It pulls on anyone
+     who doesn't mind getting bigger (Neutral weight opinion and up); they crave it, the obsessed
+     binge on it, and anyone can be told to eat from it. Studied, it can be shattered with a
+     shard. It turns up on its own now and then, or with the well-fed stranger
+     (RimRound_WellFedStranger.xml). Code: Source/RimRound/RimRound/Gluttony/BottomlessBowl.cs
+     Art: Source/TextureGen/gluttonytex.py -->
+<Defs>
+
+  <ThingDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <thingClass>ThingWithComps</thingClass>
+    <defName>RR_BottomlessBowl</defName>
+    <label>bottomless bowl</label>
+    <description>A battered, dented old bowl, full to the brim with thick, dark, steaming slop flecked with blue specks of void gluttonium. It smells wonderful. However much is eaten from it, it is always full.\n\nIt pulls on anyone who doesn't mind getting bigger, and the more they like it, the harder it pulls. Those under its pull crave it, and the deeply obsessed drop everything to gorge on it. Anyone can be told to eat from it: it stuffs them to the brim every time, and soaks them in gluttonium.\n\nThe bowl seems impervious to damage.</description>
+    <category>Item</category>
+    <genericMarketSellable>false</genericMarketSellable>
+    <drawerType>MapMeshOnly</drawerType>
+    <tickerType>Normal</tickerType>
+    <rotatable>false</rotatable>
+    <altitudeLayer>Item</altitudeLayer>
+    <selectable>true</selectable>
+    <useHitPoints>false</useHitPoints>
+    <healthAffectsPrice>false</healthAffectsPrice>
+    <alwaysHaulable>true</alwaysHaulable>
+    <drawGUIOverlay>true</drawGUIOverlay>
+    <pathCost>14</pathCost>
+    <graphicData>
+      <graphicClass>Graphic_Single</graphicClass>
+      <texPath>Things/Item/Special/RR_BottomlessBowl</texPath>
+    </graphicData>
+    <statBases>
+      <Mass>1.5</Mass>
+      <Beauty>10</Beauty>
+      <Flammability>0</Flammability>
+      <MarketValue>900</MarketValue>
+    </statBases>
+    <thingCategories>
+      <li>ItemsMisc</li>
+    </thingCategories>
+    <inspectorTabs>
+      <li>ITab_StudyNotes</li>
+    </inspectorTabs>
+    <comps>
+      <li Class="CompProperties_Forbiddable" />
+      <li Class="CompProperties_Studiable">
+        <frequencyTicks>120000</frequencyTicks>
+        <knowledgeCategory>Advanced</knowledgeCategory>
+        <anomalyKnowledge>2</anomalyKnowledge>
+        <minMonolithLevelForStudy>1</minMonolithLevelForStudy>
+        <showToggleGizmo>true</showToggleGizmo>
+      </li>
+      <li Class="CompProperties_StudyUnlocks">
+        <studyNotes>
+          <li>
+            <threshold>4</threshold>
+            <label>Bottomless bowl study progress</label>
+            <text>{PAWN_nameDef}'s investigation of the bottomless bowl has turned up more. The slop isn't made inside it: something on the far side of the void is feeding it, and the bowl feeds on appetite in turn. It pulls hardest on people who want to grow.\n\n{PAWN_nameDef} thinks there may be a way to break it, but {PAWN_pronoun} will need to study it further.</text>
+          </li>
+          <li>
+            <thresholdRange>20~32</thresholdRange>
+            <label>Bottomless bowl study complete</label>
+            <text>{PAWN_nameDef}'s investigation of the bottomless bowl is complete: pressing an archotech shard into the slop will crack it and cut it off from whatever feeds it.\n\nThe psychic whiplash will throw everyone it holds into a food binge.\n\nSelect the bowl to shatter it.</text>
+          </li>
+        </studyNotes>
+      </li>
+      <li Class="RimRound.Gluttony.CompProperties_BottomlessBowl">
+        <activeTicks>1</activeTicks>
+        <ticksToActivate>540</ticksToActivate>
+        <activateTexPath>UI/Commands/DeactivateGoldenCube</activateTexPath>
+        <activateLabelString>Shatter bottomless bowl</activateLabelString>
+        <activateDescString>Crack the bottomless bowl with a shard, cutting it off from whatever feeds it. Everyone under its pull will fall into a food binge.\n\nRequires 1 shard.</activateDescString>
+        <guiLabelString>Choose who should shatter this.</guiLabelString>
+        <jobString>shatter</jobString>
+        <activatingStringPending>shattering {0}</activatingStringPending>
+        <activatingString>shattering {0}: {1}s</activatingString>
+        <fleckOnUsed>PsycastAreaEffect</fleckOnUsed>
+        <fleckOnUsedScale>6</fleckOnUsedScale>
+        <soundActivate>PsychicAnimalPulserCast</soundActivate>
+        <targetingParameters>
+          <canTargetBuildings>false</canTargetBuildings>
+          <canTargetAnimals>false</canTargetAnimals>
+          <canTargetMechs>false</canTargetMechs>
+          <onlyTargetControlledPawns>true</onlyTargetControlledPawns>
+        </targetingParameters>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <JobDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_FeedFromBowl</defName>
+    <driverClass>RimRound.Gluttony.JobDriver_RRFeedFromBowl</driverClass>
+    <reportString>gorging from the bottomless bowl.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
+  <!-- ================================================================ its pull -->
+
+  <HediffDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BowlAllure</defName>
+    <hediffClass>RimRound.Gluttony.Hediff_BowlAllure</hediffClass>
+    <label>bowl allure</label>
+    <description>This person is drawn to the bottomless bowl. Every so often they will crave it until they eat from it, and the deeply obsessed drop everything to gorge on it.\n\nThe pull fades if they stop wanting to grow.</description>
+    <alwaysShowSeverity>true</alwaysShowSeverity>
+    <initialSeverity>0.1</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>false</isBad>
+    <stages>
+      <li>
+        <label>curious</label>
+      </li>
+      <li>
+        <label>hungry for it</label>
+        <minSeverity>0.33</minSeverity>
+        <statFactors>
+          <WorkSpeedGlobal>0.95</WorkSpeedGlobal>
+        </statFactors>
+        <hungerRateFactorOffset>0.2</hungerRateFactorOffset>
+      </li>
+      <li>
+        <label>obsessed</label>
+        <minSeverity>0.66</minSeverity>
+        <statFactors>
+          <WorkSpeedGlobal>0.85</WorkSpeedGlobal>
+        </statFactors>
+        <statOffsets>
+          <MentalBreakThreshold>0.04</MentalBreakThreshold>
+        </statOffsets>
+        <hungerRateFactorOffset>0.5</hungerRateFactorOffset>
+      </li>
+    </stages>
+    <reportStringOverrides>
+      <li>
+        <jobDef>GotoWander</jobDef>
+        <reportString>Wandering and thinking about the bowl.</reportString>
+      </li>
+      <li>
+        <jobDef>Wait_Wander</jobDef>
+        <reportString>Wandering and thinking about the bowl.</reportString>
+      </li>
+      <li>
+        <jobDef>Wait_Asleep</jobDef>
+        <reportString>Asleep, dreaming about the bowl.</reportString>
+      </li>
+    </reportStringOverrides>
+  </HediffDef>
+
+  <HediffDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BowlCraving</defName>
+    <hediffClass>RimRound.Gluttony.Hediff_BowlCraving</hediffClass>
+    <label>bowl craving</label>
+    <description>This person is craving the bottomless bowl. Nothing else will do. It gets worse until they eat from it, and left long enough it snaps into a food binge.</description>
+    <initialSeverity>0.001</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <alwaysShowSeverity>true</alwaysShowSeverity>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+      </li>
+      <li>
+        <label>peckish</label>
+        <minSeverity>0.1</minSeverity>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <offset>-0.05</offset>
+          </li>
+        </capMods>
+      </li>
+      <li>
+        <label>craving</label>
+        <minSeverity>0.4</minSeverity>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <offset>-0.1</offset>
+          </li>
+        </capMods>
+      </li>
+      <li>
+        <label>desperate</label>
+        <minSeverity>0.7</minSeverity>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <offset>-0.15</offset>
+          </li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <ThoughtDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BowlCraving</defName>
+    <workerClass>ThoughtWorker_Hediff</workerClass>
+    <hediff>RR_BowlCraving</hediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <visible>false</visible>
+      </li>
+      <li>
+        <label>thinking about the bowl</label>
+        <description>I keep thinking about that bowl. Just a little more.</description>
+        <baseMoodEffect>-3</baseMoodEffect>
+      </li>
+      <li>
+        <label>craving the bowl</label>
+        <description>Nothing else tastes of anything. I need the bowl.</description>
+        <baseMoodEffect>-8</baseMoodEffect>
+      </li>
+      <li>
+        <label>desperate for the bowl</label>
+        <description>I can smell it from here. I need to eat from it now.</description>
+        <baseMoodEffect>-15</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_AteFromBowl</defName>
+    <durationDays>1</durationDays>
+    <stackLimit>3</stackLimit>
+    <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+    <stages>
+      <li>
+        <label>gorged from the bottomless bowl</label>
+        <description>I ate until I couldn't fit any more, and it was still full. It's never empty. It's never, ever empty.</description>
+        <baseMoodEffect>8</baseMoodEffect>
+      </li>
+      <li>
+        <label>stuffed from that bowl</label>
+        <description>I ate from that bowl and it just kept coming. I can feel it settling on me.</description>
+        <baseMoodEffect>-6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- ================================================================ arrival -->
+
+  <IncidentDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BottomlessBowlArrival</defName>
+    <label>bottomless bowl</label>
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>RimRound.Gluttony.IncidentWorker_RRBottomlessBowl</workerClass>
+    <baseChance>0.15</baseChance>
+    <minAnomalyThreatLevel>1</minAnomalyThreatLevel>
+    <minRefireDays>240</minRefireDays>
+    <letterLabel>Bottomless bowl</letterLabel>
+    <letterText>Someone has left a bowl at the edge of the colony: battered, dented, and full to the brim with thick, dark, steaming slop. It smells wonderful.\n\nIt's still full. However much is eaten from it, it stays full.\n\nThe bottomless bowl pulls on anyone who doesn't mind getting bigger. Those it draws in will crave it, and the obsessed will drop everything to gorge on it. It can be studied.</letterText>
+    <letterDef>NeutralEvent</letterDef>
+  </IncidentDef>
+
+</Defs>

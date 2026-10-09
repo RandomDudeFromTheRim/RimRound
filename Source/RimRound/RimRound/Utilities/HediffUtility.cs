@@ -78,6 +78,19 @@ namespace RimRound.Utilities
                     new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, durationTicks, false));
         }
 
+        /// <summary>
+        /// Queues an exact weight change in kilograms (negative to take weight off), with none
+        /// of the pawn's gain/loss multipliers, applied a few ticks from now with a sprite
+        /// update. For things that move weight about rather than feed it.
+        /// </summary>
+        public static void QueueExactWeightChange(Pawn pawn, float kilos)
+        {
+            var fnd = pawn?.TryGetComp<FullnessAndDietStats_ThingComp>();
+            if (fnd != null && !fnd.Disabled && kilos != 0f)
+                fnd.activeWeightGainRequests.Enqueue(
+                    new WeightGainRequest(kilos, Find.TickManager.TicksGame + 5, 0, false, false));
+        }
+
         /// <summary>Adds a fresh hediff of def to the pawn at the given severity.</summary>
         public static Hediff AddHediffWithSeverity(HediffDef def, Pawn pawn, float severity)
         {

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Lipophagy (Anomaly): philophagy's gluttonous cousin. The invoker draws the fat out of the
+     target's body and into their own. Unlocked with philophagy.
+     Code: Source/RimRound/RimRound/Rituals/PsychicRitualDef_RRLipophagy.cs
+     Icon: Source/TextureGen/gluttonytex.py -->
+<Defs>
+
+  <RimRound.Rituals.PsychicRitualDef_RRLipophagy MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_Lipophagy</defName>
+    <label>lipophagy</label>
+    <description>Psychically draw the fat out of the victim's body and pour it into the invoker's. The more the victim carries, the more there is to take. The victim is left hollow and starving, and falls into dark psychic shock.</description>
+    <researchPrerequisite>Philophagy</researchPrerequisite>
+    <outcomeDescription>With the current ritual quality, the invoker will draw {0} of the target's fat into their own body.\n\nThe target will be left starving and fall into dark psychic shock.</outcomeDescription>
+    <targetRole>PhilophagyTarget</targetRole>
+    <hoursUntilOutcome>4</hoursUntilOutcome>
+    <requiredOffering>
+      <filter>
+        <thingDefs>
+          <li>Shard</li>
+        </thingDefs>
+      </filter>
+      <count>1</count>
+    </requiredOffering>
+    <fractionFromQualityCurve>
+      <points>
+        <li>(0, 0.15)</li>
+        <li>(0.5, 0.35)</li>
+        <li>(0.9, 0.6)</li>
+        <li>(1, 0.85)</li>
+      </points>
+    </fractionFromQualityCurve>
+    <cooldownHours>120</cooldownHours>
+    <iconPath>UI/PsychicRituals/RR_Lipophagy</iconPath>
+  </RimRound.Rituals.PsychicRitualDef_RRLipophagy>
+
+  <ThoughtDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_DrainedMyFat</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>20</durationDays>
+    <stackLimit>300</stackLimit>
+    <stackLimitForSameOtherPawn>10</stackLimitForSameOtherPawn>
+    <stackedEffectMultiplier>0.9</stackedEffectMultiplier>
+    <developmentalStageFilter>Child, Adult</developmentalStageFilter>
+    <socialTargetDevelopmentalStageFilter>Child, Adult</socialTargetDevelopmentalStageFilter>
+    <stages>
+      <li>
+        <label>drained my body</label>
+        <baseOpinionOffset>-25</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+</Defs>
