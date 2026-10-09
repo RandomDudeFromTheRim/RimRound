@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RimRound.Comps;
 using RimRound.Utilities;
 using RimWorld;
 using System;
@@ -55,6 +56,10 @@ namespace SwellGlow
                 if (pawn == null || pawn.Dead || pawn.genes == null)
                     continue;
 
+                // only pawns RimRound gives a weight opinion to
+                if (!pawn.RaceProps.Humanlike || pawn.TryGetComp<ThingComp_PawnAttitude>() == null)
+                    continue;
+
                 // Skip pawns that already have one of our genes
                 bool alreadyHasGene = pawn.genes.GenesListForReading.Any(g =>
                     g.def.exclusionTags != null &&
@@ -109,7 +114,15 @@ namespace SwellGlow
                 // --------------------------- //
                 // 4. Add the gene (as an endogene)
                 // --------------------------- //
-                pawn.genes.AddGene(chosenGene, xenogene: false);
+                // one odd pawn mustn't stop everyone after it from getting theirs
+                try
+                {
+                    pawn.genes.AddGene(chosenGene, xenogene: false);
+                }
+                catch (System.Exception e)
+                {
+                    Log.Warning($"[SwellGlow] Couldn't give {pawn} a weight opinion gene: {e.Message}");
+                }
             }
 
             Log.Message("[SwellGlow] FinalizeInit: synchronized WeightOpinion genes for all pawns.");

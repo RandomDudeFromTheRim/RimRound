@@ -30,7 +30,8 @@ namespace SwellGlow
                                 .Where(ext => ext != null)
                                 .Select(ext => (WeightOpinion?)ext.opinionTrait)
                                 .FirstOrDefault(o => o != null);
-                if (pawnOpinion == null)
+                // pawns of races RimRound doesn't patch have no attitude to set
+                if (pawnOpinion == null && attitudeComp != null)
                     attitudeComp.SetWeightOpinion(weightTrait.opinionTrait);
             }
             base.PostAdd();
