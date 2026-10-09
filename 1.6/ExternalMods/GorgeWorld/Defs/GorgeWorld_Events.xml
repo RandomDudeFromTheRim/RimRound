@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- The Gorge World's weather: its red air (always), and the body rhythms that come and go -
-     fever, chills, feeding season and peristalsis. None of it is about you: the planet just
+<!-- The Gorge World's weather: its red air (always, on the flesh biomes), and the body rhythms
+     that come and go - fever, chills, feeding season and peristalsis - on the flesh biomes and,
+     on the Gorge World, the overgrown broodmother too. None of it is about you: the planet just
      lives. Code: Source/RimRound/RimRound/GorgeWorld/GorgeAir.cs and GorgeEvents.cs -->
 <Defs>
 
@@ -111,11 +112,13 @@
     <targetTags>
       <li>Map_PlayerHome</li>
     </targetTags>
-    <workerClass>IncidentWorker_MakeGameCondition</workerClass>
+    <!-- on the flesh biomes always; on the overgrown broodmother only on the Gorge World -->
+    <workerClass>RimRound.GorgeWorld.IncidentWorker_GorgeCondition</workerClass>
     <allowedBiomes>
       <li>RR_Fleshwood</li>
       <li>RR_TallowMarsh</li>
       <li>RR_MawWastes</li>
+      <li MayRequire="RandomDudeFromTheRim.RimRound.Nephila">Neph_OvergrownBroodmother</li>
     </allowedBiomes>
   </IncidentDef>
 

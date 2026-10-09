@@ -8,6 +8,18 @@ using Verse.Sound;
 namespace RimRound.GorgeWorld
 {
     /// <summary>
+    /// The Gorge World's body rhythms (fever, chills, feeding season, peristalsis): on its flesh
+    /// biomes always, and on the other biomes their incident lists (the overgrown broodmother)
+    /// only while the world is the Gorge World - she sits on other planets too.
+    /// </summary>
+    public class IncidentWorker_GorgeCondition : IncidentWorker_MakeGameCondition
+    {
+        protected override bool CanFireNowSub(IncidentParms parms) =>
+            base.CanFireNowSub(parms) && parms.target is Map map
+            && (GorgeWorldUtility.IsGorgeBiome(map.Biome) || GorgeWorldUtility.Active);
+    }
+
+    /// <summary>
     /// Feeding season: the Gorge World is being fed, and everything on it gorges. Plants grow three
     /// times as fast, bloatgas geysers fill three times as fast, a few animals wander in for the
     /// glut, and the air is so thick with nourishment that anyone out under the sky barely gets hungry

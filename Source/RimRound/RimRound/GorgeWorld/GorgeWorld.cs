@@ -18,10 +18,14 @@ namespace RimRound.GorgeWorld
     {
         public const string PlanetTypeName = "RR_GorgeWorld";
 
-        static PropertyInfo currentPlanetType;
+        static FieldInfo currentPlanetType;
         static bool looked;
 
-        /// <summary>Whether the world being generated or played is the Gorge World (read from Alien Worlds, softly).</summary>
+        /// <summary>
+        /// Whether the world being generated or played is the Gorge World (read from Alien Worlds,
+        /// softly). Reads the planet type Alien Worlds saves with the world and sets before world
+        /// generation, rather than asking its backend (Worldbuilder) every time.
+        /// </summary>
         public static bool Active
         {
             get
@@ -29,7 +33,7 @@ namespace RimRound.GorgeWorld
                 if (!looked)
                 {
                     looked = true;
-                    currentPlanetType = AccessTools.TypeByName("AlienWorlds.PlanetTypeManager")?.GetProperty("Current", BindingFlags.Public | BindingFlags.Static);
+                    currentPlanetType = AccessTools.Field(AccessTools.TypeByName("AlienWorlds.PlanetTypeManager"), "current");
                 }
                 try
                 {
