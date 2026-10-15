@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -17,6 +18,27 @@ namespace RimRound.GorgeWorld
         protected override bool CanFireNowSub(IncidentParms parms) =>
             base.CanFireNowSub(parms) && parms.target is Map map
             && (GorgeWorldUtility.IsGorgeBiome(map.Biome) || GorgeWorldUtility.Active);
+    }
+
+    /// <summary>
+    /// The Gorge World is warm-blooded: it runs fevers and gets chills (above) instead of the
+    /// usual temperature events, which never come to it - on any biome, the overgrown
+    /// broodmother's included. Covers vanilla's and Vanilla Events Expanded's (old and new names).
+    /// </summary>
+    [HarmonyPatch(typeof(IncidentWorker), nameof(IncidentWorker.CanFireNow))]
+    static class IncidentWorker_CanFireNow_GorgeClimate
+    {
+        static readonly HashSet<string> NotOnTheGorgeWorld = new HashSet<string>
+        {
+            "HeatWave", "ColdSnap", "VolcanicWinter",
+            "VEE_Scorch", "VEE_Whiteout", "VEE_LongNight", "VEE_GlobalWarming", "VEE_IceAge",
+        };
+
+        static void Postfix(IncidentWorker __instance, ref bool __result)
+        {
+            if (__result && NotOnTheGorgeWorld.Contains(__instance.def.defName) && GorgeWorldUtility.Active)
+                __result = false;
+        }
     }
 
     /// <summary>
