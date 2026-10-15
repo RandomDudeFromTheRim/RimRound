@@ -88,4 +88,38 @@
 		<li IfModActiveAll="sarg.alphaanimals, Ludeon.RimWorld.Biotech, sarg.alphagenes">1.6/ExternalMods/Mime/AlphaGenes</li>
 		<li IfModActive="7f.alienworlds">1.6/ExternalMods/GorgeWorld</li>
 	</v1.6>	
+	<v1.7>
+		<li>/</li>
+		<li>1.6</li>	
+		<li>1.6/ExternalMods/SuperSpacesFatteningFoods</li>		
+		<li>1.6/ExternalMods/SwellGlow</li>		
+		
+		<li>1.6/ExternalMods/RimRoundExtraWeapons</li>
+		<li>1.6/ExternalMods/RimRoundExtraEvents</li>
+		
+		
+		<li IfModActive="Ludeon.RimWorld.Ideology">1.6/IdeologyDefs</li>
+		<!-- This is intentionally the 1.5 paths. Individual race support should be deprecated eventually in 1.6-->
+		<li IfModActive="ArmoredAmpharos.Dogbolds">1.5/ExternalMods/DogboldRaceSupport</li>	
+		<li IfModActive="ArmoredAmpharos.Foxbolds">1.5/ExternalMods/FoxboldRaceSupport</li>	
+		<li IfModActive="Hauvega.EquiumsSeries.Equiums">1.5/ExternalMods/HorseRaceSupport</li>		
+		<li IfModActive="AveryTheKitty.XenohumansAnthromorphs">1.5/ExternalMods/XenohumanlikeRaceSupport</li>
+		<li IfModActive="Eaveslabet.SylveonRace">1.5/ExternalMods/SylveonRaceSupport</li>
+		<li IfModActive="Monti.HalfDragons">1.5/ExternalMods/HalfDragonRaceSupport</li>
+		<li IfModActive="TrahsPanda.Lucario">1.5/ExternalMods/LucarioRaceSupport</li>
+		<li IfModActive="Barsimmon.OriginalByVagabond.FantasyGoblins">1.5/ExternalMods/GoblinRaceSupport</li>
+		<li IfModActive="zal.ursine">1.5/ExternalMods/UrsineOfTheRimSupport</li>
+		<li IfModActive="Razar1.Mal0Race">1.5/ExternalMods/MaloRaceSupport</li>
+		<li IfModActive="JPT.speakup">1.6/SpeakUp</li>
+		<li IfModActive="Ushanka.BiologicalWarfare">1.6/ExternalMods/BiologicalWarfare</li>
+		<li IfModActive="Ludeon.RimWorld.Odyssey">1.6/ExternalMods/UniqueWeapons</li>
+		<li IfModActive="shunter.uniqueweaponsunbound">1.6/ExternalMods/UniqueWeaponsUnbound</li>
+		<li IfModActive="Ludeon.RimWorld.Royalty">1.6/ExternalMods/PersonaWeapons</li>
+		<li IfModActive="VanillaExpanded.VWENL">1.6/ExternalMods/NonLethalWeapons</li>
+		<li IfModActive="sarg.alphagenes">1.6/ExternalMods/AlphaGenes</li>
+		<li IfModActiveAll="Ludeon.RimWorld.Odyssey, Ludeon.RimWorld.Anomaly">1.6/ExternalMods/FeedeeFacility</li>
+		<li IfModActiveAll="sarg.alphaanimals, Ludeon.RimWorld.Biotech">1.6/ExternalMods/Mime</li>
+		<li IfModActiveAll="sarg.alphaanimals, Ludeon.RimWorld.Biotech, sarg.alphagenes">1.6/ExternalMods/Mime/AlphaGenes</li>
+		<li IfModActive="7f.alienworlds">1.6/ExternalMods/GorgeWorld</li>
+	</v1.7>
 </loadFolders>

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimRound.Utilities;
 using RimWorld;
 using System;
@@ -13,72 +13,59 @@ using RimRound.Comps;
 
 namespace RimRound.Patch
 {
+    /// <summary>
+    /// VNPE's nutrient paste dripper feeds a bed's occupant once their food level drops under a
+    /// threshold. RimRound pawns go by fullness and diet mode instead, so the dripper's one
+    /// read of the food level is swapped for DripperFoodLevel: well under any threshold when
+    /// RimRound says they should eat, well over it when not, and the real level for pawns
+    /// RimRound doesn't feed. Same stack shape as the call it replaces (Need in, float out),
+    /// so the IL stays valid on Mono and CoreCLR alike.
+    /// </summary>
     public static class VENutrientPaste_Building_Dripper_FixForRR
     {
-        private static MethodInfo methodInfo_GetCurLevelPercentage = typeof(Need).GetProperty(nameof(Need.CurLevelPercentage)).GetGetMethod();
-        private static MethodInfo methodInfo_ShouldntEat = typeof(VENutrientPaste_Building_Dripper_FixForRR).GetMethod(nameof(ShouldntEat), BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo methodInfo_GetCurLevelPercentage = typeof(Need).GetProperty(nameof(Need.CurLevelPercentage)).GetGetMethod();
+        private static readonly MethodInfo methodInfo_DripperFoodLevel = typeof(VENutrientPaste_Building_Dripper_FixForRR).GetMethod(nameof(DripperFoodLevel), BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly AccessTools.FieldRef<Need, Pawn> needPawn = AccessTools.FieldRefAccess<Need, Pawn>("pawn");
 
-        private static bool ShouldntEat(Pawn pawn)
+        private static float DripperFoodLevel(Need need)
         {
-            bool shouldEat = false;
-            if (pawn.TryGetComp<FullnessAndDietStats_ThingComp>() is FullnessAndDietStats_ThingComp fullnessComp && pawn.needs?.food != null)
-            {
-                switch (fullnessComp.DietMode)
-                {
-                    case DietMode.Nutrition:
-                        shouldEat = pawn.needs.food.CurLevel + fullnessComp.CurrentFullness / fullnessComp.CurrentFullnessToNutritionRatio <= fullnessComp.GetRanges().First;
-                        break;
-                    case DietMode.Hybrid:
-                        shouldEat = pawn.needs.food.CurLevel + fullnessComp.CurrentFullness / fullnessComp.CurrentFullnessToNutritionRatio <= fullnessComp.GetRanges().First;
-                        break;
-                    case DietMode.Fullness:
-                        shouldEat = fullnessComp.CurrentFullness <= fullnessComp.GetRanges().First;
-                        break;
-                    case DietMode.Disabled:
-                        // How VE has it hard-coded
-                        shouldEat = pawn.needs.food.CurLevelPercentage <= 0.4;
-                        break;
-                    default:
-                        return false;
-                }
-            }
+            Pawn pawn = needPawn(need);
+            if (!(pawn?.TryGetComp<FullnessAndDietStats_ThingComp>() is FullnessAndDietStats_ThingComp fullnessComp) || fullnessComp.DietMode == DietMode.Disabled)
+                return need.CurLevelPercentage;
+            return ShouldEat(pawn, fullnessComp) ? -1f : 2f;
+        }
 
-            return !shouldEat;
+        private static bool ShouldEat(Pawn pawn, FullnessAndDietStats_ThingComp fullnessComp)
+        {
+            switch (fullnessComp.DietMode)
+            {
+                case DietMode.Nutrition:
+                case DietMode.Hybrid:
+                    return pawn.needs.food.CurLevel + fullnessComp.CurrentFullness / fullnessComp.CurrentFullnessToNutritionRatio <= fullnessComp.GetRanges().First;
+                case DietMode.Fullness:
+                    return fullnessComp.CurrentFullness <= fullnessComp.GetRanges().First;
+                default:
+                    return false;
+            }
         }
 
         [HarmonyPriority(Priority.VeryHigh)]
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> codeInstructions = new List<CodeInstruction>(instructions);
-            List<CodeInstruction> newInstructions = new List<CodeInstruction>();
-
-            if (methodInfo_GetCurLevelPercentage == null) {
-                Log.Error("Failed to patch VENutrientPaste_Building_Dripper_FixForRR - Null MethodInfo");
-                return codeInstructions;
-            }
-
-
-            int startJndex = -1;
-            int endJndex = -1;
-
-            for (int i = 0; i < codeInstructions.Count; ++i) {
-                if (codeInstructions[i].opcode == OpCodes.Callvirt && (MethodInfo)codeInstructions[i].operand == methodInfo_GetCurLevelPercentage) {
-                    Log.Message("Found Insertion Point");
-                    startJndex = i - 2; // Just after pawn is loaded on stack
-                    endJndex = i + 3; // Just before 0 is loaded on stack
-                    break;
-                }
-            }
-
-            newInstructions.Add(new CodeInstruction(OpCodes.Call, methodInfo_ShouldntEat));
-
-            if (startJndex != -1 && endJndex != -1)
+            bool found = false;
+            foreach (CodeInstruction instruction in instructions)
             {
-                codeInstructions.RemoveRange(startJndex, endJndex - startJndex + 1);
-                codeInstructions.InsertRange(startJndex, newInstructions);
+                if (!found && (instruction.opcode == OpCodes.Callvirt || instruction.opcode == OpCodes.Call) && instruction.operand as MethodInfo == methodInfo_GetCurLevelPercentage)
+                {
+                    // replaced in place, so any labels on it stay put
+                    instruction.opcode = OpCodes.Call;
+                    instruction.operand = methodInfo_DripperFoodLevel;
+                    found = true;
+                }
+                yield return instruction;
             }
-
-            return codeInstructions;
+            if (!found)
+                Log.Warning("[RimRound] Couldn't find the nutrient paste dripper's food check; it will use VNPE's own threshold.");
         }
 
 
