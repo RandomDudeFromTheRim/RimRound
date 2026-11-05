@@ -32,6 +32,33 @@ namespace RimRound.AI
         }
 
         /// <summary>
+        /// True while either side still carries a memory of this interaction with the other:
+        /// the touch interactions are meant to be an occasional thing between two people, not
+        /// something that fires on every social tick. The memories they award last about a
+        /// day, so they double as the cooldown and survive a save for free.
+        /// </summary>
+        public static bool RecentlyTouched(Pawn initiator, Pawn recipient, params ThoughtDef[] defs)
+        {
+            return HasMemoryOf(recipient, initiator, defs) || HasMemoryOf(initiator, recipient, defs);
+        }
+
+        static bool HasMemoryOf(Pawn holder, Pawn other, ThoughtDef[] defs)
+        {
+            MemoryThoughtHandler memories = holder?.needs?.mood?.thoughts?.memories;
+            if (memories == null || defs == null)
+                return false;
+
+            foreach (ThoughtDef def in defs)
+            {
+                if (def == null)
+                    continue;
+                if (memories.GetFirstMemoryOfDef(def) is Thought_Memory memory && memory.otherPawn == other)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Gives a touch interaction a physical presence: the initiator walks up and
         /// acts it out (see <see cref="JobDriver_RRCloseEncounter"/>) while the
         /// recipient is held in place. Skips drafted/busy/mentally-broken pawns on

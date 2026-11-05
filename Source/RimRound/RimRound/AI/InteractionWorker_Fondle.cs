@@ -22,6 +22,17 @@ namespace RimRound.AI
             if (!initiator.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
                 return 0;
 
+            // not again the moment it happened: the memory lasts a day, and without this the
+            // weight below had them at it every social tick, filling the log with it
+            if (CloseContactUtility.RecentlyTouched(initiator, recipient,
+                    Defs.ThoughtDefOf.RR_FondledInitiator,
+                    Defs.ThoughtDefOf.RR_FondledHate,
+                    Defs.ThoughtDefOf.RR_FondledDislike,
+                    Defs.ThoughtDefOf.RR_FondledNeutral,
+                    Defs.ThoughtDefOf.RR_FondledGood,
+                    Defs.ThoughtDefOf.RR_FondledGreat))
+                return 0;
+
             var initAtt = initiator.TryGetComp<ThingComp_PawnAttitude>();
             if (initAtt is null || initAtt.weightOpinion < WeightOpinion.Neutral)
                 return 0;
@@ -35,17 +46,18 @@ namespace RimRound.AI
 
             float weightBonus = recWeight.Severity * 2f;
 
+            // modest weights: these are garnish on normal social life, not the whole of it
             switch (initAtt.weightOpinion)
             {
                 case WeightOpinion.Neutral:
                 case WeightOpinion.NeutralPlus:
-                    return 1.5f + weightBonus;
+                    return 0.4f + weightBonus * 0.5f;
                 case WeightOpinion.Like:
-                    return 3f + weightBonus;
+                    return 0.7f + weightBonus * 0.5f;
                 case WeightOpinion.Love:
-                    return 5f + weightBonus;
+                    return 1.1f + weightBonus * 0.5f;
                 case WeightOpinion.Fanatical:
-                    return 8f + weightBonus;
+                    return 1.6f + weightBonus * 0.5f;
                 default:
                     return 0;
             }

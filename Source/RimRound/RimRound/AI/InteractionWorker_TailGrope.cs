@@ -16,6 +16,16 @@ namespace RimRound.AI
             if (!CloseContactUtility.InTouchRange(initiator, recipient))
                 return 0;
 
+            // same guard as fondling: not again until the memory of the last one lapses
+            if (CloseContactUtility.RecentlyTouched(initiator, recipient,
+                    RimRound.Defs.ThoughtDefOf.RR_TailGropeInitiator,
+                    ThoughtDef.Named("RR_TailGropeHate"),
+                    ThoughtDef.Named("RR_TailGropeDislike"),
+                    ThoughtDef.Named("RR_TailGropeNeutral"),
+                    ThoughtDef.Named("RR_TailGropeGood"),
+                    ThoughtDef.Named("RR_TailGropeGreat")))
+                return 0;
+
             if (HasTail(recipient))
             {
                 if (initiator.relations.OpinionOf(recipient) < 25)
@@ -31,12 +41,13 @@ namespace RimRound.AI
                     return 0;
 
                 float bonus = sev * 4f;
+                // modest, like fondling: a garnish on social life, not the whole of it
                 return initAtt.weightOpinion switch
                 {
-                    WeightOpinion.NeutralPlus => 2f + bonus,
-                    WeightOpinion.Like => 4f + bonus,
-                    WeightOpinion.Love => 6f + bonus,
-                    WeightOpinion.Fanatical => 10f + bonus,
+                    WeightOpinion.NeutralPlus => 0.5f + bonus * 0.5f,
+                    WeightOpinion.Like => 0.8f + bonus * 0.5f,
+                    WeightOpinion.Love => 1.2f + bonus * 0.5f,
+                    WeightOpinion.Fanatical => 1.8f + bonus * 0.5f,
                     _ => 0,
                 };
             }
