@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimRound.Comps;
 using RimWorld;
 using System;
@@ -21,7 +21,9 @@ namespace RimRound.Patch
         {
             if (FlickUtility.WantsToBeOn(__instance))
             {
-                var mapComp = Find.CurrentMap.GetComponent<MapComp_RRGasGrid>();
+                // the vent's own map, not whatever the camera is on: RR gas belongs to the
+                // map the vent is standing on, and a second colony or a pocket map ticks too
+                var mapComp = __instance.Map?.GetComponent<MapComp_RRGasGrid>();
 
                 if (mapComp is null)
                     return;
