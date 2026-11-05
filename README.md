@@ -245,7 +245,6 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
 - **SpeakUp** — dialogue for every touch interaction, muffled lines while constricted,
   and chitchat (with replies) about getting slimed, carrying a seed, feedee worship,
   seeing someone burst and commission guests.
-- **RimVore-2** — weight ↔ vore chance/capacity, digested-prey weight gain, AI.
 - **Intimacy series** — gluttonium ↔ `SEX_Intimacy`, shared feeding.
 - **Lactation Expansion** — milk capacity grows with weight (the same milk-by-weight
   settings vanilla lactation and RJW milking use), opinion moods, spiked milk.
@@ -283,7 +282,7 @@ Separate DLL (`1.6/ExternalMods/RimRoundExtraEvents`), always loaded:
   **Vanilla Nutrient Paste Expanded**
 - **Required for the flesh dimension, constrictor, sweet slime and meld content:** Anomaly
 - **Required for the Feedees rituals:** Ideology
-- **Recommended:** SpeakUp, RimVore-2, Intimacy series, Lactation Expansion
+- **Recommended:** SpeakUp, Intimacy series, Lactation Expansion
 - **Optional:** Royalty, Biotech, Odyssey, and the integrations above
 
 ---

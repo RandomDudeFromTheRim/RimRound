@@ -96,40 +96,6 @@
     </stages>
     <thoughtClass>Thought_Memory</thoughtClass>
   </ThoughtDef>
-  <!-- Vore integration thoughts -->
-  <ThoughtDef>
-    <defName>RR_VoredFatPredator</defName>
-    <durationDays>1</durationDays>
-    <stages>
-      <li><label>Ate well</label><description>Such a substantial meal! Delicious.</description><baseMoodEffect>5</baseMoodEffect></li>
-    </stages>
-    <thoughtClass>Thought_Memory</thoughtClass>
-  </ThoughtDef>
-  <ThoughtDef>
-    <defName>RR_VoredThinPredator</defName>
-    <durationDays>1</durationDays>
-    <stages>
-      <li><label>Disappointing meal</label><description>Barely a mouthful. What a waste.</description><baseMoodEffect>-5</baseMoodEffect></li>
-    </stages>
-    <thoughtClass>Thought_Memory</thoughtClass>
-  </ThoughtDef>
-  <ThoughtDef>
-    <defName>RR_VoredByAdmirer</defName>
-    <durationDays>1</durationDays>
-    <stages>
-      <li><label>Wanted</label><description>They wanted ALL of me. I feel desired.</description><baseMoodEffect>4</baseMoodEffect></li>
-    </stages>
-    <thoughtClass>Thought_Memory</thoughtClass>
-  </ThoughtDef>
-  <ThoughtDef>
-    <defName>RR_VoredByHater</defName>
-    <durationDays>2</durationDays>
-    <stages>
-      <li><label>Devoured by disgust</label><description>They couldn't stand to look at me, so they ATE me. I'm nothing to them.</description><baseMoodEffect>-12</baseMoodEffect></li>
-    </stages>
-    <thoughtClass>Thought_Memory</thoughtClass>
-  </ThoughtDef>
-
   <ThoughtDef>
     <defName>RR_ForceFed</defName>
     <durationDays>1</durationDays>

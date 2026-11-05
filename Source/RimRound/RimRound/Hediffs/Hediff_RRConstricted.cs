@@ -133,58 +133,22 @@ namespace RimRound.Hediffs
         }
 
         // ------------------------------------------------------------ the burst point
-
-        // A pawn bursts on passing the top of one of these. The last body type below
-        // Gelatinous I is the base; each doubling of the stomach's hard limit over the
-        // default (perks like Black Hole and Limit Break) moves it one Gelatinous tier on.
-        static readonly string[] BurstTiers =
-        {
-            "F_090_Titanic", "F_100_Gelatinous", "F_150_Gelatinous", "F_200_Gelatinous", "F_250_Gelatinous",
-            "F_300_Gelatinous", "F_350_Gelatinous", "F_400_Gelatinous", "F_450_Gelatinous", "F_500_Gelatinous",
-        };
+        // The model itself lives in Utilities.BurstPoint, which vore also counts against;
+        // these are the constrictor's own names for it.
 
         /// <summary>The body type a pawn bursts on outgrowing: Titanic, or later for a pawn whose perks let them take more.</summary>
-        public static BodyTypeDef BurstBodyType(Pawn p, int extraTiers = 0)
-        {
-            int tier = extraTiers + Hediff_RROverfilled.StretchedLevel(p);
-            var fnd = p.TryGetComp<FullnessAndDietStats_ThingComp>();
-            if (fnd != null && !fnd.Disabled)
-            {
-                float baseline = FullnessAndDietStats_ThingComp.defaultSoftLimit * 1.3f;
-                tier += Mathf.FloorToInt(Mathf.Log(Mathf.Max(1f, fnd.HardLimit / baseline), 2f));
-            }
-            tier = Mathf.Clamp(tier, 0, BurstTiers.Length - 1);
-            for (; tier > 0; tier--)
-            {
-                BodyTypeDef def = DefDatabase<BodyTypeDef>.GetNamedSilentFail(BurstTiers[tier]);
-                if (def != null && RacialBodyTypeInfoUtility.defaultFemaleSet.ContainsKey(def))
-                    return def;
-            }
-            return Defs.BodyTypeDefOf.F_090_Titanic;
-        }
-
-        /// <summary>Weight severity at which this pawn bursts, for its race.</summary>
-        static float BurstSeverity(Pawn p, int extraTiers = 0)
-        {
-            float max = RacialBodyTypeInfoUtility.defaultFemaleSet[BurstBodyType(p, extraTiers)].maxSeverity;
-            return max * RacialBodyTypeInfoUtility.GetBodyTypeWeightRequirementMultiplier(p);
-        }
-
-        static float WeightSeverity(Pawn p) => Utilities.HediffUtility.WeightHediff(p)?.Severity ?? 0f;
+        public static BodyTypeDef BurstBodyType(Pawn p, int extraTiers = 0) => BurstPoint.BodyType(p, extraTiers);
 
         /// <summary>Kilos still to go before this pawn reaches their burst point.</summary>
-        public static float KilosToBurst(Pawn p, int extraTiers = 0) =>
-            Mathf.Max(0f, Utilities.HediffUtility.SeverityToKilosWithoutBaseWeight(BurstSeverity(p, extraTiers) - WeightSeverity(p)));
+        public static float KilosToBurst(Pawn p, int extraTiers = 0) => BurstPoint.KilosRemaining(p, extraTiers);
 
-        public static bool PastBurstPoint(Pawn p, int extraTiers = 0) => BodyTypeUtility.PawnIsOverWeightThreshold(p, BurstBodyType(p, extraTiers));
+        public static bool PastBurstPoint(Pawn p, int extraTiers = 0) => BurstPoint.IsPast(p, extraTiers);
 
         /// <summary>
         /// Ghouls and the void-touched knit back together faster than a constrictor can
         /// split them: it never bursts them, it just keeps pumping until it runs dry.
         /// </summary>
-        public static bool Unburstable(Pawn p) =>
-            ModsConfig.AnomalyActive && p != null
-            && (p.IsGhoul || (RimWorld.HediffDefOf.VoidTouched != null && p.health.hediffSet.HasHediff(RimWorld.HediffDefOf.VoidTouched)));
+        public static bool Unburstable(Pawn p) => BurstPoint.CannotBurst(p);
 
         // ------------------------------------------------------------ latching on
 
@@ -289,6 +253,11 @@ namespace RimRound.Hediffs
             // held tight: the victim can't move or act
             if (pawn.IsHashIntervalTick(30))
                 pawn.stances?.stunner?.StunFor(45, pawn, addBattleLog: false, showMote: false);
+
+            // the proboscis feeds as well as fills: nobody starves while one is latched on
+            if (pawn.IsHashIntervalTick(120) && pawn.needs?.food != null &&
+                pawn.needs.food.CurLevelPercentage < 0.4f)
+                pawn.needs.food.CurLevel = pawn.needs.food.MaxLevel * 0.4f;
 
             // due-time rather than an exact tick match: a skipped tick never loses a pump
             if (Find.TickManager.TicksGame >= latchTick + (pumps + 1) * Interval)

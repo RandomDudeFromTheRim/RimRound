@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,7 +78,6 @@ namespace RimRound.Patch
 
             Comps.Comp_LactationIntegration.PatchAll(harmony);
             Comps.Comp_ObeliskIntegration.PatchAll(harmony);
-            Comps.Comp_RV2Integration.PatchAll(harmony);
 
             //  This mod is stuck in 1.4
             //  ModCompatibilityUtility.TryPatch(

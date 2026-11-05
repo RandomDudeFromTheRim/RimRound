@@ -1,4 +1,4 @@
-﻿using RimRound.Comps;
+using RimRound.Comps;
 using RimRound.Hediffs;
 using RimWorld;
 using System;
@@ -270,6 +270,11 @@ namespace RimRound.Utilities
         {
             Vector3 position = pawn.Position.ToVector3();
             Map map = pawn.MapHeld;
+
+            // Caravan members, pawns held inside another pawn and anything else off the map
+            // have no map to throw text on - the weight itself still changes.
+            if (map == null)
+                return;
 
             if (Mathf.Abs(value) < minimumDisplayMagnitude)
                 return;

@@ -671,4 +671,5 @@ HighGravWorlderRace,defaultSet
 LowGravWorlderRace,defaultSet
 RadWorlderRace,defaultSet
 VatgrownHumanRace,defaultSet</RR_RaceData>
+	<RR_VoreTab>Swallowed</RR_VoreTab>
 </LanguageData>

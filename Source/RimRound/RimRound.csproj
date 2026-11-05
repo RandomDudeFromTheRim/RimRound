@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -144,7 +144,6 @@
       <Compile Include="RimRound\Comps\Abilities\Comp_GluttoniumForceFeed.cs" />
       <Compile Include="RimRound\Comps\Abilities\Comp_LactationIntegration.cs" />
       <Compile Include="RimRound\Comps\Abilities\Comp_ObeliskIntegration.cs" />
-      <Compile Include="RimRound\Comps\Abilities\Comp_RV2Integration.cs" />
     <Compile Include="RimRound\AI\StatParts\StatPart_ArmorRating_Blunt.cs" />
     <Compile Include="RimRound\AI\StatParts\StatPart_ArmorRating_Sharp.cs" />
     <Compile Include="RimRound\AI\StatParts\StatPart_ButcheryFleshEfficiency.cs" />
@@ -281,6 +280,8 @@
     <Compile Include="RimRound\UI\Gizmos\MakeRecreationSpotGizmo.cs" />
     <Compile Include="RimRound\Utilities\BlobBedUtility.cs" />
     <Compile Include="RimRound\Utilities\BodyResourceUtility.cs" />
+    <Compile Include="RimRound\Utilities\BurstPoint.cs" />
+    <Compile Include="RimRound\Patch\ThirdParty\IntimacyLoggingOff.cs" />
     <Compile Include="RimRound\Utilities\CaravanPatchUtility.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Caravan\CaravanMaker_MakeCaravan_ChangeDietMode.cs" />
     <Compile Include="RimRound\Patch\RimWorldPatches\Caravan\Caravan_RemoveAllPawns_ChangeDietMode.cs" />
