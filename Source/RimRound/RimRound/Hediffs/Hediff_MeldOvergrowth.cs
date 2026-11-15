@@ -32,7 +32,7 @@ namespace RimRound.Hediffs
             }
         }
 
-        // Called from a Harmony patch on Pawn.TakeDamage - reduces overgrowth instead of HP
+        // Reduces overgrowth instead of HP when the damage buffer is active.
         public float AbsorbDamage(float amount, DamageDef def)
         {
             if (def.isExplosive || def == DamageDefOf.Burn || def == DamageDefOf.Flame || def == DamageDefOf.SurgicalCut)

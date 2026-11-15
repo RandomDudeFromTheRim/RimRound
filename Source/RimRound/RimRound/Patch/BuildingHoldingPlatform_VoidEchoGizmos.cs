@@ -57,7 +57,7 @@ namespace RimRound.Patch
                 {
                     defaultLabel = $"Release the consumed ({contained})",
                     defaultDesc = "Everyone the echo has swallowed climbs back out, dazed and heavier.",
-                    icon = ContentFinder<Texture2D>.Get("UI/Commands/ReleaseUnit"),
+                    icon = TexCommand.ForbidOff,
                     action = delegate { vigor.ReleaseAll(__instance.Position, __instance.Map); }
                 });
             }

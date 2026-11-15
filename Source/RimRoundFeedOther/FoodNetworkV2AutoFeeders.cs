@@ -17,6 +17,7 @@ using FeedingTubeHediffDefOf = RimRound.FeedingTube.Defs.HediffDefOf;
 
 namespace RimRound.FeedOther
 {
+    [StaticConstructorOnStartup]
     internal static class FoodNetworkV2AutoFeederUtility
     {
         private static readonly FieldInfo ForcedTargetField =

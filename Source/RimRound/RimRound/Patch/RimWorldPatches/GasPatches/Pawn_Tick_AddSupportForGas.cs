@@ -21,10 +21,7 @@ namespace RimRound.Patch
     {
         public static void Postfix(Pawn __instance) 
         {
-            if (__instance is null)
-                return;
-
-            if (!__instance.IsHashIntervalTick(150) || __instance.Suspended || !__instance.RaceProps.Humanlike)
+            if (!__instance.Spawned || !__instance.IsHashIntervalTick(150) || __instance.Suspended || !__instance.RaceProps.Humanlike)
                 return;
 
             foreach (var gasHediffCombo in Utilities.GasUtility.gasToHediff)
@@ -33,6 +30,10 @@ namespace RimRound.Patch
 
                 if (gasDensity <= 0)
                     continue;
+
+                float toxicResistance = __instance.GetStatValue(StatDefOf.ToxicResistance);
+                if (toxicResistance >= 1f)
+                    return;
 
                 float gasDensityPercent = gasDensity / 255f;
 
@@ -48,7 +49,6 @@ namespace RimRound.Patch
                     hediff = Utilities.HediffUtility.AddHediffOfDefTo(gasHediffCombo.Value, __instance);
 
 
-                float toxicResistance = Mathf.Min(__instance.GetStatValue(StatDefOf.ToxicResistance), 1f);
                 Utilities.HediffUtility.AddHediffSeverity(hediff, __instance, gasDensityPercent * 0.2f * (1f - toxicResistance));
 
 

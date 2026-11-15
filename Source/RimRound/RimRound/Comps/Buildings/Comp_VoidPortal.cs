@@ -56,8 +56,11 @@ namespace RimRound.Comps
             Scribe_Values.Look(ref nextSpawnTick, "nextSpawnTick");
             Scribe_Collections.Look(ref gulping, "gulping", LookMode.Reference);
             Scribe_Values.Look(ref gulpEndTick, "gulpEndTick", -1);
-            if (Scribe.mode == LoadSaveMode.PostLoadInit && gulping == null)
-                gulping = new List<Pawn>();
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                pawnsInMaze ??= new List<Pawn>();
+                gulping ??= new List<Pawn>();
+            }
         }
 
         public void SetLinkedPortal(Building source)
@@ -204,7 +207,7 @@ namespace RimRound.Comps
         void EnterMaze(Pawn pawn)
         {
             // the pawn may have died or left while the maze was generating
-            if (mazeMap == null || pawn == null || pawn.Dead || !pawn.Spawned)
+            if (mazeMap == null || pawn == null || pawn.Dead || !pawn.Spawned || !parent.Spawned || pawn.Map != parent.Map)
                 return;
 
             // arrive at the start of the run; the way home is at the far end
@@ -235,8 +238,8 @@ namespace RimRound.Comps
         void ReturnPawn(Pawn pawn, bool forced = false, Map homeMapOverride = null)
         {
             Comp_VoidPortal entry = EntryPortal;
-            Map homeMap = homeMapOverride ?? entry?.parent.MapHeld ?? parent.MapHeld;
-            if (homeMap == null || pawn == null)
+            Map homeMap = homeMapOverride ?? entry?.parent.MapHeld;
+            if (homeMap == null || pawn == null || !pawn.Spawned || pawn.Map != entry?.mazeMap)
                 return;
 
             IntVec3 drop = entry != null
@@ -271,7 +274,7 @@ namespace RimRound.Comps
             if (entry != null)
             {
                 entry.pawnsInMaze.Remove(pawn);
-                if (entry.pawnsInMaze.Count == 0)
+                if (!forced && entry.pawnsInMaze.Count == 0)
                     entry.CloseMaze();
             }
         }
@@ -293,13 +296,13 @@ namespace RimRound.Comps
         {
             Comp_VoidPortal entry = EntryPortal;
             Map homeMap = entry?.parent.MapHeld;
-            if (homeMap == null || carrier == null || carried == null)
+            if (homeMap == null || carrier == null || carried == null || carrier.Map != entry.mazeMap)
                 return;
 
             if (carrier.carryTracker.CarriedThing == carried)
                 carrier.carryTracker.TryDropCarriedThing(carrier.Position, ThingPlaceMode.Near, out _);
 
-            if (carried.Spawned)
+            if (carried.Spawned && carried.Map == carrier.Map)
             {
                 IntVec3 drop = CellFinder.RandomClosewalkCellNear(entry.parent.Position, homeMap, 2);
                 SkipUtility.SkipTo(carried, drop, homeMap);
@@ -333,31 +336,39 @@ namespace RimRound.Comps
             if (pawnsInMaze.Count == 0)
             {
                 CloseMaze();
-                return;
+                if (mazeMap == null)
+                    return;
             }
-
-            if (Find.TickManager.TicksGame > nextSpawnTick)
-                TrySpawnMeldBeast(mazeMap);
 
             if (Find.TickManager.TicksGame > mazeStartTick + MazeDurationTicks)
                 ReturnEveryone();
+            else if (Find.TickManager.TicksGame > nextSpawnTick)
+                TrySpawnMeldBeast(mazeMap);
         }
 
         void ReturnEveryone(Map homeMapOverride = null)
         {
+            if (mazeMap == null)
+                return;
+
             // swallowed pawns can't be skipped home from inside a maw
             RimRound.Buildings.Building_RRGorgeMaw.SpitOutAll(mazeMap);
 
-            for (int i = pawnsInMaze.Count - 1; i >= 0; i--)
-            {
-                Pawn p = pawnsInMaze[i];
-                if (p != null && !p.Dead && p.Map == mazeMap)
-                    ReturnPawn(p, forced: true, homeMapOverride);
-                else
-                    pawnsInMaze.RemoveAt(i);
-            }
+            var carriers = mazeMap.mapPawns.AllPawnsSpawned
+                .Where(p => p.carryTracker?.CarriedThing is Pawn carried && ShouldEvacuate(carried))
+                .ToList();
+            foreach (Pawn carrier in carriers)
+                carrier.carryTracker.TryDropCarriedThing(carrier.Position, ThingPlaceMode.Near, out _);
+
+            // Include colonists and prisoners who entered by another route or lost their tracking entry.
+            var evacuees = mazeMap.mapPawns.AllPawnsSpawned.Where(ShouldEvacuate).ToList();
+            foreach (Pawn pawn in evacuees)
+                ReturnPawn(pawn, forced: true, homeMapOverride);
             CloseMaze();
         }
+
+        bool ShouldEvacuate(Pawn pawn) =>
+            !pawn.Dead && (pawn.IsColonist || pawn.IsPrisonerOfColony || pawnsInMaze.Contains(pawn));
 
         void CloseMaze()
         {
@@ -365,7 +376,7 @@ namespace RimRound.Comps
                 return;
 
             // never strand anyone inside
-            if (mazeMap.mapPawns.AllPawnsSpawned.Any(pa => pa.IsColonist || pa.IsPrisonerOfColony)
+            if (mazeMap.mapPawns.AllPawns.Any(ShouldEvacuate)
                 || RimRound.Buildings.Building_RRGorgeMaw.AnyHolding(mazeMap))
                 return;
 

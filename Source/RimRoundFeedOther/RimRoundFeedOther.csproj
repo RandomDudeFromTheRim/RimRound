@@ -10,6 +10,8 @@
     <OutputPath>../../1.6/Assemblies/</OutputPath>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
+    <Managed Condition="'$(Managed)' == ''">../Dev/RimWorldWin64_Data/Managed</Managed>
+    <RimRoundAssembly Condition="'$(RimRoundAssembly)' == ''">../../1.6/Assemblies/RimRound.dll</RimRoundAssembly>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,35 +20,31 @@
 
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\Dev\harmony16\Current\Assemblies\0Harmony.dll</HintPath>
+      <HintPath>../Dev/harmony16/Current/Assemblies/0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(Managed)/Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RimRound">
-      <HintPath>..\..\1.6\Assemblies\RimRound.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="netstandard">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\netstandard.dll</HintPath>
+      <HintPath>$(RimRoundAssembly)</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>$(Managed)/UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(Managed)/UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>$(Managed)/UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>$(Managed)/UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

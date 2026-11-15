@@ -25,14 +25,17 @@ namespace RimRound.Patch
 		{
 			var harmony = new Harmony("RRHarmony");
 
-			try
-			{
-                harmony.PatchAll();
+            foreach (Type patchType in AccessTools.GetTypesFromAssembly(typeof(HarmonyPatchMain).Assembly))
+            {
+                try
+                {
+                    harmony.CreateClassProcessor(patchType).Patch();
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"[RimRound] Failed to apply {patchType.FullName}: {e}");
+                }
             }
-            catch  (Exception e)
-			{
-				Log.Error($"[RimRound] Failed to apply harmony patches. Details: {e.Message}; {e}");
-			}
 
             #region External Mod Patching
             ModCompatibilityUtility.TryPatch(
