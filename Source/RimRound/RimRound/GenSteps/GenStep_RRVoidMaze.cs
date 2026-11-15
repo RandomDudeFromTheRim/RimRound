@@ -45,6 +45,8 @@ namespace RimRound.GenSteps
         const float GeyserSpacing = 14f;
         const float HazardEntryClearance = 12f;
         const int MaxRewards = 45;
+        const int MembraneCount = 3;
+        const float MembraneClearance = 3f;
         static readonly IntRange EndCacheRange = new IntRange(25, 40);
 
         // Per-run state. GenStep instances belong to the (shared) def, so these
@@ -114,10 +116,18 @@ namespace RimRound.GenSteps
                     CarveBlindGut(i);
             GrowPolyps();
 
-            carvedList = carved.ToList();
-            BuildWalls();
-
             IntVec3 start = chambers[0].Cell, end = chambers[chambers.Count - 1].Cell;
+            var bulkheads = new HashSet<IntVec3>();
+            List<IntVec3> membranes = PlanMembranes(start, end, bulkheads);
+            carvedList = carved.Where(c => !membranes.Any(m => c.InHorDistOf(m, MembraneClearance))).ToList();
+            BuildWalls(bulkheads);
+            if (membranes.Count > 0)
+            {
+                ThingDef membrane = ThingDef.Named("RR_VoidMazeMembrane");
+                foreach (IntVec3 cell in membranes)
+                    GenSpawn.Spawn(membrane, cell, map);
+            }
+
             map.GetComponent<Comps.MapComponent_RRVoidMaze>()?.SetRoute(chambers.Select(c => c.Cell).ToList());
             GenSpawn.Spawn(ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidMazeEntryScar), start, map);
             GenSpawn.Spawn(ThingMaker.MakeThing(Defs.ThingDefOf.RR_VoidPortalReturn), end, map);
@@ -384,6 +394,71 @@ namespace RimRound.GenSteps
 
         IntVec3 RandomCarvedCell() => carvedList[Rand.Range(0, carvedList.Count)];
 
+        List<IntVec3> PlanMembranes(IntVec3 start, IntVec3 end, HashSet<IntVec3> bulkheads)
+        {
+            var membranes = new List<IntVec3>();
+            if (!ModsConfig.AnomalyActive)
+                return membranes;
+
+            int vesselCount = route.Count - 1;
+            for (int section = 0; section < MembraneCount; section++)
+            {
+                int first = vesselCount * section / MembraneCount;
+                int last = vesselCount * (section + 1) / MembraneCount;
+                float preferred = (section + 1) * vesselCount / (MembraneCount + 1f) - 0.5f;
+                foreach (int i in Enumerable.Range(first, last - first).OrderBy(i => Mathf.Abs(i - preferred)))
+                {
+                    IntVec2 a = route[i], b = route[i + 1];
+                    bool eastWest = a.x != b.x;
+                    int boundary = Mathf.RoundToInt(origin + (eastWest ? Mathf.Max(a.x, b.x) : Mathf.Max(a.z, b.z)) * cellSize);
+                    Box box = CellBox(a, 0f);
+                    int from = Mathf.FloorToInt(eastWest ? box.z0 : box.x0);
+                    int to = Mathf.CeilToInt(eastWest ? box.z1 : box.x1);
+                    var strip = new HashSet<IntVec3>();
+                    for (int t = from; t < to; t++)
+                        strip.Add(eastWest ? new IntVec3(boundary, 0, t) : new IntVec3(t, 0, boundary));
+
+                    // A closed strip must hide the exit, and opening any single chosen cell
+                    // must still connect the two sides. Reject crooked or bypassed crossings.
+                    HashSet<IntVec3> near = ReachableFloor(start, strip);
+                    if (near.Contains(end))
+                        continue;
+                    HashSet<IntVec3> far = ReachableFloor(end, strip);
+                    IntVec3 step = eastWest ? IntVec3.East : IntVec3.North;
+                    IntVec3 gate = strip.Where(carved.Contains).OrderBy(c => c.DistanceToSquared(chambers[i].Cell))
+                        .FirstOrFallback(c => (near.Contains(c - step) && far.Contains(c + step))
+                            || (far.Contains(c - step) && near.Contains(c + step)), IntVec3.Invalid);
+                    if (!gate.IsValid)
+                        continue;
+
+                    strip.Remove(gate);
+                    carved.ExceptWith(strip);
+                    bulkheads.UnionWith(strip);
+                    membranes.Add(gate);
+                    break;
+                }
+            }
+            return membranes;
+        }
+
+        HashSet<IntVec3> ReachableFloor(IntVec3 root, HashSet<IntVec3> blocked)
+        {
+            var reached = new HashSet<IntVec3> { root };
+            var pending = new Queue<IntVec3>();
+            pending.Enqueue(root);
+            while (pending.Count > 0)
+            {
+                IntVec3 cell = pending.Dequeue();
+                foreach (IntVec3 offset in GenAdj.CardinalDirections)
+                {
+                    IntVec3 next = cell + offset;
+                    if (carved.Contains(next) && !blocked.Contains(next) && reached.Add(next))
+                        pending.Enqueue(next);
+                }
+            }
+            return reached;
+        }
+
         // ------------------------------------------------------------------ walls
 
         /// <summary>
@@ -391,9 +466,10 @@ namespace RimRound.GenSteps
         /// walls early on, more and more void gluttonium flesh toward the end), and
         /// hardened flesh everywhere else so no shortcut can be dug.
         /// </summary>
-        void BuildWalls()
+        void BuildWalls(HashSet<IntVec3> bulkheads)
         {
             ThingDef hardWall = ThingDef.Named("RR_HardenedFleshWall");
+            ThingDef bulkhead = bulkheads.Count > 0 ? ThingDef.Named("RR_VoidMazeSeamWall") : null;
             ThingDef blobWall = ThingDef.Named("RR_BlobWall");
             ThingDef gluttonWall = ThingDef.Named("RR_BlobWallMineable");
             // RimRound's own flesh wall, not Anomaly's Fleshmass_Active: that one links
@@ -408,7 +484,9 @@ namespace RimRound.GenSteps
                     continue;
 
                 ThingDef def = hardWall;
-                if (band.Contains(cell) && !NearMapEdge(cell))
+                if (bulkheads.Contains(cell))
+                    def = bulkhead;
+                else if (band.Contains(cell) && !NearMapEdge(cell))
                 {
                     float progress = Mathf.Max(0f, Progress(cell));
                     if (Rand.Chance(MaxGluttoniumWallChance * Mathf.Pow(progress, 1.5f)))

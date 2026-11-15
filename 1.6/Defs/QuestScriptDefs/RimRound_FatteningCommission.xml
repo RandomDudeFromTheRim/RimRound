@@ -25,7 +25,7 @@
     </questNameRules>
     <questDescriptionRules>
       <rulesStrings>
-        <li>questDescription->[faction_name] have an unusual request. One of their people, [asker_nameDef], wants to grow - properly big - and they have heard your colony knows how to feed someone.\n\n[asker_nameDef] will stay with you for [questDurationTicks_duration]. By the time [asker_pronoun] leaves, [asker_pronoun] needs to be at least [targetLabel]. You'll be able to direct [asker_objective] like one of your own colonists in the meantime.\n\nSend [asker_objective] home [targetLabel] and [faction_name] will reward you. Send [asker_objective] home smaller and they'll be disappointed; lose [asker_objective] and they'll be furious. [rewardNote]</li>
+        <li>questDescription->[faction_name] have an unusual request. One of their people, [asker_nameDef], wants to grow - properly big - and they have heard your colony knows how to feed someone.\n\n[asker_nameDef] will stay with you for [questDurationTicks_duration]. By the time [asker_pronoun] leaves, [asker_pronoun] needs to be at least [targetLabel]. [weighInNote] You'll be able to direct [asker_objective] like one of your own colonists in the meantime.\n\nSend [asker_objective] home [targetLabel] and [faction_name] will reward you. Send [asker_objective] home smaller and they'll be disappointed; lose [asker_objective] and they'll be furious. [rewardNote]</li>
       </rulesStrings>
     </questDescriptionRules>
     <root Class="RimRound.Incidents.QuestNode_Root_RRFatteningCommission" />

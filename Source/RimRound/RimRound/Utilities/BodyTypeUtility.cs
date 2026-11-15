@@ -18,27 +18,19 @@ namespace RimRound.Utilities
     {
         public static bool PawnIsOverWeightThreshold(Pawn pawn, BodyTypeDef bodyType)
         {
-            if (pawn == null || bodyType == null)
-                return false;
-
-            float maxValueForBodyType = 0;
-            if (RacialBodyTypeInfoUtility.defaultFemaleSet.ContainsKey(bodyType))
-                maxValueForBodyType = RacialBodyTypeInfoUtility.defaultFemaleSet[bodyType].maxSeverity;
-            else
-                return false;
-
-            Hediff weightHediff = Utilities.HediffUtility.WeightHediff(pawn);
-            if (weightHediff == null)
-                return false;
-
-            if (weightHediff.Severity > maxValueForBodyType * RacialBodyTypeInfoUtility.GetBodyTypeWeightRequirementMultiplier(pawn))
-            {
-                return true;
-            }
-
-            return false;
+            return TryGetWeightThresholdSeverity(pawn, bodyType, out float threshold)
+                && pawn.WeightHediff() is Hediff weight && weight.Severity > threshold;
         }
 
+        internal static bool TryGetWeightThresholdSeverity(Pawn pawn, BodyTypeDef bodyType, out float threshold)
+        {
+            threshold = 0f;
+            if (pawn == null || bodyType == null || !RacialBodyTypeInfoUtility.defaultFemaleSet.TryGetValue(bodyType, out var info))
+                return false;
+
+            threshold = info.maxSeverity * RacialBodyTypeInfoUtility.GetBodyTypeWeightRequirementMultiplier(pawn);
+            return true;
+        }
 
         public static string GetProperBodyGraphicPathFromPawn(Pawn pawn)
         {

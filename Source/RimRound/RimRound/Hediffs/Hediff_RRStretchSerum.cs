@@ -94,4 +94,88 @@ namespace RimRound.Hediffs
                 Messages.Message($"{usedBy.LabelShort}'s stomach stretches ({h.Doses}/{Hediff_RRStretchSerum.MaxDoses} doses).", usedBy, MessageTypeDefOf.PositiveEvent);
         }
     }
+
+    public class Hediff_RRBorrowedStomach : HediffWithComps
+    {
+        const float CapacityPerDose = 0.6f;
+        const float DigestionPenaltyPerDose = 0.15f;
+
+        public int Doses => (int)Severity;
+
+        public void AddDose()
+        {
+            Severity++;
+            ChangeBonuses(1);
+            GetComp<HediffComp_Disappears>().SetDuration(Doses == 1 ? GenDate.TicksPerDay : 6 * GenDate.TicksPerHour);
+        }
+
+        public override void PostRemoved()
+        {
+            base.PostRemoved();
+            ChangeBonuses(-Doses);
+            if (!pawn.Dead && pawn.TryGetComp<FullnessAndDietStats_ThingComp>() is FullnessAndDietStats_ThingComp stomach
+                && !stomach.Disabled && stomach.CurrentFullness > stomach.HardLimit)
+            {
+                Messages.Message($"{pawn.LabelShort}'s borrowed stomach has collapsed while overfull.", pawn,
+                    MessageTypeDefOf.NegativeHealthEvent);
+            }
+        }
+
+        void ChangeBonuses(int doses) =>
+            StatChangeUtility.ChangeRimRoundStats(pawn, new RimRoundStatBonuses
+            {
+                softLimitMultiplier = CapacityPerDose * doses,
+                digestionRateMultiplier = -DigestionPenaltyPerDose * doses,
+            });
+
+        public override string LabelInBrackets => $"{Doses} dose(s)";
+
+        public override string TipStringExtra =>
+            $"{base.TipStringExtra}\nStomach capacity +{CapacityPerDose * Doses:P0}; digestion −{DigestionPenaltyPerDose * Doses:P0}.\n" +
+            "When the effect ends, everything still in the stomach stays there. Stop feeding early enough to digest the excess.";
+    }
+
+    public class CompUseEffect_RRBorrowedStomach : CompUseEffect
+    {
+        static HediffDef Def => DefDatabase<HediffDef>.GetNamed("RR_BorrowedStomach");
+
+        public override AcceptanceReport CanBeUsedBy(Pawn p)
+        {
+            var stomach = p.TryGetComp<FullnessAndDietStats_ThingComp>();
+            if (stomach == null || stomach.Disabled)
+                return $"{p.LabelShort} has no stomach for it to alter.";
+            if (p.health.hediffSet.HasHediff(HediffDefOf.DarkPsychicShock))
+                return $"{p.LabelShort} is in dark psychic shock.";
+            return base.CanBeUsedBy(p);
+        }
+
+        public override void DoEffect(Pawn usedBy)
+        {
+            var report = CanBeUsedBy(usedBy);
+            if (!report.Accepted)
+                return;
+
+            var health = usedBy.health;
+            var borrowed = health.hediffSet.GetFirstHediffOfDef(Def) as Hediff_RRBorrowedStomach;
+            if (borrowed?.Doses >= 2)
+            {
+                health.RemoveHediff(borrowed);
+                health.AddHediff(HediffDefOf.DarkPsychicShock);
+                Messages.Message($"A third dose snapped {usedBy.LabelShort}'s borrowed stomach shut and sent {usedBy.Possessive()} mind into shock.",
+                    usedBy, MessageTypeDefOf.NegativeHealthEvent);
+                return;
+            }
+
+            if (borrowed == null)
+            {
+                borrowed = (Hediff_RRBorrowedStomach)HediffMaker.MakeHediff(Def, usedBy);
+                health.AddHediff(borrowed);
+            }
+
+            borrowed.AddDose();
+            if (borrowed.Doses == 2)
+                Messages.Message($"{usedBy.LabelShort} has six hours before the borrowed stomach collapses. A third dose would end it immediately.",
+                    usedBy, MessageTypeDefOf.CautionInput);
+        }
+    }
 }

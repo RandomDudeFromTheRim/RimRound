@@ -86,6 +86,61 @@
     </building>
   </ThingDef>
 
+  <ThingDef ParentName="RR_HardenedFleshWallBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_VoidMazeSeamWall</defName>
+    <destroyable>false</destroyable>
+    <useHitPoints>false</useHitPoints>
+  </ThingDef>
+
+  <ThingDef ParentName="Door" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_VoidMazeMembrane</defName>
+    <thingClass>Building_JammedDoor</thingClass>
+    <label>sealed membrane</label>
+    <description>A seam in the living wall. Force it open to see what lies beyond.</description>
+    <destroyable>false</destroyable>
+    <useHitPoints>false</useHitPoints>
+    <designationCategory IsNull="True" />
+    <graphicData>
+      <texPath>Things/Building/GrayDoor/GrayDoor_Mover</texPath>
+      <color>(164,104,109)</color>
+    </graphicData>
+    <statBases>
+      <Flammability>0</Flammability>
+    </statBases>
+    <building>
+      <paintable>false</paintable>
+      <deconstructible>false</deconstructible>
+      <claimable>false</claimable>
+      <neverBuildable>true</neverBuildable>
+      <isAirtight>true</isAirtight>
+    </building>
+    <comps Inherit="False">
+      <li Class="CompProperties_LabyrinthDoor">
+        <jammed>
+          <texPath>Things/Building/FleshDimension/RR_VoidSeam</texPath>
+          <graphicClass>Graphic_Single</graphicClass>
+          <drawSize>(1.25,1.25)</drawSize>
+        </jammed>
+        <unlockedChance>0</unlockedChance>
+        <activeTicks>1</activeTicks>
+        <ticksToActivate>900</ticksToActivate>
+        <activateTexPath>UI/Commands/ForceOpenDoor</activateTexPath>
+        <activateLabelString>Open membrane...</activateLabelString>
+        <activateDescString>Choose a pawn to pry open the membrane and reveal the passage ahead.</activateDescString>
+        <guiLabelString>Choose who should open the membrane</guiLabelString>
+        <jobString>Open membrane</jobString>
+        <activatingStringPending>opening membrane</activatingStringPending>
+        <activatingString>opening membrane: {1}s</activatingString>
+        <targetingParameters>
+          <canTargetBuildings>false</canTargetBuildings>
+          <canTargetAnimals>false</canTargetAnimals>
+          <canTargetMechs>false</canTargetMechs>
+          <onlyTargetControlledPawns>true</onlyTargetControlledPawns>
+        </targetingParameters>
+      </li>
+    </comps>
+  </ThingDef>
+
   <!-- The way home, spawned at the far end of the maze -->
   <ThingDef>
     <defName>RR_VoidPortalReturn</defName>

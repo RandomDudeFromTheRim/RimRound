@@ -168,7 +168,7 @@
   </ThingDef>
 
   <!-- Hardened flesh shell: the maze's immovable outer carcass -->
-  <ThingDef ParentName="BuildingBase">
+  <ThingDef ParentName="BuildingBase" Name="RR_HardenedFleshWallBase">
     <defName>RR_HardenedFleshWall</defName>
     <thingClass>Building</thingClass>
     <category>Building</category>

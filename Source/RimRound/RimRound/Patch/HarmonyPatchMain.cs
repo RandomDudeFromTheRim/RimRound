@@ -27,6 +27,9 @@ namespace RimRound.Patch
 
             foreach (Type patchType in AccessTools.GetTypesFromAssembly(typeof(HarmonyPatchMain).Assembly))
             {
+                if (!patchType.IsDefined(typeof(HarmonyPatch), inherit: false))
+                    continue;
+
                 try
                 {
                     harmony.CreateClassProcessor(patchType).Patch();

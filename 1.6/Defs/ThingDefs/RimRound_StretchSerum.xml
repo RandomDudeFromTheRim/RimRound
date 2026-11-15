@@ -83,4 +83,52 @@
     <everCurableByItem>false</everCurableByItem>
   </HediffDef>
 
+  <ThingDef ParentName="SerumBase" MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BorrowedStomachSerum</defName>
+    <label>borrowed stomach serum</label>
+    <description>Void gluttonium opens a pocket between the stomach walls. It can hold a great deal, but the stomach digests more slowly while the pocket is open.\n\nThe first dose adds 60% stomach capacity for one day. A second dose takes the bonus to 120% but resets the remaining time to six hours. A third dose collapses the pocket immediately and inflicts dark psychic shock.\n\nThe pocket gives back everything it was holding when it closes. Digest the extra food before then, or the stomach may rupture.</description>
+    <graphicData>
+      <texPath>Things/Item/Serum/SerumVoidsight</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>0.8</drawSize>
+      <color>(0.85, 0.65, 0.9)</color>
+    </graphicData>
+    <statBases>
+      <MarketValue>280</MarketValue>
+    </statBases>
+    <recipeMaker>
+      <workAmount>1800</workAmount>
+      <researchPrerequisite>SerumSynthesis</researchPrerequisite>
+    </recipeMaker>
+    <costList>
+      <Neutroamine>2</Neutroamine>
+      <Bioferrite>8</Bioferrite>
+      <RR_VoidGluttonium>2</RR_VoidGluttonium>
+    </costList>
+    <comps>
+      <li Class="CompProperties_UseEffect">
+        <compClass>RimRound.Hediffs.CompUseEffect_RRBorrowedStomach</compClass>
+      </li>
+      <li Class="CompProperties_UseEffectPlaySound">
+        <soundOnUsed>MechSerumUsed</soundOnUsed>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <HediffDef MayRequire="Ludeon.RimWorld.Anomaly">
+    <defName>RR_BorrowedStomach</defName>
+    <label>borrowed stomach</label>
+    <description>A pocket of extra space in the stomach wall, held open by a void serum. Food within the pocket still has to be digested.</description>
+    <hediffClass>RimRound.Hediffs.Hediff_RRBorrowedStomach</hediffClass>
+    <initialSeverity>0</initialSeverity>
+    <maxSeverity>2</maxSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>60000</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+  </HediffDef>
+
 </Defs>

@@ -150,6 +150,7 @@ namespace RimRound.Incidents
             slate.Set("map", map);
             slate.Set("questDurationTicks", durationTicks);
             slate.Set("targetLabel", tier.label);
+            slate.Set("weighInNote", QuestPart_RRWeightGoalProgress.WeighIn(guest, tier.pastBodyType));
             slate.Set("rewardNote", faction.def.HasRoyalTitles
                 ? "The Empire rewards this sort of hospitality with honor."
                 : "The bigger they go home, the more grateful their people will be.");
@@ -243,11 +244,26 @@ namespace RimRound.Incidents
                     return null;
                 BodyTypeDef past = DefDatabase<BodyTypeDef>.GetNamedSilentFail(pastBodyTypeDefName);
                 bool reached = past != null && BodyTypeUtility.PawnIsOverWeightThreshold(pawn, past);
-                string now = pawn.story?.bodyType?.defName is string d && d.Length > 6 ? d.Substring(6).Replace('_', ' ') : "?";
-                return reached
-                    ? $"{pawn.LabelShort} has reached {targetLabel} (now {now})."
-                    : $"{pawn.LabelShort} is {now} - still short of {targetLabel}.";
+                string status = reached
+                    ? $"{pawn.LabelShort} is at the target size. Keep them there until pickup."
+                    : $"{pawn.LabelShort} is still short of {targetLabel}.";
+                return $"{status} {WeighIn(pawn, pastBodyTypeDefName)}".TrimEnd();
             }
+        }
+
+        internal static string WeighIn(Pawn pawn, string pastBodyTypeDefName)
+        {
+            var past = DefDatabase<BodyTypeDef>.GetNamedSilentFail(pastBodyTypeDefName);
+            if (!BodyTypeUtility.TryGetWeightThresholdSeverity(pawn, past, out float threshold))
+                return "";
+
+            float targetKg = Utilities.HediffUtility.SeverityToKilosWithBaseWeight(threshold);
+            string target = $"Pickup weight must be above {targetKg:0.0} kg.";
+            if (!(pawn.WeightHediff() is Hediff weight))
+                return target;
+
+            float currentKg = Utilities.HediffUtility.SeverityToKilosWithBaseWeight(weight.Severity);
+            return $"Current weight: {currentKg:0.0} kg. {target}";
         }
 
         public override void ExposeData()
