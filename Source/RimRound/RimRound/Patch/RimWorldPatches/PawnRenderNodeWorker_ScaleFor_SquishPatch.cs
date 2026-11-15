@@ -32,12 +32,32 @@ namespace RimRound.Patch.RimWorldPatches
             __result.z *= 1f + SquishUtility.MaxBulge * compression * ((mask == 3) ? 1.4f : 1f);
         }
 
-        static bool IsBodyNode(PawnRenderNode node)
+        internal static bool IsBodyNode(PawnRenderNode node)
         {
             string tag = node?.Props?.tagDef?.defName;
             if (tag != null)
                 return tag == "Body";
             return node?.Props?.debugLabel == "Body";
+        }
+    }
+
+    /// <summary>
+    /// Keeps the blocked edge of the body where it is. A pure scale shrinks toward the node centre,
+    /// so a pawn against a wall looked like it was being squeezed from both sides at once.
+    /// </summary>
+    [HarmonyPatch(typeof(PawnRenderNodeWorker), nameof(PawnRenderNodeWorker.OffsetFor))]
+    public static class PawnRenderNodeWorker_OffsetFor_SquishAnchorPatch
+    {
+        public static void Postfix(PawnRenderNode node, PawnDrawParms parms, ref Vector3 __result)
+        {
+            if (parms.Portrait || parms.Statue || parms.Cache)
+                return;
+            if (!PawnRenderNodeWorker_ScaleFor_SquishPatch.IsBodyNode(node))
+                return;
+
+            float shift = SquishUtility.AnchorShift(parms.pawn, node?.Props?.drawSize.x ?? 1f);
+            if (shift != 0f)
+                __result.x += shift;
         }
     }
 

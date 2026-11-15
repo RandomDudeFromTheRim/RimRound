@@ -26,9 +26,10 @@ namespace RimRound.Rendering
         public const float MaxCompression = 0.32f;
         public const float MaxBulge = 0.22f;
 
-        // spring constants: soft, slightly underdamped so it wobbles once before settling
-        const float Stiffness = 165f;
-        const float Damping = 0.74f;
+        // spring constants: omega ~9.5 rad/s, zeta ~0.58 - one visible wobble, settles in ~0.5 s.
+        // (the first attempt used 165/0.74 which converged in two ticks, so it looked like a snap)
+        const float Stiffness = 90f;
+        const float Damping = 11f;
         const float Dt = 1f / 60f;
 
         class State
@@ -60,26 +61,42 @@ namespace RimRound.Rendering
 
             State st = states.GetOrAdd(pawn.thingIDNumber, _ => new State());
 
-            if (!st.current.Equals(0f) || !st.velocity.Equals(0f) || pawn.IsHashIntervalTick(15))
-                st.target = TargetFor(pawn);
-
             int mask = ContactMask(pawn);
+            float target = TargetFor(pawn, mask);
+
             if (mask != st.mask)
             {
                 st.mask = mask;
-                st.target = TargetFor(pawn, mask);
                 // safe here: this is the main thread, not the render job
                 pawn.Drawer?.renderer?.SetAllGraphicsDirty();
             }
+            st.target = target;
 
-            // damped spring toward the target
+            // damped spring: accel = k*(target-current) - c*velocity
             if (!Mathf.Approximately(st.current, st.target) || Mathf.Abs(st.velocity) > 0.0005f)
             {
-                st.velocity += (st.target - st.current) * Stiffness * Dt;
-                st.velocity *= Damping;
-                st.current += st.velocity * Dt;
-                st.current = Mathf.Clamp(st.current, 0f, 1f);
+                float accel = (st.target - st.current) * Stiffness - st.velocity * Damping;
+                st.velocity += accel * Dt;
+                st.current = Mathf.Clamp(st.current + st.velocity * Dt, 0f, 1f);
+                if (st.current <= 0f && st.target <= 0f)
+                    st.velocity = 0f;
             }
+        }
+
+        /// <summary>
+        /// How far to shift the body, in cells, so the side that is blocked stays against what is
+        /// blocking it. Scaling shrinks toward the node centre, which makes a one-sided squeeze
+        /// look like a two-sided one; this puts the blocked edge back where it was.
+        /// </summary>
+        public static float AnchorShift(Pawn pawn, float drawSizeX)
+        {
+            if (pawn == null || !states.TryGetValue(pawn.thingIDNumber, out State st))
+                return 0f;
+            if (st.mask == 0 || st.mask == 3 || st.current <= 0.001f)
+                return 0f;                       // both sides: a centred squeeze is correct
+
+            float lost = drawSizeX * MaxCompression * st.current * 0.5f;
+            return (st.mask == 1) ? -lost : lost; // west blocked -> shift west, east -> east
         }
 
         /// <summary>0..1 compression to draw at, and which sides are blocked. Read-only.</summary>
