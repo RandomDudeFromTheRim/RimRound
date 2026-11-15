@@ -75,6 +75,20 @@ namespace RimRound.Patch.RimWorldPatches
 
     public static class DebugActions_Squish
     {
+        [DebugAction("RimRound", "Toggle squish MESH (geometry test)", false, false, false, false, false, 0, false,
+            actionType = DebugActionType.Action,
+            allowedGameStates = AllowedGameStates.PlayingOnMap,
+            displayPriority = 101)]
+        public static void ToggleMesh()
+        {
+            SquishMeshCache.MeshEnabled = !SquishMeshCache.MeshEnabled;
+            Find.CurrentMap?.mapDrawer?.RegenerateEverythingNow();
+            Messages.Message(
+                SquishMeshCache.MeshEnabled
+                    ? $"Squish mesh ON: body nodes use the {SquishMeshCache.Nx}x{SquishMeshCache.Ny} grid ({SquishMeshCache.Count} cached)."
+                    : "Squish mesh OFF: body nodes use the vanilla quad.",
+                MessageTypeDefOf.NeutralEvent, false);
+        }
         [DebugAction("RimRound", "Toggle squish on this pawn", false, false, false, false, false, 0, false,
             actionType = DebugActionType.ToolMapForPawns,
             allowedGameStates = AllowedGameStates.PlayingOnMap,

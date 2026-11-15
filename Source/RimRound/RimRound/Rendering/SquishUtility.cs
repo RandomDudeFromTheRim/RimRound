@@ -59,6 +59,9 @@ namespace RimRound.Rendering
             if (pawn == null || !pawn.Spawned || pawn.Map == null || !pawn.RaceProps.Humanlike)
                 return;
 
+            // main thread: make sure the body mesh exists before any draw job asks for it
+            RimRound.Patch.RimWorldPatches.SquishMeshBootstrap.Note(pawn);
+
             State st = states.GetOrAdd(pawn.thingIDNumber, _ => new State());
 
             int mask = ContactMask(pawn);
