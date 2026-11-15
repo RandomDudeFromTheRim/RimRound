@@ -9,7 +9,9 @@
     <socialFightBaseChance>0</socialFightBaseChance>
     <logRulesInitiator>
       <rulesStrings>
-        <li>r_logentry-> </li>
+        <li>r_logentry->[INITIATOR_nameDef] stroked [RECIPIENT_nameDef]'s tail.</li>
+        <li>r_logentry->[INITIATOR_nameDef] ran their hands along [RECIPIENT_nameDef]'s tail.</li>
+        <li>r_logentry->[INITIATOR_nameDef] got hold of [RECIPIENT_nameDef]'s tail and gave it a squeeze.</li>
       </rulesStrings>
     </logRulesInitiator>
   </InteractionDef>

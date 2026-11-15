@@ -10,7 +10,10 @@
     <socialFightBaseChance>0</socialFightBaseChance>
     <logRulesInitiator>
       <rulesStrings>
-        <li>r_logentry-> </li>
+        <li>r_logentry->[INITIATOR_nameDef] smothered [RECIPIENT_nameDef] under their bulk.</li>
+        <li>r_logentry->[INITIATOR_nameDef] pressed their full weight into [RECIPIENT_nameDef].</li>
+        <li>r_logentry->[INITIATOR_nameDef] squished [RECIPIENT_nameDef] against the nearest wall.</li>
+        <li>r_logentry->[INITIATOR_nameDef] buried [RECIPIENT_nameDef] in softness.</li>
       </rulesStrings>
     </logRulesInitiator>
   </InteractionDef>
@@ -25,7 +28,10 @@
     <socialFightBaseChance>0</socialFightBaseChance>
     <logRulesInitiator>
       <rulesStrings>
-        <li>r_logentry-> </li>
+        <li>r_logentry->[INITIATOR_nameDef] ran their hands over [RECIPIENT_nameDef].</li>
+        <li>r_logentry->[INITIATOR_nameDef] felt every roll of [RECIPIENT_nameDef].</li>
+        <li>r_logentry->[INITIATOR_nameDef] traced the shape of [RECIPIENT_nameDef] with their hands.</li>
+        <li>r_logentry->[INITIATOR_nameDef] took their time exploring [RECIPIENT_nameDef].</li>
       </rulesStrings>
     </logRulesInitiator>
   </InteractionDef>
@@ -40,7 +46,10 @@
     <socialFightBaseChance>0</socialFightBaseChance>
     <logRulesInitiator>
       <rulesStrings>
-        <li>r_logentry-> </li>
+        <li>r_logentry->[INITIATOR_nameDef] held [RECIPIENT_nameDef] close and fed them their milk.</li>
+        <li>r_logentry->[INITIATOR_nameDef] nursed [RECIPIENT_nameDef] against their chest.</li>
+        <li>r_logentry->[INITIATOR_nameDef] pressed their milk into [RECIPIENT_nameDef].</li>
+        <li>r_logentry->[INITIATOR_nameDef] filled [RECIPIENT_nameDef] with warm milk.</li>
       </rulesStrings>
     </logRulesInitiator>
   </InteractionDef>

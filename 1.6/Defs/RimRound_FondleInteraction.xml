@@ -9,7 +9,10 @@
     <socialFightBaseChance>0</socialFightBaseChance>
     <logRulesInitiator>
       <rulesStrings>
-        <li>r_logentry-> </li>
+        <li>r_logentry->[INITIATOR_nameDef] fondled [RECIPIENT_nameDef].</li>
+        <li>r_logentry->[INITIATOR_nameDef] ran their hands over [RECIPIENT_nameDef].</li>
+        <li>r_logentry->[INITIATOR_nameDef] squeezed [RECIPIENT_nameDef] and admired the softness.</li>
+        <li>r_logentry->[INITIATOR_nameDef] got handsy with [RECIPIENT_nameDef].</li>
       </rulesStrings>
     </logRulesInitiator>
   </InteractionDef>
