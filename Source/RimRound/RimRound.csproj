@@ -412,6 +412,8 @@
     <Compile Include="RimRound\Hediffs\Hediff_RRConstricted.cs" />
     <Compile Include="RimRound\Hediffs\DamageWorker_RRConstrictorLatch.cs" />
     <Compile Include="RimRound\Rendering\PawnRenderNodeWorker_RRConstrictor.cs" />
+    <Compile Include="RimRound\Rendering\SquishUtility.cs" />
+    <Compile Include="RimRound\Patch\RimWorldPatches\PawnRenderNodeWorker_ScaleFor_SquishPatch.cs" />
     <Compile Include="RimRound\AI\JobDriver_RRTearOffConstrictor.cs" />
     <Compile Include="RimRound\AI\FloatMenuOptionProvider_RRTearOffConstrictor.cs" />
     <Compile Include="RimRound\AI\JobDriver_RRConstrictorLatchOn.cs" />
