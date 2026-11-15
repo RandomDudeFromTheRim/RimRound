@@ -17,18 +17,30 @@ namespace RimRound.AI
             if (!CanSmother(initiator, recipient))
                 return 0;
 
+            // not again the moment it happened: the memory lasts a day, and without this
+            // the weight below had them at it every social tick, filling the log with it
+            if (CloseContactUtility.RecentlyTouched(initiator, recipient,
+                    Defs.ThoughtDefOf.RR_SmotheredInitiator,
+                    Defs.ThoughtDefOf.RR_SmotheredHate,
+                    Defs.ThoughtDefOf.RR_SmotheredDislike,
+                    Defs.ThoughtDefOf.RR_SmotheredNeutral,
+                    Defs.ThoughtDefOf.RR_SmotheredGood,
+                    Defs.ThoughtDefOf.RR_SmotheredGreat))
+                return 0;
+
             var initAtt = initiator.TryGetComp<ThingComp_PawnAttitude>();
             if (initAtt is null)
                 return 0;
 
-            float weightBonus = GetWeightSeverity(initiator) * 3f;
+            // modest weights: these are garnish on normal social life, not the whole of it
+            float weightBonus = GetWeightSeverity(initiator) * 1.5f;
 
             return initAtt.weightOpinion switch
             {
-                WeightOpinion.NeutralPlus => 3f + weightBonus,
-                WeightOpinion.Like => 6f + weightBonus,
-                WeightOpinion.Love => 9f + weightBonus,
-                WeightOpinion.Fanatical => 14f + weightBonus,
+                WeightOpinion.NeutralPlus => 0.5f + weightBonus,
+                WeightOpinion.Like => 0.8f + weightBonus,
+                WeightOpinion.Love => 1.2f + weightBonus,
+                WeightOpinion.Fanatical => 1.7f + weightBonus,
                 _ => 0,
             };
         }
@@ -142,6 +154,16 @@ namespace RimRound.AI
             if (!CanExplore(initiator, recipient))
                 return 0;
 
+            // same cooldown as the other touch acts: not again until the memory lapses
+            if (CloseContactUtility.RecentlyTouched(initiator, recipient,
+                    Defs.ThoughtDefOf.RR_ExploredInitiator,
+                    Defs.ThoughtDefOf.RR_ExploredHate,
+                    Defs.ThoughtDefOf.RR_ExploredDislike,
+                    Defs.ThoughtDefOf.RR_ExploredNeutral,
+                    Defs.ThoughtDefOf.RR_ExploredGood,
+                    Defs.ThoughtDefOf.RR_ExploredGreat))
+                return 0;
+
             var initAtt = initiator.TryGetComp<ThingComp_PawnAttitude>();
             if (initAtt is null)
                 return 0;
@@ -150,11 +172,12 @@ namespace RimRound.AI
             if (sizeDiff <= 0)
                 return 0;
 
+            // modest, like the rest: a garnish on social life, not the whole of it
             return initAtt.weightOpinion switch
             {
-                WeightOpinion.Like => 5f + sizeDiff * 4f,
-                WeightOpinion.Love => 8f + sizeDiff * 6f,
-                WeightOpinion.Fanatical => 12f + sizeDiff * 8f,
+                WeightOpinion.Like => 0.5f + sizeDiff,
+                WeightOpinion.Love => 0.9f + sizeDiff * 1.5f,
+                WeightOpinion.Fanatical => 1.4f + sizeDiff * 2f,
                 _ => 0,
             };
         }
@@ -260,17 +283,28 @@ namespace RimRound.AI
             if (!CanWetSmother(initiator, recipient))
                 return 0;
 
+            // same cooldown as the other touch acts: not again until the memory lapses
+            if (CloseContactUtility.RecentlyTouched(initiator, recipient,
+                    Defs.ThoughtDefOf.RR_WetSmotherInitiator,
+                    Defs.ThoughtDefOf.RR_WetSmotherHate,
+                    Defs.ThoughtDefOf.RR_WetSmotherDislike,
+                    Defs.ThoughtDefOf.RR_WetSmotherNeutral,
+                    Defs.ThoughtDefOf.RR_WetSmotherGood,
+                    Defs.ThoughtDefOf.RR_WetSmotherGreat))
+                return 0;
+
             var initAtt = initiator.TryGetComp<ThingComp_PawnAttitude>();
             if (initAtt is null)
                 return 0;
 
-            float weightBonus = GetWeightSeverity(initiator) * 3f;
+            // modest, like the rest: a garnish on social life, not the whole of it
+            float weightBonus = GetWeightSeverity(initiator) * 1.5f;
 
             return initAtt.weightOpinion switch
             {
-                WeightOpinion.Like => 4f + weightBonus,
-                WeightOpinion.Love => 7f + weightBonus,
-                WeightOpinion.Fanatical => 12f + weightBonus,
+                WeightOpinion.Like => 0.6f + weightBonus,
+                WeightOpinion.Love => 1.0f + weightBonus,
+                WeightOpinion.Fanatical => 1.5f + weightBonus,
                 _ => 0,
             };
         }

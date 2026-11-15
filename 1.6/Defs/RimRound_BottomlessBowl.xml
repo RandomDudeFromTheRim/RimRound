@@ -11,7 +11,7 @@
     <thingClass>ThingWithComps</thingClass>
     <defName>RR_BottomlessBowl</defName>
     <label>bottomless bowl</label>
-    <description>A battered, dented old bowl, full to the brim with thick, dark, steaming slop flecked with blue specks of void gluttonium. It smells wonderful. However much is eaten from it, it is always full.\n\nIt pulls on anyone who doesn't mind getting bigger, and the more they like it, the harder it pulls. Those under its pull crave it, and the deeply obsessed drop everything to gorge on it. Anyone can be told to eat from it: it stuffs them to the brim every time, and soaks them in gluttonium.\n\nThe bowl seems impervious to damage.</description>
+    <description>A battered, dented old bowl, full to the brim with thick, dark, steaming slop flecked with blue specks of void gluttonium. It smells wonderful. However much is eaten from it, it is always full.\n\nIt pulls on anyone who doesn't mind getting bigger, and the more they like it, the harder it pulls. Those under its pull crave it, and the deeply obsessed drop everything to gorge on it. Anyone with room for a helping can eat from it. The larger the helping, the stronger its effects.\n\nThe bowl seems impervious to damage.</description>
     <category>Item</category>
     <genericMarketSellable>false</genericMarketSellable>
     <drawerType>MapMeshOnly</drawerType>

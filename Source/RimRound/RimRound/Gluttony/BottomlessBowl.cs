@@ -24,6 +24,9 @@ namespace RimRound.Gluttony
         const float KilosPerFeedMin = 3f, KilosPerFeedMax = 6f;
         const float ExposurePerFeed = 0.06f;
         const float JoyPerFeed = 0.25f;
+        const float MinimumServingFraction = 0.2f;
+        const float StandardMealNutrition = 0.9f;
+        const float ObsessedFrom = 0.66f;
         static readonly FloatRange AllurePerFeed = new FloatRange(0.05f, 0.1f);
 
         static ThingDef bowl;
@@ -59,6 +62,22 @@ namespace RimRound.Gluttony
         public static bool CanFeed(Pawn pawn) =>
             pawn?.needs?.food != null && pawn.RaceProps.Humanlike && pawn.TryGetComp<FullnessAndDietStats_ThingComp>() is FullnessAndDietStats_ThingComp c && !c.Disabled;
 
+        static Hediff AllureOn(Pawn pawn) =>
+            Allure == null ? null : pawn.health.hediffSet.GetFirstHediffOfDef(Allure);
+
+        static float ServingFullness(FullnessAndDietStats_ThingComp stomach, Hediff allureHediff)
+        {
+            float limit = allureHediff?.Severity >= ObsessedFrom
+                ? Mathf.Lerp(stomach.SoftLimit, stomach.HardLimit, 0.6f)
+                : stomach.SoftLimit;
+            limit = Mathf.Min(limit, stomach.HardLimit);
+            float room = stomach.RemainingFullnessUntil(limit);
+            return room >= limit * MinimumServingFraction ? Mathf.Max(0f, room) : 0f;
+        }
+
+        public static bool CanTakeServing(Pawn pawn) =>
+            CanFeed(pawn) && ServingFullness(pawn.TryGetComp<FullnessAndDietStats_ThingComp>(), AllureOn(pawn)) > 0f;
+
         public static bool TryFindBowl(Pawn pawn, out Thing found)
         {
             found = null;
@@ -72,15 +91,13 @@ namespace RimRound.Gluttony
         public static Job FeedJobOn(Thing bowlThing) => JobMaker.MakeJob(FeedJob, bowlThing);
 
         /// <summary>Sends the pawn off to gorge from the nearest bowl, if there is one and they're free to go.</summary>
-        public static bool TrySendToBowl(Pawn pawn, int times = 1)
+        public static bool TrySendToBowl(Pawn pawn)
         {
-            if (FeedJob == null || pawn.Downed || pawn.Drafted || pawn.InMentalState || pawn.GetLord() != null || pawn.CurJobDef == FeedJob
+            if (FeedJob == null || !CanTakeServing(pawn) || pawn.Downed || pawn.Drafted || pawn.InMentalState || pawn.GetLord() != null || pawn.CurJobDef == FeedJob
                 || !pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation) || !TryFindBowl(pawn, out Thing found))
                 return false;
             pawn.jobs.StartJob(FeedJobOn(found), JobCondition.InterruptForced);
-            for (int i = 1; i < times; i++)
-                pawn.jobs.jobQueue.EnqueueLast(FeedJobOn(found));
-            return true;
+            return pawn.CurJobDef == FeedJob;
         }
 
         /// <summary>
@@ -90,28 +107,32 @@ namespace RimRound.Gluttony
         /// </summary>
         public static void Feed(Pawn pawn)
         {
+            if (!CanFeed(pawn))
+                return;
+
             var fnd = pawn.TryGetComp<FullnessAndDietStats_ThingComp>();
-            Hediff allureHediff = Allure != null ? pawn.health.hediffSet.GetFirstHediffOfDef(Allure) : null;
-            bool obsessed = allureHediff != null && allureHediff.Severity >= 0.66f;
-            if (fnd != null && !fnd.Disabled)
-            {
-                float limit = obsessed ? Mathf.Lerp(fnd.SoftLimit, fnd.HardLimit, 0.6f) : fnd.SoftLimit;
-                float ratio = FullnessAndDietStats_ThingComp.defaultFullnessToNutritionRatio;
-                float nutrition = Mathf.Max(0.3f, fnd.RemainingFullnessUntil(limit) / Mathf.Max(0.01f, ratio * fnd.FullnessGainedMultiplier));
-                fnd.UpdateRatio(nutrition, ratio);
-                fnd.CurrentFullness = Mathf.Max(fnd.CurrentFullness, Mathf.Min(limit, fnd.CurrentFullness + nutrition * ratio * fnd.FullnessGainedMultiplier));
-                if (pawn.needs?.food is Need_Food food)
-                    food.CurLevel = Mathf.Min(food.MaxLevel, food.CurLevel + nutrition);
-            }
+            Hediff allureHediff = AllureOn(pawn);
+            float fullness = ServingFullness(fnd, allureHediff);
+            if (fullness <= 0f)
+                return;
+
+            float ratio = Mathf.Max(0.01f, FullnessAndDietStats_ThingComp.defaultFullnessToNutritionRatio * fnd.FullnessGainedMultiplier);
+            float nutrition = fullness / ratio;
+            fnd.UpdateRatio(nutrition, ratio);
+            fnd.CurrentFullness += fullness;
+            Need_Food food = pawn.needs.food;
+            food.CurLevel = Mathf.Min(food.MaxLevel, food.CurLevel + nutrition);
+
+            float dose = Mathf.Clamp01(nutrition / StandardMealNutrition);
             float strength = AllureStrength(pawn);
-            Utilities.HediffUtility.QueueWeightGain(pawn, Rand.Range(KilosPerFeedMin, KilosPerFeedMax) * (1f + strength * 0.5f));
+            Utilities.HediffUtility.QueueWeightGain(pawn, Rand.Range(KilosPerFeedMin, KilosPerFeedMax) * (1f + strength * 0.5f) * dose);
             if (Exposure != null)
-                HealthUtility.AdjustSeverity(pawn, Exposure, ExposurePerFeed);
-            pawn.needs?.joy?.GainJoy(JoyPerFeed, JoyKindDefOf.Gluttonous);
+                HealthUtility.AdjustSeverity(pawn, Exposure, ExposurePerFeed * dose);
+            pawn.needs.joy?.GainJoy(JoyPerFeed * dose, JoyKindDefOf.Gluttonous);
             if (AteThought != null)
                 pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtMaker.MakeThought(AteThought, strength > 0f ? 0 : 1));
             if (allureHediff != null)
-                allureHediff.Severity += AllurePerFeed.RandomInRange;
+                allureHediff.Severity += AllurePerFeed.RandomInRange * dose;
             if (Craving != null && pawn.health.hediffSet.GetFirstHediffOfDef(Craving) is Hediff c2)
                 pawn.health.RemoveHediff(c2);
         }
@@ -173,7 +194,9 @@ namespace RimRound.Gluttony
         {
             if (BowlUtility.FeedJob != null && BowlUtility.CanFeed(selPawn))
             {
-                if (!selPawn.CanReach(parent, PathEndMode.ClosestTouch, Danger.Deadly))
+                if (!BowlUtility.CanTakeServing(selPawn))
+                    yield return new FloatMenuOption("Eat from the bottomless bowl (too full)", null);
+                else if (!selPawn.CanReach(parent, PathEndMode.ClosestTouch, Danger.Deadly))
                     yield return new FloatMenuOption("Eat from the bottomless bowl (no path)", null);
                 else
                     yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("Eat from the bottomless bowl", () =>
@@ -249,7 +272,10 @@ namespace RimRound.Gluttony
 
         static IEnumerable<Pawn> AllAllured() =>
             BowlUtility.Allure == null ? Enumerable.Empty<Pawn>() :
-            Find.Maps.SelectMany(m => m.mapPawns.AllPawns).Where(p => p.health.hediffSet.HasHediff(BowlUtility.Allure));
+            Find.Maps.SelectMany(m => m.mapPawns.AllPawns)
+                .Concat(Find.WorldPawns.AllPawnsAlive)
+                .Where(p => p.health.hediffSet.HasHediff(BowlUtility.Allure))
+                .Distinct();
 
         protected override void OnInteracted(Pawn caster)
         {
@@ -292,6 +318,7 @@ namespace RimRound.Gluttony
         protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
+            this.FailOn(() => !BowlUtility.CanTakeServing(pawn));
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch);
             Toil eat = Toils_General.Wait(FeedTicks, TargetIndex.A);
             eat.WithProgressBarToilDelay(TargetIndex.A);
@@ -325,14 +352,14 @@ namespace RimRound.Gluttony
             float strength = BowlUtility.AllureStrength(pawn);
             if (strength <= 0f)
             {
-                pawn.health.RemoveHediff(this);
+                BowlUtility.CureAllure(pawn);
                 return;
             }
             if (BowlUtility.Craving != null && !pawn.health.hediffSet.HasHediff(BowlUtility.Craving)
                 && Rand.MTBEventOccurs(CravingMtbDays / strength, GenDate.TicksPerDay, 250f))
                 pawn.health.AddHediff(BowlUtility.Craving);
             if (Severity >= ObsessedFrom && pawn.Spawned && Rand.MTBEventOccurs(BingeMtbDays / strength, GenDate.TicksPerDay, 250f)
-                && BowlUtility.TrySendToBowl(pawn, Rand.RangeInclusive(2, 3)) && PawnUtility.ShouldSendNotificationAbout(pawn))
+                && BowlUtility.TrySendToBowl(pawn) && PawnUtility.ShouldSendNotificationAbout(pawn))
                 Messages.Message($"{pawn.LabelShort} has dropped everything to gorge at the bottomless bowl.", pawn, MessageTypeDefOf.NegativeEvent);
         }
 
@@ -347,7 +374,7 @@ namespace RimRound.Gluttony
             if (!DebugSettings.ShowDevGizmos)
                 yield break;
             yield return new Command_Action { defaultLabel = "DEV: Bowl craving", action = () => pawn.health.AddHediff(BowlUtility.Craving) };
-            yield return new Command_Action { defaultLabel = "DEV: Bowl binge", action = () => BowlUtility.TrySendToBowl(pawn, 3) };
+            yield return new Command_Action { defaultLabel = "DEV: Bowl binge", action = () => BowlUtility.TrySendToBowl(pawn) };
         }
     }
 
