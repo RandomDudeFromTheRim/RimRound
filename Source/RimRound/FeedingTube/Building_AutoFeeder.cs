@@ -1,3 +1,4 @@
+using HarmonyLib;
 using RimRound.Comps;
 using RimRound.FeedingTube.Comps;
 using RimRound.Utilities;
@@ -269,23 +270,59 @@ namespace RimRound.FeedingTube
         private void DrawFeedingTubeFromDeviceToPawn()
         {
             Vector3 autoFeederHoseAttachmentPoint = GetAutoFeederLocationVector();
-            Vector3 mouthPosition = GetInBedTargetMouthPosition();
+            Vector3 targetPosition = GetPawnHoseEndpoint(forcedTarget.Pawn);
 
-            GenDraw.DrawLineBetween(autoFeederHoseAttachmentPoint, mouthPosition, feedingTubeMat, 0.2f);
+            GenDraw.DrawLineBetween(autoFeederHoseAttachmentPoint, targetPosition, feedingTubeMat, 0.2f);
         }
 
-        private Vector3 GetInBedTargetMouthPosition()
+        delegate Vector3 GetRenderedBodyPosition(PawnRenderer renderer, Vector3 drawLoc, PawnPosture posture, out bool showBody);
+        static readonly GetRenderedBodyPosition BodyPosition = AccessTools.Method(typeof(PawnRenderer), "GetBodyPos",
+            new[] { typeof(Vector3), typeof(PawnPosture), typeof(bool).MakeByRefType() }) is System.Reflection.MethodInfo method
+                ? AccessTools.MethodDelegate<GetRenderedBodyPosition>(method)
+                : null;
+        static readonly System.Reflection.FieldInfo BodyAttachPoints = AccessTools.Field(typeof(BodyTypeDef), "attachPoints");
+        static readonly Dictionary<BodyTypeDef, Vector3?> BellyOffsets = new Dictionary<BodyTypeDef, Vector3?>();
+
+        // CableConnection3 is the feeder anchor on the pilot body defs.
+        static Vector3? BellyOffset(BodyTypeDef bodyType)
         {
-            Vector3 targetLocation = forcedTarget.CenterVector3;
+            if (bodyType == null || BodyAttachPoints == null)
+                return null;
+            if (BellyOffsets.TryGetValue(bodyType, out Vector3? offset))
+                return offset;
 
-            targetLocation = forcedTarget.Pawn.TrueCenter();
+            if (BodyAttachPoints.GetValue(bodyType) is System.Collections.IList points)
+            {
+                foreach (object point in points)
+                {
+                    if (point != null && AccessTools.Field(point.GetType(), "type")?.GetValue(point)?.ToString() == "CableConnection3"
+                        && AccessTools.Field(point.GetType(), "offset")?.GetValue(point) is Vector3 anchor)
+                    {
+                        offset = anchor;
+                        break;
+                    }
+                }
+            }
+            BellyOffsets.Add(bodyType, offset);
+            return offset;
+        }
 
-            targetLocation.y = AltitudeLayer.MetaOverlays.AltitudeFor();
-
-            float headOffsetInBed = -0.2f;
-            targetLocation.z = targetLocation.z + headOffsetInBed;
-
-            return targetLocation;
+        public static Vector3 GetPawnHoseEndpoint(Pawn pawn)
+        {
+            Vector3 target = pawn.TrueCenter();
+            var renderer = pawn.Drawer?.renderer;
+            if (renderer != null && BodyPosition != null && pawn.CurrentBed() != null
+                && BellyOffset(pawn.story?.bodyType) is Vector3 offset)
+            {
+                target = BodyPosition(renderer, pawn.DrawPos, pawn.GetPosture(), out _);
+                target += Quaternion.AngleAxis(renderer.BodyAngle(default), Vector3.up) * offset;
+            }
+            else
+            {
+                target.z -= 0.2f;
+            }
+            target.y = AltitudeLayer.MetaOverlays.AltitudeFor();
+            return target;
         }
 
         public virtual Vector3 GetAutoFeederLocationVector()

@@ -808,13 +808,22 @@ namespace RimRound.UI
             Rect mapNutritionTitleRect = new Rect(0, 0, nutritionSettingsGroup.width, Text.LineHeight);
             Widgets.Label(mapNutritionTitleRect, "RR_Mtw_MapNutritionStatsTitle".Translate());
 
-            float mapNutrition = Find.CurrentMap?.resourceCounter?.TotalHumanEdibleNutrition ?? 0;
+            Map map = Find.CurrentMap;
+            if (map != nutritionSnapshotMap || Time.realtimeSinceStartup >= nutritionSnapshotExpires)
+            {
+                nutritionSnapshotMap = map;
+                ResourceCounter counter = map?.resourceCounter;
+                nutritionSnapshot = counter == null ? new NutritionTable() : TotalHumanEdibleNutritionOfType(counter);
+                nutritionSnapshotTotal = counter?.TotalHumanEdibleNutrition ?? 0f;
+                nutritionSnapshotExpires = Time.realtimeSinceStartup + 1f;
+            }
+            float mapNutrition = nutritionSnapshotTotal;
 
 
             //Map Nutrition Section
             Text.Font = GameFont.Tiny;
             Rect rectMapNutContent = new Rect(0, mapNutritionTitleRect.yMax, nutritionSettingsGroup.width, 6 * Text.LineHeight);
-            NutritionTable nutTable = TotalHumanEdibleNutritionOfType(Find.CurrentMap.resourceCounter);
+            NutritionTable nutTable = nutritionSnapshot;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("RR_Mtw_NutritionOverview_TotalNutrition".Translate() + ": " + mapNutrition.ToString("F1"));
             stringBuilder.AppendLine("RR_Mtw_NutritionOverview_SimpleMealNutrition".Translate() + ": " + nutTable.MealSimple.ToString("F1"));
@@ -835,10 +844,16 @@ namespace RimRound.UI
             Widgets.Label(rectMapNutContent, stringBuilder.ToString().Trim());
 
             Rect nutritionPerPawnLabel = new Rect(0, rectMapNutContent.yMax, nutritionSettingsGroup.width, Text.LineHeight);
-            Widgets.Label(nutritionPerPawnLabel, "RR_Mtw_NutritionPerPawnLabel".Translate() + ": " + (mapNutrition / (Find.CurrentMap.mapPawns.ColonistCount + Find.CurrentMap.mapPawns.SlavesOfColonySpawned.Count)).ToString("F1"));
+            int fedPawns = map == null ? 0 : map.mapPawns.ColonistCount + map.mapPawns.SlavesOfColonySpawned.Count;
+            Widgets.Label(nutritionPerPawnLabel, "RR_Mtw_NutritionPerPawnLabel".Translate() + ": " + (fedPawns > 0 ? mapNutrition / fedPawns : 0f).ToString("F1"));
 
             GUI.EndGroup();
         }
+
+        Map nutritionSnapshotMap;
+        NutritionTable nutritionSnapshot;
+        float nutritionSnapshotTotal;
+        float nutritionSnapshotExpires;
 
         internal static NutritionTable TotalHumanEdibleNutritionOfType(ResourceCounter rc)
         {

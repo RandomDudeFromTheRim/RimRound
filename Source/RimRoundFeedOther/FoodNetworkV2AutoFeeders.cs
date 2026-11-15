@@ -483,12 +483,12 @@ namespace RimRound.FeedOther
 
                 if (occupants.Count == 0)
                 {
-                    DrawTube(feeder, bed.TrueCenter());
+                    DrawTube(feeder, bed.TrueCenter() + new Vector3(0f, 0f, -0.2f));
                     continue;
                 }
                 foreach (Pawn occupant in occupants)
                 {
-                    DrawTube(feeder, occupant.TrueCenter());
+                    DrawTube(feeder, Building_AutoFeeder.GetPawnHoseEndpoint(occupant));
                 }
             }
         }
@@ -498,7 +498,6 @@ namespace RimRound.FeedOther
             Vector3 from = feeder.GetAutoFeederLocationVector();
             from.y = AltitudeLayer.MetaOverlays.AltitudeFor();
             target.y = from.y;
-            target.z -= 0.2f;
             GenDraw.DrawLineBetween(from, target, TubeMaterial, 0.2f);
         }
 

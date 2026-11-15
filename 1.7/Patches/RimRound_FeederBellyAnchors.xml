@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <!-- Base body tiers. Race-specific variants continue to use the fallback unless they declare an anchor. -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_005_Thick" or defName="F_006_Chonky" or defName="M_005_Thick" or defName="M_006_Chonky"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.12)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_010_Chubby" or defName="M_010_Chubby"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.13)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_020_Corpulent" or defName="M_020_Corpulent"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.16)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_030_Fat" or defName="M_030_Fat"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.19)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_040_Obese" or defName="M_040_Obese"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.22)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_050_MorbidlyObese" or defName="M_050_MorbidlyObese"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.25)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_060_Lardy" or defName="M_060_Lardy"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.28)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_070_Enormous" or defName="M_070_Enormous"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.32)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_080_Gigantic" or defName="M_080_Gigantic"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.35)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_090_Titanic" or defName="M_090_Titanic"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.39)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/BodyTypeDef[defName="F_100_Gelatinous" or defName="F_150_Gelatinous" or defName="F_200_Gelatinous" or defName="F_250_Gelatinous" or defName="F_300_Gelatinous" or defName="F_350_Gelatinous" or defName="F_400_Gelatinous" or defName="F_450_Gelatinous" or defName="F_500_Gelatinous" or defName="F_900_Gelatinous" or defName="F_910_Gelatinous" or defName="F_920_Gelatinous" or defName="F_930_Gelatinous" or defName="F_940_Gelatinous" or defName="F_950_Gelatinous" or defName="F_960_Gelatinous" or defName="F_970_Gelatinous" or defName="F_980_Gelatinous" or defName="F_990_Gelatinous" or defName="F_995_Gelatinous" or defName="M_100_Gelatinous" or defName="M_150_Gelatinous" or defName="M_200_Gelatinous" or defName="M_250_Gelatinous" or defName="M_300_Gelatinous" or defName="M_350_Gelatinous" or defName="M_400_Gelatinous" or defName="M_450_Gelatinous" or defName="M_500_Gelatinous" or defName="M_900_Gelatinous" or defName="M_910_Gelatinous" or defName="M_920_Gelatinous" or defName="M_930_Gelatinous" or defName="M_940_Gelatinous" or defName="M_950_Gelatinous" or defName="M_960_Gelatinous" or defName="M_970_Gelatinous" or defName="M_980_Gelatinous" or defName="M_990_Gelatinous" or defName="M_995_Gelatinous"]</xpath>
+    <value>
+      <attachPoints>
+        <li>
+          <offset>(0, 0, -0.42)</offset>
+          <type>CableConnection3</type>
+        </li>
+      </attachPoints>
+    </value>
+  </Operation>
+</Patch>

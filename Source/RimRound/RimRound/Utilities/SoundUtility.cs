@@ -258,6 +258,13 @@ namespace RimRound.Utilities
 
         private static Dictionary<String, bool> playFootStepSound1 = new Dictionary<String, bool>();
         private static Dictionary<String, int> lastPlayedFootstepTick = new Dictionary<String, int>();
+        internal static void ClearPawnSoundCaches()
+        {
+            playFootStepSound1.Clear();
+            lastPlayedFootstepTick.Clear();
+            pawnSoundDefNextMinStartTick.Clear();
+        }
+
         public static SoundDef GetFootStepSoundsByWeightAndMovement(FullnessAndDietStats_ThingComp fndComp)
         {
             if (fndComp == null ||

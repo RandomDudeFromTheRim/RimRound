@@ -16,6 +16,14 @@ namespace RimRound.Patch
     [HarmonyPatch(nameof(GameDataSaveLoader.LoadGame), new Type[] { typeof(string) })]
     public class GameDataSaveLoader_LoadGame_WipeCaches
     {
+        public static void Prefix() => ClearTransientPawnState();
+
+        internal static void ClearTransientPawnState()
+        {
+            SoundUtility.ClearPawnSoundCaches();
+            Hediffs.Hediff_RRConstricted.Victims.Clear();
+        }
+
         public static void Postfix()
         {
             BodyTypeUtility.InvalidateCorpseCache();
@@ -24,5 +32,11 @@ namespace RimRound.Patch
             Corpse_CurRotDrawMode_Get_ChangeDessicatedCorpseBodyTypeToNonRR.InvalidateCache();
             ApparelGraphicRecordGetter_TryGetGraphicApparel_UseTransparentImagesForBadTex.InvalidateCache();
         }
+    }
+
+    [HarmonyPatch(typeof(Game), "InitNewGame")]
+    internal static class Game_InitNewGame_WipePawnCaches
+    {
+        static void Prefix() => GameDataSaveLoader_LoadGame_WipeCaches.ClearTransientPawnState();
     }
 }

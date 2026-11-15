@@ -201,16 +201,16 @@ namespace RimRound.Comps
 
             if (parent.Spawned) 
             {
-                DoFootstepSounds();
-                DoEmptyStomachSounds();
-                DoGurgleSounds();
-
-                if (!IsConnectedToFeedingMachine)
+                if (parent.AsPawn().pather?.MovingNow == true)
+                    DoFootstepSounds();
+                if (parent.IsHashIntervalTick(30))
                 {
-                    DoBurpSounds();
+                    DoEmptyStomachSounds();
+                    DoGurgleSounds();
+                    if (!IsConnectedToFeedingMachine)
+                        DoBurpSounds();
+                    DoStomachStretchSounds();
                 }
-
-                DoStomachStretchSounds();
 
                 DoSloshSounds();
 

@@ -195,6 +195,9 @@ namespace RimRound.Utilities
                 return null;
             }
 
+            if (pawn.Corpse is Corpse linkedCorpse)
+                return linkedCorpse;
+
             Corpse corpse = null;
             if (cachedCorpseContainingPawnResults.TryGetValue(pawn, out corpse))
             {
@@ -359,29 +362,13 @@ namespace RimRound.Utilities
 
         private static bool ValidatePawnShouldBeRedrawn(Pawn pawn)
         {
-            if (pawn.IsWorldPawn()) { 
-                return false;
-            }
-
-            List<Pawn> allPawns = null;
-            if (Find.CurrentMap is null)
-                allPawns = Find.GameInitData.startingAndOptionalPawns;
-            else
-                allPawns = new List<Pawn>(Find.CurrentMap?.mapPawns?.AllPawns);
-
-            if (allPawns is null)
+            if (pawn.IsWorldPawn())
                 return false;
 
-            if (!(allPawns.Where(delegate (Pawn p) { return p.ThingID == pawn.ThingID; }).Any()))
-            {
-                if (GetCorpseContainingPawn(pawn) is Corpse c)
-                    return true;
+            if (pawn.MapHeld != null || pawn.Corpse?.MapHeld != null)
+                return true;
 
-                return false;
-            }
-
-            return true;
-
+            return Find.GameInitData?.startingAndOptionalPawns?.Contains(pawn) == true;
         }
 
         internal static void RedrawPawn(Pawn pawn)
