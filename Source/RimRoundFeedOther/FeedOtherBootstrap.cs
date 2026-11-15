@@ -65,7 +65,13 @@ namespace RimRound.FeedOther
             HarmonyPatchType? onlyType = null)
         {
             if (original == null)
+            {
+                // A renamed vanilla method used to make this a silent no-op: the legacy patch
+                // stayed applied next to the v2 replacement, so both handled the same job with
+                // nothing in the log to explain it.
+                Log.Warning($"[RimRound] Food Network v2 is on, but the method that {patchClassName} patched was not found, so that legacy patch could not be removed. Both food networks are now live - expect doubled handling until this is fixed.");
                 return;
+            }
 
             HarmonyLib.Patches info = Harmony.GetPatchInfo(original);
             if (info == null)
