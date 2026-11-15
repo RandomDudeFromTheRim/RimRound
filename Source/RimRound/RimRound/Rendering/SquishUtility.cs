@@ -1,47 +1,110 @@
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using RimWorld;
 using UnityEngine;
 using Verse;
 using HediffUtility = RimRound.Utilities.HediffUtility;
+using RimRound.Comps;
 
 namespace RimRound.Rendering
 {
     /// <summary>
-    /// Visual-only squish: a fat pawn standing against a wall, a table or a doorframe is drawn
-    /// narrower and taller, as if the bulk had somewhere to go. Purely cosmetic - it touches no
-    /// pathing, no hitbox and no save state.
+    /// Visual-only squish: a heavy pawn pressed against a wall or a table is drawn narrower and
+    /// taller, and it settles into that shape with a damped spring instead of snapping, so the
+    /// fat reads as soft rather than as a scale factor.
     ///
-    /// The engine draws a pawn through render nodes, and <see cref="PawnRenderNodeWorker.ScaleFor"/>
-    /// returns a Vector3 per node. A non-uniform answer there is the whole feature; the head keeps
-    /// its own node and is therefore unaffected.
+    /// Everything here that touches engine state runs on the main thread from Pawn.Tick. The
+    /// render path only ever READS a float: calling SetAllGraphicsDirty from inside
+    /// PawnRenderTree.ParallelPreDraw mutates the graphics list while the job is walking it, which
+    /// throws ArgumentOutOfRangeException and faults the render job.
     /// </summary>
     public static class SquishUtility
     {
-        /// <summary>Below this weight (severity * 1000 kg) nothing squishes. Thin pawns stay thin.</summary>
+        /// <summary>Nothing squishes below this weight (severity * 1000 kg).</summary>
         public const float StartSeverity = 0.05f;    // 50 kg
-        /// <summary>At this weight the squish is at full strength.</summary>
+        /// <summary>Full strength at this weight.</summary>
         public const float FullSeverity = 0.20f;     // 200 kg
-        /// <summary>How much narrower a fully squished body is drawn.</summary>
         public const float MaxCompression = 0.32f;
-        /// <summary>How much taller it is drawn, to keep the mass looking constant.</summary>
         public const float MaxBulge = 0.22f;
 
-        static readonly Dictionary<int, int> lastState = new Dictionary<int, int>();
-        static bool forced;
+        // spring constants: soft, slightly underdamped so it wobbles once before settling
+        const float Stiffness = 165f;
+        const float Damping = 0.74f;
+        const float Dt = 1f / 60f;
 
-        /// <summary>Debug switch so the effect can be looked at without waiting for a fat pawn.</summary>
-        public static bool Forced
+        class State
         {
-            get => forced;
-            set => forced = value;
+            public float current;      // current compression 0..1, read by the render path
+            public float velocity;
+            public float target;
+            public int mask;
         }
 
-        /// <summary>0..1, how hard this pawn squishes. Zero means "draw normally".</summary>
-        public static float StrengthFor(Pawn pawn)
+        static readonly ConcurrentDictionary<int, State> states = new ConcurrentDictionary<int, State>();
+        static readonly ConcurrentDictionary<int, bool> forcedPawns = new ConcurrentDictionary<int, bool>();
+
+        public static void ToggleForced(Pawn pawn)
         {
-            if (forced && pawn != null)
-                return 1f;
-            if (pawn == null || pawn.Dead || !pawn.RaceProps.Humanlike)
+            if (pawn == null) return;
+            int id = pawn.thingIDNumber;
+            bool now = !forcedPawns.ContainsKey(id);
+            if (now) forcedPawns[id] = true;
+            else forcedPawns.TryRemove(id, out _);
+            pawn.Drawer?.renderer?.SetAllGraphicsDirty();
+        }
+
+        /// <summary>Called from Pawn.Tick (main thread). Decides the target and springs toward it.</summary>
+        public static void Tick(Pawn pawn)
+        {
+            if (pawn == null || !pawn.Spawned || pawn.Map == null || !pawn.RaceProps.Humanlike)
+                return;
+
+            State st = states.GetOrAdd(pawn.thingIDNumber, _ => new State());
+
+            if (!st.current.Equals(0f) || !st.velocity.Equals(0f) || pawn.IsHashIntervalTick(15))
+                st.target = TargetFor(pawn);
+
+            int mask = ContactMask(pawn);
+            if (mask != st.mask)
+            {
+                st.mask = mask;
+                st.target = TargetFor(pawn, mask);
+                // safe here: this is the main thread, not the render job
+                pawn.Drawer?.renderer?.SetAllGraphicsDirty();
+            }
+
+            // damped spring toward the target
+            if (!Mathf.Approximately(st.current, st.target) || Mathf.Abs(st.velocity) > 0.0005f)
+            {
+                st.velocity += (st.target - st.current) * Stiffness * Dt;
+                st.velocity *= Damping;
+                st.current += st.velocity * Dt;
+                st.current = Mathf.Clamp(st.current, 0f, 1f);
+            }
+        }
+
+        /// <summary>0..1 compression to draw at, and which sides are blocked. Read-only.</summary>
+        public static bool TryRead(Pawn pawn, out float compression, out int mask)
+        {
+            compression = 0f;
+            mask = 0;
+            if (pawn == null) return false;
+            if (!states.TryGetValue(pawn.thingIDNumber, out State st)) return false;
+            mask = st.mask;
+            if (mask == 0 || st.current <= 0.001f) return false;
+            compression = st.current;
+            return true;
+        }
+
+        static float TargetFor(Pawn pawn, int mask = -1)
+        {
+            if (forcedPawns.ContainsKey(pawn.thingIDNumber))
+                return (mask < 0 ? ContactMask(pawn) : mask) == 0 ? 0f : 1f;
+
+            if (!RendersFat(pawn))
+                return 0f;
+
+            if (mask < 0) mask = ContactMask(pawn);
+            if (mask == 0)
                 return 0f;
 
             Hediff weight = HediffUtility.WeightHediff(pawn);
@@ -51,77 +114,40 @@ namespace RimRound.Rendering
             return Mathf.Clamp01(Mathf.InverseLerp(StartSeverity, FullSeverity, weight.Severity));
         }
 
-        /// <summary>
-        /// What is in the way, as two bits: 1 = something blocks the pawn's left, 2 = its right.
-        /// Uses the same grid queries the game uses for standing room.
-        /// </summary>
+        /// <summary>A pawn whose bulk is actually being drawn: has the comp, and is not exempt.</summary>
+        static bool RendersFat(Pawn pawn)
+        {
+            PawnBodyType_ThingComp pbt = pawn.TryGetComp<PawnBodyType_ThingComp>();
+            if (pbt == null)
+                return false;
+            if (pbt.PersonallyExempt || pbt.CategoricallyExempt)
+                return false;
+            return true;
+        }
+
         public static int ContactMask(Pawn pawn)
         {
             if (pawn == null || !pawn.Spawned || pawn.Map == null)
                 return 0;
-
             Map map = pawn.Map;
             IntVec3 cell = pawn.PositionHeld;
             int mask = 0;
-            if (Blocked(map, cell + IntVec3.West))
-                mask |= 1;
-            if (Blocked(map, cell + IntVec3.East))
-                mask |= 2;
+            if (Blocked(map, cell + IntVec3.West)) mask |= 1;
+            if (Blocked(map, cell + IntVec3.East)) mask |= 2;
             return mask;
         }
 
         static bool Blocked(Map map, IntVec3 cell)
         {
-            if (!cell.InBounds(map))
-                return true;
-            if (map.edificeGrid[cell] != null)
-                return true;
-            // catches pawns, items and anything else that takes the cell's standing room
+            if (!cell.InBounds(map)) return true;
+            if (map.edificeGrid[cell] != null) return true;
             return !cell.Standable(map);
         }
 
-        /// <summary>
-        /// Apply the squish to a node's scale. Returns false when nothing should change.
-        /// </summary>
-        public static bool TrySquish(Pawn pawn, ref Vector3 scale, out int state)
+        public static void ClearCaches()
         {
-            state = 0;
-            if (pawn == null)
-                return false;
-            if (!pawn.Spawned || pawn.Map == null)
-                return false;
-
-            float strength = StrengthFor(pawn);
-            if (strength <= 0.001f)
-                return false;
-
-            int mask = ContactMask(pawn);
-            state = ((int)(strength * 10f) << 2) | mask;
-            if (mask == 0)
-                return false;
-
-            // pressed from one side: compress, and give a little of it back as height
-            float compression = MaxCompression * strength * ((mask == 3) ? 1.5f : 1f);
-            scale.x *= 1f - Mathf.Clamp(compression, 0f, 0.55f);
-            scale.z *= 1f + MaxBulge * strength * ((mask == 3) ? 1.4f : 1f);
-            return true;
+            states.Clear();
+            forcedPawns.Clear();
         }
-
-        /// <summary>
-        /// The draw is cached against facing/posture/flags, not against our state, so a change has
-        /// to dirty the graphics explicitly or the pawn keeps its old silhouette.
-        /// </summary>
-        public static void NoteState(Pawn pawn, int state)
-        {
-            if (pawn == null)
-                return;
-            int id = pawn.thingIDNumber;
-            if (lastState.TryGetValue(id, out int previous) && previous == state)
-                return;
-            lastState[id] = state;
-            pawn.Drawer?.renderer?.SetAllGraphicsDirty();
-        }
-
-        public static void ClearCaches() => lastState.Clear();
     }
 }
